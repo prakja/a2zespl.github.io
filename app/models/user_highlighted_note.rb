@@ -1,0 +1,2 @@
+class UserHighlightedNote < ApplicationRecord
+end

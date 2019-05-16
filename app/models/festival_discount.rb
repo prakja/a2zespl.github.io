@@ -1,0 +1,2 @@
+class FestivalDiscount < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class NewUserVideoStat < ApplicationRecord
+end

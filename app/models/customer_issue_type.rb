@@ -1,0 +1,2 @@
+class CustomerIssueType < ApplicationRecord
+end

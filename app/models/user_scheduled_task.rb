@@ -1,0 +1,2 @@
+class UserScheduledTask < ApplicationRecord
+end

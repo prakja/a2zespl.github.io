@@ -1,0 +1,2 @@
+class TopicAsset < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class DoubtAnswer < ApplicationRecord
+end

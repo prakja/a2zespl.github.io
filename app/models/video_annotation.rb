@@ -1,0 +1,2 @@
+class VideoAnnotation < ApplicationRecord
+end
