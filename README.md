@@ -7,18 +7,20 @@ Things you may want to cover:
 
 * Ruby version
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
+2.6.3
 
 * Deployment instructions
 
-* ...
+Exclude .rail-version, .git, .gitignore
+
+bundle update
+gem update
+
+rails g model out_table_name
+rails g active_admin:resource model_name
+
+### run on port 5000 else remove -b
+rails s -b 5000 
+
+### create view 
+create view "topic_questions" as select "topicId" as "topic_id", "assetId" as "question_id" from "TopicAsset" where "deleted" = false and "assetType" = 'Question'
