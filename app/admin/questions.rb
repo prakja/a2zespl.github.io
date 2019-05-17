@@ -11,5 +11,5 @@ ActiveAdmin.register Question do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-
+remove_filter :detail, :topics
 end
