@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/jayprakash1/activeadmin_quill_editor
+  revision: e880d55f564cf068487b3355fef8399d1c104a9c
+  ref: e880d55f564cf068487b3355fef8399d1c104a9c
+  specs:
+    activeadmin_quill_editor (0.1.4)
+      activeadmin (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -275,6 +283,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin
+  activeadmin_quill_editor!
   bootsnap (>= 1.1.0)
   byebug
   cancancan
