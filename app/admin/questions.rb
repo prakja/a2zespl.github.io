@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics
+  remove_filter :detail, :topics, :questionTopics
   form do |f|
     f.input :question, as: :quill_editor
     f.input :correctOptionIndex
