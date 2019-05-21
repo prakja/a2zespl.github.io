@@ -12,6 +12,12 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics
+  index do
+    id_column
+    column (:question) { |question| raw(question.question)  }
+    column (:explanation) { |question| raw(question.explanation)  }
+    actions
+  end
   form do |f|
     f.input :question, as: :quill_editor
     f.input :correctOptionIndex
