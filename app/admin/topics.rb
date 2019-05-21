@@ -11,8 +11,8 @@ ActiveAdmin.register Topic do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :questions, :topicQuestions
-
+  remove_filter :questions, :topicQuestions, :subject
+  scope :neetprep_course
   sidebar :related_data, only: :show do
     link_to "Questions", admin_questions_path(q: { questionTopics_topicId_eq: topic.id  })
   end

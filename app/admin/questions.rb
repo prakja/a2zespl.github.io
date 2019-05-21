@@ -12,6 +12,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics
+  scope :neetprep_course
   index do
     id_column
     column (:question) { |question| raw(question.question)  }
