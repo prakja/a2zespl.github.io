@@ -19,6 +19,10 @@ ActiveAdmin.register Question do
     column (:explanation) { |question| raw(question.explanation)  }
     actions
   end
+
+  scope :NEET_AIPMT_PMT_Questions
+  scope :AIIMS_Questions
+
   form do |f|
     f.input :question, as: :quill_editor
     f.input :correctOptionIndex
