@@ -58,7 +58,7 @@ controller do
     })
     s3 = Aws::S3::Resource.new
     bucket = s3.bucket('neetprep-from-ruby')
-    obj = bucket.object('key_' + Time.now.to_s + '.jpeg')
+    obj = bucket.object('key_' + Time.now.to_s + file.original_filename + '.jpeg')
     File.open(file.tempfile.path, 'rb') do |file|
       obj.put(acl: "public-read", body: file)
     end
@@ -107,7 +107,7 @@ controller do
     link = advertisement_params[:link]
     backgroundColor = advertisement_params[:backgroundColor]
 
-    advertisement = Advertisement.find_by(id: id)
+    @advertisement = Advertisement.find_by(id: id)
 
     if web_URL_Image != nil
       @advertisement[:webUrl] = save_to_s3(web_URL_Image)
