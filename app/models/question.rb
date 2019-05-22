@@ -9,4 +9,6 @@ class Question < ApplicationRecord
   has_one :detail, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :questionTopics, -> {where(assetType: 'Question', deleted: false)}, foreign_key: :assetId, class_name: 'TopicAsset'
   has_many :topics, through: :questionTopics
+  has_many :questionSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Question")}, foreign_key: :ownerId, class_name: 'TopicAsset'
+  has_many :subTopics, through: :questionSubTopics
 end

@@ -11,10 +11,11 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics
+  remove_filter :detail, :topics, :questionTopics, :subTopic, :questionSubTopics
   # make a drop down menu
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
+  filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Topic"
   filter :id_eq, as: :number, label: "Question ID"
   # brings back the default filters
   preserve_default_filters!
@@ -32,11 +33,13 @@ ActiveAdmin.register Question do
   scope :include_deleted, label: "Include Deleted"
 
   form do |f|
-    f.input :question, as: :quill_editor
-    f.input :correctOptionIndex
-    f.input :explanation, as: :quill_editor
-    f.input :testId
-    f.input :deleted
-    actions
+    f.inputs "Question" do
+      f.input :question, as: :quill_editor
+      f.input :correctOptionIndex
+      f.input :explanation, as: :quill_editor
+      f.input :testId
+      f.input :deleted
+    end
+    f.actions
   end
 end
