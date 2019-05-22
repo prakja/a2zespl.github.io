@@ -14,6 +14,7 @@ ActiveAdmin.register Question do
   remove_filter :detail, :topics, :questionTopics
   # make a drop down menu
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
+  filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course
