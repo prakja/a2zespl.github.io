@@ -12,6 +12,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopic, :questionSubTopics
+  permit_params :topic_ids, :question, :correctOptionIndex, :explanation, :deleted, :subTopic_ids, :testId
   # make a drop down menu
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
@@ -39,6 +40,9 @@ ActiveAdmin.register Question do
       f.input :explanation, as: :quill_editor
       f.input :testId
       f.input :deleted
+
+      f.input :topics, as: :select, :collection => Topic.neetprep_course
+      f.input :subTopics, as: :select, :collection => SubTopic.distinct_name
     end
     f.actions
   end
