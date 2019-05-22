@@ -12,6 +12,10 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics
+  # make a drop down menu
+  filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
+  # brings back the default filters
+  preserve_default_filters!
   scope :neetprep_course
   index do
     id_column
@@ -20,7 +24,8 @@ ActiveAdmin.register Question do
     actions
   end
 
-  scope :NEET_AIPMT_PMT_Questions
+  # Label works with filters but not with scope xD 
+  scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
   scope :AIIMS_Questions
 
   form do |f|
