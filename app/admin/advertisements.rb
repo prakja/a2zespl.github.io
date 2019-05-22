@@ -13,7 +13,7 @@ ActiveAdmin.register Advertisement do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-permit_params :mobile_URL_Image, :web_URL_Image, :webUrl, :mobileUrl, :startedAt, :expiryAt, :link, :id
+permit_params :mobile_URL_Image, :web_URL_Image, :webUrl, :mobileUrl, :startedAt, :expiryAt, :link, :id, :backgroundColor
 form do |f|
   f.inputs "Details" do
     f.input :web_URL_Image, :as => :file, input_html: { accept: ".jpeg, .png" }
@@ -27,6 +27,7 @@ form do |f|
     f.input :startedAt, as: :datepicker
     f.input :expiryAt, as: :datepicker
     f.input :link
+    f.input :backgroundColor
   end
   f.actions
 end
@@ -43,6 +44,7 @@ show do |f|
     row :startedAt
     row :expiryAt
     row :link
+    row :backgroundColor
   end
 end
 
@@ -70,18 +72,26 @@ controller do
     startedAt = advertisement[:startedAt]
     expiryAt = advertisement[:expiryAt]
     link = advertisement[:link]
+    backgroundColor = advertisement[:backgroundColor]
 
-    new_row = Advertisement.new()
-    new_row[:webUrl] = save_to_s3(web_URL_Image)
-    new_row[:mobileUrl] = save_to_s3(mobile_URL_Image)
-    new_row[:startedAt] = Date.parse(startedAt).to_time
-    new_row[:expiryAt] = Date.parse(expiryAt).to_time
-    new_row[:link] = link
-    new_row[:createdAt] = Time.now
-    new_row[:updatedAt] = Time.now
+    @advertisement = Advertisement.new()
+    @advertisement[:webUrl] = save_to_s3(web_URL_Image)
+    @advertisement[:mobileUrl] = save_to_s3(mobile_URL_Image)
+    @advertisement[:startedAt] = Date.parse(startedAt).to_time
+    @advertisement[:expiryAt] = Date.parse(expiryAt).to_time
+    @advertisement[:link] = link
+    @advertisement[:createdAt] = Time.now
+    @advertisement[:updatedAt] = Time.now
+    @advertisement[:backgroundColor] = backgroundColor
 
-    if new_row.save
-      redirect_to admin_advertisement_path(new_row)
+    if not backgroundColor.start_with?('#')
+      flash.now[:error] = "Color should start with '#'"
+      render :new
+      return
+    end
+
+    if @advertisement.save
+      redirect_to admin_advertisement_path(@advertisement)
     else
       render :new
     end
@@ -95,24 +105,31 @@ controller do
     startedAt = advertisement_params[:startedAt]
     expiryAt = advertisement_params[:expiryAt]
     link = advertisement_params[:link]
+    backgroundColor = advertisement_params[:backgroundColor]
 
     advertisement = Advertisement.find_by(id: id)
 
     if web_URL_Image != nil
-      advertisement[:webUrl] = save_to_s3(web_URL_Image)
+      @advertisement[:webUrl] = save_to_s3(web_URL_Image)
     end
 
     if mobile_URL_Image != nil
-      advertisement[:mobileUrl] = save_to_s3(mobile_URL_Image)
+      @advertisement[:mobileUrl] = save_to_s3(mobile_URL_Image)
     end
 
-    advertisement[:startedAt] = Date.parse(startedAt).to_time
-    advertisement[:expiryAt] = Date.parse(expiryAt).to_time
-    advertisement[:link] = link
-    advertisement[:updatedAt] = Time.now
+    @advertisement[:startedAt] = Date.parse(startedAt).to_time
+    @advertisement[:expiryAt] = Date.parse(expiryAt).to_time
+    @advertisement[:link] = link
+    @advertisement[:updatedAt] = Time.now
+    @advertisement[:backgroundColor] = backgroundColor
+    if not backgroundColor.start_with?('#')
+      flash.now[:error] = "Color should start with '#'"
+      render :new
+      return
+    end
     
-    if advertisement.save
-      redirect_to admin_advertisement_path(advertisement)
+    if @advertisement.save
+      redirect_to admin_advertisement_path(@advertisement)
     else
       render :new
     end
