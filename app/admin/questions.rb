@@ -28,6 +28,7 @@ ActiveAdmin.register Question do
   # Label works with filters but not with scope xD 
   scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
   scope :AIIMS_Questions
+  scope :include_deleted, label: "Include Deleted"
 
   form do |f|
     f.input :question, as: :quill_editor
