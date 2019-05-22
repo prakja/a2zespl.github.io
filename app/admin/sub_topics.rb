@@ -17,7 +17,7 @@ remove_filter :questions, :subTopicQuestions, :topic
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name
-      f.input :topic
+      f.input :topic, as: :select, :collection => Topic.neetprep_course
     end
     f.actions
   end
