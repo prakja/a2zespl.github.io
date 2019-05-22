@@ -12,11 +12,11 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopic, :questionSubTopics
-  permit_params :topic_ids, :question, :correctOptionIndex, :explanation, :deleted, :subTopic_ids, :testId
+  permit_params :question, :correctOptionIndex, :explanation, :deleted, :testId, topic_ids: [], subTopic_ids: []
   # make a drop down menu
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
-  filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Topic"
+  filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :id_eq, as: :number, label: "Question ID"
   # brings back the default filters
   preserve_default_filters!
