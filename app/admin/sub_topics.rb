@@ -11,7 +11,7 @@ ActiveAdmin.register SubTopic do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-remove_filter :questions, :subTopicQuestions, :topic
+remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos
   permit_params :name, :topicId
 
   form do |f|
