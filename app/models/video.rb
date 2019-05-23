@@ -6,4 +6,8 @@ class Video < ApplicationRecord
   
   has_many :videoSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: 'Video')}, foreign_key: :ownerId, class_name: 'TopicAsset', inverse_of: 'videoSubTopic'
   has_many :subTopics, through: :videoSubTopics
+
+  attribute :createdAt, :datetime, default: Time.now
+  attribute :updatedAt, :datetime, default: Time.now
+  
 end
