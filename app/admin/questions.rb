@@ -67,8 +67,8 @@ ActiveAdmin.register Question do
       f.input :testId
       f.input :deleted
 
-      f.input :topics, as: :select, :collection => Topic.neetprep_course
-      f.input :subTopics, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
+      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
     end
     f.actions
   end
