@@ -9,6 +9,9 @@ class SubTopic < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
   attribute :deleted, :boolean, default: false
 
+  has_many :subTopicVideos, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Video")}, foreign_key: :assetId, class_name: 'TopicAsset'
+  has_many :videos, through: :subTopicVideos
+
   def self.distinct_name
     SubTopic.connection.select_all("select \"name\", \"id\" from \"SubTopic\"").pluck("name", "id")
   end
