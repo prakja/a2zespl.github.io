@@ -17,7 +17,7 @@ remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name
-      f.input :topic, as: :select, :collection => Topic.neetprep_course
+      f.input :topic, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
     end
     f.actions
   end
