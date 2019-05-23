@@ -9,6 +9,7 @@ class TopicAsset < ApplicationRecord
   belongs_to :subTopic, class_name: "SubTopic", foreign_key: "assetId", optional: true
   belongs_to :question, -> {where(deleted: false)}, foreign_key: 'assetId', optional: true
   belongs_to :questionSubTopic, -> {where(deleted: false)}, foreign_key: 'ownerId', optional: true
+  belongs_to :video, -> {where(deleted: false)}, foreign_key: 'assetId', optional: true
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 end

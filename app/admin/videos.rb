@@ -11,5 +11,7 @@ ActiveAdmin.register Video do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-
+  remove_filter :topics, :videoTopics
+  filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
+  preserve_default_filters!
 end
