@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic
+  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test
   permit_params :question, :correctOptionIndex, :explanation, :deleted, :testId, topic_ids: [], subTopic_ids: []
   # make a drop down menu
   filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
@@ -21,7 +21,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"  
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
   filter :id_eq, as: :number, label: "Question ID"
-  filter :type, as: :string, label: "Question Type"
+  filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course
