@@ -28,7 +28,33 @@ ActiveAdmin.register Question do
     actions
   end
 
-  # Label works with filters but not with scope xD 
+  show do
+    attributes_table do
+      row :question do |question|
+        raw(question.question)
+      end
+      row :explanation do |question|
+        raw(question.explanation)
+      end
+      row :options do |question|
+        raw(question.options)
+      end
+      row :correctOption do |question|
+        question.options[question.correctOptionIndex]
+      end
+      row :topics do |question|
+        question.topics
+      end
+      row :subTopics do |question|
+        question.subTopics
+      end
+      row :test do |question|
+        question.test
+      end
+    end
+  end
+
+  # Label works with filters but not with scope xD
   scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
   scope :AIIMS_Questions
   scope :include_deleted, label: "Include Deleted"
@@ -42,7 +68,7 @@ ActiveAdmin.register Question do
       f.input :deleted
 
       f.input :topics, as: :select, :collection => Topic.neetprep_course
-      f.input :subTopics, as: :select, :collection => SubTopic.distinct_name
+      f.input :subTopics, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
     end
     f.actions
   end
