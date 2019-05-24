@@ -21,7 +21,7 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   database: learner_development
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: learner-staging.cjuqv7atq8gh.us-west-2.rds.amazonaws.com
+  host: <%= ENV.fetch("RUBYACTIVEADMIN_DATABASE_HOST") {'learner-staging.cjuqv7atq8gh.us-west-2.rds.amazonaws.com'} %>
   username: learner
   password: letmepass
 
@@ -87,3 +87,4 @@ production:
   database: <%= ENV['RUBYACTIVEADMIN_DATABASE'] %>
   username: <%= ENV['RUBYACTIVEADMIN_DATABASE_USER'] %>
   password: <%= ENV['RUBYACTIVEADMIN_DATABASE_PASSWORD'] %>
+  host: <%= ENV['RUBYACTIVEADMIN_DATABASE_HOST'] %>

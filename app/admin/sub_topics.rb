@@ -11,13 +11,13 @@ ActiveAdmin.register SubTopic do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-remove_filter :questions, :subTopicQuestions, :topic
+remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos
   permit_params :name, :topicId
 
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name
-      f.input :topic
+      f.input :topic, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
     end
     f.actions
   end
