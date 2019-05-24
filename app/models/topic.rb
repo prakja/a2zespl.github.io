@@ -12,4 +12,8 @@ class Topic < ApplicationRecord
   def self.distinct_name
     Topic.neetprep_course.all().pluck("name", "id")
   end
+
+  def self.name_with_subject
+    Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
+  end
 end

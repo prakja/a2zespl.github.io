@@ -14,7 +14,7 @@ ActiveAdmin.register Question do
   remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test
   permit_params :question, :correctOptionIndex, :explanation, :deleted, :testId, topic_ids: [], subTopic_ids: []
   # make a drop down menu
-  filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
+  filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :detail_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"    
@@ -33,10 +33,12 @@ ActiveAdmin.register Question do
   #   end
   # end
 
+  # https://www.neetprep.com/api/v1/questions/id/edit
   index do
     id_column
     column (:question) { |question| raw(question.question)  }
     column (:explanation) { |question| raw(question.explanation)  }
+    column ("Link") {|question| raw('<a href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
     actions
   end
@@ -81,7 +83,7 @@ ActiveAdmin.register Question do
       f.input :testId
       f.input :deleted
 
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
     end
     f.actions

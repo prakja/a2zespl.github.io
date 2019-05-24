@@ -12,11 +12,21 @@ ActiveAdmin.register Video do
 #   permitted
 # end
   remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics
-  filter :topics_id_eq, as: :select, collection: -> { Topic.distinct_name }, label: "Chapter"
+  filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   preserve_default_filters!
 
   permit_params :name, :description, :url, :thumbnail, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
+  scope :neetprep_course
+
+  index do
+    id_column
+    column :name
+    column :duration
+    column ("Link") {|video| raw('<a href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
+    # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
+    actions
+  end
 
   show do
     attributes_table do
@@ -44,7 +54,7 @@ ActiveAdmin.register Video do
       f.input :seqId, as: :number
       f.input :youtubeUrl
 
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, :collection => SubTopic.topic_sub_topics(f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])
     end
     f.actions
