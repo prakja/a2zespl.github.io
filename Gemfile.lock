@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/spohlenz/tinymce-rails.git
+  revision: f10d438cc28d5fc85baf2203aec1144f1d2e8419
+  branch: tinymce-4
+  specs:
+    tinymce-rails (4.9.4)
+      railties (>= 3.1.1)
+
+GIT
   remote: https://github.com/jayprakash1/activeadmin_quill_editor
   revision: e880d55f564cf068487b3355fef8399d1c104a9c
   ref: e880d55f564cf068487b3355fef8399d1c104a9c
@@ -1033,6 +1041,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
+  tinymce-rails!
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)

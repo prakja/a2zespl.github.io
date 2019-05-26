@@ -44,6 +44,7 @@ ActiveAdmin.register Question do
   end
 
   show do
+    render partial: 'mathjax'
     attributes_table do
       row :question do |question|
         raw(question.question)
@@ -77,9 +78,10 @@ ActiveAdmin.register Question do
 
   form do |f|
     f.inputs "Question" do
-      f.input :question, as: :quill_editor
+      render partial: 'tinymce'
+      f.input :question
       f.input :correctOptionIndex
-      f.input :explanation, as: :quill_editor
+      f.input :explanation
       f.input :testId
       f.input :deleted
 
