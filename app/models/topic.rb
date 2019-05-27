@@ -1,4 +1,6 @@
 class Topic < ApplicationRecord
+  has_paper_trail
+  
   self.table_name = "Topic"
   # only include pcb topics for now
   scope :neetprep_course, -> {joins(:subject).where(Subject: {courseId:  8, id: [53,54,55,56]}).includes(:subject)}

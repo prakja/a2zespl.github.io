@@ -1,0 +1,30 @@
+<%= tinymce_assets %>
+<script>
+tinymce.init({
+  selector: '#post_section_1',
+  plugins: 'table print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern code paste',
+  toolbar: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify fontselect fontsizeselect | numlist bullist outdent indent  | removeformat | code | image | paste',
+  save_enablewhendirty: true,
+  menubar: 'table',
+  paste_data_images: true,
+  font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+  fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt 48pt 60pt 72pt 84pt 96pt',
+  images_upload_url: '/api/v1/fileUpload/fileUpload',
+  height: 2500,
+  extended_valid_elements : 'a[class|style|width|height|onclick|href],div[class|style|width|height|onclick|data-url],script[src|async|defer|type|charset]',
+  editorObject: {'id': 'post_section_1'},
+  setup: function (editor) {
+    editor.on('blur', function (e) {
+      _this.setState({ post: { ..._this.state.post, post: editor.getContent()} });
+    });
+    // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
+    editor.settings.images_dataimg_filter = function () {return undefined;};
+  }
+});
+</script>
+<style>
+.mce-tinymce.mce-container.mce-panel {
+  display: inline-block !important;
+  width: calc(80% - 22px) !important;
+}
+</style>
