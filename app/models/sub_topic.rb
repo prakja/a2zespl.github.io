@@ -1,4 +1,6 @@
 class SubTopic < ApplicationRecord
+  has_paper_trail
+  
   self.table_name = "SubTopic"
   scope :topic_sub_topics, lambda {|topicIds| where(topicId: topicIds)}
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId"

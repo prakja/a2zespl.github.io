@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  has_paper_trail
+  
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}

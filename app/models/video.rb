@@ -1,4 +1,6 @@
 class Video < ApplicationRecord
+  has_paper_trail
+  
   self.table_name = "Video"
 
   has_many :videoTopics, -> {where(assetType: 'Video', deleted: false, ownerType: 'Topic')}, foreign_key: :assetId, class_name: 'TopicAsset', inverse_of: 'video'
