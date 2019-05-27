@@ -12,7 +12,8 @@ ActiveAdmin.register Test do
 #   permitted
 # end
 
-permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :test_topic
+permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId
+remove_filter :topic
 
 index do
   id_column
@@ -49,6 +50,7 @@ show do
     row :exam
     row :startedAt
     row :expiryAt
+    row :topic
   end
 end
 
@@ -69,7 +71,9 @@ form do |f|
   end
 
   f.inputs "Additional Information" do
-    f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"
+    f.input :topic, as: :select, :collection => Topic.name_with_subject,  hint: "Leave empty, if the test does not belone to a Topic"
+    f.input :ownerType, as: :hidden, :input_html => { :value => 'Topic' }
+    
   end
 
   f.actions
