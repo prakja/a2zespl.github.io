@@ -1,9 +1,15 @@
 class Question < ApplicationRecord
+  before_save :default_values
+  def default_values
+    self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
+  end
   has_paper_trail
   
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
+  attribute :createdAt, :datetime, default: Time.now
+  attribute :updatedAt, :datetime, default: Time.now
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId:  8}})}
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}

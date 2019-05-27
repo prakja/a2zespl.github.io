@@ -13,7 +13,7 @@ ActiveAdmin.register Test do
 # end
 
 permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId
-remove_filter :topic
+remove_filter :topic, :questions
 
 index do
   id_column
@@ -27,10 +27,10 @@ index do
   column :showAnswer
   column :negativeMarks
   column :positiveMarks
-  column :numQuestions
   column :exam
   column :startedAt
   column :expiryAt
+  column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
   actions
 end
 
@@ -46,7 +46,7 @@ show do
     row :showAnswer
     row :negativeMarks
     row :positiveMarks
-    row :numQuestions
+    row ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
     row :exam
     row :startedAt
     row :expiryAt

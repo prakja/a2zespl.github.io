@@ -55,6 +55,7 @@ ActiveAdmin.register Question do
       row :options do |question|
         raw(question.options)
       end
+      # row :correctOptionIndex
       row :correctOption do |question|
         question.options[question.correctOptionIndex]
       end
@@ -80,9 +81,9 @@ ActiveAdmin.register Question do
     f.inputs "Question" do
       render partial: 'tinymce'
       f.input :question
-      f.input :correctOptionIndex
+      f.input :correctOptionIndex, as: :select, :collection => ["(1)", "(2)", "(3)", "(4)"], label: "Correct Option"
       f.input :explanation
-      f.input :testId
+      f.input :test, input_html: { class: "select2" }
       f.input :deleted
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
