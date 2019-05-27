@@ -46,6 +46,7 @@ ActiveAdmin.register Question do
   show do
     render partial: 'mathjax'
     attributes_table do
+      row :id
       row :question do |question|
         raw(question.question)
       end
@@ -84,7 +85,6 @@ ActiveAdmin.register Question do
       f.input :correctOptionIndex, as: :select, :collection => ["(1)", "(2)", "(3)", "(4)"], label: "Correct Option"
       f.input :explanation
       f.input :test, input_html: { class: "select2" }
-      f.input :deleted
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])

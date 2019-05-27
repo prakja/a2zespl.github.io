@@ -36,6 +36,7 @@ end
 
 show do
   attributes_table do
+    row :id
     row :name
     row :description
     row :instructions do |test|
@@ -52,6 +53,10 @@ show do
     row :expiryAt
     row :topic
   end
+end
+
+action_item :import_demo, only: :show do
+  link_to 'Add Question', '../../admin/questions/new?question[testId]=' + resource.id.to_s
 end
 
 form do |f|
@@ -71,7 +76,7 @@ form do |f|
   end
 
   f.inputs "Additional Information" do
-    f.input :topic, as: :select, :collection => Topic.name_with_subject,  hint: "Leave empty, if the test does not belone to a Topic"
+    f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject,  hint: "Leave empty, if the test does not belone to a Topic"
     f.input :ownerType, as: :hidden, :input_html => { :value => 'Topic' }
     
   end
