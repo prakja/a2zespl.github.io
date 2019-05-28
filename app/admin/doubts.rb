@@ -21,7 +21,7 @@ ActiveAdmin.register Doubt do
     column :topic
     column :tagType
     column :teacherReply
-    column ("Link") {|doubt| raw('<a href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + doubt.id.to_s) + '">Answer on NEETprep</a>')}
+    column ("Link") {|doubt| raw('<a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + doubt.id.to_s) + '">Answer on NEETprep</a>')}
       # + '/topic/' 
       # + Base64.encode64("Doubt:" + doubt.topic.id.to_s) 
       # + '/doubt/' 

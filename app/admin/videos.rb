@@ -23,7 +23,7 @@ ActiveAdmin.register Video do
     id_column
     column :name
     column :duration
-    column ("Link") {|video| raw('<a href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
+    column ("Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
     actions
   end
