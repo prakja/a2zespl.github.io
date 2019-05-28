@@ -12,4 +12,17 @@ ActiveAdmin.register CustomerIssue do
 #   permitted
 # end
 
+remove_filter :topic, :question, :video
+
+permit_params :resolved
+
+filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+preserve_default_filters!
+
+form do |f|
+  f.inputs "Issues" do
+    f.input :resolved
+  end
+  f.actions
+end
 end

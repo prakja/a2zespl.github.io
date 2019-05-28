@@ -1,6 +1,6 @@
 class Video < ApplicationRecord
   has_paper_trail
-  
+
   self.table_name = "Video"
 
   has_many :videoTopics, -> {where(assetType: 'Video', deleted: false, ownerType: 'Topic')}, foreign_key: :assetId, class_name: 'TopicAsset', inverse_of: 'video'
@@ -8,6 +8,8 @@ class Video < ApplicationRecord
   
   has_many :videoSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: 'Video')}, foreign_key: :ownerId, class_name: 'TopicAsset', inverse_of: 'videoSubTopic'
   has_many :subTopics, through: :videoSubTopics
+
+  has_many :issues, class_name: "CustomerIssue", foreign_key: "videoId"
 
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now

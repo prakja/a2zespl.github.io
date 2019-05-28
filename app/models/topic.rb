@@ -12,6 +12,8 @@ class Topic < ApplicationRecord
   has_many :videos, through: :topicVideos
   has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
 
+  has_many :issues, class_name: "CustomerIssue", foreign_key: "topicId"
+
   def self.distinct_name
     Topic.neetprep_course.all().pluck("name", "id")
   end

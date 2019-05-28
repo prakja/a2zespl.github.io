@@ -20,6 +20,7 @@ class Question < ApplicationRecord
   has_many :topics, through: :questionTopics
   has_many :questionSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: 'Question')}, foreign_key: :ownerId, class_name: 'TopicAsset', inverse_of: 'questionSubTopic'
   has_many :subTopics, through: :questionSubTopics
+  has_many :issues, class_name: "CustomerIssue", foreign_key: "questionId"
   belongs_to :test, foreign_key: :testId, optional: true
 
   def self.distinct_type
