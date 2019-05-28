@@ -10,6 +10,7 @@ class Topic < ApplicationRecord
 
   has_many :topicVideos, -> {where(assetType: 'Video', delete: false)}, foreign_key: :topicId, class_name: 'TopicAsset'
   has_many :videos, through: :topicVideos
+  has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
 
   def self.distinct_name
     Topic.neetprep_course.all().pluck("name", "id")

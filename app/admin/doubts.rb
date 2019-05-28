@@ -1,7 +1,32 @@
+require 'base64'
+
 ActiveAdmin.register Doubt do
+  remove_filter :topic
   permit_params :content, :deleted, :teacherReply, :imgUrl
   scope :botany_paid_student_doubts
   scope :chemistry_paid_student_doubts
   scope :physics_paid_student_doubts
   scope :zoology_paid_student_doubts
+
+  filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+  preserve_default_filters!
+
+  index do
+    id_column
+    column :content
+    column :imgUrl do |doubt|
+      raw('<img src="' + doubt.imgUrl + '" width="128" height="72">') if not doubt.imgUrl.blank?
+    end
+    column :createdAt
+    column :topic
+    column :tagType
+    column :teacherReply
+    column ("Link") {|doubt| raw('<a href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + doubt.id.to_s) + '">Edit on NEETprep</a>')}
+      # + '/topic/' 
+      # + Base64.encode64("Doubt:" + doubt.topic.id.to_s) 
+      # + '/doubt/' 
+      # + Base64.encode64("Doubt:" + doubt.id.to_s)
+    actions
+  end
+
 end

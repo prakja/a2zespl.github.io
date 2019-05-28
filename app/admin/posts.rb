@@ -1,5 +1,14 @@
 ActiveAdmin.register Post do
   permit_params :url, :title, :description, :section_1
+
+  index do
+    id_column
+    column :url
+    column :title
+    column :description
+    actions
+  end
+
   form do |f|
     f.inputs "Post" do
       render partial: 'tinymce'
