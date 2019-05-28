@@ -21,7 +21,7 @@ ActiveAdmin.register AdminUser do
   form do |f|
     f.inputs do
       f.input :email
-      f.input :role
+      f.input :role, as: :select, :collection => ["support", "admin", "faculty"]
       f.input :password
       f.input :password_confirmation
     end
