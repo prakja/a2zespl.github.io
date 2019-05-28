@@ -9,6 +9,7 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_doubts
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+  filter :id_eq, as: :number, label: "Doubt ID"
   preserve_default_filters!
 
   index do

@@ -1,6 +1,9 @@
 ActiveAdmin.register Post do
   permit_params :url, :title, :description, :section_1
 
+  filter :id_eq, as: :number, label: "Post ID"
+  preserve_default_filters!
+
   index do
     id_column
     column :url

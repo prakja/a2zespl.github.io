@@ -15,6 +15,9 @@ ActiveAdmin.register Test do
 permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId
 remove_filter :topic, :questions
 
+filter :id_eq, as: :number, label: "Test ID"
+preserve_default_filters!
+
 index do
   id_column
   column :name
@@ -52,11 +55,19 @@ show do
     row :startedAt
     row :expiryAt
     row :topic
+    row :questions
+    # row "Questions" do |test|
+    #   test.questions.pluck(:id, :question).join("<br />").html_safe
+    # end
   end
 end
 
-action_item :import_demo, only: :show do
+action_item :add_question, only: :show do
   link_to 'Add Question', '../../admin/questions/new?question[testId]=' + resource.id.to_s
+end
+
+action_item :show_question, only: :show do
+  link_to 'All Test Questions', "../../admin/questions?q[testId_eq]=" + resource.id.to_s
 end
 
 form do |f|
