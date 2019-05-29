@@ -22,7 +22,7 @@ ActiveAdmin.register Question do
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
   filter :id_eq, as: :number, label: "Question ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
-  filter :explanation_cont, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, multiple: true
+  filter :explanation_cont, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course
@@ -83,7 +83,7 @@ ActiveAdmin.register Question do
     f.inputs "Question" do
       render partial: 'tinymce'
       f.input :question
-      f.input :correctOptionIndex, as: :select, :collection => ["(1)", "(2)", "(3)", "(4)"], label: "Correct Option"
+      f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
       f.input :test, input_html: { class: "select2" }
 
