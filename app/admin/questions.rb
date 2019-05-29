@@ -36,6 +36,14 @@ ActiveAdmin.register Question do
 
   # https://www.neetprep.com/api/v1/questions/id/edit
   index do
+
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
+      @index = 15 * (((params[:page] || 1).to_i) - 1)
+          column :number do
+              @index +=1
+          end
+    end
+
     id_column
     column (:question) { |question| raw(question.question)  }
     column (:explanation) { |question| raw(question.explanation)  }
