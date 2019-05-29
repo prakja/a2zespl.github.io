@@ -11,6 +11,11 @@ class Video < ApplicationRecord
 
   has_many :issues, class_name: "CustomerIssue", foreign_key: "videoId"
 
+  scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}
+  scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  54}})}
+  scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  55}})}
+  scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  56}})}
+
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
   

@@ -17,6 +17,11 @@ ActiveAdmin.register SubTopic do
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
 
+  scope :botany
+  scope :chemistry
+  scope :physics
+  scope :zoology
+
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name

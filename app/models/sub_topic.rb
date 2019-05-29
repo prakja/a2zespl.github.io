@@ -1,6 +1,6 @@
 class SubTopic < ApplicationRecord
   has_paper_trail
-  
+
   self.table_name = "SubTopic"
   scope :topic_sub_topics, lambda {|topicIds| where(topicId: topicIds)}
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId"
@@ -13,6 +13,11 @@ class SubTopic < ApplicationRecord
 
   has_many :subTopicVideos, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Video")}, foreign_key: :assetId, class_name: 'TopicAsset'
   has_many :videos, through: :subTopicVideos
+
+  scope :botany, -> {joins(:topic => :subject).where(topic: {Subject: {id:  53}})}
+  scope :chemistry, -> {joins(:topic => :subject).where(topic: {Subject: {id:  54}})}
+  scope :physics, -> {joins(:topic => :subject).where(topic: {Subject: {id:  55}})}
+  scope :zoology, -> {joins(:topic => :subject).where(topic: {Subject: {id:  56}})}
 
   def self.distinct_name
     SubTopic.connection.select_all("select \"name\", \"id\" from \"SubTopic\"").pluck("name", "id")
