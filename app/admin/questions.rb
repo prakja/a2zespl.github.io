@@ -22,6 +22,7 @@ ActiveAdmin.register Question do
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
   filter :id_eq, as: :number, label: "Question ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
+  filter :explanation_cont, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, multiple: true
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course
