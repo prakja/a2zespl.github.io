@@ -3,14 +3,15 @@ require 'base64'
 ActiveAdmin.register Doubt do
   remove_filter :topic
   permit_params :content, :deleted, :teacherReply, :imgUrl
-  scope :botany_paid_student_doubts
-  scope :chemistry_paid_student_doubts
-  scope :physics_paid_student_doubts
-  scope :zoology_paid_student_doubts
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :id_eq, as: :number, label: "Doubt ID"
   preserve_default_filters!
+
+  scope :botany_paid_student_doubts
+  scope :chemistry_paid_student_doubts
+  scope :physics_paid_student_doubts
+  scope :zoology_paid_student_doubts
 
   index do
     id_column

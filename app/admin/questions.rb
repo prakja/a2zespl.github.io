@@ -13,6 +13,13 @@ ActiveAdmin.register Question do
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues
   permit_params :question, :correctOptionIndex, :explanation, :deleted, :testId, topic_ids: [], subTopic_ids: []
+
+  # before_filter only: :index do
+  #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
+  #     params['q'] = {:explanation_cont => '<video'} 
+  #   end
+  # end
+
   # make a drop down menu
   filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
@@ -22,7 +29,8 @@ ActiveAdmin.register Question do
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
   filter :id_eq, as: :number, label: "Question ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
-  filter :explanation_cont, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}
+  filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
+  filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course
