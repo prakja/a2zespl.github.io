@@ -8,7 +8,7 @@ class Topic < ApplicationRecord
   has_many :questions, through: :topicQuestions
   belongs_to :subject, foreign_key: 'subjectId', class_name: 'Subject'
 
-  has_many :topicVideos, -> {where(assetType: 'Video', delete: false)}, foreign_key: :topicId, class_name: 'TopicAsset'
+  has_many :topicVideos, foreign_key: :chapterId, class_name: 'ChapterVideo'
   has_many :videos, through: :topicVideos
   has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
 
