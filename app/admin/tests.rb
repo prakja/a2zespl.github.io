@@ -88,7 +88,7 @@ form do |f|
 
   f.inputs "Additional Information" do
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject,  hint: "Leave empty, if the test does not belone to a Topic"
-    f.input :ownerType, as: :hidden, :input_html => { :value => 'Topic' }
+    f.input :ownerType, as: :hidden, :input_html => { :value => 'topic' }
     
   end
 
