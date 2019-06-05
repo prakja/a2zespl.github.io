@@ -34,6 +34,7 @@ index do
   column :startedAt
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
+  column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white>Get PDF</a>')}
   actions
 end
 
