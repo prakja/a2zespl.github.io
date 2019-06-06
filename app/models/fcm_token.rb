@@ -1,3 +1,3 @@
 class FcmToken < ApplicationRecord
- self.table_name = "FcmToken"
+ self.table_name = "FcmToken" 
 end
