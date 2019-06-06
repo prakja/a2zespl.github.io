@@ -75,3 +75,4 @@ gem 'tinymce-rails', :git => "git://github.com/spohlenz/tinymce-rails.git", :bra
 
 gem 'paper_trail'
 gem 'active_admin_theme'
+gem 'httparty'
