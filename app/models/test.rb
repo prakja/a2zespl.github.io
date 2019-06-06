@@ -10,4 +10,5 @@ class Test < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
   belongs_to :topic, foreign_type: 'ownerType', foreign_key: 'ownerId', optional: true
   has_many :questions, class_name: "Question", foreign_key: "testId"
+  has_many :test_leader_boards, class_name: "TestLeaderBoard", foreign_key: "testId"
 end
