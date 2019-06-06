@@ -40,6 +40,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_admin_theme (1.0.3)
     active_material (1.4.2)
     activeadmin (2.0.0)
       arbre (~> 1.2, >= 1.2.1)
@@ -1022,6 +1023,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_admin_theme
   activeadmin
   activeadmin_addons
   activeadmin_quill_editor!
