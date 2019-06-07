@@ -12,12 +12,13 @@ ActiveAdmin.register VideoAnnotation do
 #   permitted
 # end
 
-permit_params :annotationType, :videoTimeMS, :createdAt, :updatedAt, :videoId, :video, :annotationId, note_attributes: [:content]
+permit_params :annotationType, :videoId, :annotationId, :videoTimeStampInSeconds, note_attributes: [:content]
 
 remove_filter :note, :video
 
 form do |f|
   f.inputs "Annotation" do
+    f.input :video, as: :fake, value: f.object.video.nil? ? 'No Video Selected' : f.object.video.name
     f.inputs "Note", for: [:note, f.object.note || Note.new] do |n|
       n.input :content
     end
@@ -29,7 +30,7 @@ form do |f|
       # end
       f.input :annotationType, label: "Annotation type", as: :hidden, :input_html => { :value => 'Note' }
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
-      f.input :videoTimeMS, hint: "To be entered in miliseconds", label: "Show At"
+      f.input :videoTimeStampInSeconds, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds", label: "Show At"
     end
     f.actions
   end
