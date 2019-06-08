@@ -12,7 +12,7 @@ class Ability
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post]
-      can [:create, :read, :update], [Question, Test]
+      can [:create, :read, :update], [Question, Test, Video]
     else
       raise 'Unsupported role'
     end

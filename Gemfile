@@ -74,4 +74,7 @@ gem 'activeadmin_addons'
 gem 'tinymce-rails', :git => "git://github.com/spohlenz/tinymce-rails.git", :branch => 'tinymce-4'
 
 gem 'paper_trail'
+
+gem 'active_admin_theme'
 gem 'httparty'
+gem 'formtastic-fake_input'

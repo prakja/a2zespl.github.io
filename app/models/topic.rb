@@ -4,7 +4,7 @@ class Topic < ApplicationRecord
   self.table_name = "Topic"
   # only include pcb topics for now
   scope :neetprep_course, -> {joins(:subject).where(Subject: {courseId:  8, id: [53,54,55,56]}).includes(:subject)}
-  has_many :topicQuestions, -> {where(assetType: 'Question', deleted: false)}, foreign_key: :topicId, class_name: 'TopicAsset'
+  has_many :topicQuestions, foreign_key: :chapterId, class_name: 'ChapterQuestion'
   has_many :questions, through: :topicQuestions
   belongs_to :subject, foreign_key: 'subjectId', class_name: 'Subject'
 

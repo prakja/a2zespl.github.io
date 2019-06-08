@@ -16,9 +16,9 @@ class Question < ApplicationRecord
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   has_one :detail, class_name: "QuestionDetail", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
-  has_many :questionTopics, -> {where(assetType: 'Question', deleted: false, ownerType: 'Topic')}, foreign_key: :assetId, class_name: 'TopicAsset', inverse_of: 'question'
+  has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
   has_many :topics, through: :questionTopics
-  has_many :questionSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: 'Question')}, foreign_key: :ownerId, class_name: 'TopicAsset', inverse_of: 'questionSubTopic'
+  has_many :questionSubTopics, foreign_key: :questionId, class_name: 'QuestionSubTopic'
   has_many :subTopics, through: :questionSubTopics
   has_many :issues, class_name: "CustomerIssue", foreign_key: "questionId"
   belongs_to :test, foreign_key: :testId, optional: true

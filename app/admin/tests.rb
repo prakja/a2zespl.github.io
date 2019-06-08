@@ -13,7 +13,7 @@ ActiveAdmin.register Test do
 # end
 
 permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId
-remove_filter :topic, :questions
+remove_filter :topic, :questions, :test_leader_boards
 
 filter :id_eq, as: :number, label: "Test ID"
 preserve_default_filters!
@@ -34,6 +34,7 @@ index do
   column :startedAt
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
+  column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white>Get PDF</a>')}
   actions
 end
 
@@ -68,6 +69,10 @@ end
 
 action_item :show_question, only: :show do
   link_to 'All Test Questions', "../../admin/questions?q[testId_eq]=" + resource.id.to_s
+end
+
+action_item :show_leaderboard, only: :show do
+  link_to 'LeaderBoard', "../../admin/test_leader_boards?q[testId_eq]=" + resource.id.to_s
 end
 
 form do |f|
