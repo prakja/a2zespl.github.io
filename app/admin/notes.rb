@@ -12,4 +12,7 @@ ActiveAdmin.register Note do
 #   permitted
 # end
 
+  remove_filter :video_annotation
+  permit_params :content, :createdAt, :updatedAt
+
 end

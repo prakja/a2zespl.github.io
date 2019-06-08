@@ -152,6 +152,12 @@ ActiveAdmin.setup do |config|
   #
   # config.before_action :do_something_awesome
 
+  config.before_action :set_admin_timezone
+
+  def set_admin_timezone
+    Time.zone = 'Kolkata'
+  end
+
   # == Attribute Filters
   #
   # You can exclude possibly sensitive model attributes from being displayed,

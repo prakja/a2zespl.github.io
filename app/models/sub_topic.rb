@@ -6,12 +6,12 @@ class SubTopic < ApplicationRecord
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId"
   has_many :subTopicQuestions, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Question")}, foreign_key: :assetId, class_name: 'TopicAsset'
   has_many :questions, through: :subTopicQuestions
-  # has_many :subTopicQuestions, {where(assetType: 'Question', deleted: false)}, foreign_key: :ownerId, class_name: 'TopicAsset'
+  has_many :subTopicQuestions, foreign_key: :subTopicId, class_name: 'QuestionSubTopic'
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
   attribute :deleted, :boolean, default: false
 
-  has_many :subTopicVideos, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Video")}, foreign_key: :assetId, class_name: 'TopicAsset'
+  has_many :subTopicVideos, foreign_key: :subTopicId, class_name: 'VideoSubTopic'
   has_many :videos, through: :subTopicVideos
 
   scope :botany, -> {joins(:topic => :subject).where(topic: {Subject: {id:  53}})}

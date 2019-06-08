@@ -6,10 +6,12 @@ class Video < ApplicationRecord
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
   has_many :topics, through: :videoTopics
   
-  has_many :videoSubTopics, -> {where(assetType: 'SubTopic', deleted: false, ownerType: 'Video')}, foreign_key: :ownerId, class_name: 'TopicAsset', inverse_of: 'videoSubTopic'
+  has_many :videoSubTopics, foreign_key: :videoId, class_name: 'VideoSubTopic'
   has_many :subTopics, through: :videoSubTopics
 
   has_many :issues, class_name: "CustomerIssue", foreign_key: "videoId"
+
+  has_many :video_annotations, class_name: "VideoAnnotation", foreign_key: "videoId"
 
   scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}
   scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  54}})}
