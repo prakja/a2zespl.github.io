@@ -11,5 +11,5 @@ ActiveAdmin.register Course do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-
+  remove_filter :payments
 end
