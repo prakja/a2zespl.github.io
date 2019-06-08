@@ -30,4 +30,5 @@ class Payment < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   belongs_to :course, foreign_key: "paymentForId", optional: false
+  has_many :courseInvitations, foreign_key: "paymentId", class_name: "CourseInvitation"
 end

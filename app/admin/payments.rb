@@ -1,9 +1,15 @@
 ActiveAdmin.register Payment do
 permit_params :paymentForType, :amount, :userId, :userName, :userEmail, :userPhone, :paymentMode, :paymentDesc, :courseExpiryAt, :paymentForId, :course, :verified
-remove_filter :course
+remove_filter :course, :courseInvitation
 
 action_item :fetch_quickbook_payments, only: :index do
-  link_to 'Fetch Payments (Quick Book)', 'http://localhost:3000/getPaymentsFromQuickBook'
+  link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
+end
+
+member_action :history do
+  @payment = Payment.find(params[:id])
+  @versions = PaperTrail::Version.where(item_type: 'Payment', item_id: @payment.id)
+  render "layouts/history"
 end
 
 form do |f|
