@@ -10,7 +10,7 @@ class Payment < ApplicationRecord
     end
 
     HTTParty.post(
-      "http://localhost:3000/api/v1/webhook/sendCourseInviteFromPayment",
+      Rails.configuration.node_site_url + "api/v1/webhook/sendCourseInviteFromPayment",
        body: {
          paymentId: self.id,
          courseId: self.course.id,
