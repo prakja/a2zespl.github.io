@@ -40,7 +40,7 @@ batch_action :notify, form: {
 
 
   HTTParty.post(
-    "http://localhost:3000/api/v1/user/sentNotify",
+    Rails.configuration.node_site_url + "api/v1/user/sentNotify",
      body: {
       title: title,
       message: message,
