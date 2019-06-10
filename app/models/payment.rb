@@ -2,6 +2,9 @@ class Payment < ApplicationRecord
   after_create :create_courseInvitation
   after_update :create_courseInvitation
 
+  default_scope {where(paymentMode: ['kotak','cash']).or(where(status: 'responseReceivedSuccess'))}
+  scope :failed_payments, -> {unscope(:where).where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
+
   validates_presence_of :course, :amount, :userName, :userEmail, :userPhone, :paymentMode, :paymentDesc, :courseExpiryAt
 
   def create_courseInvitation
@@ -29,6 +32,6 @@ class Payment < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
-  belongs_to :course, foreign_key: "paymentForId", optional: false
+  belongs_to :course, foreign_key: "paymentForId", class_name: "Course", optional: false
   has_many :courseInvitations, foreign_key: "paymentId", class_name: "CourseInvitation"
 end
