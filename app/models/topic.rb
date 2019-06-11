@@ -11,6 +11,7 @@ class Topic < ApplicationRecord
   has_many :topicVideos, foreign_key: :chapterId, class_name: 'ChapterVideo'
   has_many :videos, through: :topicVideos
   has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
+  has_many :scheduleItems, class_name: "ScheduleItem", foreign_key: "topicId"
 
   has_many :issues, class_name: "CustomerIssue", foreign_key: "topicId"
 

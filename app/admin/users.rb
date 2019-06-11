@@ -12,4 +12,6 @@ ActiveAdmin.register User do
 #   permitted
 # end
 
+remove_filter :schedule_item_users, :user_profile
+
 end

@@ -1,4 +1,4 @@
-ActiveAdmin.register UserProfile do
+ActiveAdmin.register Schedule do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -12,6 +12,14 @@ ActiveAdmin.register UserProfile do
 #   permitted
 # end
 
-remove_filter :user
+  remove_filter :scheduleItems
+  permit_params :createdAt, :updatedAt, :name
+
+  form do |f|
+    f.inputs "Schedule" do
+      f.input :name, as: :string
+    end
+    f.actions
+  end
 
 end

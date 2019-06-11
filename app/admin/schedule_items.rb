@@ -1,0 +1,41 @@
+ActiveAdmin.register ScheduleItem do
+# See permitted parameters documentation:
+# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+#
+# permit_params :list, :of, :attributes, :on, :model
+#
+# or
+#
+# permit_params do
+#   permitted = [:permitted, :attributes]
+#   permitted << :other if params[:action] == 'create' && current_user.admin?
+#   permitted
+# end
+
+remove_filter :schedule, :scheduleItemUsers, :topic
+permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :scheduledAt, :createdAt, :updatedAt
+
+form do |f|
+  f.inputs "Schedule Item" do
+    f.input :name, as: :string
+    f.input :schedule
+    f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
+    f.input :hours
+    f.input :link, as: :string
+    f.input :scheduledAt, label: "Scheduled At", as: :datetime_picker
+  end
+  f.actions
+end
+
+index do
+  id_column
+  column :name
+  column :schedule
+  column :topic
+  column :hours
+  column (:link) { |schedule_item| raw('<a target="_blank" href="' + schedule_item.link + '">' + schedule_item.link + '</a>') }
+  column :scheduledAt
+  actions
+end
+
+end
