@@ -1,4 +1,26 @@
 class CourseInvitation < ApplicationRecord
- self.table_name = "CourseInvitation"
- belongs_to :payment, foreign_key: "paymentId", class_name: "Payment", optional: true
+   self.table_name = "CourseInvitation"
+
+   after_create :after_create_update_course_invitation
+   after_update :after_create_update_course_invitation
+
+   validates_presence_of :course, :displayName, :email, :phone, :role, :payment, :expiryAt
+
+   def after_create_update_course_invitation
+     if self.course.blank? or self.displayName.blank? or self.email.blank? or self.phone.blank? or self.role.blank? or self.payment.blank? or self.expiryAt.blank?
+       return
+     end
+
+     HTTParty.post(
+       "http://localhost:3000/api/v1/webhook/afterCreateUpdateCourseInvitation",
+       # Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateCourseInvitation",
+        body: {
+          id: self.id,
+     })
+   end
+
+   attribute :createdAt, :datetime, default: Time.now
+   attribute :updatedAt, :datetime, default: Time.now
+   belongs_to :payment, foreign_key: "paymentId", class_name: "Payment", optional: true
+   belongs_to :course, foreign_key: "courseId", class_name: "Course", optional: true
 end
