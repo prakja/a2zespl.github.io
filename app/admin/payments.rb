@@ -1,6 +1,6 @@
 ActiveAdmin.register Payment do
 permit_params :paymentForType, :amount, :userId, :userName, :userEmail, :userPhone, :paymentMode, :paymentDesc, :courseExpiryAt, :paymentForId, :course, :verified
-remove_filter :course, :courseInvitation, :versions
+remove_filter :course, :courseInvitation, :versions, :courseInvitations
 
 scope :failed_payments
 

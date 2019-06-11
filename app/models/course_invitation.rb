@@ -21,6 +21,7 @@ class CourseInvitation < ApplicationRecord
 
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
-   belongs_to :payment, foreign_key: "paymentId", class_name: "Payment", optional: true
+   has_many :courseInvitationPayments, foreign_key: :courseInvitationId, class_name: 'PaymentCourseInvitation'
+   has_many :payments, through: :courseInvitationPayments
    belongs_to :course, foreign_key: "courseId", class_name: "Course", optional: true
 end

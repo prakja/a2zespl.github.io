@@ -32,6 +32,11 @@ class Payment < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
+  def self.recent_payments
+    Payment.where(:createdAt => (Time.now - 7.day)..Time.now).pluck(:id)
+  end
+
   belongs_to :course, foreign_key: "paymentForId", class_name: "Course", optional: false
-  has_many :courseInvitations, foreign_key: "paymentId", class_name: "CourseInvitation"
+  has_many :paymentCourseInvitations, foreign_key: :paymentId, class_name: 'PaymentCourseInvitation'
+  has_many :courseInvitations, through: :paymentCourseInvitations
 end
