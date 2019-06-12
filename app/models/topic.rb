@@ -12,6 +12,9 @@ class Topic < ApplicationRecord
   has_many :videos, through: :topicVideos
   has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
   has_many :scheduleItems, class_name: "ScheduleItem", foreign_key: "topicId"
+  
+  has_many :topicSubjects, -> {where(deleted: false)}, foreign_key: :chapterId, class_name: 'SubjectChapter'
+  has_many :subjects, through: :topicSubjects
 
   has_many :issues, class_name: "CustomerIssue", foreign_key: "topicId"
 

@@ -1,11 +1,14 @@
 require 'base64'
 
 ActiveAdmin.register Doubt do
-  remove_filter :topic
+  remove_filter :topic, :answers
   permit_params :content, :deleted, :teacherReply, :imgUrl
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :id_eq, as: :number, label: "Doubt ID"
+  filter :subject_doubts, as: :select, collection: -> {Subject.neetprep_course}
+  filter :solved, as: :select, collection: ["yes", "no"]
+  filter :paid, as: :select, collection: ["yes", "no"]
   preserve_default_filters!
 
   scope :botany_paid_student_doubts
