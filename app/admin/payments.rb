@@ -8,6 +8,21 @@ action_item :fetch_quickbook_payments, only: :index do
   link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
 end
 
+show do |f|
+  attributes_table do
+    row :course
+    row :status
+    row :amount
+    row :userName
+    row :userEmail
+    row :userPhone
+    row :paymentMode
+    row :paymentDesc
+    row :verified
+    row :courseExpiryAt
+  end
+end
+
 index do
   id_column
   column :course

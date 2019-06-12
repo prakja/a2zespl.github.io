@@ -1,15 +1,22 @@
 ActiveAdmin.register PaymentCourseInvitation do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  permit_params :courseInvitation, :payment, :courseInvitationId, :paymentId
+  remove_filter :courseInvitation, :payment, :createdAt, :updatedAt
 
+  index do
+    id_column
+    column :courseInvitation
+    column :payment
+    column (:createdAt) { |paymentCourseInvitation| raw(paymentCourseInvitation.createdAt)  }
+    column (:updatedAt) { |paymentCourseInvitation| raw(paymentCourseInvitation.updatedAt)  }
+    actions
+  end
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+    f.inputs "CourseInvitation" do
+      f.input :courseInvitation, as: :select, :collection => CourseInvitation.recent_course_invitations
+      f.input :payment, as: :select, :collection => Payment.recent_payments
+    end
+    f.actions
+  end
 end
