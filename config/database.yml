@@ -24,6 +24,8 @@ default: &default
   host: <%= ENV.fetch("RUBYACTIVEADMIN_DATABASE_HOST") {'learner-staging.cjuqv7atq8gh.us-west-2.rds.amazonaws.com'} %>
   username: learner
   password: letmepass
+  variables:
+    statement_timeout: 60000
 
 development:
   <<: *default
