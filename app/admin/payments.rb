@@ -1,5 +1,5 @@
 ActiveAdmin.register Payment do
-permit_params :paymentForType, :amount, :userId, :userName, :userEmail, :userPhone, :paymentMode, :paymentDesc, :courseExpiryAt, :paymentForId, :course, :verified
+permit_params :amount, :paymentMode
 remove_filter :course, :courseInvitation, :versions, :courseInvitations
 
 scope :failed_payments
@@ -47,17 +47,8 @@ end
 form do |f|
   f.semantic_errors *f.object.errors.keys
   f.inputs "Payment" do
-    f.input :course, as: :select, :collection => Course.public_courses
     f.input :amount, label: "Payment amount"
-    f.input :userName, label: "Student Name"
-    f.input :userEmail, label: "Student Email"
-    f.input :userPhone, label: "Student Phone"
     f.input :paymentMode, as: :select, :collection => ["kotak", "paytm", "cash"]
-    f.input :paymentDesc, as: :string, label: "Payment Description", hint: "Enter paytm order Id Or Kotak SalesReciept Id Or cash payment time", input_html: {disabled: true, value: f.object.paymentDesc }
-    if f.object.paymentMode == 'cash' || f.object.new_record?
-      f.input :verified, lable: "Payment Verified", hint: "Mark checked only if payment is verified"
-    end
-    f.input :courseExpiryAt, as: :date_picker, label: "Expire Course At"
   end
   f.actions
 end
