@@ -4,7 +4,7 @@ class VideoAnnotation < ApplicationRecord
     self.videoTimeMS = self.videoTimeStampInSeconds * 1000 if !self.videoTimeStampInSeconds.nil?
   end
   self.table_name = "VideoAnnotation"
-  belongs_to :video, class_name: "Video", foreign_key: :videoId
+  belongs_to :video, class_name: "Video", foreign_key: :videoId, optional: true
 
   belongs_to :note, class_name: "Note", foreign_key: "annotationId", optional: true
 
