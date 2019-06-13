@@ -7,9 +7,9 @@ class Doubt < ApplicationRecord
   }
   scope :solved, ->(solved) {
     if solved == "yes"
-      where(DoubtAnswer.where('"DoubtAnswer"."id" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).or(where.not(teacherReply: nil))
+      where(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).or(where.not(teacherReply: nil))
     else
-      where.not(DoubtAnswer.where('"DoubtAnswer"."id" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).where(teacherReply: nil)
+      where.not(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).where(teacherReply: nil)
     end
   }
   scope :paid, ->(paid) {
