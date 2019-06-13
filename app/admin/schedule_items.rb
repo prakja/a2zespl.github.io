@@ -13,16 +13,17 @@ ActiveAdmin.register ScheduleItem do
 # end
 
 remove_filter :schedule, :scheduleItemUsers, :topic
-permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :scheduledAt, :createdAt, :updatedAt
+permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :scheduledAt, :createdAt, :updatedAt, :description
 
 form do |f|
   f.inputs "Schedule Item" do
     f.input :name, as: :string
+    f.input :description, as: :string
     f.input :schedule
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
     f.input :hours
     f.input :link, as: :string
-    f.input :scheduledAt, label: "Scheduled At", as: :datetime_picker
+    f.input :scheduledAt, label: "Scheduled At", as: :datepicker
   end
   f.actions
 end
@@ -30,6 +31,7 @@ end
 index do
   id_column
   column :name
+  column :description
   column :schedule
   column :topic
   column :hours

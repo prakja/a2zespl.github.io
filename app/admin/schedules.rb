@@ -13,11 +13,19 @@ ActiveAdmin.register Schedule do
 # end
 
   remove_filter :scheduleItems
-  permit_params :createdAt, :updatedAt, :name
+  permit_params :createdAt, :updatedAt, :name, :description
+
+  index do
+    id_column
+    column :name
+    column :description
+    actions
+  end
 
   form do |f|
     f.inputs "Schedule" do
       f.input :name, as: :string
+      f.input :description, as: :string
     end
     f.actions
   end
