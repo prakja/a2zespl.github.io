@@ -16,8 +16,7 @@ class CourseInvitation < ApplicationRecord
      end
 
      HTTParty.post(
-       "http://localhost:3000/api/v1/webhook/afterCreateUpdateCourseInvitation",
-       # Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateCourseInvitation",
+       Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateCourseInvitation",
         body: {
           id: self.id,
      })
