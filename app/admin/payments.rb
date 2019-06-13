@@ -1,11 +1,26 @@
 ActiveAdmin.register Payment do
 permit_params :paymentForType, :amount, :userId, :userName, :userEmail, :userPhone, :paymentMode, :paymentDesc, :courseExpiryAt, :paymentForId, :course, :verified
-remove_filter :course, :courseInvitation, :versions
+remove_filter :course, :courseInvitation, :versions, :courseInvitations
 
 scope :failed_payments
 
 action_item :fetch_quickbook_payments, only: :index do
   link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
+end
+
+show do |f|
+  attributes_table do
+    row :course
+    row :status
+    row :amount
+    row :userName
+    row :userEmail
+    row :userPhone
+    row :paymentMode
+    row :paymentDesc
+    row :verified
+    row :courseExpiryAt
+  end
 end
 
 index do
