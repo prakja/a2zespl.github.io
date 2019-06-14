@@ -18,14 +18,14 @@ ActiveAdmin.register Schedule do
   index do
     id_column
     column :name
-    column :description
+    column (:description) { |schedule| raw(schedule.description) }
     actions
   end
 
   form do |f|
     f.inputs "Schedule" do
       f.input :name, as: :string
-      f.input :description, as: :string
+      f.input :description, as: :quill_editor
     end
     f.actions
   end

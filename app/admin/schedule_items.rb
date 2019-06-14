@@ -18,7 +18,7 @@ permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :s
 form do |f|
   f.inputs "Schedule Item" do
     f.input :name, as: :string
-    f.input :description, as: :string
+    f.input :description, as: :quill_editor
     f.input :schedule
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
     f.input :hours
@@ -31,7 +31,7 @@ end
 index do
   id_column
   column :name
-  column :description
+  column (:description) { |schedule_item| raw(schedule_item.description)  }
   column :schedule
   column :topic
   column :hours

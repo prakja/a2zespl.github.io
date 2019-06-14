@@ -63,7 +63,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'aws-sdk', '~> 3'
 
-gem 'activeadmin'
+gem 'activeadmin', '= 2.0.0'
 # Plus integrations with:
 gem 'devise'
 gem 'cancancan'

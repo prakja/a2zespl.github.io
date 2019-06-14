@@ -1042,7 +1042,7 @@ PLATFORMS
 DEPENDENCIES
   active_admin_import
   active_admin_theme
-  activeadmin
+  activeadmin (= 2.0.0)
   activeadmin_addons
   activeadmin_quill_editor!
   aws-sdk (~> 3)
