@@ -32,7 +32,7 @@ ActiveAdmin.register FcmToken do
 batch_action :notify, form: {
   title: :text,
   message: :textarea,
-  InternalWebsite: :checkbox,
+  type: ["", "ExternalWebsite", "InternalWebsite"],
   redirectUrl: :text,
   imageUrl: :text
   
@@ -46,13 +46,8 @@ batch_action :notify, form: {
   title = inputs['title']
   message = inputs['message']
   redirect = inputs['redirectUrl']
-  internalWebsite = inputs['InternalWebsite']
-  type = "ExternalWebsite"
+  type = inputs['type']
   imgUrl = inputs['imageUrl']
-
-  if internalWebsite
-    type = "InternalWebsite"
-  end
 
   HTTParty.post(
     Rails.configuration.node_site_url + "api/v1/user/sentNotify",
