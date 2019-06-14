@@ -78,3 +78,4 @@ gem 'paper_trail'
 gem 'active_admin_theme'
 gem 'httparty'
 gem 'formtastic-fake_input'
+gem "active_admin_import"
