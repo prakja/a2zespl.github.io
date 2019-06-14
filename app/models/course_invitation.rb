@@ -4,7 +4,7 @@ class CourseInvitation < ApplicationRecord
    after_create :after_create_update_course_invitation
    after_update :after_create_update_course_invitation
 
-   validates_presence_of :course, :displayName, :email, :phone, :role, :payments, :expiryAt
+   validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
    def self.recent_course_invitations
      CourseInvitation.where(:createdAt => (Time.now - 7.day)..Time.now).pluck(:id)
