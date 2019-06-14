@@ -62,7 +62,8 @@ controller do
     File.open(file.tempfile.path, 'rb') do |file|
       obj.put(acl: "public-read", body: file)
     end
-    return obj.public_url
+    # replace s3 url with cdn url
+    return obj.public_url.gsub('neetprep-from-ruby.s3-us-west-2.amazonaws.com', 'neetprepr.b-cdn.net')
   end    
 
   def create()
