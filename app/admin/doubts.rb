@@ -19,6 +19,13 @@ ActiveAdmin.register Doubt do
   scope :physics_paid_student_doubts
   scope :zoology_paid_student_doubts
 
+  form do |f|
+    f.inputs "Doubt" do
+      f.input :deleted
+    end
+    f.actions
+  end
+
   index do
     id_column
     column :content
