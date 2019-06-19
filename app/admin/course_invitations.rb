@@ -15,6 +15,12 @@ ActiveAdmin.register CourseInvitation do
     end
   end
 
+  member_action :history do
+    @courseinvitation = CourseInvitation.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'CourseInvitation', item_id: @courseinvitation.id)
+    render "layouts/history"
+  end
+
   index do
     id_column
     column :course
@@ -24,6 +30,7 @@ ActiveAdmin.register CourseInvitation do
     column (:role) { |courseInvitation| raw(courseInvitation.role)  }
     column :payments
     column (:expiryAt) { |courseInvitation| raw(courseInvitation.expiryAt)  }
+    column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
     actions
   end
 
