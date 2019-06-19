@@ -1,6 +1,6 @@
 class CourseInvitation < ApplicationRecord
    self.table_name = "CourseInvitation"
-
+   has_paper_trail
    after_commit :after_create_update_course_invitation, on: [:create, :update]
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
