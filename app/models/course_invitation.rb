@@ -10,7 +10,7 @@ class CourseInvitation < ApplicationRecord
    end
 
    def after_create_update_course_invitation
-     if self.course.blank? or self.displayName.blank? or self.email.blank? or self.phone.blank? or self.role.blank? or self.payments.blank? or self.expiryAt.blank?
+     if self.course.blank? or self.displayName.blank? or self.email.blank? or self.phone.blank? or self.role.blank? or self.expiryAt.blank?
        return
      end
 
