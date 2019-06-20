@@ -12,11 +12,11 @@ class Ability
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post]
-      can [:create, :read, :update], [Question, Test, Video]
+      can [:create, :read, :update], [Question, Test, Video, Delivery]
     elsif user.role == 'sales'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :read, UserCourse
-      can [:create, :read, :update], [Payment, CourseInvitation]
+      can [:create, :read, :update], [Payment, CourseInvitation, Delivery]
     else
       raise 'Unsupported role'
     end
