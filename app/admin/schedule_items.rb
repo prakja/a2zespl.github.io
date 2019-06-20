@@ -12,7 +12,7 @@ ActiveAdmin.register ScheduleItem do
 #   permitted
 # end
 
-remove_filter :schedule, :scheduleItemUsers, :topic
+remove_filter :scheduleItemUsers, :topic
 permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :scheduledAt, :createdAt, :updatedAt, :description
 
 form do |f|
