@@ -48,7 +48,7 @@ form do |f|
   f.semantic_errors *f.object.errors.keys
   f.inputs "Payment" do
     f.input :amount, label: "Payment amount"
-    f.input :paymentMode, as: :select, :collection => ["kotak", "paytm", "cash"]
+    f.input :paymentMode, as: :select, :collection => ["cash"]
   end
   f.actions
 end
