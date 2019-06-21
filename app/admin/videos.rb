@@ -64,6 +64,7 @@ ActiveAdmin.register Video do
       f.input :duration, as: :number, label: "Duration in seconds"
       f.input :seqId, as: :number
       f.input :youtubeUrl
+      f.input :thumbnail
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, :collection => SubTopic.topic_sub_topics(f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])
