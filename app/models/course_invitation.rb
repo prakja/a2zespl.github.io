@@ -2,8 +2,13 @@ class CourseInvitation < ApplicationRecord
    self.table_name = "CourseInvitation"
    has_paper_trail
    after_commit :after_create_update_course_invitation, on: [:create, :update]
+   validate :course_expiry_not_valid
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
+
+   def course_expiry_not_valid
+    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt > Time.now + 7.day
+   end
 
    def self.recent_course_invitations
      CourseInvitation.where(:createdAt => (Time.now - 7.day)..Time.now).pluck(:id)
@@ -21,6 +26,9 @@ class CourseInvitation < ApplicationRecord
      })
    end
 
+   scope :invitations_without_payment_last_7_days, -> {
+     where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
+   }
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
    has_many :courseInvitationPayments, foreign_key: :courseInvitationId, class_name: 'PaymentCourseInvitation'
