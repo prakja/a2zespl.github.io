@@ -2,7 +2,7 @@ ActiveAdmin.register Payment do
   config.sort_order = 'createdAt_desc'
 
   permit_params :amount, :paymentMode
-  remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations
+  remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType
 
   scope :failed_payments
 
@@ -14,21 +14,6 @@ ActiveAdmin.register Payment do
     link_to 'Update Payment Details (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook?quickBookId=' + payment.paymentDesc if payment.paymentMode == 'kotak' and payment.paymentDesc.present?
   end
 
-  show do |f|
-    attributes_table do
-      row :course
-      row :status
-      row :amount
-      row :userName
-      row :userEmail
-      row :userPhone
-      row :paymentMode
-      row :paymentDesc
-      row :verified
-      row :courseExpiryAt
-    end
-  end
-
   index do
     id_column
     column :course
@@ -38,8 +23,10 @@ ActiveAdmin.register Payment do
     column (:userPhone) { |payment| raw(payment.userPhone)  }
     column (:paymentMode) { |payment| raw(payment.paymentMode)  }
     column (:paymentDesc) { |payment| raw(payment.paymentDesc)  }
-    column (:verified) { |payment| raw(payment.verified)  }
-    column (:courseExpiryAt) { |payment| raw(payment.courseExpiryAt)  }
+    column :status
+    column :verified
+    column :courseExpiryAt
+    column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
     actions
   end
