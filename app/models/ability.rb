@@ -13,7 +13,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post]
       can :read, UserCourse
-      can [:create, :read, :update], [Question, Test, Video, Delivery, CourseInvitation]
+      can [:create, :read, :update], [Question, Test, Video, Delivery, CourseInvitation, Payment, Delivery]
     elsif user.role == 'sales'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :read, UserCourse
