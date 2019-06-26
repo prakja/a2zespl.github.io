@@ -1,6 +1,6 @@
 ActiveAdmin.register UserCourse do
   permit_params :course, :userId, :courseInvitation, :role, :role, :startedAt, :expiryAt, :courseInvitationId, :courseId
-  remove_filter :course, :courseInvitation
+  remove_filter :course
 
   index do
     id_column
@@ -10,6 +10,7 @@ ActiveAdmin.register UserCourse do
     column (:role) { |userCourse| raw(userCourse.role)  }
     column (:startedAt) { |userCourse| raw(userCourse.startedAt)  }
     column (:expiryAt) { |userCourse| raw(userCourse.expiryAt)  }
+    column :createdAt
     actions
   end
 

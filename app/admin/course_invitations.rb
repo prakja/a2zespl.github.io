@@ -1,19 +1,7 @@
 ActiveAdmin.register CourseInvitation do
   permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
-  remove_filter :payments
+  remove_filter :payments, :versions, :courseInvitationPayments, :course
   scope :invitations_without_payment_last_7_days
-  show do |f|
-    attributes_table do
-      row :id
-      row :course
-      row :displayName
-      row :email
-      row :phone
-      row :role
-      row :payments
-      row :expiryAt
-    end
-  end
 
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])
@@ -29,7 +17,8 @@ ActiveAdmin.register CourseInvitation do
     column (:phone) { |courseInvitation| raw(courseInvitation.phone)  }
     column (:role) { |courseInvitation| raw(courseInvitation.role)  }
     column :payments
-    column (:expiryAt) { |courseInvitation| raw(courseInvitation.expiryAt)  }
+    column :expiryAt
+    column :createdAt
     column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
     actions
   end
