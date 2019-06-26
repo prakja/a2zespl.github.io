@@ -1,4 +1,4 @@
-ActiveAdmin.register User do
+ActiveAdmin.register CustomerSupport do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -12,6 +12,18 @@ ActiveAdmin.register User do
 #   permitted
 # end
 
-remove_filter :schedule_item_users, :user_profile, :customer_supports
+remove_filter :user
+permit_params :resolved, :deleted
+
+filter :issueType_eq, as: :select, collection: ["Pendrive_Not_Working", "Video_Not_Playing", "Test_Not_Working", "Website_Not_Working"], label: "Issue Type"
+preserve_default_filters!
+
+form do |f|
+  f.inputs "Issues" do
+    f.input :resolved
+    f.input :deleted
+  end
+  f.actions
+end
 
 end
