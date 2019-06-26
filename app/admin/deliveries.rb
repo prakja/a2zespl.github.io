@@ -25,7 +25,7 @@ ActiveAdmin.register Delivery do
       f.input :mobile, label: "Student phone number"
       f.input :address, label: "Student address"
       f.input :counselorName, label: "Counselor name"
-      f.input :courierSource, label: "Courier source", as: :select, :collection => ["DTDC","speed post", "DTDC + party collect", "speed post + party collect"]
+      f.input :courierSource, label: "Courier source", as: :select, :collection => ["DTDC", "speed post", "DTDC + party collect", "speed post + party collect"]
       f.input :status, label: "Delivery status", hint: "Example: Done, No courier service, Wrong adrress...etc"
       f.input :trackingNumber, label: "Package tracking number"
       f.input :usb, as: :select, :collection => ["32 GB", "32 GB + 16 GB", "64 GB", "64 GB + 16 GB", "64 GB + 32 GB", "128 GB"]

@@ -5,7 +5,6 @@ class Delivery < ApplicationRecord
   has_paper_trail
   validate :check_installment_required_dueAmount
   validate :check_installment_required_dueDate
-  validate :check_pincode
   validates_presence_of :deliveryType, :course, :courseValidity, :purchasedAt, :name, :email, :mobile, :address, :counselorName
 
   def check_installment_required_dueAmount
