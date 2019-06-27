@@ -9,6 +9,18 @@ ActiveAdmin.register CourseInvitation do
     render "layouts/history"
   end
 
+  csv do
+    column (:course) { |courseInvitation| raw(courseInvitation.course.name)  }
+    column (:displayName) { |courseInvitation| raw(courseInvitation.displayName)  }
+    column (:email) { |courseInvitation| raw(courseInvitation.email)  }
+    column (:phone) { |courseInvitation| raw(courseInvitation.phone)  }
+    column "Amount" do |courseInvitation|
+     courseInvitation.payments.map { |payment| payment.amount.to_int }.compact
+    end
+    column :expiryAt
+    column :createdAt
+  end
+
   index do
     id_column
     column :course
@@ -17,6 +29,9 @@ ActiveAdmin.register CourseInvitation do
     column (:phone) { |courseInvitation| raw(courseInvitation.phone)  }
     column (:role) { |courseInvitation| raw(courseInvitation.role)  }
     column :payments
+    column "Amount" do |courseInvitation|
+     courseInvitation.payments.map { |payment| payment.amount }.compact
+    end
     column :expiryAt
     column :createdAt
     column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
