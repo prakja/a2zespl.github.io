@@ -1,6 +1,6 @@
 ActiveAdmin.register CourseInvitation do
   permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
-  remove_filter :payments, :versions, :courseInvitationPayments, :course
+  remove_filter :payments, :versions, :courseInvitationPayments
   scope :invitations_without_payment_last_7_days
 
   member_action :history do
