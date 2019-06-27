@@ -12,7 +12,7 @@ ActiveAdmin.register Delivery do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Delivery" do
       f.input :deliveryType, as: :select, :collection => ["new", "renewal", "replacement", "installment"]
-      f.input :course, as: :select, :collection => ["Full Course + Pendrive", "Physics Course + Pendrive", "Chemistry Course + Pendrive", "Biology Course + Pendrive", "Physics + Biology + Pendrive", "Chemistry + Biology + Pendrive", "Physics + Chemistry + Pendrive"]
+      f.input :course, as: :select, :collection => ["Full Course + Pendrive", "Physics Course + Pendrive", "Chemistry Course + Pendrive", "Biology Course + Pendrive", "Physics + Biology + Pendrive", "Chemistry + Biology + Pendrive", "Physics + Chemistry + Pendrive", "Dongle Only"]
       f.input :source, label: "Source of Sale", as: :select, :collection => ["neetprep"]
       f.input :description, hint: "Useful information about delivery, Example: send 64 GB pendrive only, send dongle only...etc"
       f.input :courseValidity, as: :date_picker, label: "Course Validity"
@@ -25,7 +25,7 @@ ActiveAdmin.register Delivery do
       f.input :mobile, label: "Student phone number"
       f.input :address, label: "Student address"
       f.input :counselorName, label: "Counselor name"
-      f.input :courierSource, label: "Courier source", as: :select, :collection => ["DTDC", "speed post", "DTDC + party collect", "speed post + party collect"]
+      f.input :courierSource, label: "Courier source", as: :select, :collection => ["office collect", "DTDC", "speed post", "DTDC + party collect", "speed post + party collect"]
       f.input :status, label: "Delivery status", hint: "Example: Done, No courier service, Wrong adrress...etc"
       f.input :trackingNumber, label: "Package tracking number"
       f.input :usb, as: :select, :collection => ["32 GB", "32 GB + 16 GB", "64 GB", "64 GB + 16 GB", "64 GB + 32 GB", "128 GB"]
