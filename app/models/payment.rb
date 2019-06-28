@@ -14,7 +14,7 @@ class Payment < ApplicationRecord
   end
 
   def self.recent_payments_with_props
-    Payment.where(:createdAt => (Time.now - 30.day)..Time.now).pluck(:amount, :paymentMode, :id).map{|payment_amount, payment_paymentMode, payment_id| [payment_id, payment_amount, payment_paymentMode].map(&:to_s).join(', ')}
+    Payment.where(:createdAt => (Time.now - 7.day)..Time.now).pluck(:amount, :paymentMode, :id).map{|payment_amount, payment_paymentMode, payment_id| [payment_id, payment_amount, payment_paymentMode].map(&:to_s).join(', ')}
   end
 
   belongs_to :course, foreign_key: "paymentForId", class_name: "Course", optional: true
