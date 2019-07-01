@@ -11,6 +11,6 @@ class Delivery < ApplicationRecord
   end
 
   def check_installment_required_dueDate
-   errors.add(:dueDate, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount > 0 and dueDate.blank?
+   errors.add(:dueDate, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount and dueAmount > 0 and dueDate.blank?
   end
 end
