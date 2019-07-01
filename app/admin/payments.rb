@@ -1,7 +1,7 @@
 ActiveAdmin.register Payment do
   config.sort_order = 'createdAt_desc'
 
-  permit_params :amount, :paymentMode
+  permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue
   remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType
 
   scope :failed_payments
@@ -42,6 +42,18 @@ ActiveAdmin.register Payment do
     f.inputs "Payment" do
       f.input :amount, label: "Payment amount"
       f.input :paymentMode, as: :select, :collection => ["cash"]
+      f.input :saleType, as: :select, :collection => ["inboud","outbound","scholarship","intent"]
+      f.input :userName
+      f.input :userEmail
+      f.input :userPhone
+      f.input :userState, as: :select, :collection => ["Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli","Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"]
+      f.input :userCity
+      f.input :salesPerson, as: :select, :collection => AdminUser.sales_team
+      f.input :revenue, input_html: { disabled: true }
+      f.input :paytmCut, input_html: { disabled: true }
+      f.input :gstCut, input_html: { disabled: true }
+      f.input :pendriveCut
+      f.input :netRevenue, input_html: { disabled: true }
     end
     f.actions
   end
