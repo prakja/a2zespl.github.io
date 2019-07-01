@@ -8,7 +8,7 @@ class CourseInvitation < ApplicationRecord
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
    def course_expiry_not_valid
-    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt > Time.now + 7.day
+    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt and expiryAt > Time.now + 7.day
    end
 
    def mobileValidate
