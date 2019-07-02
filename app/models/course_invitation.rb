@@ -2,16 +2,29 @@ class CourseInvitation < ApplicationRecord
    self.table_name = "CourseInvitation"
    has_paper_trail
    after_commit :after_create_update_course_invitation, on: [:create, :update]
-   validate :course_expiry_not_valid
+   before_update :before_update_course_invitation
+   after_validation :course_expiry_not_valid, :mobileValidate
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
    def course_expiry_not_valid
-    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt > Time.now + 7.day
+    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt and expiryAt > Time.now + 7.day
+   end
+
+   def mobileValidate
+     errors.add(:phone, 'length can not be less than 10') if phone.length < 10
    end
 
    def self.recent_course_invitations
      CourseInvitation.where(:createdAt => (Time.now - 7.day)..Time.now).pluck(:id)
+   end
+
+   def before_update_course_invitation
+     HTTParty.post(
+       Rails.configuration.node_site_url + "api/v1/webhook/beforeUpdateCourseInvitation",
+        body: {
+          id: self.id,
+     })
    end
 
    def after_create_update_course_invitation

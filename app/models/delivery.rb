@@ -3,8 +3,7 @@ class Delivery < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
   has_paper_trail
-  validate :check_installment_required_dueAmount
-  validate :check_installment_required_dueDate
+  after_validation :check_installment_required_dueAmount, :check_installment_required_dueDate
   validates_presence_of :deliveryType, :course, :courseValidity, :purchasedAt, :name, :email, :mobile, :address, :counselorName
 
   def check_installment_required_dueAmount
@@ -12,6 +11,6 @@ class Delivery < ApplicationRecord
   end
 
   def check_installment_required_dueDate
-   errors.add(:dueDate, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount > 0 and dueDate.blank?
+   errors.add(:dueDate, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount and dueAmount > 0 and dueDate.blank?
   end
 end
