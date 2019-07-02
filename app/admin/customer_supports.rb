@@ -16,6 +16,7 @@ remove_filter :user
 permit_params :resolved, :deleted
 
 filter :issueType_eq, as: :select, collection: ["Pendrive_Not_Working", "Video_Not_Playing", "Test_Not_Working", "Website_Not_Working"], label: "Issue Type"
+filter :resolved
 preserve_default_filters!
 
 form do |f|
