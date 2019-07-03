@@ -30,10 +30,19 @@ class Doubt < ApplicationRecord
       where.not(UserCourse.where('"UserCourse"."userId" = "Doubt"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').exists)
     end
   }
-  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').subject_name(53)}
-  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').subject_name(54)}
-  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').subject_name(55)}
-  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').subject_name(56)}
+
+  scope :deleted, ->(deleted) {
+    if deleted == "yes"
+      where(deleted: true)
+    else
+      where(deleted: false)
+    end
+  }
+
+  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(53)}
+  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(54)}
+  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(55)}
+  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(56)}
   
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name, :solved, :paid, :student_name, :student_email, :student_phone]
