@@ -24,6 +24,8 @@ class CourseInvitation < ApplicationRecord
        Rails.configuration.node_site_url + "api/v1/webhook/beforeUpdateCourseInvitation",
         body: {
           id: self.id,
+          phone: self.phone,
+          email: self.email
      })
    end
 
