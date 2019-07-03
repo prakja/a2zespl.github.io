@@ -46,7 +46,7 @@ ActiveAdmin.register CourseInvitation do
       f.input :email, label: "Email"
       f.input :phone, label: "Phone"
       f.input :role, as: :select, :collection => ["courseStudent", "courseManager", "courseCreator", "courseAdmin"]
-      f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.recent_payments_with_props
+      f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.recent_payments
       f.input :expiryAt, as: :date_picker, label: "Expire Course At"
     end
     f.actions

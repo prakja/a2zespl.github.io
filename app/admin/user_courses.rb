@@ -9,8 +9,8 @@ ActiveAdmin.register UserCourse do
     column (:userId) { |userCourse| raw(userCourse.userId)  }
     column :invitationId
     column (:role) { |userCourse| raw(userCourse.role)  }
-    column (:startedAt) { |userCourse| raw(userCourse.startedAt)  }
-    column (:expiryAt) { |userCourse| raw(userCourse.expiryAt)  }
+    column :startedAt
+    column :expiryAt
     column :createdAt
     actions
   end

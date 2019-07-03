@@ -63,8 +63,8 @@ ActiveAdmin.register Delivery do
     column (:trackingNumber) { |delivery| raw(delivery.trackingNumber)  }
     column (:usb) { |delivery| raw(delivery.usb)  }
     column (:dongle) { |delivery| raw(delivery.dongle)  }
-    column :packed
-    column :delivered
+    toggle_bool_column :packed
+    toggle_bool_column :delivered
     column ("History") {|delivery| raw('<a target="_blank" href="/admin/deliveries/' + (delivery.id).to_s + '/history">View History</a>')}
     actions
   end
