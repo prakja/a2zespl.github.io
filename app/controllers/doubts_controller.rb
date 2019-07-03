@@ -4,10 +4,22 @@ class DoubtsController < ApplicationController
   # GET /doubts
   # GET /doubts.json
   def index
-    @doubts_physics_two_days = Doubt.physics_paid_student_doubts.where(createdAt: 365.days.ago..DateTime::Infinity.new)
-    @doubts_chemistry_two_days = Doubt.chemistry_paid_student_doubts.where(createdAt: 365.days.ago..DateTime::Infinity.new)
-    @doubts_botany_two_days = Doubt.botany_paid_student_doubts.where(createdAt: 365.days.ago..DateTime::Infinity.new)
-    @doubts_zoology_two_days = Doubt.zoology_paid_student_doubts.where(createdAt: 365.days.ago..DateTime::Infinity.new)
+    @doubts_physics_two_days = Doubt.physics_paid_student_doubts.where(createdAt: 2.days.ago..DateTime::Infinity.new)
+    @doubts_physics_five_days = Doubt.physics_paid_student_doubts.where(createdAt: 5.days.ago..DateTime::Infinity.new)
+    @doubts_physics_seven_days = Doubt.physics_paid_student_doubts.where(createdAt: 7.days.ago..DateTime::Infinity.new)
+
+    @doubts_chemistry_two_days = Doubt.chemistry_paid_student_doubts.where(createdAt: 2.days.ago..DateTime::Infinity.new)
+    @doubts_chemistry_five_days = Doubt.chemistry_paid_student_doubts.where(createdAt: 5.days.ago..DateTime::Infinity.new)
+    @doubts_chemistry_seven_days = Doubt.chemistry_paid_student_doubts.where(createdAt: 7.days.ago..DateTime::Infinity.new)
+
+    @doubts_botany_two_days = Doubt.botany_paid_student_doubts.where(createdAt: 2.days.ago..DateTime::Infinity.new)
+    @doubts_botany_five_days = Doubt.botany_paid_student_doubts.where(createdAt: 5.days.ago..DateTime::Infinity.new)
+    @doubts_botany_seven_days = Doubt.botany_paid_student_doubts.where(createdAt: 7.days.ago..DateTime::Infinity.new)
+
+    @doubts_zoology_two_days = Doubt.zoology_paid_student_doubts.where(createdAt: 2.days.ago..DateTime::Infinity.new)
+    @doubts_zoology_five_days = Doubt.zoology_paid_student_doubts.where(createdAt: 5.days.ago..DateTime::Infinity.new)
+    @doubts_zoology_seven_days = Doubt.zoology_paid_student_doubts.where(createdAt: 7.days.ago..DateTime::Infinity.new)
+    
   end
 
   # GET /doubts/1
