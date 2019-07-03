@@ -1,6 +1,6 @@
 class Payment < ApplicationRecord
-  default_scope {where(paymentMode: ['kotak','cash']).or(where(status: 'responseReceivedSuccess'))}
-  before_create :before_create_update_set_default_values, :setCreatedTime
+  default_scope {where(paymentMode: ['kotak','cash','paytm wallet']).or(where(status: 'responseReceivedSuccess'))}
+  before_create :before_create_update_set_default_values, :setCreatedTime, :setUpdatedTime
   before_update :before_create_update_set_default_values, :setUpdatedTime
   scope :failed_payments, -> {unscope(:where).where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
 
@@ -19,13 +19,17 @@ class Payment < ApplicationRecord
 
   def before_create_update_set_default_values
     self.revenue = self.amount
-    self.gstCut = ((self.amount - self.pendriveCut) - ((self.amount - self.pendriveCut)/1.18))
+    if self.pendriveCut
+      self.gstCut = ((self.amount - self.pendriveCut) - ((self.amount - self.pendriveCut)/1.18))
+    end
     if self.paymentMode == "paytm"
       self.paytmCut = (self.amount * 0.023)
     else
       self.paytmCut = 0
     end
-    self.netRevenue = (self.amount - self.paytmCut - self.gstCut - self.pendriveCut)
+    if self.pendriveCut
+      self.netRevenue = (self.amount - self.paytmCut - self.gstCut - self.pendriveCut)
+    end
   end
 
   def self.recent_payments
