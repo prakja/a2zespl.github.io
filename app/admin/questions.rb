@@ -28,6 +28,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"  
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
   filter :id_eq, as: :number, label: "Question ID"
+  filter :testId_eq, as: :number, label: "Test ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
@@ -94,6 +95,10 @@ ActiveAdmin.register Question do
   scope :AIIMS_Questions
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
+
+  action_item :similar_question, only: :show do
+    link_to 'Find Similar Questions', '../../admin/questions?q[question_eq]=' + resource.question
+  end
 
   form do |f|
     f.inputs "Question" do

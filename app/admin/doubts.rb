@@ -26,6 +26,10 @@ ActiveAdmin.register Doubt do
     f.actions
   end
 
+  action_item :see_unsolved_data, only: :index do
+    link_to 'Pending Doubts Count', '../../doubts/index'
+  end
+
   index do
     id_column
     column :content
