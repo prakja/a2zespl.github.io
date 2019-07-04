@@ -11,7 +11,7 @@ class Ability
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can :manage, [SubTopic, Post, ScheduleItem, Delivery]
+      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport]
       can :read, UserCourse
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment]
     elsif user.role == 'sales'
