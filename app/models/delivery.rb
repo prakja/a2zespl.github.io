@@ -10,6 +10,13 @@ class Delivery < ApplicationRecord
    errors.add(:dueAmount, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount.blank?
   end
 
+  def check_tracking(trackingNumber)
+    HTTParty.post(
+      "http://track.dtdc.com/ctbs-tracking/customerInterface.tr?submitName=getLoadMovementDetails&cnNo=" + trackingNumber,
+       body: {}
+     )
+  end
+
   def check_installment_required_dueDate
    errors.add(:dueDate, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount and dueAmount > 0 and dueDate.blank?
   end

@@ -70,6 +70,13 @@ ActiveAdmin.register Delivery do
       column :packed
       column :packed
     end
+    column "Tracking Status" do |delivery|
+      if delivery.trackingNumber and delivery.trackingNumber.length == 9
+        if delivery.check_tracking(delivery.trackingNumber)
+          JSON.parse(delivery.check_tracking(delivery.trackingNumber))[0]["deliveryStatus"] + ' on ' + JSON.parse(delivery.check_tracking(delivery.trackingNumber))[0]["dateWithNoSuffix"]
+        end
+      end
+    end
     column ("History") {|delivery| raw('<a target="_blank" href="/admin/deliveries/' + (delivery.id).to_s + '/history">View History</a>')}
     actions
   end
