@@ -27,7 +27,7 @@ ActiveAdmin.register Doubt do
   end
 
   action_item :see_unsolved_data, only: :index do
-    link_to 'Pending Doubts Count', '../../doubts/index'
+    link_to 'Pending Doubts Count', '../../doubts/pending_stats'
   end
 
   index do

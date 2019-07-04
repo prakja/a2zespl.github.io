@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Doubts Pending</h2>
+
+<table style="width:50%">
+  <tr>
+    <th>Subject</th>
+    <th>2 days</th>
+    <th>5 days</th>
+    <th>7 days</th>
+  </tr>
+
+  <tr>
+    <th>Physics</th>
+    <th><%= link_to @doubts_physics_two_days.count, "../../admin/doubts?scope=physics_paid_student_doubts&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @doubts_physics_five_days.count, "../../admin/doubts?scope=physics_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>
+    <th><%= link_to @doubts_physics_seven_days.count, "../../admin/doubts?scope=physics_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>    
+  </tr>
+
+  <tr>
+    <th>Chemistry</th>
+    <th><%= link_to @doubts_chemistry_two_days.count, "../../admin/doubts?scope=chemistry_paid_student_doubts&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @doubts_chemistry_five_days.count, "../../admin/doubts?scope=chemistry_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>
+    <th><%= link_to @doubts_chemistry_seven_days.count, "../../admin/doubts?scope=chemistry_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>    
+  </tr>
+
+  <tr>
+    <th>Botany</th>
+    <th><%= link_to @doubts_botany_two_days.count, "../../admin/doubts?scope=botany_paid_student_doubts&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @doubts_botany_five_days.count, "../../admin/doubts?scope=botany_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @doubts_botany_seven_days.count, "../../admin/doubts?scope=botany_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>    
+  </tr>
+
+  <tr>
+    <th>Zoology</th>
+    <th><%= link_to @doubts_zoology_two_days.count, "../../admin/doubts?scope=zoology_paid_student_doubts&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @doubts_zoology_five_days.count, "../../admin/doubts?scope=zoology_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @doubts_zoology_seven_days.count, "../../admin/doubts?scope=zoology_paid_student_doubts&q[createdAt_gt]=" + 5.days.ago.to_s %></th>    
+  </tr>
+</table>
