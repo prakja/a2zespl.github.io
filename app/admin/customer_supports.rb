@@ -22,6 +22,12 @@ preserve_default_filters!
 index do
   id_column
   column :user
+  column "student phone 1" do |customerSupport|
+   customerSupport.user.phone
+  end
+  column "student phone 2" do |customerSupport|
+   customerSupport.user.user_profile.phone
+  end
   column :content
   column :phone
   column :issueType
