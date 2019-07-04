@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_27_055752) do
+ActiveRecord::Schema.define(version: 2019_07_03_122841) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_repack"
   enable_extension "plpgsql"
 
 # Could not dump table "Advertisement" because of following StandardError
@@ -50,6 +51,36 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "ChapterNote", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "noteId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "ChapterQuestion", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["chapterId"], name: "chapter_question_chapter_id"
+    t.index ["questionId"], name: "chapter_question_question_id"
+  end
+
+  create_table "ChapterTask", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "taskId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "ChapterVideo", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "videoId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "Comment", id: :serial, force: :cascade do |t|
     t.text "text"
     t.text "imgUrl"
@@ -58,6 +89,23 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "updatedAt", null: false
     t.integer "ownerId"
     t.integer "userId"
+  end
+
+  create_table "ConfigValue", id: :serial, force: :cascade do |t|
+    t.text "accessToken"
+    t.string "refreshToken", limit: 255
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "CopyAnswer", id: :serial, force: :cascade do |t|
+    t.integer "userAnswer"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "questionId"
+    t.integer "userId"
+    t.integer "testAttemptId"
+    t.integer "durationInSec"
   end
 
 # Could not dump table "CopyQuestion01012019" because of following StandardError
@@ -69,6 +117,21 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
 # Could not dump table "CopyQuestion29092018" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
+  create_table "CopyTestAttempt", id: :serial, force: :cascade do |t|
+    t.integer "testId"
+    t.integer "userId"
+    t.integer "elapsedDurationInSec"
+    t.integer "currentQuestionOffset"
+    t.boolean "completed"
+    t.json "userAnswers"
+    t.json "userQuestionWiseDurationInSec"
+    t.json "result"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.json "visitedQuestions"
+    t.json "markedQuestions"
+  end
+
 # Could not dump table "Coupon" because of following StandardError
 #   Unknown type '"enum_Coupon_discountType"' for column 'discountType'
 
@@ -77,6 +140,15 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
 
 # Could not dump table "CourseInvitation" because of following StandardError
 #   Unknown type '"enum_CourseInvitation_role"' for column 'role'
+
+  create_table "CourseTest", id: :serial, force: :cascade do |t|
+    t.integer "courseId"
+    t.integer "testId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["courseId"], name: "course_test_course_id"
+    t.index ["testId"], name: "course_test_test_id"
+  end
 
   create_table "CustomerIssue", id: :serial, force: :cascade do |t|
     t.text "description", null: false
@@ -101,6 +173,45 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.index ["code"], name: "CustomerIssueType_code_key", unique: true
+  end
+
+  create_table "CustomerSupport", id: :serial, force: :cascade do |t|
+    t.integer "userId", null: false
+    t.string "content", limit: 255
+    t.string "phone", limit: 255
+    t.string "issueType", limit: 255
+    t.boolean "deleted", default: false
+    t.boolean "resolved", default: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "Delivery", id: :serial, force: :cascade do |t|
+    t.string "deliveryType", limit: 255
+    t.string "course", limit: 255
+    t.datetime "courseValidity"
+    t.integer "amount"
+    t.string "source", limit: 255
+    t.datetime "purchasedAt"
+    t.string "name", limit: 255
+    t.string "mobile", limit: 255
+    t.text "address"
+    t.string "counselorName", limit: 255
+    t.string "trackingNumber", limit: 255
+    t.string "usb", limit: 255
+    t.string "dongle", limit: 255
+    t.boolean "delivered"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.string "purchasedAtText", limit: 255
+    t.string "installmentAmount", limit: 255
+    t.boolean "packed"
+    t.text "description"
+    t.string "email", limit: 255
+    t.string "courierSource", limit: 255
+    t.datetime "dueDate"
+    t.integer "dueAmount"
+    t.string "status", limit: 255
   end
 
 # Could not dump table "Doubt" because of following StandardError
@@ -130,7 +241,9 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.string "androidDetails", limit: 255
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
-    t.index ["deviceId"], name: "FcmToken_deviceId_key", unique: true
+    t.integer "userId"
+    t.string "platform", limit: 255
+    t.index ["fcmToken"], name: "fcmtoken_unique", unique: true
   end
 
   create_table "FestivalDiscount", id: :serial, force: :cascade do |t|
@@ -186,6 +299,13 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
 # Could not dump table "Payment" because of following StandardError
 #   Unknown type '"enum_Payment_status"' for column 'status'
 
+  create_table "PaymentCourseInvitation", id: :serial, force: :cascade do |t|
+    t.integer "paymentId", null: false
+    t.integer "courseInvitationId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "Post", id: :serial, force: :cascade do |t|
     t.text "url", null: false
     t.text "title", null: false
@@ -212,6 +332,15 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
+    t.integer "questionId"
+    t.integer "subTopicId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["questionId"], name: "question_subTopic_question_id"
+    t.index ["subTopicId"], name: "question_subTopic_subTopic_id"
+  end
+
   create_table "Quiz", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.text "description"
@@ -231,6 +360,34 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.index ["ownerId", "ownerType"], name: "s_e_o_data_owner_id_owner_type", unique: true
+  end
+
+  create_table "Schedule", id: :serial, force: :cascade do |t|
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.text "name"
+    t.text "description"
+  end
+
+  create_table "ScheduleItem", id: :serial, force: :cascade do |t|
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.text "name"
+    t.text "description"
+    t.integer "scheduleId", null: false
+    t.integer "topicId", null: false
+    t.integer "hours"
+    t.text "link"
+    t.datetime "scheduledAt"
+  end
+
+  create_table "ScheduleItemUser", id: :serial, force: :cascade do |t|
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "scheduleItemId", null: false
+    t.integer "userId", null: false
+    t.boolean "completed"
+    t.index ["scheduleItemId", "userId"], name: "u_schedule_item_user_user", unique: true
   end
 
   create_table "ScheduledTask", id: :serial, force: :cascade do |t|
@@ -411,12 +568,13 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.index ["userId"], name: "user_highlighted_note_user_id"
   end
 
-  create_table "UserLogin", primary_key: ["name", "key"], force: :cascade do |t|
-    t.string "name", limit: 50, null: false
-    t.string "key", limit: 100, null: false
+  create_table "UserLogin", id: :serial, force: :cascade do |t|
+    t.integer "userId", null: false
+    t.integer "expiry", null: false
+    t.string "platform", limit: 255, null: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
-    t.integer "userId"
+    t.index ["userId", "platform"], name: "u_user_id_platform", unique: true
   end
 
   create_table "UserNoteStat", id: :serial, force: :cascade do |t|
@@ -533,6 +691,24 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.integer "videoTimeMS", null: false
   end
 
+  create_table "VideoQuestion", id: :serial, force: :cascade do |t|
+    t.integer "videoId"
+    t.integer "questionId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["questionId"], name: "video_question_question_id"
+    t.index ["videoId"], name: "video_question_video_id"
+  end
+
+  create_table "VideoSubTopic", id: :serial, force: :cascade do |t|
+    t.integer "videoId"
+    t.integer "subTopicId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["subTopicId"], name: "video_subTopic_subTopic_id"
+    t.index ["videoId"], name: "video_subTopic_video_id"
+  end
+
   create_table "Vote", id: :serial, force: :cascade do |t|
     t.integer "userId"
     t.integer "ownerId"
@@ -588,6 +764,7 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "role", default: "read", null: false
+    t.string "name"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
@@ -614,7 +791,17 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
 
   add_foreign_key "Answer", "\"Question\"", column: "questionId", name: "Answer_questionId_fkey", on_update: :cascade, on_delete: :nullify
   add_foreign_key "Answer", "\"User\"", column: "userId", name: "Answer_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "ChapterNote", "\"Note\"", column: "noteId", name: "fk_chapter_note_note_id"
+  add_foreign_key "ChapterNote", "\"Topic\"", column: "chapterId", name: "fk_chapter_note_chapterid"
+  add_foreign_key "ChapterQuestion", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
+  add_foreign_key "ChapterQuestion", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
+  add_foreign_key "ChapterTask", "\"Task\"", column: "taskId", name: "fk_chapter_task_taskid"
+  add_foreign_key "ChapterTask", "\"Topic\"", column: "chapterId", name: "fk_chapter_task_chapterid"
+  add_foreign_key "ChapterVideo", "\"Topic\"", column: "chapterId", name: "fk_chapter_video_chapterid"
+  add_foreign_key "ChapterVideo", "\"Video\"", column: "videoId", name: "fk_chapter_video_videoid"
   add_foreign_key "Comment", "\"User\"", column: "userId", name: "Comment_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "CourseTest", "\"Course\"", column: "courseId", name: "fk_course_test_courseid"
+  add_foreign_key "CourseTest", "\"Test\"", column: "testId", name: "fk_course_test_testid"
   add_foreign_key "CustomerIssue", "\"CustomerIssueType\"", column: "typeId", name: "CustomerIssue_typeId_fkey"
   add_foreign_key "CustomerIssue", "\"Note\"", column: "noteId", name: "customer_issue_note_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"Question\"", column: "questionId", name: "customer_issue_question_id_fkey", on_update: :cascade, on_delete: :cascade
@@ -628,18 +815,29 @@ ActiveRecord::Schema.define(version: 2019_05_27_055752) do
   add_foreign_key "Doubt", "\"User\"", column: "userId", name: "Doubt_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "DoubtAnswer", "\"Doubt\"", column: "doubtId", name: "DoubtAnswer_doubtId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "DoubtAnswer", "\"User\"", column: "userId", name: "DoubtAnswer_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "FcmToken", "\"User\"", column: "userId", name: "fcm_token_user_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Notification", "\"User\"", column: "userId", name: "notification_user_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Question", "\"Test\"", column: "testId", name: "Question_testId_fkey", on_update: :cascade, on_delete: :nullify
   add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
+  add_foreign_key "QuestionSubTopic", "\"Question\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
+  add_foreign_key "ScheduleItem", "\"Schedule\"", column: "scheduleId", name: "fk_schedule_item_schedule"
+  add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
+  add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
+  add_foreign_key "ScheduleItemUser", "\"User\"", column: "userId", name: "fk_schedule_item_user_user"
   add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Topic", "\"Subject\"", column: "subjectId", name: "Topic_subjectId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserClaim", "\"User\"", column: "userId", name: "UserClaim_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserCourse", "\"Course\"", column: "courseId", name: "UserCourse_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserCourse", "\"User\"", column: "userId", name: "UserCourse_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserLogin", "\"User\"", column: "userId", name: "UserLogin_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "UserLogin", "\"User\"", column: "userId", name: "fk_user_login_user"
   add_foreign_key "UserProfile", "\"User\"", column: "userId", name: "UserProfile_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Video", "\"User\"", column: "creatorId", name: "Video_creatorId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "VideoAnnotation", "\"Video\"", column: "videoId", name: "VideoAnnotation_videoId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "VideoQuestion", "\"Question\"", column: "questionId", name: "fk_video_question_questionid"
+  add_foreign_key "VideoQuestion", "\"Video\"", column: "videoId", name: "fk_video_question_videoid"
+  add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
+  add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
 end

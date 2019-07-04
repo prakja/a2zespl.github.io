@@ -19,6 +19,24 @@ filter :issueType_eq, as: :select, collection: ["Pendrive_Not_Working", "Video_N
 filter :resolved
 preserve_default_filters!
 
+index do
+  id_column
+  column :user
+  column "student phone 1" do |customerSupport|
+   customerSupport.user.phone
+  end
+  column "student phone 2" do |customerSupport|
+   customerSupport.user.user_profile.phone
+  end
+  column :content
+  column :phone
+  column :issueType
+  column :deleted
+  toggle_bool_column :resolved
+  column :createdAt
+  actions
+end
+
 form do |f|
   f.inputs "Issues" do
     f.input :resolved
