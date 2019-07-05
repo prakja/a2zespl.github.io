@@ -68,7 +68,7 @@ ActiveAdmin.register Delivery do
       toggle_bool_column :delivered
     else
       column :packed
-      column :packed
+      column :delivered
     end
     column "Tracking Status" do |delivery|
       if delivery.trackingNumber and delivery.trackingNumber.length == 9
