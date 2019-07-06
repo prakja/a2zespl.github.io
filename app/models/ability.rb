@@ -8,7 +8,8 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, SubTopic
       can :read, UserProfile
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, VideoAnnotation]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue]
+      can [:read, :create, :update], [VideoAnnotation]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport]
