@@ -32,7 +32,7 @@ ActiveAdmin.register Doubt do
 
   index do
     id_column
-    column :content
+    column (:content) { |doubt| raw(doubt.content) }
     column :imgUrl do |doubt|
       raw('<img src="' + doubt.imgUrl + '" width="128" height="72">') if not doubt.imgUrl.blank?
     end
