@@ -1,3 +1,20 @@
 ActiveAdmin.register DoubtAnswer do
   permit_params :content, :deleted, :imgUrl
+  remove_filter :doubt, :user
+  index do
+    id_column
+    column (:content) {|doubt_answer| raw(doubt_answer.content)}
+    column :doubt
+    column :user
+    column :deleted
+    actions
+  end
+
+  form do |f|
+    f.inputs "Doubt Answer" do
+      f.input :content, as: :quill_editor
+      f.input :deleted
+    end
+    f.actions
+  end
 end

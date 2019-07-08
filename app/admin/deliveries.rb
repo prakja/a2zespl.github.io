@@ -42,6 +42,19 @@ ActiveAdmin.register Delivery do
     render "layouts/history"
   end
 
+  show do |f|
+    attributes_table do
+      row :id
+      row "Tracking Status" do |delivery|
+        if delivery.trackingNumber and delivery.trackingNumber.length == 9
+          if delivery.check_tracking(delivery.trackingNumber)
+            JSON.parse(delivery.check_tracking(delivery.trackingNumber))[0]["deliveryStatus"] + ' on ' + JSON.parse(delivery.check_tracking(delivery.trackingNumber))[0]["dateWithNoSuffix"]
+          end
+        end
+      end
+    end
+  end
+
   index do
     id_column
     column (:deliveryType) { |delivery| raw(delivery.deliveryType) }
@@ -68,7 +81,7 @@ ActiveAdmin.register Delivery do
       toggle_bool_column :delivered
     else
       column :packed
-      column :packed
+      column :delivered
     end
     column ("History") {|delivery| raw('<a target="_blank" href="/admin/deliveries/' + (delivery.id).to_s + '/history">View History</a>')}
     actions

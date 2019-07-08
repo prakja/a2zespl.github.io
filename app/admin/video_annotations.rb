@@ -37,7 +37,7 @@ form do |f|
 
   show do
     attributes_table do
-      row ("Content") {resource.note.content}
+      row ("Content") {raw(resource.note.try(:content))}
       row :video
       row :videoTimeMS
     end

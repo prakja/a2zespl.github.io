@@ -26,7 +26,9 @@ index do
    customerSupport.user.phone
   end
   column "student phone 2" do |customerSupport|
-   customerSupport.user.user_profile.phone
+   if customerSupport.user.user_profile
+     customerSupport.user.user_profile.phone
+   end
   end
   column :content
   column :phone
