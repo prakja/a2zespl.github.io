@@ -33,6 +33,7 @@ ActiveAdmin.register Payment do
       column :gstCut
       column :pendriveCut
       column :netRevenue
+      column :installment
     end
     column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
