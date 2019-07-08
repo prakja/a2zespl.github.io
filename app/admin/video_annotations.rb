@@ -20,7 +20,7 @@ form do |f|
   f.inputs "Annotation" do
     f.input :video, as: :fake, value: f.object.video.nil? ? 'No Video Selected' : f.object.video.name
     f.inputs "Note", for: [:note, f.object.note || Note.new] do |n|
-      n.input :content
+      n.input :content, as: :quill_editor
     end
       # f.inputs :for => [
       #   :note,
