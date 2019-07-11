@@ -1,7 +1,7 @@
 ActiveAdmin.register Payment do
   config.sort_order = 'createdAt_desc'
 
-  permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue
+  permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue, :course, :paymentForId
   remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut, :netRevenue
 
   scope :failed_payments
@@ -34,6 +34,11 @@ ActiveAdmin.register Payment do
       column :pendriveCut
       column :netRevenue
       column :installment
+      column ("Get Invoice") { |payment|
+        if payment.course && payment.userName && payment.amount
+          raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + '">Get Invoice</a>')
+        end
+      }
     end
     column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
@@ -52,6 +57,7 @@ ActiveAdmin.register Payment do
       f.input :amount, label: "Payment amount"
       f.input :paymentMode, as: :select, :collection => ["cash","paytm wallet"]
       if current_admin_user.role == 'admin' or current_admin_user.role == 'accounts'
+        f.input :course, as: :select, :collection => Course.public_courses
         f.input :saleType, as: :select, :collection => ["inboud","outbound","scholarship","intent"]
         f.input :userName
         f.input :userEmail
