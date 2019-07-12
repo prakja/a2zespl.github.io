@@ -55,7 +55,11 @@ ActiveAdmin.register Payment do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Payment" do
       f.input :amount, label: "Payment amount"
-      f.input :paymentMode, as: :select, :collection => ["cash","paytm wallet"]
+      if current_admin_user.role == 'admin' or current_admin_user.role == 'accounts'
+        f.input :paymentMode, as: :select, :collection => ["paytm","kotak","cash","paytm wallet"]
+      else
+        f.input :paymentMode, as: :select, :collection => ["cash","paytm wallet"]
+      end
       if current_admin_user.role == 'admin' or current_admin_user.role == 'accounts'
         f.input :course, as: :select, :collection => Course.public_courses
         f.input :saleType, as: :select, :collection => ["inboud","outbound","scholarship","intent"]
