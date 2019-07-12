@@ -41,6 +41,7 @@ class Payment < ApplicationRecord
   end
 
   belongs_to :course, foreign_key: "paymentForId", class_name: "Course", optional: true
+  has_one :installment, foreign_key: "paymentId"
   has_many :paymentCourseInvitations, foreign_key: :paymentId, class_name: 'PaymentCourseInvitation'
   has_many :courseInvitations, through: :paymentCourseInvitations
 end

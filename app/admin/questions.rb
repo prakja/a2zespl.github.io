@@ -16,7 +16,7 @@ ActiveAdmin.register Question do
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
-  #     params['q'] = {:explanation_cont => '<video'} 
+  #     params['q'] = {:explanation_cont => '<video'}
   #   end
   # end
 
@@ -24,9 +24,9 @@ ActiveAdmin.register Question do
   filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :detail_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
-  filter :detail_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"    
-  filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"  
-  # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"    
+  filter :detail_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"
+  filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"
+  # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
   filter :testId_eq, as: :number, label: "Test ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
@@ -36,7 +36,7 @@ ActiveAdmin.register Question do
   preserve_default_filters!
   scope :neetprep_course
 
-  # prevents N+1 queries to your database, don't know if that's good or bad. xD 
+  # prevents N+1 queries to your database, don't know if that's good or bad. xD
   # controller do
   #   def scoped_collection
   #     super.includes :question_analytic
