@@ -1,6 +1,6 @@
 ActiveAdmin.register Installment do
   permit_params :paymentId, :secondInstallmentDate, :secondInstallmentAmount, :finalInstallmentDate, :finalInstallmentAmount, :payment
-  remove_filter :versions, :payments
+  remove_filter :versions, :payment
 
   form do |f|
     f.semantic_errors *f.object.errors.keys

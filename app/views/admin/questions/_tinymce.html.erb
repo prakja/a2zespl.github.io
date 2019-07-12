@@ -1,4 +1,5 @@
-<%= tinymce_assets %>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
 <script>
 tinymce.init({
   selector: '#question_question',
@@ -15,7 +16,7 @@ tinymce.init({
   editorObject: {'id': 'question_question'},
   setup: function (editor) {
     editor.on('blur', function (e) {
-      _this.setState({ question: { ..._this.state.question, question:  editor.getContent()} });
+      document.getElementById('question_question').value = editor.getContent();
     });
     // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
     editor.settings.images_dataimg_filter = function () {return undefined;};
@@ -36,7 +37,7 @@ tinymce.init({
   editorObject: {'id': 'question_explanation'},
   setup: function (editor) {
     editor.on('blur', function (e) {
-      _this.setState({ question: { ..._this.state.question, question:  editor.getContent()} });
+      document.getElementById('question_explanation').value = editor.getContent();
     });
     // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
     editor.settings.images_dataimg_filter = function () {return undefined;};

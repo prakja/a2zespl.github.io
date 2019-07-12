@@ -1,8 +1,17 @@
 class Delivery < ApplicationRecord
   self.table_name = "Delivery"
-  attribute :createdAt, :datetime, default: Time.now
-  attribute :updatedAt, :datetime, default: Time.now
+  before_create :setCreatedTime, :setUpdatedTime
+  before_update :setUpdatedTime
   has_paper_trail
+
+  def setCreatedTime
+    self.createdAt = Time.now
+  end
+
+  def setUpdatedTime
+    self.updatedAt = Time.now
+  end
+
   after_validation :check_installment_required_dueAmount, :check_installment_required_dueDate
   validates_presence_of :deliveryType, :course, :courseValidity, :purchasedAt, :name, :email, :mobile, :address, :counselorName
 

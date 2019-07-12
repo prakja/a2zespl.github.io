@@ -1,11 +1,20 @@
 class CourseInvitation < ApplicationRecord
    self.table_name = "CourseInvitation"
    has_paper_trail
+   before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
-   before_update :before_update_course_invitation
+   before_update :before_update_course_invitation, :setUpdatedTime
    after_validation :course_expiry_not_valid, :mobileValidate
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
+
+   def setCreatedTime
+     self.createdAt = Time.now
+   end
+
+   def setUpdatedTime
+     self.updatedAt = Time.now
+   end
 
    def course_expiry_not_valid
     errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt and expiryAt > Time.now + 7.day
@@ -44,8 +53,6 @@ class CourseInvitation < ApplicationRecord
    scope :invitations_without_payment_last_7_days, -> {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
    }
-   attribute :createdAt, :datetime, default: Time.now
-   attribute :updatedAt, :datetime, default: Time.now
    has_many :courseInvitationPayments, foreign_key: :courseInvitationId, class_name: 'PaymentCourseInvitation'
    has_many :payments, through: :courseInvitationPayments
    belongs_to :course, foreign_key: "courseId", class_name: "Course", optional: true
