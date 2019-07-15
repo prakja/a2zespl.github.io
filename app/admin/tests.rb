@@ -72,7 +72,7 @@ action_item :show_question, only: :show do
 end
 
 action_item :show_leaderboard, only: :show do
-  link_to 'LeaderBoard', "../../admin/test_leader_boards?q[testId_eq]=" + resource.id.to_s
+  link_to 'LeaderBoard', "../../admin/test_leader_boards?order=score_desc&q[testId_eq]=" + resource.id.to_s
 end
 
 form do |f|
@@ -94,7 +94,7 @@ form do |f|
   f.inputs "Additional Information" do
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject,  hint: "Select topic (only applicable for live session test)"
     f.input :ownerType, as: :hidden, :input_html => { :value => 'topic' }
-    
+
   end
 
   f.actions
