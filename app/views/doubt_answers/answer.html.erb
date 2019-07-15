@@ -1,6 +1,6 @@
 <div style="padding: 8px">
   <div style="margin-left: 16px; padding: 8px; border: 1px solid #828282">
-    <h4>Doubt by <%= @doubt_user.name %></h4>
+    <h4>Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %></h4>
     <div style="margin-left: 20px">
       <h2><%= strip_tags(@doubt.content) %></h2>
       <%= raw(@doubt_data) %>
