@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_122841) do
+ActiveRecord::Schema.define(version: 2019_07_12_115059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -255,6 +255,29 @@ ActiveRecord::Schema.define(version: 2019_07_03_122841) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
   end
+
+  create_table "Group", id: :serial, force: :cascade do |t|
+    t.string "title", limit: 255
+    t.string "description", limit: 255
+    t.boolean "deleted", default: false
+    t.datetime "startedAt", null: false
+    t.datetime "expiryAt", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "Installment", id: :serial, force: :cascade do |t|
+    t.integer "paymentId", null: false
+    t.datetime "secondInstallmentDate"
+    t.integer "secondInstallmentAmount"
+    t.datetime "finalInstallmentDate"
+    t.integer "finalInstallmentAmount"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+# Could not dump table "Message" because of following StandardError
+#   Unknown type '"enum_Message_type"' for column 'type'
 
   create_table "NewUserVideoStat", id: false, force: :cascade do |t|
     t.integer "id"
@@ -533,6 +556,7 @@ ActiveRecord::Schema.define(version: 2019_07_03_122841) do
     t.text "source"
     t.text "referrer"
     t.boolean "isFcmTokenActive", default: true
+    t.boolean "blockedUser", default: false
     t.index ["email"], name: "User_email_key", unique: true
     t.index ["email"], name: "user_email"
     t.index ["phone"], name: "User_phone_key", unique: true
@@ -765,6 +789,7 @@ ActiveRecord::Schema.define(version: 2019_07_03_122841) do
     t.datetime "updated_at", null: false
     t.string "role", default: "read", null: false
     t.string "name"
+    t.integer "userId"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
