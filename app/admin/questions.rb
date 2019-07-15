@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues, :versions
-  permit_params :question, :correctOptionIndex, :explanation, :deleted, :testId, topic_ids: [], subTopic_ids: []
+  permit_params :question, :correctOptionIndex, :explanation, :jee, :deleted, :testId, topic_ids: [], subTopic_ids: []
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -58,6 +58,11 @@ ActiveAdmin.register Question do
     column (:explanation) { |question| raw(question.explanation)  }
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+      toggle_bool_column :jee
+    else
+      column :jee
+    end
     actions
   end
 
@@ -88,6 +93,12 @@ ActiveAdmin.register Question do
         question.test
       end
     end
+  end
+
+  csv do
+    column :question
+    column :explanation
+    column :correctOptionIndex
   end
 
   # Label works with filters but not with scope xD
