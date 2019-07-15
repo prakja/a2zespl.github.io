@@ -14,6 +14,44 @@ ActiveAdmin.register Payment do
     link_to 'Update Payment Details (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook?quickBookId=' + payment.paymentDesc if payment.paymentMode == 'kotak' and payment.paymentDesc.present?
   end
 
+  csv do
+    column ("Date Of Sale") {|payment| payment.createdAt}
+    column :saleType
+    column :userName
+    column :userEmail
+    column :userPhone
+    column :userState
+    column :userCity
+    column :salesPerson
+    column :paymentMode
+    column ("Order Id") {|payment| raw(payment.paymentDesc)}
+    column :revenue
+    column :paytmCut
+    column :gstCut
+    column :pendriveCut
+    column :netRevenue
+    column ("Second Installment Date") { |payment|
+      if payment.installment
+        payment.installment.secondInstallmentDate
+      end
+    }
+    column ("Second Installment Amount") { |payment|
+      if payment.installment
+        payment.installment.secondInstallmentAmount
+      end
+    }
+    column ("Final Installment Date") { |payment|
+      if payment.installment
+        payment.installment.finalInstallmentDate
+      end
+    }
+    column ("Final Installment Amount") { |payment|
+      if payment.installment
+        payment.installment.finalInstallmentAmount
+      end
+    }
+  end
+
   index do
     id_column
     column :course
