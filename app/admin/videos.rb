@@ -56,6 +56,12 @@ ActiveAdmin.register Video do
     end
   end
 
+  csv do
+    column (:subject) {|video| raw(video.topics[0].subject.name)}
+    column (:chapter) {|video| raw(video.topics[0].name)}
+    column :name
+  end
+
   form do |f|
     f.inputs "Video" do
       f.input :name

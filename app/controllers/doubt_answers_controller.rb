@@ -12,11 +12,13 @@ class DoubtAnswersController < ApplicationController
     @doubt_answers_data = {}
 
     @doubt_tag = @doubt.tagType
-    @doubt_data = ""
+    @doubt_data = '<p><a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + @doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + @doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + @doubt.id.to_s) + '">Answer on NEETprep</a></p>'
+
+    @doubt_data += '<img src="' + @doubt.imgUrl + '" width="800" height="600">' if not @doubt.imgUrl.blank?
 
     if @doubt_tag == "question"
       @question = Question.find(@doubt.questionId)
-      @doubt_data = @question.question
+      @doubt_data += @question.question
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">Go to Question</a>'
     end
 
@@ -42,12 +44,12 @@ class DoubtAnswersController < ApplicationController
     @new_answer[:createdAt] = Time.now
     @new_answer[:updatedAt] = Time. now
     if @new_answer.save
-      # HTTParty.post(
-      #   Rails.configuration.node_site_url + 'api/v1/webhook/afterCreateDoubtAnswer',
-      #   body: {
-      #     id: @doubt_id
-      #   }
-      # )
+      HTTParty.post(
+        Rails.configuration.node_site_url + 'api/v1/webhook/afterCreateDoubtAnswer',
+        body: {
+          id: @doubt_id
+        }
+      )
       redirect_to "/doubt_answers/answer?doubt_id=" + @doubt_id.to_s 
     end 
   end
