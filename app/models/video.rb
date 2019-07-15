@@ -20,6 +20,17 @@ class Video < ApplicationRecord
 
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
+
+  # scope :subject_name_by_id, ->(subject_id) {
+  #   joins(:topics => :subject).where(topic: {Subject: {id: subject_id}})
+  # }
+
+  # scope :subject_name_by_course, ->(course_id) {
+  #   joins(:topics => :subject).where(topic: {Subject: {courseId: course_id}})
+  # }
   
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId:  8}})}
+  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId:  115}})}
+
+
 end

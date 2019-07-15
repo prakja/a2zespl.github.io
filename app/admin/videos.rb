@@ -19,6 +19,7 @@ ActiveAdmin.register Video do
 
   permit_params :name, :description, :url, :thumbnail, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
   scope :neetprep_course
+  scope :maths_course
 
   scope :botany
   scope :chemistry
