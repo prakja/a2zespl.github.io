@@ -34,12 +34,12 @@ ActiveAdmin.register Payment do
       column :pendriveCut
       column :netRevenue
       column :installment
-      column ("Get Invoice") { |payment|
-        if payment.course && payment.userName && payment.amount
-          raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + '">Get Invoice</a>')
-        end
-      }
     end
+    column ("Get Invoice") { |payment|
+      if payment.course && payment.userName && payment.amount
+        raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + '">Get Invoice</a>')
+      end
+    }
     column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
     actions
