@@ -1,6 +1,7 @@
 require 'base64'
 
 ActiveAdmin.register Doubt do
+  config.sort_order = 'createdAt_desc'
   remove_filter :topic, :answers, :user
   permit_params :content, :deleted, :teacherReply, :imgUrl
 
