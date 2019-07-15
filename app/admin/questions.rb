@@ -95,24 +95,11 @@ ActiveAdmin.register Question do
     end
   end
 
-  # csv do
-  #   column (:course) { |courseInvitation| raw(courseInvitation.course.name)  }
-  #   column (:displayName) { |courseInvitation| raw(courseInvitation.displayName)  }
-  #   column (:email) { |courseInvitation| raw(courseInvitation.email)  }
-  #   column (:phone) { |courseInvitation| raw(courseInvitation.phone)  }
-  #   column "Amount" do |courseInvitation|
-  #    courseInvitation.payments.map { |payment| payment.amount.to_int }.compact
-  #   end
-  #   column :expiryAt
-  #   column :createdAt
-  #   if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
-  #     toggle_bool_column :packed
-  #     toggle_bool_column :delivered
-  #   else
-  #     column :packed
-  #     column :delivered
-  #   end
-  # end
+  csv do
+    column :question
+    column :explanation
+    column :correctOptionIndex
+  end
 
   # Label works with filters but not with scope xD
   scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
