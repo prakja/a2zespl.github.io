@@ -83,4 +83,10 @@ class Doubt < ApplicationRecord
     [:subject_name, :solved, :paid, :student_name, :student_email, :student_phone]
   end
 
+  def imgUrl
+    return nil if self.read_attribute(:imgUrl).blank?
+    return self.read_attribute(:imgUrl) if self.read_attribute(:imgUrl).include? "http"
+    return "https://www.neetprep.com" + self.read_attribute(:imgUrl)
+  end
+
 end
