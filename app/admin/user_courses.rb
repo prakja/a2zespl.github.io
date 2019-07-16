@@ -1,6 +1,6 @@
 ActiveAdmin.register UserCourse do
   permit_params :course, :userId, :role, :role, :startedAt, :expiryAt, :invitationId, :courseId
-  remove_filter :course
+  remove_filter :course, :versions
   preserve_default_filters!
 
   index do
