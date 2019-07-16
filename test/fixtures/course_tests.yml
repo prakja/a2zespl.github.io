@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rails: MyString
+  g: MyString
+  active_admin: 
+  courseTest: MyString
+
+two:
+  rails: MyString
+  g: MyString
+  active_admin: 
+  courseTest: MyString

@@ -12,7 +12,7 @@ ActiveAdmin.register Test do
 #   permitted
 # end
 
-permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId
+permit_params :name, :description, :instructions, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId, :courses, course_ids: []
 remove_filter :topic, :questions, :test_leader_boards
 
 filter :id_eq, as: :number, label: "Test ID"
@@ -94,7 +94,7 @@ form do |f|
   f.inputs "Additional Information" do
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject,  hint: "Select topic (only applicable for live session test)"
     f.input :ownerType, as: :hidden, :input_html => { :value => 'topic' }
-
+    f.input :courses, as: :select, :collection => Course.public_courses, input_html: { class: "select2" }, include_hidden: false, multiple: true
   end
 
   f.actions
