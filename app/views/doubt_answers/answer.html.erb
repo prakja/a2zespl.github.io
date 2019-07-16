@@ -1,3 +1,9 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub])
+  };
+</script>
 <div style="padding: 8px">
   <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
     <h4>Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %></h4>
@@ -12,7 +18,7 @@
     <% @doubt_answers_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h3><b><%= value[0] %></b></h3>
-        <h4><%= strip_tags(value[1]) %></h4>
+        <h4><%= raw(value[1]) %></h4>
       </div>
     <% end %>
     <div style="margin-top: 4px;">
