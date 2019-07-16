@@ -1,11 +1,20 @@
 class DoubtAnswersController < ApplicationController
   before_action :set_doubt_answer, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
 
   # GET /doubt_answers
   # GET /doubt_answers.json
+  def create
+  end
+
   def answer
     @userId = current_admin_user.userId
     @doubt_id = params[:doubt_id]
+    if @userId.blank?
+      redirect_to "/doubt_answers/connect_user?doubt_id=" + @doubt_id.to_s
+    end
+    @userEmail = current_admin_user.email
     @doubt = Doubt.find(@doubt_id)
     @doubt_user = User.find(@doubt.userId)
     @doubt_answers = DoubtAnswer.where(doubtId: @doubt_id)
@@ -33,25 +42,52 @@ class DoubtAnswersController < ApplicationController
     end
   end
 
-  def post_answer
-    @doubt_id = params[:doubtId]
-    @content = params[:content]
+  def connect_user
+    @userEmail = params[:email]
+    @doubtId = params[:doubt_id]
     @userId = current_admin_user.userId
+    if @userId.blank?
+      @userEmail = current_admin_user.email if @userEmail.blank?
+      p "User Id is missing, looking for NEETprep user with email: " + @userEmail
+      @neetUser = User.where(email: @userEmail).first
+      if @neetUser
+        p "NEETprep user found"
+        current_admin_user.userId = @neetUser.id
+        if current_admin_user.save
+          p "Adming user is now connected with NEETprep"
+          @userId = current_admin_user.userId
+          redirect_to "/doubt_answers/answer?doubt_id=" + @doubtId.to_s
+        end
+      else 
+        p "user not found"
+      end
+    end
+  end
+
+  def post_answer
+    @doubtId = params[:doubtId]
+    @content = params[:content]
+    @userId = params[:userId]
+    create_answer_row(@userId, @doubtId, @content)
+  end
+
+  def create_answer_row (userId, doubtId, content)
+    p "Posting Answer, for user " + userId.to_s
     @new_answer = DoubtAnswer.new()
-    @new_answer[:content] = @content
-    @new_answer[:userId] = @userId
-    @new_answer[:doubtId] = @doubt_id
+    @new_answer[:content] = content
+    @new_answer[:userId] = userId
+    @new_answer[:doubtId] = doubtId
     @new_answer[:createdAt] = Time.now
     @new_answer[:updatedAt] = Time. now
     if @new_answer.save
       HTTParty.post(
         Rails.configuration.node_site_url + 'api/v1/webhook/afterCreateDoubtAnswer',
         body: {
-          id: @doubt_id
+          id: doubtId
         }
       )
-      redirect_to "/doubt_answers/answer?doubt_id=" + @doubt_id.to_s 
+      redirect_to "/doubt_answers/answer?doubt_id=" + doubtId.to_s 
     end 
   end
 
-  end
+end

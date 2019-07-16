@@ -1,1 +1,1 @@
-json.array! @doubt_answers, partial: "doubt_answers/doubt_answer", as: :doubt_answer
+json.array! @doubt_answers, partial: "doubt_answers/answer", as: :doubt_answer

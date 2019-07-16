@@ -1,0 +1,18 @@
+<div style="margin: 8px">
+  <div>  
+    <h3><%= "Unable to find your User on NEETprep with email: " + @userEmail %></h3>
+    <h3><%= "Please enter you NEETprep email to connect automatically" %></h3>
+    Email: <%= text_field "user", "email", "size" => 100 %>
+  </div>
+  <div style="margin-top: 8px">
+    <button type="button" onclick="findUser()">Find and Connect</button>
+  </div>
+</div>
+
+<script>
+function findUser() {
+  var email = document.getElementById("user_email").value;
+  var link = window.location.href + "&email=" + email;
+  window.location.href = link;
+}
+</script>

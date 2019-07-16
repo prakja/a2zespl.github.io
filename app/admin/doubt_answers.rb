@@ -2,7 +2,8 @@ ActiveAdmin.register DoubtAnswer do
   permit_params :content, :deleted, :imgUrl
   remove_filter :doubt, :user
 
-  filter :userId_eq
+  filter :userId_eq, as: :number, label: "User ID"
+  filter :doubtId_eq, as: :number, label: "Doubt ID"
   preserve_default_filters!
 
   index do
