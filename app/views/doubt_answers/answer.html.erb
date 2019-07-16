@@ -1,5 +1,5 @@
 <div style="padding: 8px">
-  <div style="margin-left: 16px; padding: 8px; border: 1px solid #828282">
+  <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
     <h4>Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %></h4>
     <div style="margin-left: 20px">
       <h2><%= strip_tags(@doubt.content) %></h2>
@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div style="margin-left: 32px">
+  <div style="margin: 32px">
     <h4>Doubt Answers:</h4>
     <% @doubt_answers_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
@@ -49,15 +49,33 @@ tinymce.init({
 </script>
 
 <div style="text-align: center">
-  <button type="button" onclick="putAnswer()">Post Answer</button>
+  <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
 </div>
 
 <script>
 function putAnswer() {
   var content = document.getElementById("doubtAnswer_content").value
-  var userId = <%= @userId %>
+  if (!content)
+    return;
+
   var doubtId = <%= @doubt_id %>
-  var link = "post_answer" + "?content=" + content + "&doubtId=" + doubtId 
-  window.location.href = link;
+
+  var data = new FormData();
+  var http = new XMLHttpRequest();
+  data.append("doubtId", doubtId);
+  data.append("content", content);
+  data.append("userId", "<%= @userId %>");
+  var url = '/doubt_answers/post_answer';
+  document.getElementById("post_button").innerHTML = "Posting";
+  document.getElementById("post_button").disabled = true;
+
+  http.onreadystatechange = function() {
+    if (http.readyState == XMLHttpRequest.DONE) {
+      document.getElementById("post_button").innerHTML = "Done Redirecting";
+      window.location.href = "/doubt_answers/answer?doubt_id=" + doubtId
+    }
+  }
+  http.open("POST", url);
+  http.send(data);
 }
 </script>
