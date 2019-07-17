@@ -17,13 +17,13 @@ class DoubtAnswersController < ApplicationController
     @userEmail = current_admin_user.email
     @doubt = Doubt.find(@doubt_id)
     @doubt_user = User.find(@doubt.userId)
-    @doubt_answers = DoubtAnswer.where(doubtId: @doubt_id)
+    @doubt_answers = DoubtAnswer.where(doubtId: @doubt_id).order(createdAt: :asc)
     @doubt_answers_data = {}
 
     @doubt_tag = @doubt.tagType
     @doubt_data = '<p><a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + @doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + @doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + @doubt.id.to_s) + '">Answer on NEETprep</a></p>'
 
-    @doubt_data += '<img src="' + @doubt.imgUrl + '" width="800" height="600">' if not @doubt.imgUrl.blank?
+    @doubt_data += '<img src="' + @doubt.imgUrl + '" width="640" height="360">' if not @doubt.imgUrl.blank?
 
     if @doubt_tag == "question"
       @question = Question.find(@doubt.questionId)
