@@ -1,18 +1,62 @@
 ActiveAdmin.register UserCourse do
-  permit_params :course, :userId, :role, :role, :startedAt, :expiryAt, :invitationId, :courseId
-  remove_filter :course, :versions
+  permit_params :course, :userId, :role, :startedAt, :expiryAt, :invitationId, :courseId
+  remove_filter :course, :versions, :invitation, :user
   preserve_default_filters!
+
+  filter :invitationId_eq, as: :number, label: "Invitation ID"
+  filter :userId_eq, as: :number, label: "User ID"
 
   index do
     id_column
     column :course
     column (:userId) { |userCourse| raw(userCourse.userId)  }
     column :invitationId
+    column ("email") { |userCourse|
+      if userCourse.invitation
+        userCourse.invitation.email
+      end
+    }
+    column ("user email") { |userCourse|
+      if userCourse.user
+        userCourse.user.email
+      end
+    }
+    column ("user profile email") { |userCourse|
+      if userCourse.user.user_profile
+        userCourse.user.user_profile.email
+      end
+    }
     column (:role) { |userCourse| raw(userCourse.role)  }
     column :startedAt
     column :expiryAt
     column :createdAt
     actions
+  end
+
+  csv do
+    column ("course") { |userCourse|
+      if userCourse.course
+        userCourse.course.name
+      end
+    }
+    column ("email") { |userCourse|
+      if userCourse.invitation
+        userCourse.invitation.email
+      end
+    }
+    column ("user email") { |userCourse|
+      if userCourse.user
+        userCourse.user.email
+      end
+    }
+    column ("user profile email") { |userCourse|
+      if userCourse.user.user_profile
+        userCourse.user.user_profile.email
+      end
+    }
+    column :startedAt
+    column :expiryAt
+    column :createdAt
   end
 
   form do |f|
