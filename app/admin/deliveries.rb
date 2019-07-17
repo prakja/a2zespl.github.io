@@ -8,6 +8,9 @@ ActiveAdmin.register Delivery do
         csv_headers: ["delivery type","course","course validity","installment amount","source","purchased at text","name","mobile","address","counselor name","tracking number","usb","dongle","packed","delivered","created at","updated at"]
     )
 
+  filter :id_eq, as: :number, label: "Delivery ID"
+  preserve_default_filters!
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Delivery" do

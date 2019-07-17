@@ -38,7 +38,7 @@ class DoubtAnswersController < ApplicationController
 
     @doubt_answers.each do |doubt_answer|
       @doubt_answer_user = User.find(doubt_answer.userId)
-      @doubt_answers_data[doubt_answer.id] = [@doubt_answer_user.name, doubt_answer.content]
+      @doubt_answers_data[doubt_answer.id] = [@doubt_answer_user.name, doubt_answer.content, Time.parse(doubt_answer.createdAt.to_s), doubt_answer.imgUrl]
     end
   end
 

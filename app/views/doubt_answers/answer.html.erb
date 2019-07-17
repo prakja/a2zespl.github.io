@@ -9,6 +9,7 @@
     <h4 style="margin-top: -4px">Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %></h4>
     <div style="margin-left: 20px; margin-top: -10px">
       <h2><%= raw(@doubt.content) %></h2>
+      <h5 style="margin-top: -10px"><%= Time.parse(@doubt.createdAt.to_s).to_date.to_formatted_s(:long) %></h5>
       <h5 style="margin-top: -10px"><%= @doubt.topic.name + ' / ' + @doubt.topic.subject.name %></h5>
       <div style="margin-top: -10px"><%= raw(@doubt_data) %></div>
     </div>
@@ -18,14 +19,16 @@
     <h4>Doubt Answers:</h4>
     <% @doubt_answers_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-        <h3><b><%= value[0] %></b></h3>
-        <h4><%= raw(value[1]) %></h4>
+        <h3 style="margin-top: -2px"><b><%= value[0] %></b></h3>
+        <h5 style="margin-top: -10px"><%= value[2].to_date.to_formatted_s(:long) %></h5>
+        <h4 style="margin-top: -10px"><%= raw(value[1]) %></h4>
+        <div style="margin-top: -10px"><%= image_tag(value[3], size: "640x360") if not value[3].blank? %></div>
       </div>
     <% end %>
-    <div style="margin-top: 4px;">
-      <h4>Add your Answer:</h4>
-      <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
-    </div>
+  </div>
+  <div style="margin: 32px; margin-top: 4px;">
+    <h4>Add your Answer:</h4>
+    <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
   </div>
 </div>
 
