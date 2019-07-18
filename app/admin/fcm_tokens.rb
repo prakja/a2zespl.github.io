@@ -44,7 +44,7 @@ batch_action :notify, form: {
 
   if inputs['sendToAll'] == 'on'
     p "Send to all"
-    to_send_ids = FcmToken.all()
+    to_send_ids = FcmToken.where(platform: 'android')
     to_send_ids.each do |row|
       fcmTokens << row.fcmToken
     end
