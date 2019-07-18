@@ -34,15 +34,27 @@ batch_action :notify, form: {
   message: :textarea,
   type: ["", "ExternalWebsite", "InternalWebsite"],
   redirectUrl: :text,
-  imageUrl: :text
+  imageUrl: :text,
+  sendToAll: :checkbox
   
 } do |ids, inputs|
   fcmTokens = Array.new
 
-  ids.each do |id|
-    fcmTokenRow = FcmToken.find(id)
-    fcmTokens << fcmTokenRow.fcmToken
+  to_send_ids = ids
+
+  if inputs['sendToAll'] == 'on'
+    p "Send to all"
+    to_send_ids = FcmToken.all()
+    to_send_ids.each do |row|
+      fcmTokens << row.fcmToken
+    end
+  else
+    to_send_ids.each do |id|
+      fcmTokenRow = FcmToken.find(id)
+      fcmTokens << fcmTokenRow.fcmToken
+    end
   end
+
   title = inputs['title']
   message = inputs['message']
   redirect = inputs['redirectUrl']
