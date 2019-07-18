@@ -17,7 +17,7 @@ ActiveAdmin.register Notification do
           id = item.split('/')[-1]
         end
       end
-      link_to "Answer", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + id.to_s
+      link_to "Answer this doubt", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + id.to_s, target: ":_blank"
     }
     actions
   end
