@@ -9,6 +9,16 @@ ActiveAdmin.register Notification do
     column :title
     column :user
     column (:body) { |notification| raw(notification.body)  }
+    column ("Doubt Link") { |notification|
+      string_items = notification.body.split
+      id = ""
+      string_items.each do |item|
+        if item.start_with?('http')
+          id = item.split('/')[-1]
+        end
+      end
+      link_to "Answer", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + id.to_s
+    }
     actions
   end
 end

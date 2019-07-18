@@ -68,8 +68,7 @@ function putAnswer() {
   if (!content)
     return;
 
-  var doubtId = <%= @doubt_id %>
-
+  var doubtId = "<%= @doubt_id %>";
   var data = new FormData();
   var http = new XMLHttpRequest();
   data.append("doubtId", doubtId);
