@@ -1,15 +1,23 @@
 ActiveAdmin.register Course do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  permit_params :name, :description, :package, :fee, :public, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt
   remove_filter :payments
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+    f.inputs "Course" do
+      f.input :name
+      f.input :description
+      f.input :package
+      f.input :fee
+      f.input :public
+      f.input :origFee
+      f.input :discount
+      f.input :type
+      f.input :bestSeller
+      f.input :recommended
+      f.input :discountedFee
+      f.input :expiryAt, as: :date_picker
+    end
+    f.actions
+  end
 end
