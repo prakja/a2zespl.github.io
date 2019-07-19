@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues, :versions
-  permit_params :question, :correctOptionIndex, :explanation, :jee, :deleted, :testId, topic_ids: [], subTopic_ids: []
+  permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: []
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -93,6 +93,7 @@ ActiveAdmin.register Question do
       row :test do |question|
         question.test
       end
+      row :type
     end
   end
 
@@ -122,6 +123,7 @@ ActiveAdmin.register Question do
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
+      f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
     end
     f.actions
   end
