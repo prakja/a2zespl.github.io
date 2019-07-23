@@ -23,7 +23,7 @@ batch_action :notify, form: {
 
   HTTParty.post(
     # Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
-    "http://192.168.1.25:3001/api/v1/job/importantNewsNotification",
+    "https://www.neetprep.com/api/v1/job/importantNewsNotification",
     body: {
       title: title,
       message: message,
