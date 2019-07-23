@@ -6,7 +6,7 @@
 </script>
 <div style="padding: 8px">
   <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
-    <h4 style="margin-top: -4px">Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %></h4>
+    <h4 style="margin-top: -4px">Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %>, <%= link_to "Past Doubts", "/admin/doubts?q[userId_eq]=" + @doubt_user.id.to_s, target: :_blank %> </h4>
     <div style="margin-left: 20px; margin-top: -10px">
       <h2><%= raw(@doubt.content) %></h2>
       <h5 style="margin-top: -10px"><%= Time.parse(@doubt.createdAt.to_s).to_date.to_formatted_s(:long) %></h5>
