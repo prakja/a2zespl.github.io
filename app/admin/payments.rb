@@ -1,7 +1,7 @@
 ActiveAdmin.register Payment do
   config.sort_order = 'createdAt_desc'
 
-  permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue, :course, :paymentForId
+  permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue, :course, :paymentForId, :createdAt
   remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut, :netRevenue
 
   scope :failed_payments
@@ -72,14 +72,14 @@ ActiveAdmin.register Payment do
       column :pendriveCut
       column :netRevenue
       column :installment
+      column ("Get Invoice") { |payment|
+        if payment.course && payment.userName && payment.amount && payment.userState && payment.userCity && payment.installment
+          raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '&secondInstallmentDate=' + (payment.installment.secondInstallmentDate).to_s + '&secondInstallmentAmount=' + (payment.installment.secondInstallmentAmount).to_s + '&finalInstallmentDate=' + (payment.installment.finalInstallmentDate).to_s + '&finalInstallmentAmount=' + (payment.installment.finalInstallmentAmount).to_s + '">Get Invoice</a>')
+        elsif payment.course && payment.userName && payment.amount && payment.userState && payment.userCity
+          raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '">Get Invoice</a>')
+        end
+      }
     end
-    column ("Get Invoice") { |payment|
-      if payment.course && payment.userName && payment.amount && payment.userState && payment.userCity && payment.installment
-        raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '&secondInstallmentDate=' + (payment.installment.secondInstallmentDate).to_s + '&secondInstallmentAmount=' + (payment.installment.secondInstallmentAmount).to_s + '&finalInstallmentDate=' + (payment.installment.finalInstallmentDate).to_s + '&finalInstallmentAmount=' + (payment.installment.finalInstallmentAmount).to_s + '">Get Invoice</a>')
-      elsif payment.course && payment.userName && payment.amount && payment.userState && payment.userCity
-        raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '">Get Invoice</a>')
-      end
-    }
     column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
     actions
@@ -114,6 +114,7 @@ ActiveAdmin.register Payment do
         f.input :gstCut, input_html: { disabled: true }
         f.input :pendriveCut
         f.input :netRevenue, input_html: { disabled: true }
+        f.input :createdAt, as: :date_picker
       end
     end
     f.actions
