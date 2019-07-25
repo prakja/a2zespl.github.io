@@ -12,6 +12,7 @@ ActiveAdmin.register Video do
 #   permitted
 # end
   remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations
+  filter :id_eq, as: :number, label: "Video ID"
   filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   # filter :subTopics_id_not_cont_any, label: "Has Sub-topics", as: :boolean
