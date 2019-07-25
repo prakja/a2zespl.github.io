@@ -40,7 +40,15 @@ class DoubtAnswersController < ApplicationController
       @minutes = (timeElapsed / 60) % 60
       @hours = (timeElapsed/3600)
 
-      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' + @video.id.to_s + '-abc&currentTimeStamp=' + timeElapsed.to_s + '">Go to Video</a>'
+      topic = Topic.find(@doubt.topicId)
+      subject = Subject.find(topic.subjectId)
+
+      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
+       @video.id.to_s + '-abc?subjectId=' + 
+       subject.id.to_s + '&chapterId=' +
+       topic.id.to_s + '&currentTimeStamp=' +
+       timeElapsed.to_s +
+       '">Go to Video</a>'
       
       @doubt_data += '<h5>Time: ' + @hours.to_s + ':' + @minutes.to_s + ':' + @seconds.to_s + '</h5>'
     end
