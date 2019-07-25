@@ -33,7 +33,16 @@ class DoubtAnswersController < ApplicationController
 
     if @doubt_tag == "video"
       @video = Video.find(@doubt.videoId)
-      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' + @video.id.to_s + '-abc">Go to Video</a>'
+      @annotation = VideoAnnotation.where(annotationId: @doubt.id).first
+
+      timeElapsed = @annotation.videoTimeStampInSeconds
+      @seconds = timeElapsed % 60
+      @minutes = (timeElapsed / 60) % 60
+      @hours = (timeElapsed/3600)
+
+      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' + @video.id.to_s + '-abc&currentTimeStamp=' + timeElapsed.to_s + '">Go to Video</a>'
+      
+      @doubt_data += '<h5>Time: ' + @hours.to_s + ':' + @minutes.to_s + ':' + @seconds.to_s + '</h5>'
     end
 
     @doubt_answers.each do |doubt_answer|

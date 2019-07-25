@@ -22,8 +22,8 @@ batch_action :notify, form: {
   imgUrl = inputs['imageUrl']
 
   HTTParty.post(
-    # Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
-    "https://www.neetprep.com/api/v1/job/importantNewsNotification",
+    Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
+    # "https://www.neetprep.com/api/v1/job/importantNewsNotification",
     body: {
       title: title,
       message: message,
