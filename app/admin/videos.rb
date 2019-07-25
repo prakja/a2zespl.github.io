@@ -37,6 +37,7 @@ ActiveAdmin.register Video do
     column :duration
     column ("Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
+    column ("History") {|video| raw('<a target="_blank" href="/admin/videos/' + (video.id).to_s + '/history">View History</a>')}
     actions
   end
 
@@ -61,6 +62,12 @@ ActiveAdmin.register Video do
     column (:subject) {|video| raw(video.topics[0].subject.name)}
     column (:chapter) {|video| raw(video.topics[0].name)}
     column :name
+  end
+
+  member_action :history do
+    @video = Video.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Video', item_id: @video.id)
+    render "layouts/history"
   end
 
   form do |f|
