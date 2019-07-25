@@ -1,5 +1,5 @@
 class Payment < ApplicationRecord
-  default_scope {where(paymentMode: ['kotak','cash','paytm wallet']).or(where(status: 'responseReceivedSuccess'))}
+  default_scope {where(paymentMode: ['kotak','cash','paytm','paytm wallet']).or(where(status: 'responseReceivedSuccess'))}
   before_create :before_create_update_set_default_values, :setCreatedTime, :setUpdatedTime
   before_update :before_create_update_set_default_values, :setUpdatedTime
   scope :failed_payments, -> {unscope(:where).where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
@@ -10,10 +10,15 @@ class Payment < ApplicationRecord
   self.table_name = "Payment"
 
   def setCreatedTime
-    self.createdAt = Time.now
+    if createdAt.blank?
+      self.createdAt = Time.now
+    end
   end
 
   def setUpdatedTime
+    if createdAt.blank?
+      self.createdAt = Time.now
+    end
     self.updatedAt = Time.now
   end
 
