@@ -12,6 +12,7 @@ class Video < ApplicationRecord
   has_many :issues, class_name: "CustomerIssue", foreign_key: "videoId"
 
   has_many :video_annotations, class_name: "VideoAnnotation", foreign_key: "videoId"
+  has_many :notes, through: :video_annotations
 
   scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}
   scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  54}})}
@@ -33,4 +34,13 @@ class Video < ApplicationRecord
   scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}
 
 
+  def ms_to_time(ms)
+    hours = ms / (1000 * 60 * 60)
+    ms = ms - hours * (60*60*1000)
+    minutes = ms / (1000 * 60) % 60
+    ms = ms - minutes * (60*1000)
+    seconds = ms / 1000
+    return hours, minutes, seconds
+  end
+  
 end

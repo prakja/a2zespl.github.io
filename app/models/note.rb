@@ -4,4 +4,5 @@ class Note < ApplicationRecord
  attribute :updatedAt, :datetime, default: Time.now
 
   has_one :video_annotation, class_name: "VideoAnnotation", foreign_key: "annotationId"
+  has_one :video, through: :video_annotation
 end

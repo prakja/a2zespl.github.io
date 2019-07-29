@@ -42,7 +42,7 @@ ActiveAdmin.register Video do
     actions
   end
 
-  show do
+  show do |video|
     attributes_table do
       row :name
       row :description
@@ -55,6 +55,22 @@ ActiveAdmin.register Video do
       end
       row :subTopics do |video|
         video.subTopics
+      end
+      panel "Video Annotation" do
+        table_for video.notes do
+          column :content do |note|
+            raw(note.content)
+          end
+          column :time do |note|
+            ms = note.video_annotation.videoTimeMS
+            hours = ms / (1000 * 60 * 60)
+            ms = ms - hours * (60*60*1000)
+            minutes = ms / (1000 * 60) % 60
+            ms = ms - minutes * (60*1000)
+            seconds = ms / 1000
+            raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
+          end
+        end
       end
     end
   end
