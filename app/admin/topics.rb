@@ -15,5 +15,6 @@ ActiveAdmin.register Topic do
   scope :neetprep_course
   sidebar :related_data, only: :show do
     link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id  })
+    link_to "Videos", admin_questions_path(q: { videoTopics_chapterId_eq: topic.id  })
   end
 end
