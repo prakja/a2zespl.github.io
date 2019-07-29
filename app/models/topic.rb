@@ -1,9 +1,9 @@
 class Topic < ApplicationRecord
   has_paper_trail
-  
+
   self.table_name = "Topic"
   scope :neetprep_course_id_filter, -> (course_id) {
-    joins(:subject).where(Subject: {courseId: course_id}).includes(:subject)
+    joins(:subject => :course).where(Subject: {courseId: course_id}).includes(:subject => :course)
   }
   # only include pcb topics for now
   scope :neetprep_course, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [53,54,55,56]}).includes(:subject)}
@@ -16,7 +16,7 @@ class Topic < ApplicationRecord
   has_many :videos, through: :topicVideos
   has_many :doubts, class_name: "Doubt", foreign_key: "topicId"
   has_many :scheduleItems, class_name: "ScheduleItem", foreign_key: "topicId"
-  
+
   has_many :topicSubjects, -> {where(deleted: false)}, foreign_key: :chapterId, class_name: 'SubjectChapter'
   has_many :subjects, through: :topicSubjects
 
@@ -27,6 +27,6 @@ class Topic < ApplicationRecord
   end
 
   def self.name_with_subject
-    Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id]).pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
+    Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id]).pluck(:name, :'Subject.name', :'Course.name' , :id).map{|topic_name, subject_name, course_name, topic_id| [topic_name + " - " + subject_name + " - " + course_name, topic_id]}
   end
 end
