@@ -13,7 +13,7 @@ class Subject < ApplicationRecord
   end
 
   self.table_name = "Subject"
-  scope :neetprep_course, -> {where(courseId:  8)}
+  scope :neetprep_course, -> {where(courseId: Rails.configuration.hinglish_full_course_id)}
   belongs_to :course, foreign_key: 'courseId', class_name: 'Course'
 
   has_many :subjectTopics, -> {where(deleted: false)}, foreign_key: :subjectId, class_name: 'SubjectChapter'
