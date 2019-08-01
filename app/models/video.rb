@@ -31,16 +31,5 @@ class Video < ApplicationRecord
   # }
   
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
-  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}
-
-
-  def ms_to_time(ms)
-    hours = ms / (1000 * 60 * 60)
-    ms = ms - hours * (60*60*1000)
-    minutes = ms / (1000 * 60) % 60
-    ms = ms - minutes * (60*1000)
-    seconds = ms / 1000
-    return hours, minutes, seconds
-  end
-  
+  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}  
 end
