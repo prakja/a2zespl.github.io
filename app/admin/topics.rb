@@ -14,6 +14,9 @@ ActiveAdmin.register Topic do
   remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subjects
   scope :neetprep_course
   sidebar :related_data, only: :show do
-    link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id  })
+    ul do
+      li link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
+      li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
+    end
   end
 end

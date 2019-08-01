@@ -5,6 +5,11 @@ ActiveAdmin.register Payment do
   remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut, :netRevenue
 
   scope :failed_payments
+  scope :kotak_payments
+  scope :paytm_payments
+  scope :cash_payments
+  scope :direct_payments
+  scope :direct_payments_test_series
 
   action_item :fetch_quickbook_payments, only: :index do
     link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
