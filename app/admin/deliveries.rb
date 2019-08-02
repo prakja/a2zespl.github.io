@@ -31,7 +31,7 @@ ActiveAdmin.register Delivery do
       f.input :courierSource, label: "Courier source", as: :select, :collection => ["office collect", "DTDC", "speed post", "DTDC + party collect", "speed post + party collect"]
       f.input :status, label: "Delivery status", hint: "Example: Done, No courier service, Wrong adrress...etc"
       f.input :trackingNumber, label: "Package tracking number"
-      f.input :usb, as: :select, :collection => ["32 GB", "32 GB + 16 GB", "64 GB", "64 GB + 16 GB", "64 GB + 32 GB", "128 GB"]
+      f.input :usb, as: :select, :collection => ["32 GB", "32 GB + 16 GB", "64 GB", "64 GB + 16 GB", "64 GB + 32 GB", "64 GB + 64 GB" , "128 GB"]
       f.input :dongle, as: :select, :collection => ["1", "2", "3"]
       f.input :packed
       f.input :delivered
