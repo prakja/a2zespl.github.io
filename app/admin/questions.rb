@@ -94,6 +94,7 @@ ActiveAdmin.register Question do
         question.test
       end
       row :type
+      row :sequenceId
     end
   end
 
@@ -124,6 +125,7 @@ ActiveAdmin.register Question do
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
+      f.input :sequenceId
     end
     f.actions
   end
