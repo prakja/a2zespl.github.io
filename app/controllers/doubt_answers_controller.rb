@@ -50,7 +50,7 @@ class DoubtAnswersController < ApplicationController
        timeElapsed.to_s +
        '">Go to Video</a>'
       
-      @doubt_data += '<h5>Time: ' + @hours.to_s + ':' + @minutes.to_s + ':' + @seconds.to_s + '</h5>'
+      @doubt_data += '<h5>Time: ' + @hours.to_s.rjust(2, '0') + ':' + @minutes.to_s.rjust(2, '0') + ':' + @seconds.to_s.rjust(2, '0') + '</h5>'
     end
 
     @doubt_answers.each do |doubt_answer|
