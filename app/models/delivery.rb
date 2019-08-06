@@ -1,7 +1,7 @@
 class Delivery < ApplicationRecord
   self.table_name = "Delivery"
-  before_create :setCreatedTime, :setUpdatedTime
-  before_update :setUpdatedTime
+  before_create :setCreatedTime, :setUpdatedTime, :before_create_update_set_default_values
+  before_update :setUpdatedTime, :before_create_update_set_default_values
   has_paper_trail
 
   def setCreatedTime
@@ -10,6 +10,30 @@ class Delivery < ApplicationRecord
 
   def setUpdatedTime
     self.updatedAt = Time.now
+  end
+
+  def before_create_update_set_default_values
+    if self.course == "Full Course + Pendrive" and self.usb.blank?
+      self.usb = "128 GB"
+    elsif self.course == "Physics Course + Pendrive" and self.usb.blank?
+      self.usb = "32 GB + 16 GB"
+    elsif self.course == "Chemistry Course + Pendrive" and self.usb.blank?
+      self.usb = "32 GB"
+    elsif self.course == "Biology Course + Pendrive" and self.usb.blank?
+      self.usb = "32 GB + 16 GB"
+    elsif self.course == "Physics + Biology + Pendrive" and self.usb.blank?
+      self.usb = "64 GB + 32 GB"
+    elsif self.course == "Chemistry + Biology + Pendrive" and self.usb.blank?
+      self.usb = "64 GB + 16 GB"
+    elsif self.course == "Physics + Chemistry + Pendrive" and self.usb.blank?
+      self.usb = "64 GB + 16 GB"
+    elsif self.course == "Dongle Only" and self.usb.blank?
+      self.usb = ""
+    elsif self.course == "9th Class Course + Pendrive" and self.usb.blank?
+      self.usb = "32 GB"
+    elsif self.course == "10th Class Course + Pendrive" and self.usb.blank?
+      self.usb = "64 GB"
+    end
   end
 
   after_validation :check_installment_required_dueAmount, :check_installment_required_dueDate
