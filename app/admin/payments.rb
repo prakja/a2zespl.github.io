@@ -80,7 +80,7 @@ ActiveAdmin.register Payment do
       column ("Get Invoice") { |payment|
         if payment.course && payment.userName && payment.amount && payment.userState && payment.userCity && payment.installment
           raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '&secondInstallmentDate=' + (payment.installment.secondInstallmentDate).to_s + '&secondInstallmentAmount=' + (payment.installment.secondInstallmentAmount).to_s + '&finalInstallmentDate=' + (payment.installment.finalInstallmentDate).to_s + '&finalInstallmentAmount=' + (payment.installment.finalInstallmentAmount).to_s + '">Get Invoice</a>')
-        elsif payment.course && payment.userName && payment.amount && payment.userState && payment.userCity
+        elsif payment.course && payment.userName && payment.amount
           raw('<a target="_blank" href="'+ Rails.configuration.node_site_url + 'getInvoice?id=' + (payment.id).to_s + '&name=' + (payment.userName).to_s + '&course=' + (payment.course.name).to_s + '&qty=1&amount=' + (payment.amount).to_s + + '&state=' + (payment.userState).to_s + '&city=' + (payment.userCity).to_s + '&invoiceDate=' + (payment.createdAt).to_s + '">Get Invoice</a>')
         end
       }
