@@ -4,7 +4,8 @@ class Test < ApplicationRecord
     self.ownerType = nil if self.ownerId.blank?
     self.exam = nil if self.exam.blank?
   end
-
+  
+  has_paper_trail
   self.table_name = "Test"
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now

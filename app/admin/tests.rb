@@ -1,17 +1,4 @@
 ActiveAdmin.register Test do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
-
 permit_params :name, :description, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId, :courses, course_ids: []
 remove_filter :topic, :questions, :test_leader_boards
 
@@ -35,7 +22,14 @@ index do
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
   column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white>Get PDF</a>')}
+  column ("History") {|test| raw('<a target="_blank" href="/admin/tests/' + (test.id).to_s + '/history">View History</a>')}
   actions
+end
+
+member_action :history do
+  @test = Test.find(params[:id])
+  @versions = PaperTrail::Version.where(item_type: 'Test', item_id: @test.id)
+  render "layouts/history"
 end
 
 show do
