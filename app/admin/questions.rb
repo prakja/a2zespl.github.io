@@ -82,7 +82,7 @@ ActiveAdmin.register Question do
       end
       # row :correctOptionIndex
       row :correctOption do |question|
-        question.options[question.correctOptionIndex]
+        question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank?
       end
       row :topics do |question|
         question.topics
