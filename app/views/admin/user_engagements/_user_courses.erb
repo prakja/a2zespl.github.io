@@ -1,0 +1,1 @@
+<%= line_chart UserCourse.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count, xtitle: 'Last Month', ytitle: 'Paid User Courses' %>

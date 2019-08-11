@@ -1,4 +1,1 @@
 <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
-<%= line_chart User.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count, xtitle: 'Last Month', ytitle: "New Users" %>
-<%= line_chart Answer.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count, xtitle: 'Last Month', ytitle: "Questios Solved" %>
-<%= line_chart UserCourse.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count, xtitle: 'Last Month', ytitle: 'Paid User Courses' %>
