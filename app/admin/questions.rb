@@ -12,8 +12,8 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues, :versions, :doubts
-  permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: []
+  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :tests, :issues, :versions, :doubts
+  permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: [], test_ids: []
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -96,8 +96,8 @@ ActiveAdmin.register Question do
       row :subTopics do |question|
         question.subTopics
       end
-      row :test do |question|
-        question.test
+      row :tests do |question|
+        question.tests
       end
       row :type
       row :sequenceId
@@ -126,7 +126,7 @@ ActiveAdmin.register Question do
       f.input :question
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
-      f.input :test, input_html: { class: "select2" }
+      f.input :tests, input_html: { class: "select2" }
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
