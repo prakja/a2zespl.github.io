@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues, :versions
+  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :test, :issues, :versions, :doubts
   permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: []
 
   # before_filter only: :index do
@@ -63,6 +63,12 @@ ActiveAdmin.register Question do
       toggle_bool_column :jee
     else
       column :jee
+    end
+
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+      column :doubt_count, sortable: :doubts do |question|
+        question.doubts.count
+      end
     end
     actions
   end

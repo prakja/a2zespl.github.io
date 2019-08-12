@@ -22,6 +22,7 @@ class Question < ApplicationRecord
   has_many :subTopics, through: :questionSubTopics
   has_many :issues, class_name: "CustomerIssue", foreign_key: "questionId"
   belongs_to :test, foreign_key: :testId, optional: true
+  has_many :doubts, class_name: "Doubt", foreign_key: "questionId"
 
   def self.distinct_type
     Question.connection.select_all("select distinct \"type\" from \"Question\"")

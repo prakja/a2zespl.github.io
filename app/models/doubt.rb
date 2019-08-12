@@ -3,6 +3,8 @@ class Doubt < ApplicationRecord
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId"
   belongs_to :user, class_name: "User", foreign_key: "userId"
   has_many :answers, foreign_key: "doubtId", class_name: "DoubtAnswer"
+  belongs_to :question, class_name: "Question", foreign_key: "questionId", counter_cache: true, optional: true
+
   
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
