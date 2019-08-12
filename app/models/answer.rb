@@ -4,9 +4,9 @@ class Answer < ApplicationRecord
 
  scope :paid, ->(paid, start_date, end_date) {
    if paid == "yes"
-     where(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
+     where(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
    else
-     where.not(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
+     where.not(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
    end
  }
 
