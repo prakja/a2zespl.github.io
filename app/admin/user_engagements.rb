@@ -4,6 +4,10 @@ ActiveAdmin.register_page "User Engagements" do
     render json: User.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
   end
 
+  page_action :paid_users_answers_json, method: :get do
+    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
+  end
+
   page_action :solved_questions_json, method: :get do
     render json: Answer.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
   end
@@ -23,6 +27,9 @@ ActiveAdmin.register_page "User Engagements" do
       end
       tab :user_courses do
         render partial: 'user_courses'
+      end
+      tab :paid_users_answers do
+        render partial: 'paid_users_answers'
       end
     end
   end
