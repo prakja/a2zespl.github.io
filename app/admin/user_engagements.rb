@@ -5,7 +5,7 @@ ActiveAdmin.register_page "User Engagements" do
   end
 
   page_action :paid_users_answers_json, method: :get do
-    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
+    render json: Answer.paid_users_answers.group_by_month(:createdAt, format: "%b %Y").count
   end
 
   page_action :solved_questions_json, method: :get do
