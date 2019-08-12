@@ -10,6 +10,6 @@ class Answer < ApplicationRecord
    end
  }
 
- scope :paid_users_answers, -> {paid("yes", '2018-06-01 00:00:00 +0530', '2018-06-29 00:00:00 +0530')}
+ scope :paid_users_answers, -> {paid("yes", '2018-06-29 00:00:00 +0530', '2018-06-01 00:00:00 +0530')}
 
 end
