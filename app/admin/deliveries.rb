@@ -86,6 +86,7 @@ ActiveAdmin.register Delivery do
       column :packed
       column :delivered
     end
+    column :createdAt
     column ("History") {|delivery| raw('<a target="_blank" href="/admin/deliveries/' + (delivery.id).to_s + '/history">View History</a>')}
     actions
   end
