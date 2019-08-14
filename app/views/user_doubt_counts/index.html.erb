@@ -1,0 +1,13 @@
+<h3>User stats for: <%= @user.name %></h3>
+<table style="width:40%; border: 1px solid grey">
+  <tr>
+    <th>Subject Name</th>
+    <th>Doubt Count</th> 
+  </tr>
+  <% @doubts_subject.each do |key, value| %>
+    <tr>
+      <td><%= key.name %></td>
+      <td><%= value.count %></td>
+    </tr>
+  <% end %>
+</table>

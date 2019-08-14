@@ -15,6 +15,6 @@ class Test < ApplicationRecord
   # has_many :questions, class_name: "Question", foreign_key: "testId"
   has_many :test_leader_boards, class_name: "TestLeaderBoard", foreign_key: "testId"
 
-  has_many :testQuestions, foreign_key: :testId, class_name: 'TestQuestion'
+  has_many :testQuestions, foreign_key: :testId, class_name: 'TestQuestion', dependent: :destroy
   has_many :questions, through: :testQuestions, dependent: :destroy
 end

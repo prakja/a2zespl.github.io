@@ -24,7 +24,7 @@ class Question < ApplicationRecord
   # belongs_to :test, foreign_key: :testId, optional: true
   has_many :doubts, class_name: "Doubt", foreign_key: "questionId"
 
-  has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion'
+  has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion', dependent: :destroy
   has_many :tests, through: :questionTests, dependent: :destroy
 
   def self.distinct_type
