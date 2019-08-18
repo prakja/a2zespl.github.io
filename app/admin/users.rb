@@ -21,6 +21,10 @@ form do |f|
   f.actions
 end
 
+action_item :user, only: :show do
+  link_to 'User Doubt Stat', "/user_doubt_counts/stats?user=" + resource.id.to_s
+end
+
 sidebar :user_activity, only: :show do
   ul do
     li link_to "Doubts", admin_doubts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')

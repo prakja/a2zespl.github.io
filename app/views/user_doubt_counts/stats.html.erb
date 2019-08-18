@@ -1,0 +1,52 @@
+<div style="padding: 8px">
+  <h3>User doubt stats for: <%= @user.name %></h3>
+  <h4>Overall</h4>
+  <table style="width:40%; border: 1px solid grey">
+    <tr>
+      <th>Subject Name</th>
+      <th>Doubt Count</th> 
+    </tr>
+    <% @doubts_subject.each do |key, value| %>
+      <tr>
+        <td><%= key.name %></td>
+        <td><%= value.count %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h4>In time frame</h4>
+  Start Date: <input id="start" type="date">
+  End Date: <input id="end" type="date">
+  <button type="button" onclick="setTimeFrame()">Set Time Frame</button>
+  <div style="margin-top: 4px"></div>
+  <table style="width:40%; border: 1px solid grey">
+    <tr>
+      <th>Subject Name</th>
+      <th>Doubt Count</th> 
+    </tr>
+    <% @doubts_subject_time.each do |key, value| %>
+      <tr>
+        <td><%= key.name %></td>
+        <td><%= value.count %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<script>
+  var currentUrl = new URL (window.location.href);
+  var startDate = currentUrl.searchParams.get("startDate");
+  var endDate = currentUrl.searchParams.get("endDate");
+  var userId = currentUrl.searchParams.get("user");
+
+  document.getElementById("start").value = startDate
+  document.getElementById("end").value = endDate
+
+  function setTimeFrame () {
+    var startDate = document.getElementById("start").value;
+    var endDate = document.getElementById("end").value;
+
+    var link = "/user_doubt_counts/stats?user=" + userId + "&startDate=" + startDate + "&endDate=" + endDate
+    window.location.href = link
+  }
+</script>
