@@ -4,7 +4,12 @@ class Doubt < ApplicationRecord
   belongs_to :user, class_name: "User", foreign_key: "userId"
   has_many :answers, foreign_key: "doubtId", class_name: "DoubtAnswer"
   belongs_to :question, class_name: "Question", foreign_key: "questionId", counter_cache: true, optional: true
+  has_one :doubt_admin, class_name: "DoubtAdmin", foreign_key: "doubtId"
+  has_one :admin_user, through: :doubt_admin
 
+  scope :my_doubts, -> (admin_id) {
+    joins(:doubt_admin => :admin_user).where(doubt_admin: {admin_users: {id: admin_id}})
+  }
   
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
@@ -64,6 +69,8 @@ class Doubt < ApplicationRecord
   scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(54)}
   scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(55)}
   scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(56)}
+
+  # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
   scope :botany_paid_student_doubts_two_days, -> {botany_paid_student_doubts().two_days_pending('yes')}
   scope :botany_paid_student_doubts_five_days, -> {botany_paid_student_doubts().five_days_pending('yes')}

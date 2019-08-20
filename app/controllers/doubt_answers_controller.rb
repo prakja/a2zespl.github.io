@@ -43,6 +43,8 @@ class DoubtAnswersController < ApplicationController
       topic = Topic.find(@doubt.topicId)
       subject = Subject.find(topic.subjectId)
 
+      # @doubt_data =+ '<div><video-js id=vid1 preload="auto" width="640" height="268" controls> <source src="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8" type="application/x-mpegURL"></video-js></div>'
+
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
        @video.id.to_s + '-abc?subjectId=' + 
        subject.id.to_s + '&chapterId=' +
