@@ -73,6 +73,31 @@ tinymce.init({
   video_template_callback: (data) => {
     return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
   },
+  file_picker_callback: function(cb, value, meta) {
+    if (meta.filetype != "media") {
+      return;
+    }
+    var input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', '*/*');
+
+    input.onchange = function() {
+      const data = new FormData();
+      data.append('file', this.files[0]);
+      data.append('filename', this.files[0].name);
+
+      fetch('https://www.neetprep.com/api/v1/fileUpload/fileUpload', {
+        method: 'POST',
+        body: data,
+      }).then((response) => {
+        response.json().then((body) => {
+          cb(body.location);
+        });
+      });
+    };
+    input.click();
+  },
+  file_picker_type: 'media',
   setup: function (editor) {
     editor.on('blur', function (e) {
       document.getElementById('question_explanation').value = editor.getContent();

@@ -4,7 +4,20 @@ class Question < ApplicationRecord
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
   end
   has_paper_trail
-  
+  after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
+
+  def after_update_question
+    if self.tests.blank?
+      return
+    end
+
+    HTTParty.post(
+      Rails.configuration.node_site_url + "api/v1/webhook/afterUpdateQuestion",
+       body: {
+         id: self.id
+    })
+  end
+
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
