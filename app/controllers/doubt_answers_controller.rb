@@ -43,14 +43,28 @@ class DoubtAnswersController < ApplicationController
       topic = Topic.find(@doubt.topicId)
       subject = Subject.find(topic.subjectId)
 
-      # @doubt_data =+ '<div><video-js id=vid1 preload="auto" width="640" height="268" controls> <source src="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8" type="application/x-mpegURL"></video-js></div>'
+      if @video.url.include? ".m3u8"
+        @doubt_data =+ 
+        '<script src="https://unpkg.com/video.js/dist/video.js"></script>
+        <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        <div>
+          <video-js id="my_video_1" class="vjs-default-skin" controls preload="auto" width="640" height="268">
+            <source src="' + @video.url + '" type="application/x-mpegURL">
+          </video-js>
+        </div>'
+      else
+        uri = URI.parse(@video.url)
+        params = CGI.parse(uri.query)
+        @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
+      end
 
-      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
-       @video.id.to_s + '-abc?subjectId=' + 
-       subject.id.to_s + '&chapterId=' +
-       topic.id.to_s + '&currentTimeStamp=' +
-       timeElapsed.to_s +
-       '">Go to Video</a>'
+      # @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
+      #  @video.id.to_s + '-abc?subjectId=' + 
+      #  subject.id.to_s + '&chapterId=' +
+      #  topic.id.to_s + '&currentTimeStamp=' +
+      #  timeElapsed.to_s +
+      #  '">Go to Video</a>'
       
       @doubt_data += '<h5>Time: ' + @hours.to_s.rjust(2, '0') + ':' + @minutes.to_s.rjust(2, '0') + ':' + @seconds.to_s.rjust(2, '0') + '</h5>'
     end
