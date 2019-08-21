@@ -1,7 +1,14 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script>
   window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub])
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    if ("<%= @doubt_tag %>" == "video") {
+      console.log("Has video");
+      var player = videojs('my_video_1');
+      player.src({
+        withCredentials: true
+      }); 
+    }
   };
 </script>
 <div style="padding: 8px">
