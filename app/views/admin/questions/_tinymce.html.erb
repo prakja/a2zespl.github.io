@@ -46,9 +46,6 @@ tinymce.init({
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better? this is especially added for data image which exist and images_dataimg_filter was anyway getting called for that
   editorObject: {'id': 'question_question'},
-  video_template_callback: (data) => {
-    return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
-  },
   setup: function (editor) {
     editor.on('blur', function (e) {
       document.getElementById('question_question').value = editor.getContent();
@@ -70,9 +67,6 @@ tinymce.init({
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better? this is especially added for data image which exist and images_dataimg_filter was anyway getting called for that
   editorObject: {'id': 'question_explanation'},
-  video_template_callback: (data) => {
-    return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
-  },
   file_picker_callback: function(cb, value, meta) {
     if (meta.filetype != "media") {
       return;
