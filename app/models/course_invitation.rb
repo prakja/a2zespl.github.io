@@ -50,8 +50,14 @@ class CourseInvitation < ApplicationRecord
      })
    end
 
-   scope :invitations_without_payment_last_7_days, -> {
+   scope :invitations_without_payment, -> {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
+   }
+   scope :invitations_expiring_by_tomorrow, -> {
+     where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now, :expiryAt => (Time.now - 2.day)..Time.now);
+   }
+   scope :my_invitations_expiring_soon, ->(admin_user) {
+     where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit" = ? and "item_type" = ? and "event" = ?', admin_user, 'CourseInvitation', 'create').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
    }
    has_many :courseInvitationPayments, foreign_key: :courseInvitationId, class_name: 'PaymentCourseInvitation'
    has_many :payments, through: :courseInvitationPayments

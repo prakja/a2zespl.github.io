@@ -1,7 +1,17 @@
 ActiveAdmin.register CourseInvitation do
   permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
-  scope :invitations_without_payment_last_7_days
+  scope "invitations without payments", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
+    courseInvitation.invitations_without_payment
+  end
+
+  scope "invitations expiring tomorrow", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
+    courseInvitation.invitations_expiring_by_tomorrow
+  end
+
+  scope "my invitations expiring in 7 days" do |courseInvitation|
+    courseInvitation.my_invitations_expiring_soon(current_admin_user.id.to_s)
+  end
 
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])
