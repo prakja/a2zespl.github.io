@@ -33,8 +33,13 @@ ActiveAdmin.register Delivery do
       f.input :trackingNumber, label: "Package tracking number"
       f.input :usb, as: :select, :collection => ["32 GB", "32 GB + 16 GB", "64 GB", "64 GB + 16 GB", "64 GB + 32 GB", "64 GB + 64 GB" , "128 GB"]
       f.input :dongle, as: :select, :collection => ["1"], selected: '1'
-      f.input :packed
-      f.input :delivered
+      if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
+        f.input :packed
+        f.input :delivered
+      else
+        f.input :packed, input_html: { disabled: true }
+        f.input :delivered, input_html: { disabled: true }
+      end
     end
     f.actions
   end
