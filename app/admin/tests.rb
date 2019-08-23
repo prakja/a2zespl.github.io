@@ -1,6 +1,6 @@
 ActiveAdmin.register Test do
 permit_params :name, :description, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId, :courses, course_ids: []
-remove_filter :topic, :questions, :test_leader_boards
+remove_filter :topic, :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests
 
 filter :id_eq, as: :number, label: "Test ID"
 preserve_default_filters!
