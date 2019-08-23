@@ -1,0 +1,74 @@
+<h2><%= @course.name %></h2>
+<table style="width:100%">
+  <tr>
+    <th>Entity</th>
+    <th>Count</th> 
+  </tr>
+  <tr>
+    <td>Subjects</td>
+    <td><%= @course.subjects.count %></td>
+  </tr>
+  <tr>
+    <td>Topics</td>
+    <td><%= @course_topics.count %></td>
+  </tr>
+  <tr>
+    <td>Sub Topics</td>
+    <td><%= @course_subTopics.count %></td>
+  </tr>
+  <tr>
+      <td>Tests</td>
+      <td><%= @course_subTopics.count %></td>
+    </tr>
+
+  <tr>
+    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
+      <tr class="header">
+        <th>Subject Name</th>
+        <th>Topic Count</th> 
+      </tr>
+      <% @course_subjects.each do |subject| %>
+        <tr>
+          <td><%= subject.name %></td>
+          <td><%= subject.topics.count %></td>
+        </tr>
+      <% end %>
+    </table>
+  </tr>
+
+  <tr>
+    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
+      <tr class="header">
+        <th>Topic Name</th>
+        <th>SubTopic Count</th>
+        <th>Question Count</th> 
+        <th>Video Count</th>  
+      </tr>
+      <% @course_topics.each do |topic| %>
+        <tr>
+          <td><%= topic.name %></td>
+          <td><%= @course_topics_subTopics[topic.id] %></td>
+          <td><%= @course_topics_questions[topic.id] %></td>
+          <td><%= @course_topics_videos[topic.id] %></td>
+        </tr>
+      <% end %>
+    </table>
+  </tr>
+
+  <tr>
+    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
+      
+    </table>
+  </tr>
+</table>
+
+
+
+<script>
+    $('.header').nextUntil('tr.header').slideToggle(1000);
+    $('.header').click(function(){
+      $(this).find('span').text(function(_, value){return value=='-'?'+':'-'});
+       $(this).nextUntil('tr.header').slideToggle(100, function(){
+       });
+   });
+</script>

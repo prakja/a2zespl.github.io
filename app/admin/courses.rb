@@ -1,6 +1,6 @@
 ActiveAdmin.register Course do
   permit_params :name, :description, :package, :fee, :public, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt
-  remove_filter :payments
+  remove_filter :payments, :subjects
 
   form do |f|
     f.semantic_errors *f.object.errors.keys

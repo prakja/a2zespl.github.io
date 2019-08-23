@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   get "doubt_answers/connect_user"
   post "doubt_answers/post_answer"
   get "user_doubt_counts/stats"
+  get "course_details/show"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
