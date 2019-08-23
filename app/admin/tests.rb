@@ -58,11 +58,11 @@ show do
 end
 
 action_item :add_question, only: :show do
-  link_to 'Add Question', '../../admin/questions/new?question[testId]=' + resource.id.to_s
+  link_to 'Add Question', '../../admin/questions/new?question[test_ids][]=' + resource.id.to_s
 end
 
 action_item :show_question, only: :show do
-  link_to 'All Test Questions', "../../admin/questions?q[testId_eq]=" + resource.id.to_s
+  link_to 'All Test Questions', "../../admin/questions?q[questionTests_testId_eq]=" + resource.id.to_s
 end
 
 action_item :show_leaderboard, only: :show do

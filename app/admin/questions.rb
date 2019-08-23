@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :tests, :issues, :versions, :doubts
+  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts
   permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: [], test_ids: []
 
   # before_filter only: :index do
@@ -29,7 +29,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
-  filter :testId_eq, as: :number, label: "Test ID"
+  filter :tests
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
