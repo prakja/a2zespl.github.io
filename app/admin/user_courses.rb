@@ -5,6 +5,8 @@ ActiveAdmin.register UserCourse do
 
   filter :invitationId_eq, as: :number, label: "Invitation ID"
   filter :userId_eq, as: :number, label: "User ID"
+  filter :user_email, as: :string, label: "User Email"
+  filter :user_phone, as: :string, label: "User Phone"
 
   index do
     id_column
@@ -24,6 +26,16 @@ ActiveAdmin.register UserCourse do
     column ("user profile email") { |userCourse|
       if userCourse.user.user_profile
         userCourse.user.user_profile.email
+      end
+    }
+    column ("user phone") { |userCourse|
+      if userCourse.user
+        userCourse.user.phone
+      end
+    }
+    column ("user profile phone") { |userCourse|
+      if userCourse.user.user_profile
+        userCourse.user.user_profile.phone
       end
     }
     column (:role) { |userCourse| raw(userCourse.role)  }
