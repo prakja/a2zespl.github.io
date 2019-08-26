@@ -11,7 +11,7 @@ ActiveAdmin.register SubTopic do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-  remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos
+  remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos, :versions
   permit_params :name, :topicId
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"

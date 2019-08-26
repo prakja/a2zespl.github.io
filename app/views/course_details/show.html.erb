@@ -6,20 +6,20 @@
   </tr>
   <tr>
     <td>Subjects</td>
-    <td><%= @course.subjects.count %></td>
+    <td><%= link_to  @course.subjects.count, admin_subjects_path(q: {courseId_eq: @course_id}) %></td>
   </tr>
   <tr>
     <td>Topics</td>
-    <td><%= @course_topics.count %></td>
+    <td><%= link_to @course_topics.count, admin_topics_path(q: {subjectId_in: @course.subjects.pluck("id")}) %></td>
   </tr>
   <tr>
     <td>Sub Topics</td>
-    <td><%= @course_subTopics.count %></td>
+    <td><%= link_to @course_subTopics_count, admin_sub_topics_path(q: {topicId_in: @course_topics.pluck("id")}) %></td>
   </tr>
   <tr>
-      <td>Tests</td>
-      <td><%= @course_subTopics.count %></td>
-    </tr>
+    <td>Tests</td>
+    <td><%= link_to @course.tests.count, admin_tests_path(q: {courses_id_ed: @course_id}) %></td>
+  </tr>
 
   <tr>
     <table style="margin-left: 16px; width:50%; border: grey solid 1px">
@@ -30,7 +30,7 @@
       <% @course_subjects.each do |subject| %>
         <tr>
           <td><%= subject.name %></td>
-          <td><%= subject.topics.count %></td>
+          <td><%= link_to subject.topics.count, admin_topics_path(q: {subjectId_eq: subject.id}) %></td>
         </tr>
       <% end %>
     </table>
@@ -47,9 +47,9 @@
       <% @course_topics.each do |topic| %>
         <tr>
           <td><%= topic.name %></td>
-          <td><%= @course_topics_subTopics[topic.id] %></td>
-          <td><%= @course_topics_questions[topic.id] %></td>
-          <td><%= @course_topics_videos[topic.id] %></td>
+          <td><%= link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) %></td>
+          <td><%= link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) %></td>
+          <td><%= link_to @course_topics_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id}) %></td>
         </tr>
       <% end %>
     </table>
@@ -57,7 +57,7 @@
 
   <tr>
     <table style="margin-left: 16px; width:50%; border: grey solid 1px">
-      
+
     </table>
   </tr>
 </table>
