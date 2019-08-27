@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts
+  remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests
   permit_params :question, :correctOptionIndex, :explanation, :jee, :type, :deleted, :testId, topic_ids: [], subTopic_ids: [], test_ids: []
 
   # before_filter only: :index do

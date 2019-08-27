@@ -11,7 +11,7 @@ class Video < ApplicationRecord
 
   has_many :issues, class_name: "CustomerIssue", foreign_key: "videoId"
 
-  has_many :video_annotations, class_name: "VideoAnnotation", foreign_key: "videoId"
+  has_many :video_annotations, -> { where(annotationType: "Note") }, class_name: "VideoAnnotation", foreign_key: "videoId"
   has_many :notes, through: :video_annotations
 
   scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}

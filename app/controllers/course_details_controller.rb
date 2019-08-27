@@ -4,7 +4,7 @@ class CourseDetailsController < ApplicationController
 
   def show
     @course_id = params.require(:courseId)
-    @course = Course.find(@course_id)
+    @course = Course.includes(subjects: :topics).find(@course_id)
     
     @course_subjects = @course.subjects
 
@@ -17,22 +17,26 @@ class CourseDetailsController < ApplicationController
     @course_topics_videos = {}
     @course_topics_questions = {}
 
-    @course_videos = []
-    @course_questions = []
-    @course_subTopics = []
+    @course_videos_count = 0
+    @course_questions_count = 0
+    @course_subTopics_count = 0  
+
+
 
     @course_topics.each do |topic|
-      videos = topic.videos
-      questions = topic.questions
-      subtopics = topic.subTopics
+      # videos = topic.videos
+      # questions = topic.questions
+      # subtopics = topic.subTopics
 
-      @course_videos += videos
-      @course_questions += questions
-      @course_subTopics += subtopics
+      # @course_videos += videos
+      # @course_questions += questions
+      # @course_subTopics += subtopics
     
-      @course_topics_videos[topic.id] = videos.length
-      @course_topics_questions[topic.id] = questions.length
-      @course_topics_subTopics[topic.id] = subtopics.length
+      @course_topics_videos[topic.id] = topic.videos.count
+      @course_topics_questions[topic.id] = topic.questions.count
+      @course_topics_subTopics[topic.id] = topic.subTopics.count
+
+      @course_subTopics_count += @course_topics_subTopics[topic.id]
     end
   end
 end
