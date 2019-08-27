@@ -1,4 +1,9 @@
 <h2><%= @course.name %></h2>
+<div>
+  <button onclick="sortTable(1, 'sortST')">Sort By SubTopic Count</button>
+  <button onclick="sortTable(2, 'sortQ')">Sort By Question Count</button>
+  <button onclick="sortTable(3, 'sortV')">Sort By Video Count</button>
+</div>
 <table style="width:100%">
   <tr>
     <th>Entity</th>
@@ -37,7 +42,7 @@
   </tr>
 
   <tr>
-    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
+    <table id="chaper_table" style="margin-left: 16px; width:50%; border: grey solid 1px">
       <tr class="header">
         <th>Topic Name</th>
         <th>SubTopic Count</th>
@@ -46,29 +51,56 @@
       </tr>
       <% @course_topics.each do |topic| %>
         <tr>
-          <td><%= topic.name %></td>
+          <td><%= topic.name + " (" + topic.subject.name + ")" %></td>
           <td><%= link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) %></td>
+          <!-- link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) -->
           <td><%= link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) %></td>
+          <!-- link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) -->
           <td><%= link_to @course_topics_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id}) %></td>
         </tr>
       <% end %>
     </table>
   </tr>
-
-  <tr>
-    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
-
-    </table>
-  </tr>
 </table>
 
-
-
 <script>
-    $('.header').nextUntil('tr.header').slideToggle(1000);
-    $('.header').click(function(){
-      $(this).find('span').text(function(_, value){return value=='-'?'+':'-'});
-       $(this).nextUntil('tr.header').slideToggle(100, function(){
-       });
+  $('.header').nextUntil('tr.header').slideToggle(1000);
+  $('.header').click(function(){
+    $(this).find('span').text(function(_, value){return value=='-'?'+':'-'});
+      $(this).nextUntil('tr.header').slideToggle(100, function(){
+      });
    });
+
+   var ascendingOrder = false;
+   var currentOperation;
+
+   function sortTable(col, task) {
+    if (currentOperation == task) {
+      ascendingOrder = !ascendingOrder
+    } else {
+      currentOperation = task;
+      ascendingOrder = true;
+    }
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("chaper_table");
+    rows = table.rows;
+    for (i = 1; i < rows.length; i++) {
+      var min = i;
+      for (j = i + 1; j < rows.length; j++) {
+        var minValue = rows[min].getElementsByTagName("TD")[col].getElementsByTagName("A")[0];
+        var toCheck = rows[j].getElementsByTagName("TD")[col].getElementsByTagName("A")[0];
+        if (ascendingOrder) {
+          if (Number(toCheck.innerHTML) < Number(minValue.innerHTML)) {
+            min = j;
+          }
+        } else {
+          if (Number(toCheck.innerHTML) > Number(minValue.innerHTML)) {
+            min = j;
+          }
+        }
+      }
+      var temp = rows[min].getElementsByTagName("TD")[3].getElementsByTagName("A")[0];
+      rows[i].parentNode.insertBefore(rows[min], rows[i]);
+    }
+  }
 </script>

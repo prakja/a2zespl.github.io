@@ -4,6 +4,11 @@ class DoubtsController < ApplicationController
   # GET /doubts
   # GET /doubts.json
   def pending_stats
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    
     @doubts_physics_two_days = Doubt.physics_paid_student_doubts_two_days
     @doubts_physics_five_days = Doubt.physics_paid_student_doubts_five_days
     @doubts_physics_seven_days = Doubt.physics_paid_student_doubts_seven_days

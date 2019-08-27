@@ -9,6 +9,11 @@ class DoubtAnswersController < ApplicationController
   end
 
   def answer
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    
     @userId = current_admin_user.userId
     @doubt_id = params[:doubt_id]
     if @userId.blank?

@@ -3,6 +3,10 @@ class CourseDetailsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
     @course_id = params.require(:courseId)
     @course = Course.includes(subjects: :topics).find(@course_id)
     
