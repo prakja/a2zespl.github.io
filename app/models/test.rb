@@ -4,7 +4,21 @@ class Test < ApplicationRecord
     self.ownerType = nil if self.ownerId.blank?
     self.exam = nil if self.exam.blank?
   end
-  
+
+  after_commit :after_update_test, if: Proc.new { |model| model.previous_changes[:sections]}, on: [:update]
+
+  def after_update_test
+    if self.sections.blank?
+      return
+    end
+
+    HTTParty.post(
+      Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
+       body: {
+         id: self.id
+    })
+  end
+
   has_paper_trail
   self.table_name = "Test"
   attribute :createdAt, :datetime, default: Time.now

@@ -76,7 +76,7 @@ ActiveAdmin.register Doubt do
     column :topic
     column :tagType
     column :doubtType
-    column :teacherReply
+    column :user
     column "adminUser" do |doubt|
       doubt.admin_user.email if not doubt.admin_user.blank?
     end
