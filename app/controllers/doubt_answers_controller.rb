@@ -64,12 +64,12 @@ class DoubtAnswersController < ApplicationController
         @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
       end
 
-      # @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
-      #  @video.id.to_s + '-abc?subjectId=' + 
-      #  subject.id.to_s + '&chapterId=' +
-      #  topic.id.to_s + '&currentTimeStamp=' +
-      #  timeElapsed.to_s +
-      #  '">Go to Video</a>'
+      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
+       @video.id.to_s + '-abc?subjectId=' + 
+       subject.id.to_s + '&chapterId=' +
+       topic.id.to_s + '&currentTimeStamp=' +
+       timeElapsed.to_s +
+       '">Go to Video</a>'
       
       @doubt_data += '<h5>Time: ' + @hours.to_s.rjust(2, '0') + ':' + @minutes.to_s.rjust(2, '0') + ':' + @seconds.to_s.rjust(2, '0') + '</h5>'
     end
