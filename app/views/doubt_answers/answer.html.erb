@@ -35,6 +35,18 @@
   </div>
   <div style="margin: 32px; margin-top: 4px;">
     <h4>Add your Answer:</h4>
+
+    <div>
+      <p>Add video to answer</p>
+      <input id="select_video" list="videos">
+      <datalist id="videos">
+        <%= Video.all.pluck("id", "name").each do |video| %>
+          <option value="<%= video %>">
+        <% end %>
+      </datalist>
+      <button onclick="addVideo()">Add selected video</button>
+    </div>
+
     <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
   </div>
 </div>
@@ -93,5 +105,11 @@ function putAnswer() {
   }
   http.open("POST", url);
   http.send(data);
+}
+
+function addVideo() {
+  var video_id = window.document.getElementById('select_video').value.split(',')[0].replace('[','');
+  var video_name = document.getElementById('select_video').value.split(',')[1].replace(']','').trim();
+  this.tinyMCE.editors[0].execCommand('mceInsertContent', false, '<a href="https://www.neetprep.com/video-class/' + video_id + '">' + video_name + '</a>');
 }
 </script>
