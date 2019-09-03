@@ -40,7 +40,7 @@
       <p>Add video to answer</p>
       <input id="select_video" list="videos">
       <datalist id="videos">
-        <%= Video.all.pluck("id", "name").each do |video| %>
+        <%= Video.neetprep_course.pluck("id", "name").each do |video| %>
           <option value="<%= video %>">
         <% end %>
       </datalist>
