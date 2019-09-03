@@ -28,7 +28,37 @@ class DoubtAnswersController < ApplicationController
     @doubt_tag = @doubt.tagType
     @doubt_data = '<p><a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + @doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + @doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + @doubt.id.to_s) + '">Answer on NEETprep</a></p>'
 
-    @doubt_data += '<img src="' + @doubt.imgUrl + '" style="max-width:640px; max-height:360px;"></img>' if not @doubt.imgUrl.blank?
+    # @doubt_data += '<img src="' + @doubt.imgUrl + '" style="max-width:640px; max-height:360px;"></img>' if not @doubt.imgUrl.blank?
+
+    if not @doubt.imgUrl.blank?
+      @doubt_data +=
+      '<div class="canvas-container" style="width: 1000px; height: 500px;">
+      <canvas id="c" width="1000" height="500" style="border: 1px solid rgb(204, 204, 204); width: 1000px; height: 500px; left: 0px; top: 0px; touch-action: none; user-select: none;" class="lower-canvas"></canvas>
+      <img src="' + @doubt.imgUrl + '" id="my-image" style="max-width:640px; max-height:360px; display: none;"></img>
+      </div>
+      <script>
+        var canvas = new fabric.Canvas("c");
+        var imgElement = document.getElementById("my-image");
+        var imgInstance = new fabric.Image(imgElement, {
+          left: 400,
+          top: 400,
+          angle: 0
+        });
+        canvas.add(imgInstance);
+        canvas.setZoom(0.1);
+        canvas.on("mouse:wheel", function(opt) {
+          var minZoom = 0.1;
+          var delta = opt.e.deltaY;
+          var zoom = canvas.getZoom();
+          zoom = zoom + delta/3000;
+          if (zoom > 20) zoom = 20;
+          if (zoom < minZoom) zoom = minZoom;
+          canvas.setZoom(zoom);
+          opt.e.preventDefault();
+          opt.e.stopPropagation();
+        });
+      </script>'
+    end
 
     if @doubt_tag == "question"
       @question = Question.find(@doubt.questionId)
