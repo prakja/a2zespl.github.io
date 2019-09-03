@@ -2,10 +2,11 @@ class Video < ApplicationRecord
   has_paper_trail
 
   self.table_name = "Video"
+  after_commit :after_create_update_video, on: [:create, :update]
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
   has_many :topics, through: :videoTopics
-  
+
   has_many :videoSubTopics, foreign_key: :videoId, class_name: 'VideoSubTopic'
   has_many :subTopics, through: :videoSubTopics
 
@@ -22,6 +23,18 @@ class Video < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
+  def after_create_update_video
+    if self.url.blank? || !self.duration.blank?
+      return
+    end
+
+    HTTParty.post(
+      Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateVideo",
+       body: {
+         id: self.id,
+    })
+  end
+
   # scope :subject_name_by_id, ->(subject_id) {
   #   joins(:topics => :subject).where(topic: {Subject: {id: subject_id}})
   # }
@@ -29,7 +42,7 @@ class Video < ApplicationRecord
   # scope :subject_name_by_course, ->(course_id) {
   #   joins(:topics => :subject).where(topic: {Subject: {courseId: course_id}})
   # }
-  
+
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
-  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}  
+  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}
 end
