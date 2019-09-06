@@ -13,6 +13,10 @@ ActiveAdmin.register CourseInvitation do
     courseInvitation.my_invitations_expiring_soon(current_admin_user.id.to_s)
   end
 
+  scope "my invitations expiring tomorrow" do |courseInvitation|
+    courseInvitation.my_invitations_expiring_by_tomorrow(current_admin_user.id.to_s)
+  end
+
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])
     @versions = PaperTrail::Version.where(item_type: 'CourseInvitation', item_id: @courseinvitation.id)
