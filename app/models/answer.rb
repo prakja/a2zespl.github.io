@@ -1,6 +1,8 @@
 class Answer < ApplicationRecord
   self.table_name = "Answer"
   belongs_to :user, foreign_key: "userId", class_name: "User"
+  belongs_to :question, foreign_key: "questionId", class_name: "Question"
+  belongs_to :testAttempt, foreign_key: "testAttemptId", class_name: "TestAttempt", optional: true
 
   scope :paid, ->(paid, start_date, end_date) {
     if paid == "yes"
