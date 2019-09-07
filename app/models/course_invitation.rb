@@ -4,7 +4,7 @@ class CourseInvitation < ApplicationRecord
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation :course_expiry_not_valid, :mobileValidate
+   after_validation  :mobileValidate #:course_expiry_not_valid, the reason to put course_expiry_not_valid was to force payment linking with course invitation but this caused unnecessary course expiring for paid users and subsequent calls to Kapil sir's number so removing this..we are reverting to old system where few sales person have ability to send course invitation now
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
