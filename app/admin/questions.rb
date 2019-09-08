@@ -37,12 +37,11 @@ ActiveAdmin.register Question do
   preserve_default_filters!
   scope :neetprep_course
 
-  # prevents N+1 queries to your database, don't know if that's good or bad. xD
-  # controller do
-  #   def scoped_collection
-  #     super.includes :question_analytic
-  #   end
-  # end
+  controller do
+    def scoped_collection
+      super.left_outer_joins(:doubts).select('"Question".*, COUNT("Doubt"."id") as doubts_count').group('"Question"."id"')
+    end
+  end
 
   # https://www.neetprep.com/api/v1/questions/id/edit
   index do
@@ -66,9 +65,7 @@ ActiveAdmin.register Question do
     #end
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
-      column :doubt_count, sortable: :doubts do |question|
-        question.doubts.count
-      end
+      column :doubts_count, sortable: true
     end
     actions
   end
