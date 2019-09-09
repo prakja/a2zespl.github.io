@@ -24,6 +24,10 @@ class Video < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def after_create_update_video
+    if !self.duration.blank? && self.seqId == self.id
+      return
+    end
+
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateVideo",
        body: {
