@@ -118,6 +118,7 @@ ActiveAdmin.register Question do
   end
 
   form do |f|
+    f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
       render partial: 'tinymce'
       f.input :question
