@@ -5,6 +5,15 @@ class Question < ApplicationRecord
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
+  after_validation :check_correct_option_of_mcq_type_question, :test_addition_validation
+
+  def check_correct_option_of_mcq_type_question
+   errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
+  end
+
+  def test_addition_validation
+   errors.add(:type, 'mcq only questions can be added in tests') if type != 'MCQ-SO' and !tests.blank?
+  end
 
   def after_update_question
     if self.tests.blank?

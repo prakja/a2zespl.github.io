@@ -24,7 +24,7 @@ class Video < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def after_create_update_video
-    if self.url.blank? || !self.duration.blank?
+    if !self.duration.blank? && self.seqId == self.id
       return
     end
 
