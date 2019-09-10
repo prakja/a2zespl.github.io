@@ -43,7 +43,7 @@ class Payment < ApplicationRecord
   end
 
   def self.all_payments_3_months
-    Payment.where(:createdAt => (Time.now - 90.day)..Time.now).pluck(:id)
+    Payment.unscope(:where).where(:createdAt => (Time.now - 90.day)..Time.now).where(paymentMode: ['kotak','cash','paytm wallet']).or(unscope(:where).where(status: 'responseReceivedSuccess', paymentMode: 'paytm')).pluck(:id)
   end
 
   def self.recent_payments_with_props

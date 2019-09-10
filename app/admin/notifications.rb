@@ -3,8 +3,7 @@ ActiveAdmin.register Notification do
   filter :userId_eq, as: :number, label: "User ID"
   preserve_default_filters!
 
-  index do
-
+  index pagination_total: false do
     id_column
     column :title
     column :user

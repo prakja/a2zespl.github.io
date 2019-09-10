@@ -35,6 +35,7 @@ sidebar :user_activity, only: :show do
     li link_to "Test Attempts", admin_test_attempts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Profile Analytics", admin_user_profile_analytics_path(q: { userId_eq: user.id})
     li link_to "Courses", admin_user_courses_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "MCQ Answers", admin_answers_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
   end
 end
 
