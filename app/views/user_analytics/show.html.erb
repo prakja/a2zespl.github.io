@@ -1,0 +1,43 @@
+<div style="padding: 8px">
+  <h4>In time frame</h4>
+  Start Date: <input id="start" type="date">
+  End Date: <input id="end" type="date">
+  <button type="button" onclick="setTimeFrame()">Set Time Frame</button>
+  <br></br>
+  
+  <div>
+      <% @objects.each do |object| %>
+      <div>
+          <div style="border: solid grey 1px; padding: 4px">
+              <h3 style="text-align: left">Visit Id: <%= object["idVisit"] %></h3>
+              <h3 style="text-align: right"><%= object["serverDatePrettyFirstAction"] + " " + object["serverTimePrettyFirstAction"] %></h3>
+              <h3>Action count: <%= object["actions"] %></h3>
+          </div>
+          <% actions = object["actionDetails"] %>
+            <% actions.each do |action| %>
+              <div>
+                <h4 style="margin-left:5em"><%= action["pageTitle"] %></h4>
+              </div>
+            <% end %>
+          <% end %>
+      </div>  
+  </div>
+
+  <script>
+    var currentUrl = new URL (window.location.href);
+    var startDate = currentUrl.searchParams.get("startDate");
+    var endDate = currentUrl.searchParams.get("endDate");
+    var userId = currentUrl.searchParams.get("userId");
+
+    document.getElementById("start").value = startDate
+    document.getElementById("end").value = endDate
+
+    function setTimeFrame () {
+      var startDate = document.getElementById("start").value;
+      var endDate = document.getElementById("end").value;
+
+      var link = "/user_analytics/show?userId=" + userId + "&startDate=" + startDate + "&endDate=" + endDate
+      window.location.href = link
+    }
+  </script>
+</div>
