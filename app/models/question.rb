@@ -12,7 +12,7 @@ class Question < ApplicationRecord
   end
 
   def test_addition_validation
-   errors.add(:type, 'mcq only questions can be added in tests') if type != 'MCQ-SO' and !tests.blank?
+   errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
   end
 
   def after_update_question
