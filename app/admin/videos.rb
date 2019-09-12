@@ -18,7 +18,7 @@ ActiveAdmin.register Video do
   # filter :subTopics_id_not_cont_any, label: "Has Sub-topics", as: :boolean
   preserve_default_filters!
 
-  permit_params :name, :description, :url, :thumbnail, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
+  permit_params :name, :description, :url, :thumbnail, :language, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
   scope :neetprep_course
   scope :maths_course
 
@@ -36,6 +36,7 @@ ActiveAdmin.register Video do
     id_column
     column :name
     column :duration
+    column :language
     column ("Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
     column ("History") {|video| raw('<a target="_blank" href="/admin/videos/' + (video.id).to_s + '/history">View History</a>')}
@@ -48,6 +49,7 @@ ActiveAdmin.register Video do
       row :description
       row :url
       row :duration
+      row :language
       row :seqId
       row :youtubeUrl
       row :topics do |video|
@@ -96,6 +98,7 @@ ActiveAdmin.register Video do
       f.input :seqId, as: :number
       f.input :youtubeUrl
       f.input :thumbnail, as: :string
+      f.input :language, as: :select, :collection => ["hinglish", "english"]
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, :collection => SubTopic.topic_sub_topics(f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])
