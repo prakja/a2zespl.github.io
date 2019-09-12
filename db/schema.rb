@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_20_114330) do
+ActiveRecord::Schema.define(version: 2019_09_11_070437) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.integer "noteId"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["chapterId", "noteId"], name: "chapternote_chapter_id_note_id", unique: true
     t.index ["chapterId"], name: "chapter_note_chapter_id"
     t.index ["noteId"], name: "chapter_note_note_id"
   end
@@ -83,6 +84,7 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.integer "testId"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["chapterId", "testId"], name: "chaptertest_chapter_id_test_id", unique: true
     t.index ["chapterId"], name: "chapter_test_chapter_id"
     t.index ["testId"], name: "chapter_test_test_id"
   end
@@ -92,6 +94,7 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.integer "videoId"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["chapterId", "videoId"], name: "chaptervideo_chapter_id_video_id", unique: true
     t.index ["chapterId"], name: "chapter_video_chapter_id"
     t.index ["videoId"], name: "chapter_video_video_id"
   end
@@ -543,7 +546,7 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.boolean "isComingSoon", default: false
   end
 
-  create_table "TopicAsset", id: :serial, force: :cascade do |t|
+  create_table "TopicAssetOld", id: :integer, default: -> { "nextval('\"TopicAsset_id_seq\"'::regclass)" }, force: :cascade do |t|
     t.string "assetType", limit: 255
     t.integer "assetId"
     t.integer "topicId"
@@ -723,6 +726,7 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.float "duration"
     t.integer "seqId", default: 0, null: false
     t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
   end
 
   create_table "VideoAnnotation", id: :serial, force: :cascade do |t|
@@ -802,6 +806,14 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
     t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
   end
 
+  create_table "user_actions", force: :cascade do |t|
+    t.integer "userId"
+    t.integer "count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["userId"], name: "index_user_actions_on_userId", unique: true
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.bigint "item_id", null: false
@@ -843,7 +855,6 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
   add_foreign_key "FcmToken", "\"User\"", column: "userId", name: "fcm_token_user_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Notification", "\"User\"", column: "userId", name: "notification_user_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Question", "\"Test\"", column: "testId", name: "Question_testId_fkey", on_update: :cascade, on_delete: :nullify
   add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
@@ -867,4 +878,5 @@ ActiveRecord::Schema.define(version: 2019_08_20_114330) do
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
   add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
+  add_foreign_key "user_actions", "\"User\"", column: "userId"
 end
