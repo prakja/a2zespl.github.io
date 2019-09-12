@@ -9,7 +9,7 @@ ActiveAdmin.register Notification do
     column :user
     column (:body) { |notification| raw(notification.body)  }
     column ("Doubt Link") { |notification|
-      if notification.contextType == "Doubt" || notification.contextType == "DoubtAnswer"
+      if notification.contextType == "Doubt" || notification.contextType == "DoubtAnswer" || notification.title.start_with?("New Doubt")
         string_items = notification.body.split
         id = ""
         string_items.each do |item|
@@ -22,7 +22,6 @@ ActiveAdmin.register Notification do
           int_return = Integer(id) rescue false
           if int_return == false
             int_id = Base64.decode64(id)
-            p int_id
             link_to "Answer this doubt", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + int_id.split(':')[1], target: ":_blank"
           else
             link_to "Answer this doubt", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + id.to_s, target: ":_blank"

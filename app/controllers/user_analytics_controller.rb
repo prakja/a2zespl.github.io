@@ -30,7 +30,7 @@ class UserAnalyticsController < ApplicationController
   def populate_user_activites
     auth_token = params.require(:auth_token)
     if auth_token == "ff0dc842-551f-4910-a476-516b561c5756"
-      users = User.where('"createdAt" >= ?', (Date.current - 10))
+      users = User.where('"createdAt" >= ? and "User"."id" NOT IN (SELECT "userId" from "UserCourse")', (Date.current - 10))
       
       users.each do |user|
         userId = user[:id]
@@ -48,6 +48,9 @@ class UserAnalyticsController < ApplicationController
         UserAction.find_or_create_by(userId: userId) do |user|
           user.count = action_count
         end
+      end
+      respond_to do |format|
+        format.json { render json: "success" }
       end
     else
       p "Insure call to API"
