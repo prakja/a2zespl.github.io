@@ -8,6 +8,7 @@ class User < ApplicationRecord
  has_many :doubts, class_name: "Doubt", foreign_key: "userId"
  has_many :test_attempts, class_name: "TestAttempt", foreign_key: "userId"
  has_one :user_profile_analytics, class_name: "UserProfileAnalytic", foreign_key: "userId"
+ has_one :user_action, class_name: "user_action", foreign_key: "userId"
 
  def name
   if not self.user_profile.blank? and not self.user_profile.displayName.blank?
