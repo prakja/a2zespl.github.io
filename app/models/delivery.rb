@@ -39,6 +39,10 @@ class Delivery < ApplicationRecord
   after_validation :check_installment_required_dueAmount, :check_installment_required_dueDate
   validates_presence_of :deliveryType, :course, :courseValidity, :purchasedAt, :name, :email, :mobile, :address, :counselorName
 
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  validates_format_of :mobile, :with =>  /\d[0-9]\)*\z/
+  validates :mobile, :numericality => true, :length => { :minimum => 10, :maximum => 13 }
+
   def check_installment_required_dueAmount
    errors.add(:dueAmount, 'is required field for installment delivery') if deliveryType == 'installment' and dueAmount.blank?
   end
@@ -48,6 +52,15 @@ class Delivery < ApplicationRecord
       "http://track.dtdc.com/ctbs-tracking/customerInterface.tr?submitName=getLoadMovementDetails&cnNo=" + trackingNumber,
        body: {}
      )
+  end
+
+  def check_duplicate(email, mobile, createDate)
+    rowCount = Delivery.where(:createdAt => (createDate - 30.day)..createDate, :email => email, :mobile => mobile).count
+    if rowCount > 1
+      return "Duplicate"
+    else
+      return ""
+    end
   end
 
   def check_installment_required_dueDate

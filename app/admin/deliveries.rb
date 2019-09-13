@@ -65,6 +65,9 @@ ActiveAdmin.register Delivery do
 
   index do
     id_column
+    column "Possible Duplicate" do |delivery|
+      delivery.check_duplicate(delivery.email, delivery.mobile, delivery.createdAt)
+    end
     column (:deliveryType) { |delivery| raw(delivery.deliveryType) }
     column (:course) { |delivery| raw(delivery.course) }
     column :description
