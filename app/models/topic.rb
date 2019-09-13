@@ -28,6 +28,8 @@ class Topic < ApplicationRecord
   end
 
   def self.name_with_subject
-    Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id]).pluck(:name, :'Subject.name', :'Course.name' , :id).map{|topic_name, subject_name, course_name, topic_id| [topic_name + " - " + subject_name + " - " + course_name, topic_id]}
+    Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id])
+      .pluck(:name, :'Subject.name', :'Course.name', :id, :'Course.id', :'Subject.id')
+      .map{|topic_name, subject_name, course_name, topic_id| [topic_name + " - " + subject_name + " - " + course_name, topic_id]}
   end
 end
