@@ -65,6 +65,11 @@ ActiveAdmin.register Delivery do
 
   index do
     id_column
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
+      column "Possible Duplicate" do |delivery|
+        delivery.check_duplicate(delivery.email, delivery.mobile, delivery.createdAt)
+      end
+    end
     column (:deliveryType) { |delivery| raw(delivery.deliveryType) }
     column (:course) { |delivery| raw(delivery.course) }
     column :description
