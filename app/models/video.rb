@@ -2,7 +2,8 @@ class Video < ApplicationRecord
   has_paper_trail
 
   self.table_name = "Video"
-  after_commit :after_create_update_video, on: [:create, :update]
+  after_commit :after_create_update_video, on: [:create]
+  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url]}, on: [:update]
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
   has_many :topics, through: :videoTopics
@@ -24,10 +25,6 @@ class Video < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def after_create_update_video
-    if !self.duration.blank? && self.seqId == self.id
-      return
-    end
-
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateVideo",
        body: {
