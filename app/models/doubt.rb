@@ -9,6 +9,7 @@ class Doubt < ApplicationRecord
 
   scope :my_doubts, -> (admin_id) {
     joins(:doubt_admin => :admin_user).where(doubt_admin: {admin_users: {id: admin_id}})
+    #joins(topic:  { subjects: :course }).where(topic: {subjects: { Course: {id: course_id}, id: subject_id }})
   }
   
   scope :subject_name, ->(subject_id) {
@@ -65,10 +66,10 @@ class Doubt < ApplicationRecord
     end
   }
 
-  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(53)}
-  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(54)}
-  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(55)}
-  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name(56)}
+  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([53, 478])}
+  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([54, 477])}
+  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([55, 476])}
+  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([56, 479])}
 
   # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
