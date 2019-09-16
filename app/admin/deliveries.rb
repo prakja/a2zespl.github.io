@@ -4,7 +4,7 @@ ActiveAdmin.register Delivery do
   active_admin_import validate: true,
     headers_rewrites: { 'delivery type': :deliveryType, 'course': :course, 'course validity': :courseValidity, 'installment amount': :installmentAmount, 'source': :source, 'purchased at text': :purchasedAtText, 'name': :name, 'mobile': :mobile, 'address': :address, 'counselor name': :counselorName, 'tracking number': :trackingNumber, 'usb': :usb, 'dongle': :dongle, 'packed': :packed , 'delivered': :delivered, 'created at': :createdAt, 'updated at': :updatedAt},
     template_object: ActiveAdminImport::Model.new(
-        hint: "file will be imported with such header format: 'delivery_type','course','course_validity'",
+        hint: "File will be imported with such header format: 'delivery_type','course','course_validity'",
         csv_headers: ["delivery type","course","course validity","installment amount","source","purchased at text","name","mobile","address","counselor name","tracking number","usb","dongle","packed","delivered","created at","updated at"]
     )
 

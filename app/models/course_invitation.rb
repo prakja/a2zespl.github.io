@@ -7,6 +7,9 @@ class CourseInvitation < ApplicationRecord
    after_validation  :mobileValidate #:course_expiry_not_valid, the reason to put course_expiry_not_valid was to force payment linking with course invitation but this caused unnecessary course expiring for paid users and subsequent calls to Kapil sir's number so removing this..we are reverting to old system where few sales person have ability to send course invitation now
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
+   
+   attribute :createdAt, :datetime, default: Time.now
+   attribute :updatedAt, :datetime, default: Time.now
 
    def setCreatedTime
      self.createdAt = Time.now
