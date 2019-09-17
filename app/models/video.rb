@@ -3,7 +3,7 @@ class Video < ApplicationRecord
 
   self.table_name = "Video"
   after_commit :after_create_update_video, on: [:create]
-  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url]}, on: [:update]
+  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:update]
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
   has_many :topics, through: :videoTopics

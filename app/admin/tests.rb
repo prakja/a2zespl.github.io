@@ -1,5 +1,5 @@
 ActiveAdmin.register Test do
-permit_params :name, :sections, :description, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId, :courses, course_ids: []
+permit_params :name, :sections, :description, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :topic, :ownerType, :ownerId, :courses, course_ids: []
 remove_filter :topic, :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests
 
 filter :id_eq, as: :number, label: "Test ID"
@@ -75,6 +75,7 @@ end
 
 form do |f|
   f.inputs "Test" do
+    render partial: 'tinymce'
     f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"
     f.input :description
     f.input :instructions
@@ -82,6 +83,7 @@ form do |f|
     f.input :durationInMin, label: "Duration in Minutes"
     f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
     f.input :showAnswer, hint: "Mark un-checked only for Scholarship tests"
+    f.input :resultMsgHtml, hint: "result message on test result page"
     f.input :negativeMarks, label: "Negative Marks", hint: "No '-' sign is required"
     f.input :positiveMarks, label: "Positive Marks", hint: "No '+' sign is required"
     f.input :numQuestions, label: "Number of Questions"
