@@ -4,6 +4,7 @@ ActiveAdmin.register DoubtAnswer do
 
   filter :userId_eq, as: :number, label: "User ID"
   filter :doubtId_eq, as: :number, label: "Doubt ID"
+  filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
 
   index do
