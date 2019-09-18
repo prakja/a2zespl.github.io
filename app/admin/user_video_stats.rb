@@ -12,4 +12,6 @@ ActiveAdmin.register UserVideoStat do
 #   permitted
 # end
 
+remove_filter :user, :video
+
 end
