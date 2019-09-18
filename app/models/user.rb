@@ -11,9 +11,15 @@ class User < ApplicationRecord
  has_one :user_action, foreign_key: "userId"
  has_many :user_video_stats, class_name: "UserVideoStat", foreign_key: "userId"
 
- scope :video_stats, -> () {
-  joins(:user_video_stats).where(isPaid: true).count
+ has_many :user_courses, class_name: "UserCourse", foreign_key: "userId"
+
+scope :free_users, -> {
+  where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
 }
+scope :paid_users, -> {
+  joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
+}
+
 
  def name
   if not self.user_profile.blank? and not self.user_profile.displayName.blank?
