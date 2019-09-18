@@ -30,15 +30,15 @@ end
 
 index do
   id_column
-  column :name
-  column (:description) { |schedule_item| raw(schedule_item.description)  }
-  column :schedule
+  column :scheduledAt
   column :topic
+  column :name
   column :hours
   column (:link) { |schedule_item| 
     raw('<a target="_blank" href="' + schedule_item.link + '">' + schedule_item.link + '</a>') if not schedule_item.link.blank?
   }
-  column :scheduledAt
+  column :schedule
+  column (:description) { |schedule_item| raw(schedule_item.description)  }
   actions
 end
 
