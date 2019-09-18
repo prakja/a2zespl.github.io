@@ -37,6 +37,8 @@ end
 
 # filter :video_count_eq, label: "Watch count", as: :number 
 preserve_default_filters!
+scope :free_users
+scope :paid_users
 
 index do
   id_column
