@@ -3,7 +3,7 @@ class Video < ApplicationRecord
 
   self.table_name = "Video"
   after_commit :after_create_update_video, on: [:create]
-  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url]}, on: [:update]
+  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:update]
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
   has_many :topics, through: :videoTopics
@@ -15,6 +15,7 @@ class Video < ApplicationRecord
 
   has_many :video_annotations, -> { where(annotationType: "Note") }, class_name: "VideoAnnotation", foreign_key: "videoId"
   has_many :notes, through: :video_annotations
+  has_many :user_video_stats, class_name: "UserVideoStat", foreign_key: "videoId"
 
   scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}
   scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  54}})}

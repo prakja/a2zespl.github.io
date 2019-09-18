@@ -12,7 +12,7 @@ permit_params :blockedUser
 #   permitted
 # end
 
-remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action
+remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats
 
 form do |f|
   f.inputs "User" do
@@ -27,6 +27,27 @@ end
 
 action_item :user, only: :show do
   link_to 'User Activity', "/user_analytics/show?userId=" + resource.id.to_s
+end
+
+controller do
+  def scoped_collection
+    super.left_outer_joins(:user_video_stats).select('"User".*, COUNT("UserVideoStat"."id") as video_count').group('"User"."id"')
+  end
+end
+
+# filter :video_count_eq, label: "Watch count", as: :number 
+preserve_default_filters!
+scope :free_users
+scope :paid_users
+
+index do
+  id_column
+  column :name
+  column :email
+  column :phone
+  column :role
+  column :video_count, sortable: true
+  actions
 end
 
 sidebar :user_activity, only: :show do
