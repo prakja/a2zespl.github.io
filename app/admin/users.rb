@@ -12,7 +12,10 @@ permit_params :blockedUser
 #   permitted
 # end
 
-remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action
+remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats
+
+# filter :video_stats_eq, label: "Watch count", as: :number 
+preserve_default_filters!
 
 form do |f|
   f.inputs "User" do
@@ -27,6 +30,18 @@ end
 
 action_item :user, only: :show do
   link_to 'User Activity', "/user_analytics/show?userId=" + resource.id.to_s
+end
+
+index do
+  id_column
+  column :name
+  column :email
+  column :phone
+  column :role
+  column ("Video watch count") { |user|
+    user.user_video_stats.where(isPaid: true).count
+  }
+  actions
 end
 
 sidebar :user_activity, only: :show do
