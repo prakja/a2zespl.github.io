@@ -13,25 +13,27 @@ class Delivery < ApplicationRecord
   end
 
   def before_create_update_set_default_values
-    if self.course == "Full Course + Pendrive" and self.usb.blank?
-      self.usb = "128 GB"
-    elsif self.course == "Physics Course + Pendrive" and self.usb.blank?
-      self.usb = "32 GB + 16 GB"
-    elsif self.course == "Chemistry Course + Pendrive" and self.usb.blank?
-      self.usb = "32 GB"
-    elsif self.course == "Biology Course + Pendrive" and self.usb.blank?
-      self.usb = "32 GB + 16 GB"
-    elsif self.course == "Physics + Biology + Pendrive" and self.usb.blank?
-      self.usb = "64 GB + 32 GB"
-    elsif self.course == "Chemistry + Biology + Pendrive" and self.usb.blank?
-      self.usb = "64 GB + 16 GB"
-    elsif self.course == "Physics + Chemistry + Pendrive" and self.usb.blank?
-      self.usb = "64 GB + 16 GB"
-    elsif self.course == "Dongle Only" and self.usb.blank?
+    if self.deliveryType == "replacement"
       self.usb = ""
-    elsif self.course == "9th Class Course + Pendrive" and self.usb.blank?
+    elsif self.course == "Full Course + Pendrive"
+      self.usb = "128 GB"
+    elsif self.course == "Physics Course + Pendrive"
+      self.usb = "32 GB + 16 GB"
+    elsif self.course == "Chemistry Course + Pendrive"
       self.usb = "32 GB"
-    elsif self.course == "10th Class Course + Pendrive" and self.usb.blank?
+    elsif self.course == "Biology Course + Pendrive"
+      self.usb = "32 GB + 16 GB"
+    elsif self.course == "Physics + Biology + Pendrive"
+      self.usb = "64 GB + 32 GB"
+    elsif self.course == "Chemistry + Biology + Pendrive"
+      self.usb = "64 GB + 16 GB"
+    elsif self.course == "Physics + Chemistry + Pendrive"
+      self.usb = "64 GB + 16 GB"
+    elsif self.course == "Dongle Only"
+      self.usb = ""
+    elsif self.course == "9th Class Course + Pendrive"
+      self.usb = "32 GB"
+    elsif self.course == "10th Class Course + Pendrive"
       self.usb = "64 GB"
     end
   end
