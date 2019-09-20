@@ -13,9 +13,7 @@ class Delivery < ApplicationRecord
   end
 
   def before_create_update_set_default_values
-    if self.deliveryType == "replacement"
-      self.usb = ""
-    elsif self.course == "Full Course + Pendrive"
+    if self.course == "Full Course + Pendrive"
       self.usb = "128 GB"
     elsif self.course == "Physics Course + Pendrive"
       self.usb = "32 GB + 16 GB"
