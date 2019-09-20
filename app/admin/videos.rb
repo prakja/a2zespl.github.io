@@ -34,11 +34,13 @@ ActiveAdmin.register Video do
       videos = Video.where(createdAt: time)
       videos.each do |video|
         videoId = video[:id]
+        Video.find(videoId).update(updatedAt: Time.now)
         ChapterVideo.create(chapterId: topicId, videoId: videoId)
       end
     },
     template_object: ActiveAdminImport::Model.new(
-        hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',	'role',	'expiryAt'",
+        hint: "File will be imported with such header format: name',	'description', 'thumbnail', 'url', 'language', 'topicId'.
+        Remove the header from the CSV before uploading.",
         csv_headers: ['name',	'description', 'thumbnail', 'url', 'language', 'createdAt', 'updatedAt']
     )
   remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats

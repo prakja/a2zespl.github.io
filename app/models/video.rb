@@ -26,6 +26,7 @@ class Video < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def after_create_update_video
+    p "Calling after create"
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateVideo",
        body: {
