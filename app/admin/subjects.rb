@@ -1,6 +1,6 @@
 ActiveAdmin.register Subject do
   permit_params :course, :courseId, :name, :description
-  remove_filter :course, :topics, :versions
+  remove_filter :course, :topics, :versions, :subjectTopics
   scope :neetprep_course
 
   form do |f|
