@@ -11,6 +11,38 @@ ActiveAdmin.register Video do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
+  active_admin_import validate: true,
+    timestamps: true,
+    headers_rewrites: { 'name': :name, 'description': :description, 'thumbnail': :thumbnail, 'url': :url, 'language': :language, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    before_batch_import: ->(importer) {
+      # add created at and upated at
+      p importer.options[:csv_options]
+      time = Time.now
+      importer.csv_lines.each do |line|
+        topicId = line[-1]
+        line.pop
+        importer.options[:csv_options]['topicId'] = topicId
+        importer.options[:csv_options]['time'] = time
+        line.insert(-1, time)
+        line.insert(-1, time)
+      end
+    },
+    after_import:  ->(importer){
+      p "after_import"
+      time = importer.options[:csv_options]['time']
+      topicId = importer.options[:csv_options]['topicId'].to_i
+      videos = Video.where(createdAt: time)
+      videos.each do |video|
+        videoId = video[:id]
+        Video.find(videoId).update(updatedAt: Time.now)
+        ChapterVideo.create(chapterId: topicId, videoId: videoId)
+      end
+    },
+    template_object: ActiveAdminImport::Model.new(
+        hint: "File will be imported with such header format: name',	'description', 'thumbnail', 'url', 'language', 'topicId'.
+        Remove the header from the CSV before uploading.",
+        csv_headers: ['name',	'description', 'thumbnail', 'url', 'language', 'createdAt', 'updatedAt']
+    )
   remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats
   filter :id_eq, as: :number, label: "Video ID"
   filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"

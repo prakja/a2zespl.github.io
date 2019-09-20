@@ -5,7 +5,7 @@ class Video < ApplicationRecord
   after_commit :after_create_update_video, on: [:create]
   after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:update]
 
-  has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo'
+  has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo', dependent: :destroy
   has_many :topics, through: :videoTopics
 
   has_many :videoSubTopics, foreign_key: :videoId, class_name: 'VideoSubTopic'
@@ -26,6 +26,7 @@ class Video < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def after_create_update_video
+    p "Calling after create"
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateVideo",
        body: {

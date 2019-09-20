@@ -8,6 +8,11 @@ panel "History" do
     column ("Type") { |v| v.item_type.underscore.humanize }
     column ("Modified at") { |v| v.created_at.to_s :long }
     column ("Event") { |v| v.event.underscore.humanize }
+    list_column ("Address") do |v|
+      if v.item_type == 'Delivery' and v.object
+        v.object[/#{'address:'}(.*?)#{'counselorName:'}/m, 1].split('\r\n')
+      end
+    end
     column ("Admin") { |v| link_to AdminUser.find(v.whodunnit).email, [:admin, AdminUser.find(v.whodunnit)] }
   end
 end

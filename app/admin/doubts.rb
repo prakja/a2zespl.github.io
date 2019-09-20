@@ -3,7 +3,7 @@ require 'base64'
 ActiveAdmin.register Doubt do
   config.sort_order = 'createdAt_desc'
   remove_filter :topic, :answers, :user, :question, :doubt_admin
-  permit_params :content, :deleted, :teacherReply, :imgUrl
+  permit_params :content, :deleted, :teacherReply, :imgUrl, :goodFlag
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :id_eq, as: :number, label: "Doubt ID"
@@ -83,6 +83,11 @@ ActiveAdmin.register Doubt do
     end
     #column ("Link") {|doubt| raw('<a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + doubt.id.to_s) + '">Answer on NEETprep</a>')}
     column ("Link") {|doubt| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt.id.to_s, target: ":_blank" }
+      if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+      toggle_bool_column :goodFlag
+      else
+      column :goodFlag
+      end
       # + '/topic/' 
       # + Base64.encode64("Doubt:" + doubt.topic.id.to_s) 
       # + '/doubt/' 

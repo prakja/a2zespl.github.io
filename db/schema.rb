@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_11_070437) do
+ActiveRecord::Schema.define(version: 2019_09_20_100046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -710,6 +710,7 @@ ActiveRecord::Schema.define(version: 2019_09_11_070437) do
     t.boolean "completed", default: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.boolean "isPaid", default: true
     t.index ["userId", "videoId"], name: "uservideostat_user_id_video_id", unique: true
     t.index ["userId"], name: "user_video_stat_user_id"
     t.index ["videoId"], name: "user_video_stat_video_id"
