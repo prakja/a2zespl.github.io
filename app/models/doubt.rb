@@ -66,10 +66,10 @@ class Doubt < ApplicationRecord
     end
   }
 
-  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([53, 478, 132])}
-  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([54, 477, 129])}
-  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([55, 476, 126])}
-  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([56, 479, 135])}
+  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([53, 478, 132]).distinct}
+  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([54, 477, 129]).distinct}
+  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([55, 476, 126]).distinct}
+  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([56, 479, 135]).distinct}
 
   # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
