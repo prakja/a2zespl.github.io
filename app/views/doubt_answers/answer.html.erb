@@ -36,7 +36,7 @@
   <div style="margin: 32px; margin-top: 4px;">
     <h4>Add your Answer:</h4>
 
-    <div>
+    <div style="margin: 8px">
       <p>Add video to answer</p>
       <input id="select_video" list="videos">
       <datalist id="videos">
@@ -45,6 +45,43 @@
         <% end %>
       </datalist>
       <button onclick="addVideo()">Add selected video</button>
+    </div>
+
+    <style>
+      .loader {
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 9px solid #3498db;
+        width: 20px;
+        height: 20px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+      }
+      
+      /* Safari */
+      @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
+    <div style="margin: 8px">
+      <p>Record audio explanation</p>
+      <div style="display: none" class="loader" id="loader"></div>
+      <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
+      -- or --
+      <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
+
+      <audio controls style="display: none" id="audio_player">
+          <source src="" type="audio/ogg">
+        Your browser does not support the audio element.
+      </audio>
+      <button style="margin-top: 8px; display: none"onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
     </div>
 
     <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
@@ -82,6 +119,18 @@ tinymce.init({
 </div>
 
 <script>
+
+var loader = document.getElementById("loader");
+var audioButton = document.getElementById("audio_button");
+var audio = document.getElementById("audio_player");
+var uploadAudioButton = document.getElementById("upload_attach_button");
+var fileInput = document.getElementById('audioFile');
+var uploadFromFile = false;
+const  audioChunks = [];
+var audioUrl = null;
+var audioBlob = null;
+var mediaRecorder = null;
+
 function putAnswer() {
   var content = document.getElementById("doubtAnswer_content").value
   if (!content)
@@ -105,6 +154,103 @@ function putAnswer() {
   }
   http.open("POST", url);
   http.send(data);
+}
+
+function fileSelected() {
+  uploadFromFile = true;
+  uploadAudioButton.style.display = 'block';
+  audioButton.style.display = 'none';
+}
+
+function startRecording () {
+  loader.style.display = 'block';
+  audioButton.innerHTML = "Recording";
+  audioButton.onclick = stopRecording;
+  navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(stream => {
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.start();
+
+    mediaRecorder.addEventListener("dataavailable", event => {
+      audioChunks.push(event.data);
+    });
+  });
+}
+
+function stopRecording () {
+  loader.style.display = 'none';
+  audioButton.innerHTML = "Record";
+  audioButton.onclick = startRecording;
+  mediaRecorder.addEventListener("stop", () => {
+    console.log ("Preparing audio");
+    audioBlob = new Blob(audioChunks);
+    audioUrl = URL.createObjectURL(audioBlob);
+    audio.src = audioUrl;
+    console.log (audioUrl);
+    audio.style.display = 'block';
+    uploadAudioButton.style.display = 'block';
+    audioButton.style.display = 'none';
+  });
+  console.log ("Stopping recording");
+  mediaRecorder.stop();
+}
+
+function uploadAndAttachRecording (inputFile=null) {
+  loader.style.display = 'block'
+  var bucketName = 'doubtexplanations';
+  var bucketRegion = 'us-west-2';
+
+  var config = new AWS.Config({
+    accessKeyId: 'AKIAYEPQTPG6K7CEFU6D', secretAccessKey: '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', region: 'us-west-2'
+  });
+
+  var credentials = new AWS.Credentials('AKIAYEPQTPG6K7CEFU6D', 'XtUqnXWkwvPvlK+t8gwuShuESJA1fjnBV1q6AwTX');
+  AWS.config.region = bucketRegion;
+  AWS.config.credentials = credentials;
+  console.log(AWS.config.credentials);
+  
+  var bucket = new AWS.S3({
+    params: {
+        Bucket: bucketName
+    }
+  });
+  if (!uploadFromFile)
+    var file = new File([audioBlob], "doubt_explanations_" + "<%= @doubt_id %>" + "_" + Date.now() + ".ogg");
+  else 
+    var file = fileInput.files[0];
+
+  if (!file) {
+    alert ("File error");
+    loader.style.display = 'none';
+    return;
+  } else {
+    var params = {
+      Key: file.name,
+      ContentType: file.type,
+      Body: file,
+      ACL: 'public-read'
+    };
+    bucket.putObject(params, function(err, data) {
+      if (err) {
+        console.log(" Error while  UPLOADING Audio :" + err);
+        alert ('Error uploading audio');
+  
+        loader.style.display = 'none';
+      } else {
+        var fileUrl = 'https://doubtexplanations.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+        insertIntoTiny(fileUrl);
+  
+        loader.style.display = 'none';
+        audio.style.display = 'none';
+        uploadAudioButton.style.display = 'none';
+        audioButton.style.display = 'block';
+      }
+    });
+  }
+}
+
+function insertIntoTiny(url) {
+  this.tinyMCE.editors[0].execCommand('mceInsertContent', false, '<audio controls style="display: block" id="audio_player"><source src="' + url +'" type="audio/ogg">Your browser does not support the audio element.</audio>');
 }
 
 function addVideo() {
