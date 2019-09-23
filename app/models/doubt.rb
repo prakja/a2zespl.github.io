@@ -11,7 +11,7 @@ class Doubt < ApplicationRecord
     joins(:doubt_admin => :admin_user).where(doubt_admin: {admin_users: {id: admin_id}})
     #joins(topic:  { subjects: :course }).where(topic: {subjects: { Course: {id: course_id}, id: subject_id }})
   }
-  
+
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
   }
@@ -32,11 +32,11 @@ class Doubt < ApplicationRecord
       where.not(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).where(teacherReply: nil)
     end
   }
-  scope :paid, ->(paid) {
+  scope :paid, ->(course_ids, paid) {
     if paid == "yes"
-      where(UserCourse.where('"UserCourse"."userId" = "Doubt"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').exists)
+      where(UserCourse.where('"UserCourse"."userId" = "Doubt"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').where(courseId: course_ids).exists)
     else
-      where.not(UserCourse.where('"UserCourse"."userId" = "Doubt"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').exists)
+      where.not(UserCourse.where('"UserCourse"."userId" = "Doubt"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').where(courseId: course_ids).exists)
     end
   }
 
@@ -66,10 +66,10 @@ class Doubt < ApplicationRecord
     end
   }
 
-  scope :botany_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([53, 478])}
-  scope :chemistry_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([54, 477])}
-  scope :physics_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([55, 476])}
-  scope :zoology_paid_student_doubts, -> {solved('no').paid('yes').deleted('no').subject_name([56, 479])}
+  scope :botany_paid_student_doubts, -> {solved('no').paid([8, 141, 20], 'yes').deleted('no').subject_name([53, 478, 132]).distinct}
+  scope :chemistry_paid_student_doubts, -> {solved('no').paid([8, 141, 19], 'yes').deleted('no').subject_name([54, 477, 129]).distinct}
+  scope :physics_paid_student_doubts, -> {solved('no').paid([8, 141, 18], 'yes').deleted('no').subject_name([55, 476, 126]).distinct}
+  scope :zoology_paid_student_doubts, -> {solved('no').paid([8, 141, 20], 'yes').deleted('no').subject_name([56, 479, 135]).distinct}
 
   # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
@@ -88,7 +88,7 @@ class Doubt < ApplicationRecord
   scope :zoology_paid_student_doubts_two_days, -> {zoology_paid_student_doubts().two_days_pending('yes')}
   scope :zoology_paid_student_doubts_five_days, -> {zoology_paid_student_doubts().five_days_pending('yes')}
   scope :zoology_paid_student_doubts_seven_days, -> {zoology_paid_student_doubts().seven_days_pending('yes')}
-  
+
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name, :solved, :paid, :student_name, :student_email, :student_phone]
   end
