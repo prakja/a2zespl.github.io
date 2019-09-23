@@ -73,15 +73,20 @@
     <div style="margin: 8px">
       <p>Record audio explanation</p>
       <div style="display: none" class="loader" id="loader"></div>
-      <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
-      -- or --
-      <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
 
-      <audio controls style="display: none" id="audio_player">
+      <div>
+        <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
+        -- or --
+        <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
+      </div>
+
+      <div>
+        <audio controls style="display: none" id="audio_player_preview">
           <source src="" type="audio/ogg">
-        Your browser does not support the audio element.
-      </audio>
-      <button style="margin-top: 8px; display: none"onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <div><button style="margin-top: 8px; display: none"onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button></div>
     </div>
 
     <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
@@ -122,7 +127,7 @@ tinymce.init({
 
 var loader = document.getElementById("loader");
 var audioButton = document.getElementById("audio_button");
-var audio = document.getElementById("audio_player");
+var audio = document.getElementById("audio_player_preview");
 var uploadAudioButton = document.getElementById("upload_attach_button");
 var fileInput = document.getElementById('audioFile');
 var uploadFromFile = false;
@@ -195,7 +200,7 @@ function stopRecording () {
   mediaRecorder.stop();
 }
 
-function uploadAndAttachRecording (inputFile=null) {
+function uploadAndAttachRecording () {
   loader.style.display = 'block'
   var bucketName = 'doubtexplanations';
   var bucketRegion = 'us-west-2';
