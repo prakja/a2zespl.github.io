@@ -141,7 +141,7 @@ var previewDiv = document.getElementById("preview_div");
 var uploadDiv = document.getElementById("upload_div");
 
 var uploadFromFile = false;
-const  audioChunks = [];
+var audioChunks = [];
 var audioUrl = null;
 var audioBlob = null;
 var mediaRecorder = null;
@@ -275,6 +275,7 @@ function uploadAndAttachRecording () {
 }
 
 function reset() {
+  audioChunks = [];
   stopRecordingButton.innerHTML = "Stop Recording";
   stopRecordingButton.onclick = stopRecording;
   loader.style.display = 'none';
