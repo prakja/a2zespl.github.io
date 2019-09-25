@@ -140,6 +140,7 @@ class DoubtAnswersController < ApplicationController
   end
 
   def toggle_good_flag
+    p "Toggle doubt flag"
     @doubtId = params[:doubtId]
     @value = params.require(:value)
     Doubt.where(id: @doubtId).update(goodFlag: @value)
