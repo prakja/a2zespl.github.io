@@ -17,9 +17,9 @@ ActiveAdmin.register DoubtAnswer do
       @index = 15 * (((params[:page] || 1).to_i) - 1)
       column (:goodFlag) { |doubt_answer|
         if doubt_answer.doubt.goodFlag
-          @checkbox = '<label><input type="checkbox" checked id="good_doubt_' + (@index += 1).to_s + '" onchange="onDoubtFlagChange' + @index.to_s + '()"> This is a good doubt</label>'
+          @checkbox = '<label><input type="checkbox" checked id="good_doubt_' + (@index += 1).to_s + '" onchange="onDoubtFlagChange' + @index.to_s + '()"></label>'
         else
-          @checkbox = '<label><input type="checkbox" id="good_doubt_' + (@index += 1).to_s + '" onchange="onDoubtFlagChange' + @index.to_s + '()"> This is a good doubt</label>'
+          @checkbox = '<label><input type="checkbox" id="good_doubt_' + (@index += 1).to_s + '" onchange="onDoubtFlagChange' + @index.to_s + '()"></label>'
         end
         raw(
           @checkbox + '
