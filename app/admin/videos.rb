@@ -45,8 +45,8 @@ ActiveAdmin.register Video do
     )
   remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats
   filter :id_eq, as: :number, label: "Video ID"
-  filter :topics_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
-  filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
+  filter :topics_name, as: :string, label: "Chapter"
+  filter :subTopics_name, as: :string, label: "Sub Topic"
   # filter :subTopics_id_not_cont_any, label: "Has Sub-topics", as: :boolean
   preserve_default_filters!
 
