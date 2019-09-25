@@ -9,13 +9,14 @@
         withCredentials: true
       }); 
     }
-
+    document.getElementById("good_doubt").checked = "<%= @doubt.goodFlag %>" == "false" ? false : true;
     reset();
   };
 </script>
 <div style="padding: 8px">
   <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
     <h4 style="margin-top: -4px">Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %>, <%= link_to "Past Doubts", "/admin/doubts?q[userId_eq]=" + @doubt_user.id.to_s, target: :_blank %> </h4>
+    <label><input type="checkbox" id="good_doubt" onchange="onDoubtFlagChange()"> This is a good doubt</label>
     <div style="margin-left: 20px; margin-top: -10px">
       <h2><%= raw(@doubt.content) %></h2>
       <h5 style="margin-top: -10px"><%= Time.parse(@doubt.createdAt.to_s).to_date.to_formatted_s(:long) %></h5>
@@ -140,6 +141,8 @@ var inputStopDiv = document.getElementById("input_stop_div");
 var previewDiv = document.getElementById("preview_div");
 var uploadDiv = document.getElementById("upload_div");
 
+var goodFlagCheckbox = document.getElementById("good_doubt");
+
 var uploadFromFile = false;
 var audioChunks = [];
 var audioUrl = null;
@@ -169,6 +172,21 @@ function putAnswer() {
   }
   http.open("POST", url);
   http.send(data);
+}
+
+function onDoubtFlagChange() {
+  //const Http = new XMLHttpRequest();
+  const url = window.location.origin + "/doubt_answers/toggle_good_flag/";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      "doubtId": "<%= @doubt_id %>",
+      "value": goodFlagCheckbox.checked 
+    }
+  }).done (function (data) {
+    data = null;
+  });
 }
 
 function fileSelected(e) {

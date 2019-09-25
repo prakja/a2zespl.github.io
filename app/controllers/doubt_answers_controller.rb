@@ -139,6 +139,12 @@ class DoubtAnswersController < ApplicationController
     create_answer_row(@userId, @doubtId, @content)
   end
 
+  def toggle_good_flag
+    @doubtId = params[:doubtId]
+    @value = params.require(:value)
+    Doubt.where(id: @doubtId).update(goodFlag: @value)
+  end
+
   def create_answer_row (userId, doubtId, content)
     p "Posting Answer, for user " + userId.to_s
     @new_answer = DoubtAnswer.new()

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "doubt_answers/answer"
   get "doubt_answers/connect_user"
   post "doubt_answers/post_answer"
+  post "doubt_answers/toggle_good_flag"
   get "user_doubt_counts/stats"
   get "course_details/show"
   get "user_analytics/show"
