@@ -29,16 +29,16 @@ action_item :user, only: :show do
   link_to 'User Activity', "/user_analytics/show?userId=" + resource.id.to_s
 end
 
-controller do
-  def scoped_collection
-    super.left_outer_joins(:user_video_stats).select('"User".*, COUNT("UserVideoStat"."id") as video_count').group('"User"."id"')
-  end
-end
+# controller do
+#   def scoped_collection
+#     super.left_outer_joins(:user_video_stats).select('"User".*, COUNT("UserVideoStat"."id") as video_count').group('"User"."id"')
+#   end
+# end
 
-# filter :video_count_eq, label: "Watch count", as: :number 
+# filter :video_count_eq, label: "Watch count", as: :number
 preserve_default_filters!
-scope :free_users
-scope :paid_users
+# scope :free_users
+# scope :paid_users
 
 index do
   id_column

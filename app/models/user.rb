@@ -13,12 +13,12 @@ class User < ApplicationRecord
 
  has_many :user_courses, class_name: "UserCourse", foreign_key: "userId"
 
-scope :free_users, -> {
-  where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
-}
-scope :paid_users, -> {
-  joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
-}
+# scope :free_users, -> {
+#   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
+# }
+# scope :paid_users, -> {
+#   joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
+# }
 
 
  def name
