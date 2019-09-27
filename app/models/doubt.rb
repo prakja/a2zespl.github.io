@@ -71,6 +71,8 @@ class Doubt < ApplicationRecord
   scope :physics_paid_student_doubts, -> {solved('no').paid([8, 141, 18], 'yes').deleted('no').subject_name([55, 476, 126]).distinct}
   scope :zoology_paid_student_doubts, -> {solved('no').paid([8, 141, 20], 'yes').deleted('no').subject_name([56, 479, 135]).distinct}
 
+  scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135]).distinct}
+
   # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
   scope :botany_paid_student_doubts_two_days, -> {botany_paid_student_doubts().two_days_pending('yes')}

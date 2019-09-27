@@ -16,6 +16,18 @@ ActiveAdmin.register_page "User Engagements" do
     render json: UserCourse.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
   end
 
+  page_action :paid_users_video_stats_json, method: :get do
+    render json: UserVideoStat.paid_users_video_stats.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
+  end
+
+  page_action :unpaid_users_video_stats_json, method: :get do
+    render json: UserVideoStat.unpaid_users_video_stats.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
+  end
+
+  page_action :paid_student_doubts_json, method: :get do
+    render json: Doubt.paid_student_doubts.group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).count
+  end
+
   content do
     render partial: 'graph'
     tabs do
@@ -30,6 +42,15 @@ ActiveAdmin.register_page "User Engagements" do
       end
       tab :paid_users_answers do
         render partial: 'paid_users_answers'
+      end
+      tab :paid_users_video_stats do
+        render partial: 'paid_users_video_stats'
+      end
+      tab :unpaid_users_video_stats do
+        render partial: 'unpaid_users_video_stats'
+      end
+      tab :paid_student_doubts do
+        render partial: 'paid_student_doubts'
       end
     end
   end
