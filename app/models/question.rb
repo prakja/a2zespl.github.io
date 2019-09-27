@@ -5,7 +5,7 @@ class Question < ApplicationRecord
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
-  after_validation :check_correct_option_of_mcq_type_question, :test_addition_validation
+  after_validation :check_correct_option_of_mcq_type_question
 
   def check_correct_option_of_mcq_type_question
    errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
