@@ -18,12 +18,17 @@ class Answer < ApplicationRecord
 
   scope :paid, ->(paid, start_date, end_date) {
     if paid == "yes"
-      where(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
+      if start_date != nil and end_date != nil
+        where(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
+      else
+        # currently paid students
+        where(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."expiryAt" >= current_timestamp').exists)
+      end
     else
       where.not(UserCourse.where('"UserCourse"."userId" = "Answer"."userId" AND "UserCourse"."createdAt" <= ? and "UserCourse"."createdAt" >= ?', "#{start_date}", "#{end_date}").exists)
     end
   }
 
-  scope :paid_users_answers, -> {paid("yes", '2018-06-29 00:00:00 +0530', '2018-06-01 00:00:00 +0530')}
+  scope :paid_users_answers, -> {paid("yes", nil, nil)}
 
 end
