@@ -50,10 +50,9 @@ show do
     row :startedAt
     row :expiryAt
     row :topic
-    row :questions
-    # row "Questions" do |test|
-    #   test.questions.pluck(:id, :question).join("<br />").html_safe
-    # end
+    row "Questions" do |test|
+      test.questions_with_number.html_safe
+    end
   end
 end
 
