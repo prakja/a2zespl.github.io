@@ -7,6 +7,10 @@ ActiveAdmin.register Answer do
 
   scope :correct_answers
   scope :incorrect_answers
+  scope :incorrect_physics_answers
+  scope :incorrect_chemistry_answers
+  scope :incorrect_botany_answers
+  scope :incorrect_zoology_answers
 
   index do
     id_column

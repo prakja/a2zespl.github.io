@@ -57,6 +57,8 @@ sidebar :user_activity, only: :show do
     li link_to "User Profile Analytics", admin_user_profile_analytics_path(q: { userId_eq: user.id})
     li link_to "Courses", admin_user_courses_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "MCQ Answers", admin_answers_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "Subject Ranks", admin_subject_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
+    li link_to "Overall Rank", admin_common_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
   end
 end
 
