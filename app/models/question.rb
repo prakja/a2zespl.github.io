@@ -37,6 +37,7 @@ class Question < ApplicationRecord
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
   scope :botany_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 53}})}
   scope :zoology_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 56}})}
+  scope :test_questions, -> {joins(:tests).where("\"Test\".\"id\" IS NOT NULL")}
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
