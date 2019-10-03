@@ -16,6 +16,42 @@ class Answer < ApplicationRecord
     joins(:question).where('"Question"."correctOptionIndex" != "userAnswer"')
   }
 
+  scope :incorrect_physics_answers, -> {
+    Answer.incorrect_answers.merge(Question.physics_mcqs)
+  }
+
+  scope :correct_physics_answers, -> {
+    Answer.correct_answers.merge(Question.physics_mcqs)
+  }
+
+  scope :incorrect_chemistry_answers, -> {
+    Answer.incorrect_answers.merge(Question.chemistry_mcqs)
+  }
+
+  scope :correct_chemistry_answers, -> {
+    Answer.correct_answers.merge(Question.chemistry_mcqs)
+  }
+
+  scope :incorrect_botany_answers, -> {
+    Answer.incorrect_answers.merge(Question.botany_mcqs)
+  }
+
+  scope :correct_botany_answers, -> {
+    Answer.correct_answers.merge(Question.botany_mcqs)
+  }
+
+  scope :incorrect_zoology_answers, -> {
+    Answer.incorrect_answers.merge(Question.zoology_mcqs)
+  }
+
+  scope :correct_zoology_answers, -> {
+    Answer.correct_answers.merge(Question.zoology_mcqs)
+  }
+
+  scope :incorrect_test_answers, -> {
+    Answer.incorrect_answers.merge(Question.test_questions)
+  }
+
   scope :paid, ->(paid, start_date, end_date) {
     if paid == "yes"
       if start_date != nil and end_date != nil
