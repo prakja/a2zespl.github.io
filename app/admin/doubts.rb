@@ -78,6 +78,9 @@ ActiveAdmin.register Doubt do
     column :tagType
     column :doubtType
     column :user
+    column "rank" do |doubt|
+      doubt.user&.common_rank&.rank
+    end
     column "adminUser" do |doubt|
       doubt.admin_user.email if not doubt.admin_user.blank?
     end
@@ -93,6 +96,12 @@ ActiveAdmin.register Doubt do
       # + '/doubt/' 
       # + Base64.encode64("Doubt:" + doubt.id.to_s)
     actions
+  end
+
+  controller do
+    def scoped_collection
+      super.includes(:topic, :admin_user, user: [:user_profile, :common_rank])
+    end
   end
 
 end
