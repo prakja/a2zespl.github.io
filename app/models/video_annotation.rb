@@ -12,4 +12,6 @@ class VideoAnnotation < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   accepts_nested_attributes_for :note, :allow_destroy => true
+  
+  validates_presence_of :videoTimeStampInSeconds
 end
