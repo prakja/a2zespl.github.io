@@ -33,7 +33,7 @@ ActiveAdmin.register Doubt do
 
   batch_action :assign_doubts, form: {
     assignTo: AdminUser.distinct_faculty_name
-  } do |ids, inputs| 
+  } do |ids, inputs|
     assign_to = inputs['assignTo']
     p ids
     p assign_to
@@ -81,6 +81,12 @@ ActiveAdmin.register Doubt do
     column "rank" do |doubt|
       doubt.user&.common_rank&.rank
     end
+    column "subject rank" do |doubt|
+      doubt.user&.subject_rank.map { |subjectRank| subjectRank.subject.name.to_s + "(" + subjectRank.rank.to_s + ")" }.compact
+    end
+    column "subject accuracy" do |doubt|
+      doubt.user&.subject_rank.map { |subjectRank| subjectRank.subject.name.to_s + "(" + subjectRank.accuracy.to_s + "%)" }.compact
+    end
     column "adminUser" do |doubt|
       doubt.admin_user.email if not doubt.admin_user.blank?
     end
@@ -91,9 +97,9 @@ ActiveAdmin.register Doubt do
       else
       column :goodFlag
       end
-      # + '/topic/' 
-      # + Base64.encode64("Doubt:" + doubt.topic.id.to_s) 
-      # + '/doubt/' 
+      # + '/topic/'
+      # + Base64.encode64("Doubt:" + doubt.topic.id.to_s)
+      # + '/doubt/'
       # + Base64.encode64("Doubt:" + doubt.id.to_s)
     actions
   end
@@ -104,7 +110,7 @@ ActiveAdmin.register Doubt do
       #  " PG::UndefinedFunction: ERROR:  could not identify an equality operator for type json
       #  LINE 1: ...S t4_r17, "UserProfile"."neetExamYear" AS t4_r18, "UserProfi...
       #   " weeklySchedule is JSON type and on distinct operation, it throws the above error
-      super.includes(:topic, :admin_user, user: [:common_rank])
+      super.includes(:topic, :admin_user, user: [:common_rank], user: [:subject_rank])
     end
   end
 
