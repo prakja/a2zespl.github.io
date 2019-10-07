@@ -1,9 +1,10 @@
 ActiveAdmin.register Answer do
-  remove_filter :versions, :user, :question, :testAttempt
+  remove_filter :versions, :user, :question, :testAttempt, :questionAnalytic
   preserve_default_filters!
   filter :userId_eq, as: :number, label: "User ID"
   filter :questionId_eq, as: :number, label: "Question ID"
   filter :testAttemptId_eq, as: :number, label: "TestAttempt ID"
+  filter :questionAnalytic_difficultyLevel_eq, as: :select, collection: ["easy", "medium", "difficult"], label: "Difficulty"
 
   scope :correct_answers, show_count: false
   scope :incorrect_answers, show_count: false
@@ -23,5 +24,8 @@ ActiveAdmin.register Answer do
     column (:correct) {|answer| answer.correct ? 'yes' : 'no'}
     column (:userAnswer) {|answer| answer.question.options[answer.userAnswer]}
     column (:correctOption) {|answer| answer.question.options[answer.question.correctOptionIndex]}
+    column "difficulty Level" do |answer|
+     answer.questionAnalytic.difficultyLevel
+    end
   end
 end

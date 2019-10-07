@@ -3,6 +3,7 @@ class Answer < ApplicationRecord
   belongs_to :user, foreign_key: "userId", class_name: "User"
   belongs_to :question, foreign_key: "questionId", class_name: "Question"
   belongs_to :testAttempt, foreign_key: "testAttemptId", class_name: "TestAttempt", optional: true
+  belongs_to :questionAnalytic, foreign_key: "questionId", class_name: "QuestionAnalytic"
 
   def correct
     return self.userAnswer == self.question.correctOptionIndex
