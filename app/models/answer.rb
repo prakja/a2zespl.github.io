@@ -6,8 +6,10 @@ class Answer < ApplicationRecord
   belongs_to :questionAnalytic, foreign_key: "questionId", class_name: "QuestionAnalytic"
 
   def correct
-    return self.userAnswer == self.question.correctOptionIndex
+    return self.userAnswer == self.question&.correctOptionIndex
   end
+
+  default_scope {joins(:question).where('"Question"."deleted" = false')}
 
   scope :correct_answers, -> {
     joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"')

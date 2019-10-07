@@ -18,14 +18,21 @@ ActiveAdmin.register Answer do
   scope :correct_zoology_answers, show_count: false
   scope :incorrect_test_answers, show_count: false
 
+  controller do
+    def scoped_collection
+      super.left_outer_joins(:questionAnalytic, :question).select('"Answer".*, "QuestionAnalytics"."correctPercentage" as correct_percentage')
+    end
+  end
+
   index do
     id_column
-    column (:question) {|answer| raw(answer.question.question)}
+    column (:question) {|answer| raw(answer.question&.question)}
     column (:correct) {|answer| answer.correct ? 'yes' : 'no'}
-    column (:userAnswer) {|answer| answer.question.options[answer.userAnswer]}
-    column (:correctOption) {|answer| answer.question.options[answer.question.correctOptionIndex]}
+    column (:userAnswer) {|answer| answer.question&.options[answer.userAnswer]}
+    column (:correctOption) {|answer| answer.question&.options[answer.question&.correctOptionIndex]}
     column "difficulty Level" do |answer|
      answer.questionAnalytic.difficultyLevel
     end
+    column :correct_percentage, :sortable => true
   end
 end
