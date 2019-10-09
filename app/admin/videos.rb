@@ -30,12 +30,20 @@ ActiveAdmin.register Video do
     after_import:  ->(importer){
       p "after_import"
       time = importer.options[:csv_options]['time']
-      topicId = importer.options[:csv_options]['topicId'].to_i
+      topicId = importer.options[:csv_options]['topicId']
       videos = Video.where(createdAt: time)
       videos.each do |video|
         videoId = video[:id]
         Video.find(videoId).update(updatedAt: Time.now)
-        ChapterVideo.create(chapterId: topicId, videoId: videoId)
+        if topicId.include? "|"
+          topicIds = topicId.split("|")
+          topicIds.each do |id|
+            p id
+            ChapterVideo.create(chapterId: id.to_i, videoId: videoId)
+          end
+        else
+          ChapterVideo.create(chapterId: topicId.to_i, videoId: videoId)
+        end
       end
     },
     template_object: ActiveAdminImport::Model.new(
