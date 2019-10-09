@@ -32,6 +32,11 @@ class Question < ApplicationRecord
   default_scope {where(deleted: false)}
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
+
+  scope :subject_name, ->(subject_id) {
+    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+  }
+
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
@@ -56,5 +61,9 @@ class Question < ApplicationRecord
 
   def self.distinct_type
     Question.connection.select_all("select distinct \"type\" from \"Question\"")
+  end
+
+  def self.ransackable_scopes(_auth_object = nil)
+    [:subject_name]
   end
 end

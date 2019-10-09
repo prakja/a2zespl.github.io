@@ -10,4 +10,17 @@ ActiveAdmin.register SubjectLeaderBoard do
       super.includes(:subject, user: :user_profile)
     end
   end
+
+  index do
+    id_column
+    column :rank
+    column :user
+    column :subject
+    column :score
+    column :correctAnswerCount
+    column :incorrectAnswerCount
+    column :accuracy
+    actions
+  end
+
 end

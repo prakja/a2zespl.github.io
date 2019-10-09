@@ -31,9 +31,12 @@ class Test < ApplicationRecord
   self.table_name = "Test"
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
-  belongs_to :topic, foreign_type: 'ownerType', foreign_key: 'ownerId', optional: true
+  # belongs_to :topic, foreign_type: 'ownerType', foreign_key: 'ownerId', optional: true
   has_many :testCourseTests, foreign_key: :testId, class_name: 'CourseTest'
   has_many :courses, through: :testCourseTests
+
+  has_many :testChapterTests, foreign_key: :testId, class_name: 'ChapterTest'
+  has_many :topics, through: :testChapterTests
   # has_many :questions, class_name: "Question", foreign_key: "testId"
   has_many :test_leader_boards, class_name: "TestLeaderBoard", foreign_key: "testId"
 

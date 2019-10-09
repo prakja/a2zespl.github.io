@@ -11,6 +11,7 @@ class User < ApplicationRecord
  has_one :user_action, foreign_key: "userId"
  has_many :user_video_stats, class_name: "UserVideoStat", foreign_key: "userId"
  has_one :common_rank, class_name: "CommonLeaderBoard", foreign_key: "userId"
+ has_many :subject_rank, class_name: "SubjectLeaderBoard", foreign_key: "userId"
 
  has_many :user_courses, class_name: "UserCourse", foreign_key: "userId"
 

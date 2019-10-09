@@ -55,7 +55,7 @@ class Delivery < ApplicationRecord
   end
 
   def check_duplicate(email, mobile, createDate)
-    rowCount = Delivery.where(:createdAt => (createDate - 30.day)..createDate, :email => email, :mobile => mobile).count
+    rowCount = Delivery.where(:createdAt => (createDate - 30.day)..createDate, :email => email, :mobile => mobile).where.not(deliveryType: 'installment').count
     if rowCount > 1
       return "Duplicate"
     else
