@@ -44,6 +44,10 @@ ActiveAdmin.register_page "User Engagements" do
     render json: Doubt.paid_student_doubts.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
   end
 
+  page_action :schedule_items_users_json, method: :get do
+    render json: ScheduleItemUser.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).distinct.count("userId")
+  end
+
   content do
     render partial: 'graph'
     tabs do
@@ -76,6 +80,9 @@ ActiveAdmin.register_page "User Engagements" do
       end
       tab :paid_student_doubts do
         render partial: 'paid_student_doubts'
+      end
+      tab :schedule_items_users_json do
+        render partial: 'schedule_items_users'
       end
     end
   end
