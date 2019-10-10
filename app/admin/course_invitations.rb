@@ -9,6 +9,23 @@ ActiveAdmin.register CourseInvitation do
         csv_headers: ['name',	'courseId',	'email',	'phone',	'role',	'expiryAt', 'createdAt', 'updatedAt']
     )
 
+  member_action :resendinvite, :method=>:get do
+    p resource
+    redirect_to resource_path
+  end
+
+  controller do
+    def resendinvite
+      p resource
+      resource.update(updatedAt: Time.now)
+      redirect_to resource_path
+    end
+  end
+
+  action_item :resend_course_invitation, only: :show do
+    link_to 'Resend Course Invite', resource.id.to_s + '/resendinvite'
+  end
+
   scope "invitations without payments", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
     courseInvitation.invitations_without_payment
   end
