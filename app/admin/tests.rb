@@ -5,6 +5,8 @@ remove_filter :topics, :questions, :test_leader_boards, :versions, :testQuestion
 filter :id_eq, as: :number, label: "Test ID"
 preserve_default_filters!
 
+scope :neet_course
+
 index do
   id_column
   column :name

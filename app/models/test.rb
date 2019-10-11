@@ -42,4 +42,10 @@ class Test < ApplicationRecord
 
   has_many :testQuestions, foreign_key: :testId, class_name: 'TestQuestion', dependent: :destroy
   has_many :questions, through: :testQuestions, dependent: :destroy
+
+  scope :course_name, ->(course_id) {
+    joins(:testCourseTests => :course).where(testCourseTests: {Course: {id: course_id}})
+  }
+
+  scope :neet_course, -> {course_name(8)}
 end
