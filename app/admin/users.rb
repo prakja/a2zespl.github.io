@@ -59,7 +59,7 @@ sidebar :user_activity, only: :show do
     li link_to "Subject Ranks", admin_subject_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
     li link_to "Topic Ranks", admin_topic_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
     li link_to "Overall Rank", admin_common_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
-    li raw("Videos Watched " + "(" + user.user_video_stats.where(completed: true).count.to_s + ")")
+    li link_to "Videos Watched ", admin_user_video_stats_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
   end
 end
 

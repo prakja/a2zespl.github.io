@@ -13,5 +13,6 @@ ActiveAdmin.register UserVideoStat do
 # end
 
 remove_filter :user, :video
+filter :userId_eq, as: :number, label: "User ID"
 
 end
