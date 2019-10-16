@@ -23,7 +23,7 @@ class QuestionsController < ApplicationController
     end
 
     @questions.each do |question|
-      @questions_data[question.id] = [question.question, question.explanation]
+      @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage]
     end
 
   end
