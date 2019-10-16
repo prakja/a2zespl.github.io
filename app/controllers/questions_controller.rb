@@ -10,15 +10,16 @@ class QuestionsController < ApplicationController
     @questions_data = {}
     @questions = {}
     @subject = params[:subject]
+    @topicId = params[:topic]
 
-    if @subject == 'physics'
-      @questions = Question.physics_mcqs_difficult
-    elsif @subject == 'chemistry'
-      @questions = Question.chemistry_mcqs_difficult
-    elsif @subject == 'botany'
-      @questions = Question.botany_mcqs_difficult
-    elsif @subject == 'zoology'
-      @questions = Question.zoology_mcqs_difficult
+    if @subject == 'physics' && @topicId
+      @questions = Question.physics_mcqs_difficult(@topicId)
+    elsif @subject == 'chemistry'  && @topicId
+      @questions = Question.chemistry_mcqs_difficult(@topicId)
+    elsif @subject == 'botany' && @topicId
+      @questions = Question.botany_mcqs_difficult(@topicId)
+    elsif @subject == 'zoology' && @topicId
+      @questions = Question.zoology_mcqs_difficult(@topicId)
     end
 
     @questions.each do |question|

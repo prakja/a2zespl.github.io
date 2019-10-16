@@ -37,16 +37,28 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
 
+  scope :topic, ->(topic_id) {
+    joins(:topics).where("\"Topic\".\"id\"="+topic_id)
+  }
+
   scope :difficulty, ->(difficulty) {
     joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\"='difficult'")
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
-  scope :physics_mcqs_difficult, -> {subject_name(55).difficulty('difficult')}
-  scope :chemistry_mcqs_difficult, -> {subject_name(54).difficulty('difficult')}
-  scope :botany_mcqs_difficult, -> {subject_name(53).difficulty('difficult')}
-  scope :zoology_mcqs_difficult, -> {subject_name(56).difficulty('difficult')}
+  scope :physics_mcqs_difficult, ->(topic_id) {
+    subject_name(55).topic(topic_id).difficulty('difficult')
+  }
+  scope :chemistry_mcqs_difficult, ->(topic_id) {
+    subject_name(54).topic(topic_id).difficulty('difficult')
+  }
+  scope :botany_mcqs_difficult, ->(topic_id) {
+    subject_name(53).topic(topic_id).difficulty('difficult')
+  }
+  scope :zoology_mcqs_difficult, ->(topic_id) {
+    subject_name(56).topic(topic_id).difficulty('difficult')
+  }
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
   scope :botany_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 53}})}
   scope :zoology_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 56}})}
