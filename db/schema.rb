@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_17_085922) do
+ActiveRecord::Schema.define(version: 2019_10_17_094016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -453,9 +453,10 @@ ActiveRecord::Schema.define(version: 2019_10_17_085922) do
 
   create_table "ScheduleItemAsset", force: :cascade do |t|
     t.bigint "ScheduleItem_id"
-    t.text "asset"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.text "assetLink"
+    t.string "assetName"
     t.index ["ScheduleItem_id"], name: "index_ScheduleItemAsset_on_ScheduleItem_id"
   end
 
