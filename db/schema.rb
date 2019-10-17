@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_17_094016) do
+ActiveRecord::Schema.define(version: 2019_10_17_114507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -445,7 +445,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_094016) do
     t.text "name"
     t.text "description"
     t.integer "scheduleId", null: false
-    t.integer "topicId", null: false
+    t.integer "topicId"
     t.integer "hours"
     t.text "link"
     t.datetime "scheduledAt"
