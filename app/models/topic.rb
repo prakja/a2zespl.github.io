@@ -23,6 +23,9 @@ class Topic < ApplicationRecord
   has_many :issues, class_name: "CustomerIssue", foreign_key: "topicId"
   has_many :subTopics, class_name: "SubTopic", foreign_key: "topicId"
 
+  has_many :topicChapterTests, foreign_key: :chapterId, class_name: 'ChapterTest'
+  has_many :tests, through: :topicChapterTests
+
   def self.distinct_name
     Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id]).all().pluck("name", "id")
   end

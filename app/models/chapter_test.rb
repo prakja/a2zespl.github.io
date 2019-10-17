@@ -1,7 +1,7 @@
 class ChapterTest < ApplicationRecord
   self.table_name = "ChapterTest"
-  belongs_to :topic, class_name: "Topic", foreign_key: "chapterId"
-  belongs_to :test, class_name: "Test", foreign_key: "testId"
+  belongs_to :topic, class_name: "Topic", foreign_key: "chapterId", optional: true
+  belongs_to :test, class_name: "Test", foreign_key: "testId", optional: true
 
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
