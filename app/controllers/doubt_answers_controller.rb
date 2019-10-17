@@ -13,7 +13,7 @@ class DoubtAnswersController < ApplicationController
       redirect_to "/admin/login"
       return
     end
-    
+
     @userId = current_admin_user.userId
     @doubt_id = params[:doubt_id]
     if @userId.blank?
@@ -63,6 +63,7 @@ class DoubtAnswersController < ApplicationController
     if @doubt_tag == "question"
       @question = Question.find(@doubt.questionId)
       @doubt_data += @question.question
+      @doubt_data += '<div style="margin: 16px; padding: 8px; border: 1px solid #828282">' + "Explanation: </br>" + @question.explanation.to_s + '</div>'
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">Go to Question</a>'
     end
 
@@ -79,7 +80,7 @@ class DoubtAnswersController < ApplicationController
       subject = Subject.find(topic.subjectId)
 
       if @video.url.include? ".m3u8"
-        @doubt_data =+ 
+        @doubt_data =+
         '<script src="https://unpkg.com/video.js/dist/video.js"></script>
         <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
         <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
@@ -95,12 +96,12 @@ class DoubtAnswersController < ApplicationController
       end
 
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
-       @video.id.to_s + '-abc?subjectId=' + 
+       @video.id.to_s + '-abc?subjectId=' +
        subject.id.to_s + '&chapterId=' +
        topic.id.to_s + '&currentTimeStamp=' +
        timeElapsed.to_s +
        '">Go to Video</a>'
-      
+
       @doubt_data += '<h5>Time: ' + @hours.to_s.rjust(2, '0') + ':' + @minutes.to_s.rjust(2, '0') + ':' + @seconds.to_s.rjust(2, '0') + '</h5>'
     end
 
@@ -126,7 +127,7 @@ class DoubtAnswersController < ApplicationController
           @userId = current_admin_user.userId
           redirect_to "/doubt_answers/answer?doubt_id=" + @doubtId.to_s
         end
-      else 
+      else
         p "user not found"
       end
     end
@@ -161,8 +162,8 @@ class DoubtAnswersController < ApplicationController
           id: doubtId
         }
       )
-      redirect_to "/doubt_answers/answer?doubt_id=" + doubtId.to_s 
-    end 
+      redirect_to "/doubt_answers/answer?doubt_id=" + doubtId.to_s
+    end
   end
 
 end
