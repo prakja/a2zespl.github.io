@@ -6,7 +6,9 @@ filter :id_eq, as: :number, label: "Test ID"
 preserve_default_filters!
 
 scope :neet_course
-
+scope :test_series_2018
+scope :test_series_2019
+ 
 index do
   id_column
   column :name
