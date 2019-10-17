@@ -5,7 +5,7 @@ class ScheduleItem < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   belongs_to :schedule, class_name: "Schedule", foreign_key: "scheduleId"
-  belongs_to :topic, class_name: "Topic", foreign_key: "topicId"
+  belongs_to :topic, class_name: "Topic", foreign_key: "topicId", optional: true
   has_many :scheduleItemUsers, class_name: "ScheduleItemUser", foreign_key: "scheduleItemId"
   has_many :scheduleItemAssets, class_name: "ScheduleItemAsset", foreign_key: "ScheduleItem_id"
 
