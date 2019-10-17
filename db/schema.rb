@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_20_100046) do
+ActiveRecord::Schema.define(version: 2019_10_17_085922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -38,6 +38,8 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.integer "userId"
     t.integer "testAttemptId"
     t.integer "durationInSec"
+    t.string "incorrectAnswerReason", limit: 255
+    t.text "incorrectAnswerOther"
     t.index ["testAttemptId"], name: "answer_test_attempt_id"
     t.index ["userId", "questionId"], name: "answer_user_id_question_id", unique: true
   end
@@ -49,6 +51,15 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.boolean "forceUpdate"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+  end
+
+  create_table "BookmarkQuestion", id: :serial, force: :cascade do |t|
+    t.integer "questionId"
+    t.integer "userId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["userId", "questionId"], name: "bookmarkquestion_user_id_question_id", unique: true
+    t.index ["userId"], name: "bookmark_question_user_id"
   end
 
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
@@ -66,8 +77,18 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.integer "questionId"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["chapterId", "questionId"], name: "chapterquestion1_chapter_id_question_id", unique: true
     t.index ["chapterId"], name: "chapter_question_chapter_id"
     t.index ["questionId"], name: "chapter_question_question_id"
+  end
+
+  create_table "ChapterQuestionCopy", id: false, force: :cascade do |t|
+    t.integer "id", default: -> { "nextval('\"ChapterQuestion_id_seq\"'::regclass)" }, null: false
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["chapterId", "questionId"], name: "chapterquestion_chapter_id_question_id", unique: true
   end
 
   create_table "ChapterTask", id: :serial, force: :cascade do |t|
@@ -92,8 +113,8 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
   create_table "ChapterVideo", id: :serial, force: :cascade do |t|
     t.integer "chapterId"
     t.integer "videoId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "now()" }, null: false
+    t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["chapterId", "videoId"], name: "chaptervideo_chapter_id_video_id", unique: true
     t.index ["chapterId"], name: "chapter_video_chapter_id"
     t.index ["videoId"], name: "chapter_video_video_id"
@@ -276,6 +297,15 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "Group", id: :serial, force: :cascade do |t|
+    t.string "title", limit: 255
+    t.string "description", limit: 255
+    t.datetime "startedAt", null: false
+    t.datetime "expiryAt", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "Installment", id: :serial, force: :cascade do |t|
     t.integer "paymentId", null: false
     t.datetime "secondInstallmentDate"
@@ -285,6 +315,9 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
   end
+
+# Could not dump table "Message" because of following StandardError
+#   Unknown type '"enum_Message_type"' for column 'type'
 
   create_table "NewUserVideoStat", id: false, force: :cascade do |t|
     t.integer "id"
@@ -418,6 +451,14 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
     t.datetime "scheduledAt"
   end
 
+  create_table "ScheduleItemAsset", force: :cascade do |t|
+    t.bigint "ScheduleItem_id"
+    t.text "asset"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["ScheduleItem_id"], name: "index_ScheduleItemAsset_on_ScheduleItem_id"
+  end
+
   create_table "ScheduleItemUser", id: :serial, force: :cascade do |t|
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
@@ -525,8 +566,8 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
   create_table "TestQuestion", id: :serial, force: :cascade do |t|
     t.integer "testId"
     t.integer "questionId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "now()" }, null: false
+    t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["questionId"], name: "test_question_question_id"
     t.index ["testId"], name: "test_question_test_id"
   end
@@ -831,6 +872,8 @@ ActiveRecord::Schema.define(version: 2019_09_20_100046) do
   add_foreign_key "ChapterNote", "\"Topic\"", column: "chapterId", name: "fk_chapter_note_chapterid"
   add_foreign_key "ChapterQuestion", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
   add_foreign_key "ChapterQuestion", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
+  add_foreign_key "ChapterQuestionCopy", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
+  add_foreign_key "ChapterQuestionCopy", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
   add_foreign_key "ChapterTask", "\"Task\"", column: "taskId", name: "fk_chapter_task_taskid"
   add_foreign_key "ChapterTask", "\"Topic\"", column: "chapterId", name: "fk_chapter_task_chapterid"
   add_foreign_key "ChapterTest", "\"Test\"", column: "testId", name: "fk_chapter_test_testid"
