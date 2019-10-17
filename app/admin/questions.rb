@@ -118,6 +118,22 @@ ActiveAdmin.register Question do
     link_to 'Find Similar Questions', '../../admin/questions?q[question_eq]=' + resource.question
   end
 
+  action_item :see_physics_difficult_questions, only: :index do
+    link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
+  end
+
+  action_item :see_chemistry_difficult_questions, only: :index do
+    link_to 'Chemistry Difficult Questions', '../../questions/pdf_questions?subject=chemistry'
+  end
+
+  action_item :see_botany_difficult_questions, only: :index do
+    link_to 'Botany Difficult Questions', '../../questions/pdf_questions?subject=botany'
+  end
+
+  action_item :see_zoology_difficult_questions, only: :index do
+    link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do

@@ -10,5 +10,6 @@ Rails.application.routes.draw do
   get "course_details/show"
   get "user_analytics/show"
   post "user_analytics/populate_user_activites"
+  get "questions/pdf_questions"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
