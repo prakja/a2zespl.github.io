@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
     @subject = params[:subject]
     @topicId = params[:topic]
     @orderBy = params[:order]
+    @limit = params[:limit]
 
     if @subject == 'physics' && @topicId
       @questions = Question.physics_mcqs_difficult(@topicId)
@@ -27,6 +28,10 @@ class QuestionsController < ApplicationController
       @questions = @questions.order(correctPercentage: :desc)
     elsif @orderBy == 'asc'
       @questions = @questions.order(correctPercentage: :asc)
+    end
+
+    if @limit
+      @questions = @questions.limit(@limit)
     end
 
     @questions.each do |question|
