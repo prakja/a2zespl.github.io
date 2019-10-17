@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
     @questions = {}
     @subject = params[:subject]
     @topicId = params[:topic]
+    @orderBy = params[:order]
 
     if @subject == 'physics' && @topicId
       @questions = Question.physics_mcqs_difficult(@topicId)
@@ -20,6 +21,12 @@ class QuestionsController < ApplicationController
       @questions = Question.botany_mcqs_difficult(@topicId)
     elsif @subject == 'zoology' && @topicId
       @questions = Question.zoology_mcqs_difficult(@topicId)
+    end
+
+    if @orderBy == 'desc'
+      @questions = @questions.order(correctPercentage: :desc)
+    elsif @orderBy == 'asc'
+      @questions = @questions.order(correctPercentage: :asc)
     end
 
     @questions.each do |question|
