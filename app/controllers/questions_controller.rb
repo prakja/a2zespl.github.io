@@ -49,7 +49,7 @@ class QuestionsController < ApplicationController
       @testQuestions = @test.questions
 
       @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, question.explanation]
+        @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage]
       end
     rescue => exception
       
