@@ -39,4 +39,20 @@ class QuestionsController < ApplicationController
     end
 
   end
+
+  def test_question_pdf
+    @questions_data = {}
+    @testId = params.require(:id)
+
+    begin
+      @test = Test.find(@testId)
+      @testQuestions = @test.questions
+
+      @testQuestions.each do |question|
+        @questions_data[question.id] = [question.question, question.explanation]
+      end
+    rescue => exception
+      
+    end
+  end
 end
