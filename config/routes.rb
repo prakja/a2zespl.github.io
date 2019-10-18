@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get "user_analytics/show"
   post "user_analytics/populate_user_activites"
   get "questions/pdf_questions"
+  get "questions/add_explanation/:id", to: "questions#add_explanation"
+  post "questions/update_explanation", to: "questions#update_explanation"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

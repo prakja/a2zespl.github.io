@@ -1,5 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :set_doubt, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
 
   def pdf_questions
     if not current_admin_user
@@ -40,6 +42,30 @@ class QuestionsController < ApplicationController
 
   end
 
+  def update_explanation
+    id = params.require(:id)
+    new_explanation = params.require(:explanation)
+    question = Question.find(id)
+    current_explanation = question.explanation
+    question.update(explanation: new_explanation + current_explanation)
+  end
+
+  def add_explanation
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @questionId = params.require(:id)
+      @question = Question.find(@questionId)
+      @questionBody = @question.question
+      @questionExplanation = @question.explanation
+
+    rescue => exception
+      
+    end    
+  end
+  
   def test_question_pdf
     @questions_data = {}
     @testId = params.require(:id)
