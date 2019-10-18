@@ -49,5 +49,5 @@ class Test < ApplicationRecord
 
   scope :neet_course, -> {course_name(8)}
   scope :test_series_2018, -> {course_name(128)}
-  scope :test_series_2019, -> {course_name(31)}
+  scope :test_series_2019, -> {course_name(148)}
 end
