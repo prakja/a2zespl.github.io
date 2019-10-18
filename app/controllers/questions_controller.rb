@@ -64,6 +64,8 @@ class QuestionsController < ApplicationController
     rescue => exception
       
     end    
+  end
+  
   def test_question_pdf
     @questions_data = {}
     @testId = params.require(:id)
