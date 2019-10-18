@@ -33,6 +33,7 @@ ActiveAdmin.register Answer do
     column "difficulty Level" do |answer|
      answer.questionAnalytic.difficultyLevel
     end
+    column (:durationInSec) {|answer| answer.durationInSec ? answer.durationInSec : nil}
     column :correct_percentage, :sortable => true
   end
 end
