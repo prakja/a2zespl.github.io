@@ -1,0 +1,209 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    reset();
+  };
+</script>
+
+<style>
+  .loader {
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 9px solid #3498db;
+    width: 20px;
+    height: 20px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<div style="padding: 8px">
+  <p>Question</p>
+  <p><%= raw(@questionBody) %></p>
+
+  <p>Explanation</p>
+  <p><%= raw(@questionExplanation) %></p>
+
+  <div style="margin: 8px">
+    <p>Record audio explanation</p>
+    <div style="display: none" class="loader" id="loader"></div>
+    <div id="input_div" style="display: none">
+      <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
+      -- or --
+      <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
+    </div>
+    <div id="preview_div" style="display: none">
+      <audio controls id="audio_player_preview"></audio>
+    </div>
+    <div id="input_stop_div" style="display: none">
+        <button style="margin-top: 8px" onclick="stopRecording()" id="rec_stop_button">Stop Recording</button>
+    </div>
+    <div id="upload_div" style="display: none">
+      <button style="margin-top: 8px" onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var loader = document.getElementById("loader");
+  var audioButton = document.getElementById("audio_button");
+  var audio = document.getElementById("audio_player_preview");
+  var uploadAudioButton = document.getElementById("upload_attach_button");
+  var fileInput = document.getElementById('audioFile');
+  var cancleButton = document.getElementById('cancleButton');
+  var stopRecordingButton = document.getElementById('rec_stop_button');
+
+  var inputDiv = document.getElementById("input_div");
+  var inputStopDiv = document.getElementById("input_stop_div");
+  var previewDiv = document.getElementById("preview_div");
+  var uploadDiv = document.getElementById("upload_div");
+
+  var uploadFromFile = false;
+  var audioChunks = [];
+  var audioUrl = null;
+  var audioBlob = null;
+  var mediaRecorder = null;
+
+  function fileSelected(e) {
+    uploadFromFile = true;
+    inputDiv.style.display = 'none';
+    stopRecordingButton.innerHTML = "Cancel";
+    stopRecordingButton.onclick = reset;
+    inputStopDiv.style.display = 'block';
+    uploadDiv.style.display = 'block';
+    previewDiv.style.display = 'block';
+  
+    var file = fileInput.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        audio.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  function startRecording () {
+    loader.style.display = 'block';
+    inputDiv.style.display = 'none';
+    inputStopDiv.style.display = 'block';
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+  
+      mediaRecorder.addEventListener("dataavailable", event => {
+        audioChunks.push(event.data);
+      });
+    });
+  }
+  
+  function stopRecording () {
+    loader.style.display = 'none';
+    stopRecordingButton.innerHTML = "Cancel";
+    stopRecordingButton.onclick = reset;
+  
+    mediaRecorder.addEventListener("stop", () => {
+      console.log ("Preparing audio");
+      audioBlob = new Blob(audioChunks);
+      audioUrl = URL.createObjectURL(audioBlob);
+      audio.src = audioUrl;
+      console.log (audioUrl);
+  
+      previewDiv.style.display = 'block';
+      uploadDiv.style.display = 'block';
+    });
+    console.log ("Stopping recording");
+    mediaRecorder.stop();
+  }
+  
+  function uploadAndAttachRecording () {
+    loader.style.display = 'block'
+    var bucketName = 'questionexplanation';
+    var bucketRegion = 'us-west-2';
+  
+    var config = new AWS.Config({
+      accessKeyId: 'AKIAYEPQTPG6K7CEFU6D', secretAccessKey: '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', region: 'us-west-2'
+    });
+  
+    var credentials = new AWS.Credentials('AKIAYEPQTPG6K7CEFU6D', 'XtUqnXWkwvPvlK+t8gwuShuESJA1fjnBV1q6AwTX');
+    AWS.config.region = bucketRegion;
+    AWS.config.credentials = credentials;
+    console.log(AWS.config.credentials);
+    
+    var bucket = new AWS.S3({
+      params: {
+          Bucket: bucketName
+      }
+    });
+    if (!uploadFromFile)
+      var file = new File([audioBlob], "question_explanations_" + "<%= @doubt_id %>" + "_" + Date.now() + ".ogg");
+    else 
+      var file = fileInput.files[0];
+  
+    if (!file) {
+      alert ("File error");
+      loader.style.display = 'none';
+      return;
+    } else {
+      var params = {
+        Key: file.name,
+        ContentType: file.type,
+        Body: file,
+        ACL: 'public-read'
+      };
+      bucket.putObject(params, function(err, data) {
+        if (err) {
+          console.log(" Error while  UPLOADING Audio :" + err);
+          alert ('Error uploading audio');
+    
+          loader.style.display = 'none';
+        } else {
+          var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+          insertIntoExplanation('<%= @questionId %>', fileUrl);
+          reset ();
+        }
+      });
+    }
+  }
+
+  function insertIntoExplanation(id, fileUrl) {
+    audioTag = '<audio controls style="display: block" id="audio_player"><source src="' + fileUrl +'" type="audio/ogg">Your browser does not support the audio element.</audio>'
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", window.location.origin + '/questions/update_explanation', true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      var params = "id=" + id + "&explanation=" + audioTag
+      xhr.send(params);
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log("Done");
+          window.location.href = window.location.href;
+        }
+      }
+  }
+  
+  function reset() {
+    audioChunks = [];
+    stopRecordingButton.innerHTML = "Stop Recording";
+    stopRecordingButton.onclick = stopRecording;
+    loader.style.display = 'none';
+    inputDiv.style.display = 'block';
+    inputStopDiv.style.display = 'none';
+    previewDiv.style.display = 'none';
+    uploadDiv.style.display = 'none';
+  }
+</script>
