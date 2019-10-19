@@ -1,10 +1,13 @@
 ActiveAdmin.register Answer do
-  remove_filter :versions, :user, :question, :testAttempt, :questionAnalytic
+  remove_filter :versions, :user, :question, :testAttempt, :questionAnalytic, :incorrectAnswerReason, :incorrectAnswerOther
   preserve_default_filters!
   filter :userId_eq, as: :number, label: "User ID"
   filter :questionId_eq, as: :number, label: "Question ID"
   filter :testAttemptId_eq, as: :number, label: "TestAttempt ID"
   filter :questionAnalytic_difficultyLevel_eq, as: :select, collection: ["easy", "medium", "difficult"], label: "Difficulty"
+  filter :incorrectAnswerReason_present, as: :boolean, label: "Incorrect Answer Reason Present"
+  filter :incorrectAnswerReason_eq, as: :boolean, collection: ["1", "2"], label: "Incorrect Answer Reason"
+  filter :incorrectAnswerOther_present, as: :boolean, label: "Incorrect Answer Other Present"
 
   scope :correct_answers, show_count: false
   scope :incorrect_answers, show_count: false
@@ -35,5 +38,7 @@ ActiveAdmin.register Answer do
     end
     column (:durationInSec) {|answer| answer.durationInSec ? answer.durationInSec : nil}
     column :correct_percentage, :sortable => true
+    column :incorrectAnswerReason
+    column :incorrectAnswerOther
   end
 end
