@@ -1,4 +1,5 @@
 ActiveAdmin.register CommonLeaderBoard do
+  config.sort_order = 'rank_asc'
   remove_filter :user
   preserve_default_filters!
   scope :paid_students
