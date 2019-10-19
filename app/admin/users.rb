@@ -13,7 +13,7 @@ permit_params :blockedUser
 # end
 
 remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank
-
+filter :student_name, as: :string
 form do |f|
   f.inputs "User" do
     f.input :blockedUser

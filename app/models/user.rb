@@ -15,13 +15,19 @@ class User < ApplicationRecord
 
  has_many :user_courses, class_name: "UserCourse", foreign_key: "userId"
 
-# scope :free_users, -> {
+ scope :student_name, ->(name) {
+   joins(:user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
+ }
+ # scope :free_users, -> {
 #   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
 # }
 # scope :paid_users, -> {
 #   joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
 # }
 
+  def self.ransackable_scopes(_auth_object = nil)
+    [:student_name]
+  end
 
  def name
   if not self.user_profile.blank? and not self.user_profile.displayName.blank?
