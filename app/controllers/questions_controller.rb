@@ -9,12 +9,14 @@ class QuestionsController < ApplicationController
       return
     end
 
+    default_order = 'asc'
+    default_limit = 50
     @questions_data = {}
     @questions = {}
     @subject = params[:subject]
     @topicId = params[:topic]
-    @orderBy = params[:order]
-    @limit = params[:limit]
+    @orderBy = params[:order] or default_order
+    @limit = params[:limit] or default_limit
 
     if @subject == 'physics' && @topicId
       @questions = Question.physics_mcqs_difficult(@topicId)
