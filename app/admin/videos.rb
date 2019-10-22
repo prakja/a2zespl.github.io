@@ -129,6 +129,10 @@ ActiveAdmin.register Video do
     render "layouts/history"
   end
 
+  action_item :add_chapter, only: :show do
+    link_to 'Add Chapter', '/videos/add_chapter_video/' + resource.id.to_s
+  end
+
   form do |f|
     f.inputs "Video" do
       f.input :name
