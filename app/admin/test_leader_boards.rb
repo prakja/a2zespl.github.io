@@ -12,8 +12,12 @@ ActiveAdmin.register TestLeaderBoard do
     column :test
     column :test_attempt
     column :score
-    column :correctAnswerCount
-    column :incorrectAnswerCount
+    column (:correctAnswerCount) { |test_attempt|
+      raw('<a target="_blank" href=answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=correct_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + test_attempt.correctAnswerCount.to_s + '</a>') 
+    }
+    column (:incorrectAnswerCount) { |test_attempt|
+      raw('<a target="_blank" href=answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=incorrect_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + test_attempt.incorrectAnswerCount.to_s + '</a>') 
+    }
     column "Time Taken" do |testLeaderBoard|
       raw(((testLeaderBoard.test_attempt.updatedAt - testLeaderBoard.test_attempt.createdAt) / 60).round.to_s + " minutes")
     end
