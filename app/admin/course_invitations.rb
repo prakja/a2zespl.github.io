@@ -4,6 +4,13 @@ ActiveAdmin.register CourseInvitation do
   active_admin_import validate: true,
     timestamps: true,
     headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,	'role': :role,	'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    before_batch_import: ->(importer) {
+      time = Time.now
+      importer.csv_lines.each do |line|
+        line.insert(-1, time)
+        line.insert(-1, time)
+      end
+    },
     template_object: ActiveAdminImport::Model.new(
         hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',	'role',	'expiryAt'",
         csv_headers: ['name',	'courseId',	'email',	'phone',	'role',	'expiryAt', 'createdAt', 'updatedAt']

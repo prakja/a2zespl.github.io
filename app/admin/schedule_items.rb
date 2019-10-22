@@ -31,7 +31,11 @@ end
 index do
   id_column
   column :scheduledAt
-  column :topic
+  column ("Topic") { |scheduleItem|
+    if not scheduleItem.topic.nil?
+      scheduleItem.topic.name + " (" + scheduleItem.topic.subject.name + ")"
+    end
+  }
   column :name
   column :hours
   column (:link) { |schedule_item| 
@@ -40,6 +44,14 @@ index do
   column :schedule
   column (:description) { |schedule_item| raw(schedule_item.description)  }
   actions
+end
+
+action_item :show_assets, only: :show do
+  link_to 'Asset List', '/admin/schedule_item_assets?q[ScheduleItem_id_eq]=' + resource.id.to_s
+end
+
+action_item :add_asset, only: :show do
+  link_to 'Add Assets', '/admin/schedule_item_assets/new?schedule_item_asset[ScheduleItem_id]=' + resource.id.to_s
 end
 
 end
