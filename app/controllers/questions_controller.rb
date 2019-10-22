@@ -19,13 +19,13 @@ class QuestionsController < ApplicationController
     @limit = params[:limit] or default_limit
 
     if @subject == 'physics' && @topicId
-      @questions = Question.physics_mcqs_difficult(@topicId)
+      @questions = Question.physics_mcqs_difficult(@topicId).includes(:question_analytic)
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question.chemistry_mcqs_difficult(@topicId)
+      @questions = Question.chemistry_mcqs_difficult(@topicId).includes(:question_analytic)
     elsif @subject == 'botany' && @topicId
-      @questions = Question.botany_mcqs_difficult(@topicId)
+      @questions = Question.botany_mcqs_difficult(@topicId).includes(:question_analytic)
     elsif @subject == 'zoology' && @topicId
-      @questions = Question.zoology_mcqs_difficult(@topicId)
+      @questions = Question.zoology_mcqs_difficult(@topicId).includes(:question_analytic)
     end
 
     if @orderBy == 'desc'
@@ -39,7 +39,7 @@ class QuestionsController < ApplicationController
     end
 
     @questions.each do |question|
-      @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage]
+      @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage, question.correctOptionIndex]
     end
 
   end
