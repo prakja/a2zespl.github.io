@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_17_114507) do
+ActiveRecord::Schema.define(version: 2019_10_21_115016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.integer "durationInSec"
     t.string "incorrectAnswerReason", limit: 255
     t.text "incorrectAnswerOther"
+    t.index ["incorrectAnswerReason"], name: "answer_incorrect_answer_reason"
     t.index ["testAttemptId"], name: "answer_test_attempt_id"
     t.index ["userId", "questionId"], name: "answer_user_id_question_id", unique: true
   end
@@ -297,15 +298,6 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.datetime "updatedAt", null: false
   end
 
-  create_table "Group", id: :serial, force: :cascade do |t|
-    t.string "title", limit: 255
-    t.string "description", limit: 255
-    t.datetime "startedAt", null: false
-    t.datetime "expiryAt", null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-  end
-
   create_table "Installment", id: :serial, force: :cascade do |t|
     t.integer "paymentId", null: false
     t.datetime "secondInstallmentDate"
@@ -315,9 +307,6 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
   end
-
-# Could not dump table "Message" because of following StandardError
-#   Unknown type '"enum_Message_type"' for column 'type'
 
   create_table "NewUserVideoStat", id: false, force: :cascade do |t|
     t.integer "id"
@@ -400,6 +389,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.integer "questionId"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["questionId"], name: "QuestionDetail_questionId"
   end
 
   create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
@@ -499,6 +489,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.integer "position"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.index ["topicId"], name: "SubTopic_topicId"
   end
 
   create_table "Subject", id: :serial, force: :cascade do |t|
@@ -508,6 +499,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.integer "courseId"
+    t.index ["courseId"], name: "Subject_courseId"
   end
 
   create_table "SubjectChapter", id: :serial, force: :cascade do |t|
@@ -586,6 +578,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.integer "seqId", default: 0, null: false
     t.string "importUrl", limit: 255
     t.boolean "isComingSoon", default: false
+    t.index ["subjectId"], name: "Topic_subjectId"
   end
 
   create_table "TopicAssetOld", id: :integer, default: -> { "nextval('\"TopicAsset_id_seq\"'::regclass)" }, force: :cascade do |t|
@@ -838,6 +831,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
     t.integer "userId"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_admin_users_on_role"
   end
 
   create_table "doubt_admins", force: :cascade do |t|
@@ -902,7 +896,7 @@ ActiveRecord::Schema.define(version: 2019_10_17_114507) do
   add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
-  add_foreign_key "QuestionSubTopic", "\"Question\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
+  add_foreign_key "QuestionSubTopic", "\"SubTopic\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
   add_foreign_key "ScheduleItem", "\"Schedule\"", column: "scheduleId", name: "fk_schedule_item_schedule"
   add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
   add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
