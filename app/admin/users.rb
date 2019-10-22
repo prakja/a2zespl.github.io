@@ -12,8 +12,10 @@ permit_params :blockedUser
 #   permitted
 # end
 
-remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank
+remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone
 filter :student_name, as: :string
+filter :student_email, as: :string
+filter :student_phone, as: :string
 form do |f|
   f.inputs "User" do
     f.input :blockedUser
@@ -46,11 +48,35 @@ index do
   column :email
   column :phone
   column :role
+  column :user_profile
+  column (:user_profile_phone) { |user| 
+    if not user.user_profile.nil?
+      if user.user_profile.phone != ''
+         user.user_profile.phone
+      else
+        raw("-")   
+      end
+    else
+      raw("-")    
+    end
+  }
+  column (:user_profile_name) { |user| 
+    if not user.user_profile.nil?
+      if user.user_profile.displayName != ''
+         user.user_profile.displayName
+      else
+        raw("-")   
+      end
+    else
+      raw("-")    
+    end
+  }
   actions
 end
 
 sidebar :user_activity, only: :show do
-  ul do
+  ul do 
+    li link_to "User Profile", admin_user_profiles_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Doubts", admin_doubts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Test Attempts", admin_test_attempts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Profile Analytics", admin_user_profile_analytics_path(q: { userId_eq: user.id})

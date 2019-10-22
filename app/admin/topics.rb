@@ -12,6 +12,7 @@ ActiveAdmin.register Topic do
   #   permitted
   # end
   remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subjects, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests
+  permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id
   scope :neetprep_course
   sidebar :related_data, only: :show do
     ul do
