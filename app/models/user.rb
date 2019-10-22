@@ -19,10 +19,10 @@ class User < ApplicationRecord
    joins(:user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
  }
  scope :student_email, ->(email) {
-  joins(:user_profile).where('"UserProfile"."email" ILIKE ?', "%#{email}%")
+  User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."email" ILIKE ? or "User"."email" ILIKE ?', "%#{email}%", "%#{email}%")
  }
  scope :student_phone, ->(phone) {
-  joins(:user_profile).where('"UserProfile"."phone" ILIKE ?', "%#{phone}%")
+  User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."phone" ILIKE ? or "User"."phone" ILIKE ?', "%#{phone}%", "%#{phone}%")    
  }
  # scope :free_users, -> {
 #   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
