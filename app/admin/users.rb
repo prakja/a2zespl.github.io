@@ -12,7 +12,7 @@ permit_params :blockedUser
 #   permitted
 # end
 
-remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank
+remove_filter :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone
 filter :student_name, as: :string
 filter :student_email, as: :string
 filter :student_phone, as: :string
