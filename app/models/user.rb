@@ -18,6 +18,12 @@ class User < ApplicationRecord
  scope :student_name, ->(name) {
    joins(:user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
  }
+ scope :student_email, ->(email) {
+  joins(:user_profile).where('"UserProfile"."email" ILIKE ?', "%#{email}%")
+ }
+ scope :student_phone, ->(phone) {
+  joins(:user_profile).where('"UserProfile"."phone" ILIKE ?', "%#{phone}%")
+ }
  # scope :free_users, -> {
 #   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
 # }
@@ -26,7 +32,7 @@ class User < ApplicationRecord
 # }
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:student_name]
+    [:student_name, :student_email, :student_phone]
   end
 
  def name
