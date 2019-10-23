@@ -79,9 +79,9 @@ class QuestionsController < ApplicationController
       @test = Test.find(@testId)
       @testQuestions = nil
       if @limit.to_i > 0 
-        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i)
+        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i).order(id: :asc)
       else
-        @testQuestions = @test.questions
+        @testQuestions = @test.questions.order(id: :asc)
       end 
       
       @testQuestions.each do |question|
