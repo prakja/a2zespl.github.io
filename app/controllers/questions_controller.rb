@@ -68,14 +68,22 @@ class QuestionsController < ApplicationController
     end    
   end
   
+
   def test_question_pdf
     @questions_data = {}
     @testId = params.require(:id)
+    @limit = params[:limit] || 0
+    @offset = params[:offset] || 0
 
     begin
       @test = Test.find(@testId)
-      @testQuestions = @test.questions
-
+      @testQuestions = nil
+      if @limit.to_i > 0 
+        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i)
+      else
+        @testQuestions = @test.questions
+      end 
+      
       @testQuestions.each do |question|
         @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage]
       end
