@@ -66,10 +66,10 @@ class Doubt < ApplicationRecord
     end
   }
 
-  scope :botany_paid_student_doubts, -> {solved('no').paid([8, 141, 20], 'yes').deleted('no').subject_name([53, 478, 132]).distinct}
-  scope :chemistry_paid_student_doubts, -> {solved('no').paid([8, 141, 19], 'yes').deleted('no').subject_name([54, 477, 129]).distinct}
-  scope :physics_paid_student_doubts, -> {solved('no').paid([8, 141, 18], 'yes').deleted('no').subject_name([55, 476, 126]).distinct}
-  scope :zoology_paid_student_doubts, -> {solved('no').paid([8, 141, 20], 'yes').deleted('no').subject_name([56, 479, 135]).distinct}
+  scope :botany_paid_student_doubts, -> {solved('no').paid([8, 141, 20, 100], 'yes').deleted('no').subject_name([53, 478, 132, 390]).distinct}
+  scope :chemistry_paid_student_doubts, -> {solved('no').paid([8, 141, 19, 100], 'yes').deleted('no').subject_name([54, 477, 129, 391]).distinct}
+  scope :physics_paid_student_doubts, -> {solved('no').paid([8, 141, 18, 100], 'yes').deleted('no').subject_name([55, 476, 126, 392]).distinct}
+  scope :zoology_paid_student_doubts, -> {solved('no').paid([8, 141, 20, 100], 'yes').deleted('no').subject_name([56, 479, 135, 393]).distinct}
 
   scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135]).distinct}
 
