@@ -17,7 +17,6 @@ class VideosController < ApplicationController
       end
 
     rescue => exception
-      p exception
 
     end
   end
@@ -30,7 +29,6 @@ class VideosController < ApplicationController
 
     @videoId = params[:videoId]
     @video = Video.where(id: @videoId).first
-    p @video
     @courses_data = {}
     @courses = Course.public_courses
     @courses.each do |course|
