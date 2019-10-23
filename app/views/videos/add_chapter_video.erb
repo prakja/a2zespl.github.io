@@ -21,6 +21,8 @@
   <script type="text/javascript">
 
     function onCourseChange() {
+      $("#subjectList").html("");
+      $("#chapterList").html("");
       let url = window.location.origin + "/videos/getSubjectsList";
       let courseId = $('#courseList').val();
       $.ajax({
@@ -40,6 +42,7 @@
     }
 
     function onSubjectChange() {
+      $("#chapterList").html("");
       let url = window.location.origin + "/videos/getChaptersList";
       let subjectId = $('#subjectList').val();
       $.ajax({
@@ -61,6 +64,10 @@
     function addChapterVideo() {
       let chapterId = $("#chapterList option:selected").val();
       let videoId = '<%= @video.id %>';
+      if (chapterId == null){
+        alert('Chapter is not selected');
+        return
+      }
       let url = window.location.origin + "/videos/createChapterVideo";
       $.ajax({
         type: "POST",

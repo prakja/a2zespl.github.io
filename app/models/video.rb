@@ -2,8 +2,7 @@ class Video < ApplicationRecord
   has_paper_trail
 
   self.table_name = "Video"
-  after_commit :after_create_update_video, on: [:create]
-  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:update]
+  after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:create, :update]
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo', dependent: :destroy
   has_many :topics, through: :videoTopics

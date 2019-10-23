@@ -130,7 +130,7 @@ ActiveAdmin.register Video do
   end
 
   action_item :add_chapter, only: :show do
-    link_to 'Add Chapter', '/videos/add_chapter_video/' + resource.id.to_s
+    link_to 'Add Chapter', '/videos/add_chapter_video/' + resource.id.to_s, target: :_blank
   end
 
   form do |f|
