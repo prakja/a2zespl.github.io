@@ -66,6 +66,9 @@ ActiveAdmin.register Question do
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
       column :doubts_count, sortable: true
+      column ("Add explanation") { |question|
+        raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
+      }
     end
     actions
   end
