@@ -113,6 +113,7 @@ ActiveAdmin.register Question do
   # Label works with filters but not with scope xD
   scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
   scope :AIIMS_Questions
+  scope :empty_explanation
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
 
