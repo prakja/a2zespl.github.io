@@ -42,6 +42,40 @@ ActiveAdmin.register UserCourse do
     column :startedAt
     column :expiryAt
     column :createdAt
+    column ("Reinvite Student") { |userCourse|
+      #if userCourse.role == "courseStudent"
+
+        # In my defence, it works! ':D
+
+        email = ""
+        if userCourse.invitation.nil?
+          if not userCourse.user.email.nil?
+            email = userCourse.user.email
+          elsif not userCourse.user.user_profile.email.nil?
+            email = userCourse.user.user_profile.email
+          else
+            email = ""
+          end
+        else
+          email = userCourse.invitation.email
+        end
+
+        phone = ''
+        if userCourse.invitation.nil?
+          if not userCourse.user.phone.nil?
+            phone = userCourse.user.phone
+          elsif not userCourse.user.user_profile.phone.nil?
+            phone = userCourse.user.user_profile.phone
+          else
+            phone = ""
+          end
+        else
+          phone = userCourse.invitation.phone
+        end
+
+        link_to "Invite", "/admin/course_invitations/new?course_invitation[displayName]=" + (userCourse.user.name || "NEET Student") + "&course_invitation[email]=" + email  + "&course_invitation[phone]=" + phone
+      #end
+    }
     actions
   end
 
