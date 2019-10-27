@@ -51,7 +51,7 @@ ActiveAdmin.register UserCourse do
         if userCourse.invitation.nil?
           if not userCourse.user.email.nil?
             email = userCourse.user.email
-          elsif not userCourse.user.user_profile.email.nil?
+          elsif userCourse.user.user_profile and not userCourse.user.user_profile.email.nil?
             email = userCourse.user.user_profile.email
           else
             email = ""
@@ -64,7 +64,7 @@ ActiveAdmin.register UserCourse do
         if userCourse.invitation.nil?
           if not userCourse.user.phone.nil?
             phone = userCourse.user.phone
-          elsif not userCourse.user.user_profile.phone.nil?
+          elsif userCourse.user.user_profile and not userCourse.user.user_profile.phone.nil?
             phone = userCourse.user.user_profile.phone
           else
             phone = ""
@@ -103,6 +103,16 @@ ActiveAdmin.register UserCourse do
     column :startedAt
     column :expiryAt
     column :createdAt
+  end
+
+  controller do
+    def scoped_collection
+      # TODO: why is profile not included in include below?
+      #  " PG::UndefinedFunction: ERROR:  could not identify an equality operator for type json
+      #  LINE 1: ...S t4_r17, "UserProfile"."neetExamYear" AS t4_r18, "UserProfi...
+      #   " weeklySchedule is JSON type and on distinct operation, it throws the above error
+      super.includes(:course, user: [:user_profile])
+    end
   end
 
   form do |f|
