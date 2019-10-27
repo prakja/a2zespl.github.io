@@ -77,6 +77,10 @@ action_item :update_test_attempts, only: :show do
   link_to 'Update Test Attempts', Rails.configuration.node_site_url + 'api/v1/webhook/updateTestAttempts?testId=' + resource.id.to_s
 end
 
+  action_item :add_chapter, only: :show do
+    link_to 'Add Chapter', '/tests/add_chapter_test/' + resource.id.to_s, target: :_blank
+  end
+
 form do |f|
   f.inputs "Test" do
     render partial: 'tinymce'

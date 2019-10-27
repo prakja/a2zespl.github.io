@@ -18,5 +18,9 @@ Rails.application.routes.draw do
   post "videos/getSubjectsList"
   post "videos/getChaptersList"
   post "videos/createChapterVideo"
+  get "tests/add_chapter_test/:testId", to: "tests#add_chapter_test"
+  post "tests/getSubjectsList"
+  post "tests/getChaptersList"
+  post "tests/createChapterTest"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
