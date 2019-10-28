@@ -27,6 +27,7 @@ index do
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
   column ("All Questions") {|test| link_to 'All Test Questions', "../../admin/questions?showProofRead=yes&q[questionTests_testId_eq]=" + test.id.to_s}
   column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white&showId=true>Get PDF</a>')}
+  column ("Get PDF with Solution") {|test| raw('<a target="_blank" href=https://admin1.neetprep.com/questions/test_question_pdf/' + test.id.to_s + '>Get PDF with Solution</a>')}
   column ("History") {|test| raw('<a target="_blank" href="/admin/tests/' + (test.id).to_s + '/history">View History</a>')}
   actions
 end

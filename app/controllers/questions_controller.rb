@@ -74,6 +74,7 @@ class QuestionsController < ApplicationController
     @testId = params.require(:id)
     @limit = params[:limit] || 0
     @offset = params[:offset] || 0
+    @showExplanation = params[:showExplanation] && params[:showExplanation] === "false" ? false : true
 
     begin
       @test = Test.find(@testId)
@@ -85,7 +86,7 @@ class QuestionsController < ApplicationController
       end 
       
       @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage]
+        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0 ]
       end
     rescue => exception
       
