@@ -17,8 +17,9 @@ permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :s
 
 form do |f|
   f.inputs "Schedule Item" do
+    render partial: 'tinymce'
     f.input :name, as: :string
-    f.input :description, as: :quill_editor
+    f.input :description
     f.input :schedule
     f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
     f.input :hours
