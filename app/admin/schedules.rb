@@ -24,8 +24,9 @@ ActiveAdmin.register Schedule do
 
   form do |f|
     f.inputs "Schedule" do
+      render partial: 'tinymce'
       f.input :name, as: :string
-      f.input :description, as: :quill_editor
+      f.input :description
     end
     f.actions
   end
