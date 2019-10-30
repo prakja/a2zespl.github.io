@@ -55,6 +55,12 @@ ActiveAdmin.register CourseInvitation do
     render "layouts/history"
   end
 
+  controller do
+    def scoped_collection
+      super.includes :course, :payments
+    end
+  end
+
   csv do
     column (:course) { |courseInvitation| raw(courseInvitation.course.name)  }
     column (:displayName) { |courseInvitation| raw(courseInvitation.displayName)  }

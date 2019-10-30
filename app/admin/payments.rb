@@ -57,6 +57,12 @@ ActiveAdmin.register Payment do
     }
   end
 
+  controller do
+    def scoped_collection
+      super.includes :course, :installment
+    end
+  end
+
   index do
     id_column
     column :course

@@ -3,6 +3,12 @@ ActiveAdmin.register Subject do
   remove_filter :course, :topics, :versions, :subjectTopics
   scope :neetprep_course
 
+  controller do
+    def scoped_collection
+      super.includes(:course)
+    end
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Course" do

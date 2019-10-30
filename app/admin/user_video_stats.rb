@@ -15,4 +15,11 @@ ActiveAdmin.register UserVideoStat do
 remove_filter :user, :video
 filter :userId_eq, as: :number, label: "User ID"
 
+controller do
+  def scoped_collection
+    super.includes(:video, user: :user_profile)
+  end
+end
+
+
 end
