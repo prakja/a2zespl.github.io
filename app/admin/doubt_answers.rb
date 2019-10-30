@@ -7,6 +7,12 @@ ActiveAdmin.register DoubtAnswer do
   filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
 
+  controller do
+    def scoped_collection
+      super.includes(:doubt, user: :user_profile)
+    end
+  end
+
   index do
     id_column
     column (:content) {|doubt_answer| raw(doubt_answer.content)}
@@ -36,7 +42,7 @@ ActiveAdmin.register DoubtAnswer do
                   url: url,
                   data: {
                     "doubtId": ' + doubt_answer.doubt.id.to_s + ',
-                    "value": goodFlagCheckbox' + @index.to_s + '.checked 
+                    "value": goodFlagCheckbox' + @index.to_s + '.checked
                   }
                 }).done (function (data) {
                   data = null;

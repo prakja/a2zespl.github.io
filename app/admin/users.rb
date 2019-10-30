@@ -42,6 +42,12 @@ preserve_default_filters!
 # scope :free_users
 # scope :paid_users
 
+controller do
+  def scoped_collection
+    super.includes(:user_profile)
+  end
+end
+
 index do
   id_column
   column :name
@@ -49,33 +55,33 @@ index do
   column :phone
   column :role
   column :user_profile
-  column (:user_profile_phone) { |user| 
+  column (:user_profile_phone) { |user|
     if not user.user_profile.nil?
       if user.user_profile.phone != ''
          user.user_profile.phone
       else
-        raw("-")   
+        raw("-")
       end
     else
-      raw("-")    
+      raw("-")
     end
   }
-  column (:user_profile_name) { |user| 
+  column (:user_profile_name) { |user|
     if not user.user_profile.nil?
       if user.user_profile.displayName != ''
          user.user_profile.displayName
       else
-        raw("-")   
+        raw("-")
       end
     else
-      raw("-")    
+      raw("-")
     end
   }
   actions
 end
 
 sidebar :user_activity, only: :show do
-  ul do 
+  ul do
     li link_to "User Profile", admin_user_profiles_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Doubts", admin_doubts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Test Attempts", admin_test_attempts_path(q: { userId_eq: user.id}, order: 'createdAt_desc')
