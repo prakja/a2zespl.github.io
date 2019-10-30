@@ -22,5 +22,6 @@ Rails.application.routes.draw do
   post "tests/getSubjectsList"
   post "tests/getChaptersList"
   post "tests/createChapterTest"
+  get "course_details/booster"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

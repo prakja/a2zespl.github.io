@@ -20,4 +20,10 @@ ActiveAdmin.register Topic do
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
     end
   end
+
+  controller do
+    def scoped_collection
+      super.includes(:subject)
+    end
+  end
 end

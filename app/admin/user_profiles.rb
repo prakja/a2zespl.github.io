@@ -14,4 +14,10 @@ ActiveAdmin.register UserProfile do
 
 remove_filter :user
 
+controller do
+  def scoped_collection
+    super.includes(user: :user_profile)
+  end
+end
+
 end

@@ -3,6 +3,13 @@ ActiveAdmin.register TestAttempt do
   preserve_default_filters!
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
+
+  controller do
+    def scoped_collection
+      super.includes(:test, user: :user_profile)
+    end
+  end
+
   index do
     id_column
     column :user

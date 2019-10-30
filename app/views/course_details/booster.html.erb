@@ -1,0 +1,37 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  };
+</script>
+
+<div style="margin: 32px">
+  <h3 style="margin-top: -2px"><%= ( @paidUser.to_s === 'true' ? 'Paid' : 'Free' ) + raw(" Users : " + @users.length.to_s) %></h3>
+</div>
+
+<div style="margin: 32px">
+ 
+  <table>
+    <tr>
+        <th>S. No</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Alternate Email</th>
+        <th>Alternate Phone</th>
+    </tr>
+      <% @users.each.with_index do |user , index| %>
+        <tr>
+            <td> <%= index.to_i + 1 %></td>
+            <td> <%= user["userId"] != nil ? user["userId"] : "null" %></td>
+            <td> <%= user["displayName"] != nil ? user["displayName"] : "null" %></td>
+            <td> <%= user["email"] != nil ? user["email"] : "null" %></td>
+            <td> <%= user["phone"] != nil ? user["phone"] : "null" %></td>
+            <td> <%= user["uemail"] != nil ? user["uemail"] : "null" %></td>
+            <td> <%= user["uphone"] != nil ? user["uphone"] : "null" %></td>
+        </tr>
+      <% end %>
+  </table>
+</div>
