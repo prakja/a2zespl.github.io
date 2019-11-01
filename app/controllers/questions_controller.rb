@@ -64,10 +64,10 @@ class QuestionsController < ApplicationController
       @questionExplanation = @question.explanation
 
     rescue => exception
-      
-    end    
+
+    end
   end
-  
+
 
   def test_question_pdf
     @questions_data = {}
@@ -79,17 +79,17 @@ class QuestionsController < ApplicationController
     begin
       @test = Test.find(@testId)
       @testQuestions = nil
-      if @limit.to_i > 0 
+      if @limit.to_i > 0
         @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i).order(id: :asc)
       else
         @testQuestions = @test.questions.order(id: :asc)
-      end 
-      
+      end
+
       @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0 ]
+        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex ]
       end
     rescue => exception
-      
+
     end
   end
 end
