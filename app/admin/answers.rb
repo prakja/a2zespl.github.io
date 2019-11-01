@@ -24,7 +24,6 @@ ActiveAdmin.register Answer do
   controller do
     def scoped_collection
       super.left_outer_joins(:questionAnalytic, :question).select('"Answer".*, "QuestionAnalytics"."correctPercentage" as correct_percentage')
-      super.includes :question, :questionAnalytic
     end
   end
 

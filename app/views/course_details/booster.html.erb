@@ -21,16 +21,20 @@
         <th>Phone</th>
         <th>Alternate Email</th>
         <th>Alternate Phone</th>
+        <th>Total Video</th>
+        <th>Course Name</th>
     </tr>
       <% @users.each.with_index do |user , index| %>
         <tr>
             <td> <%= index.to_i + 1 %></td>
-            <td> <%= user["userId"] != nil ? user["userId"] : "null" %></td>
-            <td> <%= user["displayName"] != nil ? user["displayName"] : "null" %></td>
-            <td> <%= user["email"] != nil ? user["email"] : "null" %></td>
-            <td> <%= user["phone"] != nil ? user["phone"] : "null" %></td>
-            <td> <%= user["uemail"] != nil ? user["uemail"] : "null" %></td>
-            <td> <%= user["uphone"] != nil ? user["uphone"] : "null" %></td>
+            <td> <%= user["uUserId"] != nil ? user["uUserId"] : "-" %></td>
+            <td> <%= user["displayName"] != nil ? user["displayName"] : "-" %></td>
+            <td> <%= user["email"] != nil ? user["email"] : "-" %></td>
+            <td> <%= user["phone"] != nil ? user["phone"] : "-" %></td>
+            <td> <%= user["uemail"] != nil ? user["uemail"] : "-" %></td>
+            <td> <%= user["uphone"] != nil ? user["uphone"] : "-" %></td>
+            <td> <%= user["totalVideos"] != nil ? user["totalVideos"] : "-" %></td>
+            <td> <%= user["courseId"] != nil ? user["courseId"] : "-" %></td>
         </tr>
       <% end %>
   </table>
