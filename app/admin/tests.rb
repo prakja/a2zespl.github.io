@@ -83,6 +83,8 @@ end
   end
 
 form do |f|
+  f.object.positiveMarks = 4
+  f.object.negativeMarks = 1
   f.inputs "Test" do
     render partial: 'tinymce'
     f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"

@@ -21,8 +21,8 @@ form do |f|
     f.input :name, as: :string
     f.input :description
     f.input :schedule
-    # f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
-    f.input :topicId
+    f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
+    # f.input :topicId
     f.input :hours
     f.input :link, as: :string
     f.input :scheduledAt, label: "Scheduled At", as: :datetime_picker
