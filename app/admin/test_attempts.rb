@@ -18,24 +18,18 @@ ActiveAdmin.register TestAttempt do
     column :completed
     column :result
     column "Physics Score" do |testAttempt|
-      if testAttempt.result
-        if testAttempt.result['sections']
-          testAttempt.result['sections'][2]['totalMarks']
-        end
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][2].present?
+        testAttempt.result['sections'][2]['totalMarks']
       end
     end
     column "Chemistry Score" do |testAttempt|
-      if testAttempt.result
-        if testAttempt.result['sections']
-          testAttempt.result['sections'][1]['totalMarks']
-        end
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][1].present?
+        testAttempt.result['sections'][1]['totalMarks']
       end
     end
     column "Biology Score" do |testAttempt|
-      if testAttempt.result
-        if testAttempt.result['sections']
-          testAttempt.result['sections'][0]['totalMarks']
-        end
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][0].present?
+        testAttempt.result['sections'][0]['totalMarks']
       end
     end
     column ("Link") {|testAttempt| testAttempt.completed ? raw('<a target="_blank" href="https://www.neetprep.com/testResult/' + Base64.encode64("TestAttempt:" + testAttempt.id.to_s) + '">Result Summary</a>') : ''}
@@ -51,26 +45,22 @@ ActiveAdmin.register TestAttempt do
       row :completed
       row :result
       row "Physics Score" do |testAttempt|
-        if testAttempt.result
-          if testAttempt.result['sections']
-            testAttempt.result['sections'][2]['totalMarks']
-          end
+        if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][2].present?
+          testAttempt.result['sections'][2]['totalMarks']
         end
       end
       row "Chemistry Score" do |testAttempt|
-        if testAttempt.result
-          if testAttempt.result['sections']
-            testAttempt.result['sections'][1]['totalMarks']
-          end
+        if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][1].present?
+          testAttempt.result['sections'][1]['totalMarks']
         end
       end
       row "Biology Score" do |testAttempt|
-        if testAttempt.result
-          if testAttempt.result['sections']
-            testAttempt.result['sections'][0]['totalMarks']
-          end
+        if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][0].present?
+          testAttempt.result['sections'][0]['totalMarks']
         end
       end
+      row :createdAt
+      row :updatedAt
       row ("Link") {|testAttempt| testAttempt.completed ? raw('<a target="_blank" href="https://www.neetprep.com/testResult/' + Base64.encode64("TestAttempt:" + testAttempt.id.to_s) + '">Result Summary</a>') : ''}
     end
     active_admin_comments
