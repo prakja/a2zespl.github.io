@@ -56,6 +56,7 @@ ActiveAdmin.register Question do
 
     id_column
     column (:question) { |question| raw(question.question)  }
+    column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
