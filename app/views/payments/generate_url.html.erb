@@ -1,0 +1,62 @@
+<div style="padding: 8px;">
+  <p>Student Name: <input oninput="$('#url').html('');$('#copy').hide();" type="text" id="name" required="required" type="name"></p>
+  <p>Student Email: <input oninput="$('#url').html('');$('#copy').hide();" type="text" id="email" required="required" type="email"></p>
+  <p>Student Phone: <input oninput="$('#url').html('');$('#copy').hide();" type="text" id="mobile" required="required" type="phone"></p>
+  <p>Payment Amount: <input oninput="$('#url').html('');$('#copy').hide();" type="text" id="amount" required="required" type="number"></p>
+
+  <p>Url: <textarea style="width: 100%;" id="url"></textarea></p>
+  <input type="button" value="Get URL" onclick="make_url()">
+  <button id="copy" onclick="copy_text()">Copy text</button>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#copy').hide();
+  });
+
+  function copy_text() {
+    $("#url").select();
+    document.execCommand("copy");
+  }
+
+  function make_url() {
+    name_input = $("#name");
+    email_input = $("#email");
+    phone_input = $("#mobile");
+    amount_input = $("#amount");
+
+    if (!name_input.val()) {
+      alert("Name cannot be empty");
+      return;
+    }
+    
+    if (!email_input.val()) {
+      alert("Email cannot be empty");
+      return;
+    } else if (!email_input.val().match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+      alert("Email format incorrect");
+      return;
+    }
+
+    if (!phone_input.val()) {
+      alert("Phone cannot be empty");
+      return;
+    } else if (phone_input.val().length < 10) {
+      alert ("Phone format is incorrect");
+      return;
+    }
+
+    if (!amount_input.val()) {
+      alert("You cannot give the course for free, please enter amount");
+      return
+    } else if (amount_input.val() > 40000) {
+      alert("Payment fails for amount more that 40000, contact the tech team!");
+      return;
+    }
+
+    $('#copy').show();
+    link = "https://www.neetprep.com/payment?amount=" + amount_input.val() + "&name=" + name_input.val() + "&email=" + email_input.val() + "&mobile=" + phone_input.val()
+    $('#url').html('');
+    $("#url").html(link);
+  }
+</script>
