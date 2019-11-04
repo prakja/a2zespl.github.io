@@ -1,5 +1,5 @@
 ActiveAdmin.register Question do
-  config.sort_order = 'createdAt_desc'
+  config.sort_order = 'sequenceId_asc_and_createdAt_desc'
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
