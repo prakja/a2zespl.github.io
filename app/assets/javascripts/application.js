@@ -16,3 +16,5 @@
 //= require_tree .
 //= require tinymce
 //= require chartkick
+
+//= requre libphonenumber

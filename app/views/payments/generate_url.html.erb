@@ -6,7 +6,7 @@
 
   <p>Url: <textarea style="width: 100%;" id="url"></textarea></p>
   <input type="button" value="Get URL" onclick="make_url()">
-  <button id="copy" onclick="copy_text()">Copy text</button>
+  <button id="copy" onclick="copy_text()">Copy URL</button>
 </div>
 
 <script>
@@ -45,6 +45,12 @@
       alert ("Phone format is incorrect");
       return;
     }
+
+    var phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
+    var phone_number = $('#mobile').val();
+    var phone_number_validated = phoneUtil.parse(phone_number, "IN");
+    phone_number = phone_number_validated.values_[1].toString() + phone_number_validated.values_[2].toString();
+    $('#mobile').val(phone_number);
 
     if (!amount_input.val()) {
       alert("You cannot give the course for free, please enter amount");
