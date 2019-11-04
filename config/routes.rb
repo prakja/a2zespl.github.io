@@ -24,5 +24,6 @@ Rails.application.routes.draw do
   post "tests/createChapterTest"
   get "course_details/booster"
   get "payments/generate_url", to: "payments#generate_url"
+  get "matviews/forced_update"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
