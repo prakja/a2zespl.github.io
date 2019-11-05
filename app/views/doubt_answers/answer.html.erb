@@ -7,7 +7,7 @@
       var player = videojs('my_video_1');
       player.src({
         withCredentials: true
-      }); 
+      });
     }
     document.getElementById("good_doubt").checked = "<%= @doubt.goodFlag %>" == "false" ? false : true;
     reset();
@@ -64,13 +64,13 @@
         -webkit-animation: spin 2s linear infinite; /* Safari */
         animation: spin 2s linear infinite;
       }
-      
+
       /* Safari */
       @-webkit-keyframes spin {
         0% { -webkit-transform: rotate(0deg); }
         100% { -webkit-transform: rotate(360deg); }
       }
-      
+
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
@@ -186,7 +186,7 @@ function onDoubtFlagChange() {
     url: url,
     data: {
       "doubtId": "<%= @doubt_id %>",
-      "value": goodFlagCheckbox.checked 
+      "value": goodFlagCheckbox.checked
     }
   }).done (function (data) {
     data = null;
@@ -259,7 +259,7 @@ function uploadAndAttachRecording () {
   AWS.config.region = bucketRegion;
   AWS.config.credentials = credentials;
   console.log(AWS.config.credentials);
-  
+
   var bucket = new AWS.S3({
     params: {
         Bucket: bucketName
@@ -267,7 +267,7 @@ function uploadAndAttachRecording () {
   });
   if (!uploadFromFile)
     var file = new File([audioBlob], "doubt_explanations_" + "<%= @doubt_id %>" + "_" + Date.now() + ".ogg");
-  else 
+  else
     var file = fileInput.files[0];
 
   if (!file) {
@@ -285,10 +285,10 @@ function uploadAndAttachRecording () {
       if (err) {
         console.log(" Error while  UPLOADING Audio :" + err);
         alert ('Error uploading audio');
-  
+
         loader.style.display = 'none';
       } else {
-        var fileUrl = 'https://doubtexplanations.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+        var fileUrl = 'https://doubtexplanations.s3-us-west-2.amazonaws.com/' + file.name;
         insertIntoTiny(fileUrl);
         reset ();
       }
