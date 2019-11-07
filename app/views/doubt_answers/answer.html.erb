@@ -2,7 +2,7 @@
 <script>
   window.onload = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    if ("<%= @doubt_tag %>" == "video" && <%= @video.url.include? ".m3u8" %>) {
+    if ("<%= @doubt_tag %>" == "video" && "<%= @ism3u8 %>" == "yes") {
       console.log("Has video");
       var player = videojs('my_video_1');
       player.src({
