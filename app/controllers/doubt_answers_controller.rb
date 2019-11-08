@@ -67,6 +67,7 @@ class DoubtAnswersController < ApplicationController
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">Go to Question</a>'
     end
 
+    @ism3u8 = "no"
     if @doubt_tag == "video"
       @video = Video.find(@doubt.videoId)
       @annotation = VideoAnnotation.where(annotationId: @doubt.id).first
@@ -80,6 +81,7 @@ class DoubtAnswersController < ApplicationController
       subject = Subject.find(topic.subjectId)
 
       if @video.url.include? ".m3u8"
+        @ism3u8 = "yes"
         @doubt_data =+
         '<script src="https://unpkg.com/video.js/dist/video.js"></script>
         <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>

@@ -1,0 +1,49 @@
+<body>
+  <div id="loader" style="display: none; background-color: black; position: absolute; height: 90%; width: 100%">
+    <h1>Processing...</h1>
+  </div>
+  <div style="margin: 32px">
+    <h2>Select Matview for Update</h2>
+  </div>
+  <div style="margin: 32px">
+    <label>Matviews :</label>
+    <select name="matview" id="matviewList">
+      <option value=''>Select Matview</option>
+        <option value="TestLeaderBoard">TestLeaderBoard</option>
+        <option value="TopicLeaderBoard">TopicLeaderBoard</option>
+        <option value="SubjectLeaderBoard">SubjectLeaderBoard</option>
+        <option value="CommonLeaderBoard">CommonLeaderBoard</option>
+        <option value="UserTaskProgress">UserTaskProgress</option>
+        <option value="QuestionAnalytics">QuestionAnalytics</option>
+        <option value="UserProfileAnalytic">UserProfileAnalytic</option>
+    </select>
+  </div>
+  <div style="margin: 32px">
+    <button id="updateButton" onclick="updateMatview()">Update Selected Matview</button>
+  </div>
+  <script type="text/javascript">
+
+    function updateMatview() {
+      let matview = $("#matviewList option:selected").val();
+      if (matview == null || matview == ''){
+        alert('Matview is not selected');
+        return
+      }
+      $("#loader").css("display", "block");
+      let url = "https://www.neetprep.com/api/v1/job/refreshMatViews?matview=" + matview;
+      $.ajax({
+        type: "POST",
+        url: url,
+        success: function(data){
+          $("#loader").css("display", "none");
+          alert('Updated');
+        },
+        error: function(error){
+          $("#loader").css("display", "none");
+          alert('Error');
+        }
+      });
+    }
+
+  </script>
+</body>
