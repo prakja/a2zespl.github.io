@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'
 
 ActiveAdmin.register Advertisement do
 # See permitted parameters documentation:
