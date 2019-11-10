@@ -17,7 +17,6 @@ ActiveAdmin.register TestAttempt do
     id_column
     column :user
     column :test
-    column :elapsedDurationInSec
     column :completed
     column :result
     column "Total" do |testAttempt|
@@ -41,6 +40,11 @@ ActiveAdmin.register TestAttempt do
       end
     end
     column "Time Taken" do |testAttempt|
+      if testAttempt.elapsedDurationInSec.present?
+        (elapsedDurationInSec / 60.0).round
+      end
+    end
+    column "Time Taken 2" do |testAttempt|
       if testAttempt.createdAt.present? and testAttempt.updatedAt.present?
         raw(((testAttempt.updatedAt - testAttempt.createdAt) / 60).round.to_s + " minutes")
       end
