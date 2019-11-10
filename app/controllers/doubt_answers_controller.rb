@@ -71,7 +71,6 @@ class DoubtAnswersController < ApplicationController
     if @doubt_tag == "video"
       @video = Video.find(@doubt.videoId)
       @annotation = VideoAnnotation.where(annotationId: @doubt.id).first
-
       timeElapsed = @annotation.videoTimeStampInSeconds
       @seconds = timeElapsed % 60
       @minutes = (timeElapsed / 60) % 60
@@ -91,10 +90,14 @@ class DoubtAnswersController < ApplicationController
             <source src="' + @video.url + '" type="application/x-mpegURL">
           </video-js>
         </div>'
-      else
+      elsif @video.url.include? "youtube"
         uri = URI.parse(@video.url)
         params = CGI.parse(uri.query)
         @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
+      else  
+        @urlArray = @video.url.to_s.split('/')
+        @vimeoId = @urlArray[-1]
+        @doubt_data += '<div><iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
       end
 
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
