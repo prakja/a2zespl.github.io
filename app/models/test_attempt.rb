@@ -8,4 +8,16 @@ class TestAttempt < ApplicationRecord
   }
 
   scope :test_series, -> {course_id(8)}
+
+  scope :score_gte, -> (score){
+    TestAttempt.where("(\"result\"->>'totalMarks')::INTEGER >= ?", score)
+  }
+
+  scope :score_lt, -> (score){
+    TestAttempt.where("(\"result\"->>'totalMarks')::INTEGER < ?", score)
+  }
+
+  def self.ransackable_scopes(_auth_object = nil)
+    [:score_gte, :score_lt]
+  end
 end
