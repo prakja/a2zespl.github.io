@@ -18,6 +18,11 @@ ActiveAdmin.register TestAttempt do
     column :elapsedDurationInSec
     column :completed
     column :result
+    column "Total" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
+        testAttempt.result['totalMarks']
+      end
+    end
     column "Physics Score" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][2].present?
         testAttempt.result['sections'][2]['totalMarks']
