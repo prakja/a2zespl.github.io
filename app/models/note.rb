@@ -7,7 +7,7 @@ class Note < ApplicationRecord
   has_one :video, through: :video_annotation
 
   def githubEpubContent
-    if(self.epubURL)
+    if(self.epubURL != nil)
       return 'https://github.com/jayprakash1/ncert_epubs/tree/master/' + self.epubURL.split("neetprep/")[1].gsub('content.opf','Text')
     else
       return "#"
