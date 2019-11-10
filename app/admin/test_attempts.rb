@@ -3,6 +3,8 @@ ActiveAdmin.register TestAttempt do
   preserve_default_filters!
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
+  filter :score_gte, as: :number, label: "Score >="
+  filter :score_lt, as: :number, label: "Score <"
 
   scope :test_series, show_count: false
   controller do
