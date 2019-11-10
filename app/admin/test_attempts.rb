@@ -41,7 +41,7 @@ ActiveAdmin.register TestAttempt do
     end
     column "Time Taken" do |testAttempt|
       if testAttempt.elapsedDurationInSec.present?
-        (elapsedDurationInSec / 60.0).round
+        (testAttempt.elapsedDurationInSec / 60.0).round
       end
     end
     column "Time Taken 2" do |testAttempt|
