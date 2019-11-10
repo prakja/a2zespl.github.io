@@ -4,6 +4,7 @@ ActiveAdmin.register TestAttempt do
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
 
+  scope :test_series, show_count: false
   controller do
     def scoped_collection
       super.includes(:test, user: :user_profile)
