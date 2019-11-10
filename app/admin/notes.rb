@@ -1,6 +1,6 @@
 ActiveAdmin.register Note do
   remove_filter :video_annotation, :video
-  permit_params :content, :createdAt, :updatedAt
+  permit_params :name, :content, :description, :externalURL, :epubURL, :epubContent, :createdAt, :updatedAt
 
   index do
     id_column
@@ -23,7 +23,7 @@ ActiveAdmin.register Note do
       f.input :description
       f.input :externalURL, as: :string
       f.input :epubURL, as: :string
-      f.input :epubContent
+      f.input :epubContent, hint: link_to('Epub Html', note.githubEpubContent)
     end
     f.actions
   end
