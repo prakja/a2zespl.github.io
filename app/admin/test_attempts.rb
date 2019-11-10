@@ -40,6 +40,11 @@ ActiveAdmin.register TestAttempt do
         testAttempt.result['sections'][0]['totalMarks']
       end
     end
+    column "Time Taken" do |testAttempt|
+      if testAttempt.createdAt.present? and testAttempt.updatedAt.present?
+        raw(((testAttempt.updatedAt - testAttempt.createdAt) / 60).round.to_s + " minutes")
+      end
+    end
     column ("Link") {|testAttempt| testAttempt.completed ? raw('<a target="_blank" href="https://www.neetprep.com/testResult/' + Base64.encode64("TestAttempt:" + testAttempt.id.to_s) + '">Result Summary</a>') : ''}
     actions
   end
