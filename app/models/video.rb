@@ -6,6 +6,7 @@ class Video < ApplicationRecord
 
   has_many :videoTopics, foreign_key: :videoId, class_name: 'ChapterVideo', dependent: :destroy
   has_many :topics, through: :videoTopics
+  has_many :videoLinks, class_name: "VideoLink", foreign_key: "videoId"
 
   has_many :videoSubTopics, foreign_key: :videoId, class_name: 'VideoSubTopic'
   has_many :subTopics, through: :videoSubTopics
