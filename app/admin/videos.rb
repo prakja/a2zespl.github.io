@@ -116,6 +116,7 @@ ActiveAdmin.register Video do
             seconds = ms / 1000
             raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
           end
+          column ("View / Edit") {|notes| raw('<a target="_blank" href="/admin/video_annotations/' + (notes.id).to_s + '">View / Edit</a>')}
         end
       end
       panel "Video Links" do
@@ -123,6 +124,7 @@ ActiveAdmin.register Video do
           column :name
           column :url
           column :time
+          column ("View / Edit") {|videoLinks| raw('<a target="_blank" href="/admin/video_links/' + (videoLinks.id).to_s + '">View / Edit</a>')}
         end
       end
     end
