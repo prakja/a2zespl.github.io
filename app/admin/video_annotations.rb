@@ -32,6 +32,20 @@ form do |f|
       f.input :annotationType, label: "Annotation type", as: :hidden, :input_html => { :value => 'Note' }
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
       f.input :videoTimeStampInSeconds, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds", label: "Show At"
+      panel 'Video' do
+        raw '<script src="https://unpkg.com/video.js/dist/video.js"></script>
+        <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        <div>
+          <video-js id="my_video_1" class="vjs-default-skin" controls preload="auto" width="640" height="268">
+            <source src="' + f.object.video.url + '" type="application/x-mpegURL">
+          </video-js>
+        </div>
+        <script>
+          player = videojs("my_video_1");
+          player.on("pause", function() {$("#video_annotation_videoTimeStampInSeconds").val(player.currentTime())});
+        </script>'
+      end
     end
     f.actions
   end
