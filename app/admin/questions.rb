@@ -1,5 +1,5 @@
 ActiveAdmin.register Question do
-  config.sort_order = 'sequenceId_asc_and_createdAt_desc'
+  config.sort_order = 'sequenceId_asc_and_id_asc'
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -60,7 +60,7 @@ ActiveAdmin.register Question do
     column (:explanation) { |question| raw(question.explanation)  }
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
-    
+
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' and params[:showProofRead] == 'yes'
      toggle_bool_column :proofRead
     end

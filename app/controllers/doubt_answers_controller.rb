@@ -67,10 +67,10 @@ class DoubtAnswersController < ApplicationController
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">Go to Question</a>'
     end
 
+    @ism3u8 = "no"
     if @doubt_tag == "video"
       @video = Video.find(@doubt.videoId)
       @annotation = VideoAnnotation.where(annotationId: @doubt.id).first
-
       timeElapsed = @annotation.videoTimeStampInSeconds
       @seconds = timeElapsed % 60
       @minutes = (timeElapsed / 60) % 60
@@ -80,6 +80,7 @@ class DoubtAnswersController < ApplicationController
       subject = Subject.find(topic.subjectId)
 
       if @video.url.include? ".m3u8"
+        @ism3u8 = "yes"
         @doubt_data =+
         '<script src="https://unpkg.com/video.js/dist/video.js"></script>
         <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
@@ -89,10 +90,14 @@ class DoubtAnswersController < ApplicationController
             <source src="' + @video.url + '" type="application/x-mpegURL">
           </video-js>
         </div>'
-      else
+      elsif @video.url.include? "youtube"
         uri = URI.parse(@video.url)
         params = CGI.parse(uri.query)
         @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
+      else  
+        @urlArray = @video.url.to_s.split('/')
+        @vimeoId = @urlArray[-1]
+        @doubt_data += '<div><iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
       end
 
       @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +

@@ -4,6 +4,7 @@ ActiveAdmin.register TestLeaderBoard do
   scope :paid_students
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
+  filter :test_attempt_createdAt, as: :date_range, label: "Test Attempt Date"
 
   controller do
     def scoped_collection

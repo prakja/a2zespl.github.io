@@ -110,7 +110,7 @@ ActiveAdmin.register Doubt do
       #  " PG::UndefinedFunction: ERROR:  could not identify an equality operator for type json
       #  LINE 1: ...S t4_r17, "UserProfile"."neetExamYear" AS t4_r18, "UserProfi...
       #   " weeklySchedule is JSON type and on distinct operation, it throws the above error
-      super.includes(:topic, :admin_user, user: [:common_rank], user: [:subject_rank])
+      super.includes(:topic, :admin_user, user: [:common_rank, :subject_rank])
     end
   end
 

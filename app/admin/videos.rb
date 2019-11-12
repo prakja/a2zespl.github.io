@@ -72,6 +72,10 @@ ActiveAdmin.register Video do
     link_to 'Add Annotation', '../../admin/video_annotations/new?video_annotation[annotationType]=Note&video_annotation[videoId]=' + resource.id.to_s
   end
 
+  action_item :add_link, only: :show do
+    link_to 'Add Video Link', '../../admin/video_links/new?video_link[videoId]=' + resource.id.to_s
+  end
+
   index do
     id_column
     column :name
@@ -112,6 +116,15 @@ ActiveAdmin.register Video do
             seconds = ms / 1000
             raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
           end
+          column ("View / Edit") {|notes| raw('<a target="_blank" href="/admin/video_annotations/' + (notes.id).to_s + '">View / Edit</a>')}
+        end
+      end
+      panel "Video Links" do
+        table_for video.videoLinks do
+          column :name
+          column :url
+          column :time
+          column ("View / Edit") {|videoLinks| raw('<a target="_blank" href="/admin/video_links/' + (videoLinks.id).to_s + '">View / Edit</a>')}
         end
       end
     end
