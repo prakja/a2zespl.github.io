@@ -36,14 +36,20 @@ form do |f|
         if f.object.video.url.include? ".m3u8"
           raw '<script src="https://unpkg.com/video.js/dist/video.js"></script>
           <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
-          <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+          <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"></link>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css"></link>
+          <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
           <div>
-            <video-js id="my_video_1" class="vjs-default-skin" controls preload="auto" width="640" height="268">
+            <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268" data-setup=\'{"controls": true}\'>
               <source src="' + f.object.video.url + '" type="application/x-mpegURL">
-            </video-js>
+            </video>
           </div>
           <script>
             player = videojs("my_video_1");
+            player.seekButtons({
+              forward: 30,
+              back: 5
+            });
             player.on("pause", function() {$("#video_annotation_videoTimeStampInSeconds").val(player.currentTime())});
           </script>'
         elsif f.object.video.url.include? "youtube"
