@@ -1,4 +1,5 @@
 ActiveAdmin.register Video do
+  config.create_another = true
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -51,7 +52,7 @@ ActiveAdmin.register Video do
         Remove the header from the CSV before uploading.",
         csv_headers: ['name',	'description', 'thumbnail', 'url', 'language', 'createdAt', 'updatedAt']
     )
-  remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats
+  remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats, :videoLinks
   filter :id_eq, as: :number, label: "Video ID"
   filter :topics_name, as: :string, label: "Chapter"
   filter :subTopics_name, as: :string, label: "Sub Topic"
