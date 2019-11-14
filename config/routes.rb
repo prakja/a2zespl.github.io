@@ -26,4 +26,7 @@ Rails.application.routes.draw do
   get "payments/generate_url", to: "payments#generate_url"
   get "matviews/forced_update"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  get "/livesession/:id/", to: "group_chats#group"
+  post "/livesession/create_chat", to: "group_chats#create_chat"
 end
