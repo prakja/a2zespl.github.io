@@ -1,0 +1,64 @@
+script crossorigin="anonymous" integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54=" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js" 
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet" /
+script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+javascript:
+  var socket = io.connect('#{Rails.application.config.site_url_for_socket}');
+
+  socket.on('connect', function(){
+    console.log("Connected to neetprep");
+    socket.emit('JOIN_GROUP', '#{@group_id_encoded}');
+  });
+
+  socket.on('RECEIVE_MESSAGE', function(data) {
+    console.log(data);
+    append_chat(data);
+  });
+
+  function append_chat(data) {
+    if (data.userId == '#{@my_id}') {
+      var to_append = '<div class="mt-2"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + data.user.profile.displayName + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      $('#chat_box').append(to_append);
+    } else {
+      var to_append = '<div class="mt-2"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + data.user.profile.displayName + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      $('#chat_box').append(to_append);
+    }
+    
+  }
+
+  function onSendClicked () {
+    if ($('#msg').val()) {
+      var message = $('#msg').val();
+      $.post("/livesession/create_chat", {content: message, type: "normal", groupId: '#{@group_id}', userId: '#{@my_id}'})
+        .done(function(data) {
+          socket.emit('SEND_MESSAGE', '#{@group_id_encoded}', data);
+          append_chat(data);
+          $('#msg').val("");
+        })
+        .fail(function(error) {
+          console.log ("failed")
+        });
+    }
+  }
+
+div style="padding: 16px"
+  #steam style="text-align: center"
+    iframe src = @livesessionurl
+  
+  #chat
+    ul#chat_box.list-group style="width: 100%; overflow: scroll; height: 420px;"
+      - @messages.reverse_each do |message|
+        - if message.userId == @my_id
+          div.mt-2 id = message.id
+            li.list-group-item.text-right.bg-success.text-white.float-right
+              .
+                p.mb-0.font-weight-bold = message.content
+                small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+        - else
+          div.mt-2 id = message.id
+            li.list-group-item.text-left.bg-primary.text-white.float-left
+              .
+                p.mb-0.font-weight-bold = message.content
+                small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+
+    textarea#msg.mt-2 style="width: 100%" rows="2"
+    button id="send" value="Send message" onclick="onSendClicked()" Send message
