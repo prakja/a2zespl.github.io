@@ -22,7 +22,7 @@ class User < ApplicationRecord
   User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."email" ILIKE ? or "User"."email" ILIKE ?', "%#{email}%", "%#{email}%")
  }
  scope :student_phone, ->(phone) {
-  User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."phone" ILIKE ? or "User"."phone" ILIKE ?', "%#{phone}%", "%#{phone}%")    
+  User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."phone" ILIKE ? or "User"."phone" ILIKE ?', "%#{phone}%", "%#{phone}%")
  }
  # scope :free_users, -> {
 #   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
