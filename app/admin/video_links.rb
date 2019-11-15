@@ -16,11 +16,8 @@ ActiveAdmin.register VideoLink do
     actions
   end
 
-  form do |f|
+  form remote: true do |f|
     f.inputs "VideoLink" do
-      f.input :video, as: :fake, value: f.object.video.nil? ? 'No Video Selected' : f.object.video.name
-      f.input :name, as: :string
-      f.input :url, as: :string
       panel 'Video' do
         if f.object.video.url.include? ".m3u8"
           raw '<script src="https://unpkg.com/video.js/dist/video.js"></script>
@@ -92,6 +89,7 @@ ActiveAdmin.register VideoLink do
           '
         end
       end
+      f.input :name, as: :string
       f.input :time, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds"
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
     end
@@ -102,6 +100,15 @@ ActiveAdmin.register VideoLink do
     def new
       params.permit!
       @video_link = VideoLink.new (params[:video_link])
+    end
+
+    def create
+      create! do |success, failure|
+        success.html { redirect_to admin_video_links_url }
+        # TODO: link actual object url here
+        success.js {flash.now[:notice] = "Video Link created! Id: <a href='/admin/user_links/#{@video_link.id}' target='_blank'>#{@video_link.id}</a>"}
+        failure.js {flash.now[:error] = "Video Link NOT created! #{@video_link.errors.full_messages}"}
+      end
     end
   end
 end

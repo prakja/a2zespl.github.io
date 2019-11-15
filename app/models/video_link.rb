@@ -4,4 +4,11 @@ class VideoLink < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
   validates_presence_of :name, :time, :videoId
+  validate :too_close_video_links
+
+  def too_close_video_links
+    if (VideoLink.where("\"videoId\" = ? and \"time\" < ? + 30 and \"time\" > ? - 30", videoId, time, time).count > 0)
+      errors.add(:time, "can't be less than 30 seconds away from any existing video links. Please set time carefully. Maybe play and pause again to set time correctly.")
+    end
+  end
 end
