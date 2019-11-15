@@ -36,7 +36,7 @@ ActiveAdmin.register VideoLink do
               forward: 30,
               back: 5
             });
-            player.on("pause", function() {$("#video_link_time").val(player.currentTime())});
+            player.on("timeupdate", function() {$("#video_link_time").val(player.currentTime())});
           </script>'
         elsif f.object.video.url.include? "youtube"
           uri = URI.parse(f.object.video.url)
@@ -89,8 +89,8 @@ ActiveAdmin.register VideoLink do
           '
         end
       end
-      f.input :name, as: :string
       f.input :time, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds"
+      f.input :name, as: :string
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
     end
     f.actions
