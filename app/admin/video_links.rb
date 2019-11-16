@@ -42,6 +42,7 @@ ActiveAdmin.register VideoLink do
               });
             }
             player.on("pause", function() {$("#video_link_time").val(player.currentTime())});
+            player.on("timeupdate", function(){player.paused() == true ? $("#video_link_time").val(player.currentTime()) : null});
           </script>'
         elsif f.object.video.url.include? "youtube"
           uri = URI.parse(f.object.video.url)
