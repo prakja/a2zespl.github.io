@@ -1,4 +1,5 @@
 class CourseInvitation < ApplicationRecord
+  attr_accessor :admin_user
    self.table_name = "CourseInvitation"
    has_paper_trail
    before_create :setCreatedTime, :setUpdatedTime
@@ -20,7 +21,7 @@ class CourseInvitation < ApplicationRecord
    end
 
    def course_expiry_not_valid
-    errors.add(:expiryAt, 'can be set only for 2 days for trial access of any course or link payment row correctly for longer access') if payments.blank? and expiryAt and expiryAt > Time.now + 3.day and current_admin_user.role == 'sales'
+    errors.add(:expiryAt, 'can be set only for 2 days for trial access of any course or link payment row correctly for longer access') if payments.blank? and expiryAt and expiryAt > Time.now + 3.day and admin_user.role == 'sales'
    end
 
    def mobileValidate

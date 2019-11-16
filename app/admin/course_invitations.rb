@@ -1,4 +1,7 @@
 ActiveAdmin.register CourseInvitation do
+  after_build do |course_invitation|
+    course_invitation.admin_user = current_admin_user
+  end
   permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
   active_admin_import validate: true,
