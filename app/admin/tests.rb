@@ -90,7 +90,7 @@ form do |f|
     f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"
     f.input :description
     f.input :instructions
-    f.input :syllabus, as: :quill_editor
+    f.input :syllabus
     f.input :durationInMin, label: "Duration in Minutes"
     f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
     f.input :showAnswer, hint: "Mark un-checked only for Scholarship tests"

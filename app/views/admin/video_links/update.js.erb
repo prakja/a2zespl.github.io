@@ -1,0 +1,2 @@
+$('.flashes').html('<% flash_messages.each do |type, message| %><%= content_tag :div, message, class: "flash flash_#{type}" %><% end %>');
+alert('<% flash_messages.each do |type, message| %><%= type == "notice" ? "Updated" : "NOT Updated" %><% end %>');

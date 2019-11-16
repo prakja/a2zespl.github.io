@@ -36,7 +36,12 @@ ActiveAdmin.register VideoLink do
               forward: 30,
               back: 5
             });
-            player.on("timeupdate", function() {$("#video_link_time").val(player.currentTime())});
+            if ($("#video_link_time").val() != "" &&$("#video_link_time").val() > 0) {
+              player.on("loadeddata", function(){
+                player.currentTime($("#video_link_time").val());
+              });
+            }
+            player.on("pause", function() {$("#video_link_time").val(player.currentTime())});
           </script>'
         elsif f.object.video.url.include? "youtube"
           uri = URI.parse(f.object.video.url)
@@ -107,6 +112,15 @@ ActiveAdmin.register VideoLink do
         success.html { redirect_to admin_video_links_url }
         # TODO: link actual object url here
         success.js {flash.now[:notice] = "Video Link created! Id: <a href='/admin/user_links/#{@video_link.id}' target='_blank'>#{@video_link.id}</a>"}
+        failure.js {flash.now[:error] = "Video Link NOT created! #{@video_link.errors.full_messages}"}
+      end
+    end
+
+    def update
+      update! do |success, failure|
+        success.html { redirect_to admin_video_links_url }
+        # TODO: link actual object url here
+        success.js {flash.now[:notice] = "Video Link updated! Id: <a href='/admin/user_links/#{@video_link.id}' target='_blank'>#{@video_link.id}</a>"}
         failure.js {flash.now[:error] = "Video Link NOT created! #{@video_link.errors.full_messages}"}
       end
     end
