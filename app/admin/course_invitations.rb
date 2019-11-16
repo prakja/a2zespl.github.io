@@ -1,5 +1,5 @@
 ActiveAdmin.register CourseInvitation do
-  after_build do |course_invitation|
+  before_save do |course_invitation|
     course_invitation.admin_user = current_admin_user
   end
   permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
