@@ -4,7 +4,7 @@ class CourseInvitation < ApplicationRecord
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation  :mobileValidate #:course_expiry_not_valid, the reason to put course_expiry_not_valid was to force payment linking with course invitation but this caused unnecessary course expiring for paid users and subsequent calls to Kapil sir's number so removing this..we are reverting to old system where few sales person have ability to send course invitation now
+   after_validation  :mobileValidate, :course_expiry_not_valid
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
    
@@ -20,7 +20,7 @@ class CourseInvitation < ApplicationRecord
    end
 
    def course_expiry_not_valid
-    errors.add(:expiryAt, 'can set only for 7 days when payments are not linked') if payments.blank? and expiryAt and expiryAt > Time.now + 7.day
+    errors.add(:expiryAt, 'can be set only for 2 days for trial access of any course or link payment row correctly for longer access') if payments.blank? and expiryAt and expiryAt > Time.now + 3.day and current_admin_user.role == 'sales'
    end
 
    def mobileValidate
