@@ -31,7 +31,9 @@ ActiveAdmin.register VideoLink do
             </video>
           </div>
           <script>
-            player = videojs("my_video_1");
+            player = videojs("my_video_1", {
+              playbackRates: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+            });
             player.seekButtons({
               forward: 30,
               back: 5
