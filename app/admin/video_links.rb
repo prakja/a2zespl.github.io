@@ -40,8 +40,12 @@ ActiveAdmin.register VideoLink do
             <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268" data-setup=\'{"controls": true}\'>
               <source src="' + f.object.video.url + '" type="application/x-mpegURL">
             </video>
+            <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
           </div>
           <script>
+            function updateVideoTime() {
+              $("#video_link_time").val(player.currentTime());
+            }
             player = videojs("my_video_1", {
               playbackRates: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
             });
@@ -49,44 +53,36 @@ ActiveAdmin.register VideoLink do
               forward: 30,
               back: 5
             });
-            if ($("#video_link_time").val() != "" &&$("#video_link_time").val() > 0) {
-              player.on("loadeddata", function(){
-                player.currentTime($("#video_link_time").val());
-              });
-            }
-            player.on("pause", function() {$("#video_link_time").val(player.currentTime())});
-            player.on("timeupdate", function(){player.paused() == true && player.currentTime() != 0 ? $("#video_link_time").val(player.currentTime()) : null});
           </script>'
         elsif f.object.video.url.include? "youtube"
           uri = URI.parse(f.object.video.url)
           params = CGI.parse(uri.query)
           raw '
             <div id="player"></div>
+            <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
             <script>
-            var tag = document.createElement("script");
-
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName("script")[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-            var player;
-            function onYouTubeIframeAPIReady() {
-              player = new YT.Player("player", {
-                height: "390",
-                width: "640",
-                videoId: "' + params['v'].first  + '",
-                events: {
-                  "onStateChange": onPlayerStateChange
-                }
-              });
-            }
-
-            function onPlayerStateChange(event) {
-              if (event.data == YT.PlayerState.PAUSED) {
+              function updateVideoTime() {
                 $("#video_link_time").val(player.getCurrentTime());
+
               }
-            }
-          </script>
+              var tag = document.createElement("script");
+
+              tag.src = "https://www.youtube.com/iframe_api";
+              var firstScriptTag = document.getElementsByTagName("script")[0];
+              firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+              var player;
+              function onYouTubeIframeAPIReady() {
+                player = new YT.Player("player", {
+                  height: "390",
+                  width: "640",
+                  videoId: "' + params['v'].first  + '",
+                  events: {
+                    "onStateChange": onPlayerStateChange
+                  }
+                });
+              }
+            </script>
           '
         else
           @urlArray = f.object.video.url.to_s.split('/')
@@ -94,8 +90,14 @@ ActiveAdmin.register VideoLink do
           raw '<script src="https://player.vimeo.com/api/player.js"></script>
           <div>
             <iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
           </div>
           <script>
+              function updateVideoTime() {
+                player.getCurrentTime().then(function(seconds) {
+                  $("#video_link_time").val(seconds);
+                });
+              }
               var iframe = document.querySelector("iframe");
               var player = new Vimeo.Player(iframe);
 
