@@ -113,9 +113,29 @@ ActiveAdmin.register VideoLink do
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
     end
     f.actions
+    panel "Video Links", id: "videoVideoLinks" do
+      table_for f.object.video.videoLinks do
+        column :name
+        column :url
+        column :time do |video_link|
+          s = video_link.time
+          hours = s / (60 * 60)
+          s = s - hours * (60*60)
+          minutes = s / (60) % 60
+          s = s - minutes * (60)
+          seconds = s
+          raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
+        end
+        column ("View / Edit") {|videoLinks| raw('<a target="_blank" href="/admin/video_links/' + (videoLinks.id).to_s + '">View / Edit</a>')}
+      end
+    end
   end
 
   controller do
+    def scoped_collection
+      super.includes(video: :videoLinks)
+    end
+
     def new
       params.permit!
       @video_link = VideoLink.new (params[:video_link])
@@ -123,6 +143,7 @@ ActiveAdmin.register VideoLink do
 
     def create
       create! do |success, failure|
+        @video_link.video.videoLinks.reload
         success.html { redirect_to admin_video_links_url }
         # TODO: link actual object url here
         success.js {flash.now[:notice] = "Video Link created! Id: <a href='/admin/user_links/#{@video_link.id}' target='_blank'>#{@video_link.id}</a>"}
@@ -132,6 +153,7 @@ ActiveAdmin.register VideoLink do
 
     def update
       update! do |success, failure|
+        @video_link.video.videoLinks.reload
         success.html { redirect_to admin_video_links_url }
         # TODO: link actual object url here
         success.js {flash.now[:notice] = "Video Link updated! Id: <a href='/admin/user_links/#{@video_link.id}' target='_blank'>#{@video_link.id}</a>"}
