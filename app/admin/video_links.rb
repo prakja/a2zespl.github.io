@@ -25,6 +25,17 @@ ActiveAdmin.register VideoLink do
           <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"></link>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css"></link>
           <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
+          <style>
+            .video-js .vjs-current-time, .vjs-no-flex .vjs-current-time {
+              display: block !important;
+            }
+            .vjs-time-divider {
+              display: block !important;
+            }
+            .video-js .vjs-duration, .vjs-no-flex .vjs-duration {
+              display: block !important;
+            }
+          </style>
           <div>
             <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268" data-setup=\'{"controls": true}\'>
               <source src="' + f.object.video.url + '" type="application/x-mpegURL">
