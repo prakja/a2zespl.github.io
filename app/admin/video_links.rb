@@ -19,6 +19,7 @@ ActiveAdmin.register VideoLink do
 
   form remote: true do |f|
     f.inputs "VideoLink" do
+      render partial: 'tinymce'
       panel 'Video' do
         if f.object.video.url.include? ".m3u8"
           raw '<script src="https://unpkg.com/video.js/dist/video.js"></script>
@@ -113,7 +114,7 @@ ActiveAdmin.register VideoLink do
       end
       f.input :time, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds"
       f.input :name, as: :string
-      f.input :description, as: :quill_editor
+      f.input :description
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
     end
     f.actions
