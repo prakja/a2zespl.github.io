@@ -1,5 +1,5 @@
 ActiveAdmin.register VideoLink do
-  permit_params :name, :url, :time, :videoId
+  permit_params :name, :url, :time, :videoId, :description
 
   filter :videoId_eq, as: :number, label: "Video ID"
   remove_filter :video
@@ -8,6 +8,7 @@ ActiveAdmin.register VideoLink do
   index do
     id_column
     column :name
+    column :description
     column :url
     column :time
     column :video
@@ -112,6 +113,7 @@ ActiveAdmin.register VideoLink do
       end
       f.input :time, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds"
       f.input :name, as: :string
+      f.input :description, as: :quill_editor
       f.input :videoId, label: "Video", as: :hidden, :input_html => { :value => f.object.videoId }
     end
     f.actions
