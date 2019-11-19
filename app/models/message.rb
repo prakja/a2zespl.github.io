@@ -7,4 +7,5 @@ class Message < ApplicationRecord
 
   belongs_to :user, class_name: "User", foreign_key: "userId"
   belongs_to :group, class_name: "Group", foreign_key: "groupId"
+  belongs_to :question, class_name: "Question", foreign_key: "questionId", optional: true
 end

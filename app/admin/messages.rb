@@ -12,11 +12,12 @@ ActiveAdmin.register Message do
 #   permitted
 # end
 
-  remove_filter :user, :group
+  remove_filter :user, :group, :question
   permit_params :userId, :groupId, :content, :type, :deleted, :createdAt, :updatedAt, :questionId
 
   filter :userId
   filter :groupId
+  filter :questionId
   preserve_default_filters!
 
   form do |f|

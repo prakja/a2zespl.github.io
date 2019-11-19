@@ -3,6 +3,21 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
 script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
 javascript:
   var socket = io.connect('#{Rails.application.config.site_url_for_socket}');
+  var isQuestion = false;
+  var questionId = 0;
+  var chatScrollAtEnd = false;
+
+  $( document ).ready(function() {
+    console.log( "ready!" );
+    $('#chat_box').bind('scroll', function() {
+			if($('#chat_box').scrollTop() + $('#chat_box').innerHeight()>=$('#chat_box')[0].scrollHeight) {
+        chatScrollAtEnd = true;
+      } else {
+        chatScrollAtEnd = false;
+      }
+    });
+    $("#chat_box").animate({ scrollTop: $('#chat_box').prop("scrollHeight")}, 4000);
+  });
 
   socket.on('connect', function(){
     console.log("Connected to neetprep");
@@ -10,34 +25,161 @@ javascript:
   });
 
   socket.on('RECEIVE_MESSAGE', function(data) {
-    console.log(data);
     append_chat(data);
   });
 
   function append_chat(data) {
+    $('#send').html("Send Message");
+    $('#question_prev').html("");
+    var question_data
+    if (data.type == 'question') {
+      question_data = data.question.question
+    }
     if (data.userId == '#{@my_id}') {
-      var to_append = '<div class="mt-2"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + data.user.profile.displayName + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      var to_append = '';
+      var student_name = data.user.profile ? data.user.profile.displayName || "NEETprep Student" : "NEETprep Student";
+      if (data.type == 'normal') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button></p></div></li></div>'
+      } else if (data.type == 'question') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.question.question  + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button></p></div></li></div>'
+      } 
+      
+      //'<div class="mt-2" id="95:418820"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">test</p><small class="mb-0">Sanchit Samuel, 2019-11-14</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button></p></div></li></div>'
       $('#chat_box').append(to_append);
     } else {
-      var to_append = '<div class="mt-2"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + data.user.profile.displayName + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      var to_append = ''
+      console.log(data);
+      var student_name = data.user.profile ? data.user.profile.displayName || "NEETprep Student" : "NEETprep Student";
+      if (data.type == 'normal') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button><button class="btn-sm" onclick="onBlockClicked($(this))">B</button></p></div></li></div>'
+      } else if (data.type == 'question') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.question.question + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button><button class="btn-sm" onclick="onBlockClicked($(this))">B</button></p></div></li></div>'
+      }
+      
+      //'<div class="mt-2" id="94:482807"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">jfklsdjfl</p><small class="mb-0">Deepak Kumar, 2019-11-14</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button><button class="btn-sm" onclick="onBlockClicked($(this))">B</button></p></div></li></div>'
       $('#chat_box').append(to_append);
     }
-    
+    if(chatScrollAtEnd)
+      $("#chat_box").animate({ scrollTop: $('#chat_box').prop("scrollHeight")}, 1000);
   }
 
   function onSendClicked () {
-    if ($('#msg').val()) {
-      var message = $('#msg').val();
-      $.post("/livesession/create_chat", {content: message, type: "normal", groupId: '#{@group_id}', userId: '#{@my_id}'})
-        .done(function(data) {
-          socket.emit('SEND_MESSAGE', '#{@group_id_encoded}', data);
-          append_chat(data);
-          $('#msg').val("");
-        })
-        .fail(function(error) {
-          console.log ("failed")
-        });
+    if ($('#send').html().includes("Invalid") || $('#send').html().includes("Analyzing")) {
+      console.log("returning");
+      return;
     }
+    if ($('#msg').val()) {
+      if (!isQuestion) {
+        var message = $('#msg').val();
+        $.post("/livesession/create_chat", {content: message, type: "normal", groupId: '#{@group_id}', userId: '#{@my_id}'})
+          .done(function(data) {
+            socket.emit('SEND_MESSAGE', '#{@group_id_encoded}', data);
+            append_chat(data);
+            $('#msg').val("");
+          })
+          .fail(function(error) {
+            console.log ("failed")
+          });
+      } else {
+        $.post("/livesession/send_question", {questionId: questionId, type: "question", groupId: '#{@group_id}', userId: '#{@my_id}'})
+          .done(function(data) {
+            socket.emit('SEND_QUESTION', '#{@group_id_encoded}', data);
+            $('#msg').val("");
+            append_chat(data);
+            isQuestion = false;
+          })
+          .fail(function(error) {
+            console.log ("failed");
+            isQuestion = false;
+          });
+      }
+    }
+  }
+
+  function onEndClicked () {
+    if (confirm('Are you sure you want to end the chat?')) {
+      $.post("/livesession/end_chat", {id: '#{@group_id}'})
+      .done(function(data) {
+        socket.emit('END_CHAT', '#{@group_id_encoded}', '#{@group_id}');
+        append_chat(data);
+        $('#msg').val("");
+      })
+      .fail(function(error) {
+        console.log ("failed")
+      });
+    } else {}
+  }
+
+  function chatInputUpdate (element) {
+    var val = element.val();
+    if (val.startsWith('@')) {
+      if (val.split(" ")[0].match(/@[0-9]{4,10}/)) {
+        isQuestion = true;
+        questionId = val.split(" ")[0].replace('@', '');
+        $('#send').html("Analyzing Question");
+        $.post("/livesession/check_question", {id: questionId})
+          .done(function(data) {
+            console.log(data);
+            $('#question_prev').html(data.question);
+            $('#send').html("Send Question");
+          })
+          .fail(function() {
+            $('#question_prev').html("");
+            $('#send').html("Invalid Question");
+            isQuestion = false
+          });
+      } else {
+        $('#question_prev').html("");
+        isQuestion = false;
+        questionId = 0;
+        $('#send').html("Send Message");
+      }
+    }
+  }
+
+  function onBlockClicked (element) {
+    var element_to_update = element.parent().parent().parent();
+    var msg_user = element.parent().parent().parent().parent().attr('id');
+    var user = msg_user.split(':')[1];
+    $.post("/livesession/block_user", {id: user})
+      .done(function(){
+        socket.emit('BLOCK_USER', '#{@group_id_encoded}', user);
+        var buttons = $("#button:" + user);
+        element.html() == 'B' ? element.html('U') : element.html('B')
+      })
+      .fail(function(error) {
+        console.log ("Can't block user");
+      });
+  }
+
+  function onChatDelete (element) {
+    var element_to_update = element.parent().parent().parent();
+    var msg_user = element.parent().parent().parent().parent().attr('id');
+    var msg = msg_user.split(':')[0];
+    $.post("/livesession/delete_message", {id: msg})
+      .done(function(data) {
+        socket.emit('DELETE_MSG', '#{@group_id_encoded}', data);
+        element_to_update.removeClass("bg-success bg-primary").addClass("bg-danger");
+      })
+      .fail(function(error) {
+        alert("Can't delete chat");
+      });
+  }
+
+  function onShowAnalytics () {
+    console.log("showing analytics")
+    $.post("/livesession/show_analytics", {groupId: '#{@group_id}'})
+      .done(function(data) {
+        console.log(data);
+        socket.emit('SEND_ANALYTICS', '#{@group_id_encoded}', data);
+      })
+      .fail(function(error) {
+        alert("Can't send analytics");
+      });
+  }
+
+  function onHideAnalytics () {
+    socket.emit('HIDE_ANALYTICS', '#{@group_id_encoded}', "");
   }
 
 div style="padding: 16px"
@@ -45,20 +187,58 @@ div style="padding: 16px"
     iframe src = @livesessionurl
   
   #chat
+    / Don't fucking change this. 
     ul#chat_box.list-group style="width: 100%; overflow: scroll; height: 420px;"
       - @messages.reverse_each do |message|
         - if message.userId == @my_id
-          div.mt-2 id = message.id
-            li.list-group-item.text-right.bg-success.text-white.float-right
-              .
-                p.mb-0.font-weight-bold = message.content
-                small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+          - question_data = ''
+          - if message.type == "question"
+            - question_data = Question.find(message.questionId).question
+          div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+            - if not message.deleted
+              li.list-group-item.text-right.bg-success.text-white.float-right
+                .
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                  p.mb-0
+                    button.btn-sm onclick="onChatDelete($(this))" X
+            - else
+              li.list-group-item.text-right.bg-danger.text-white.float-right
+                .
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
         - else
-          div.mt-2 id = message.id
-            li.list-group-item.text-left.bg-primary.text-white.float-left
-              .
-                p.mb-0.font-weight-bold = message.content
-                small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+          div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+            - if not message.deleted
+              li.list-group-item.text-left.bg-primary.text-white.float-left
+                .
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                  p.mb-0
+                    button.btn-sm onclick="onChatDelete($(this))" X
+                    button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
+                    / id = '#{"button:" + message.userId.to_s}'
+            - else
+              li.list-group-item.text-left.bg-danger.text-white.float-left
+                .
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                  p.mb-0
+                    button.btn-sm onclick="onChatDelete($(this))" X
+                    button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
+                    / id = '#{"button:" + message.userId.to_s}'
 
-    textarea#msg.mt-2 style="width: 100%" rows="2"
-    button id="send" value="Send message" onclick="onSendClicked()" Send message
+    textarea#msg.mt-2 style="width: 100%" rows="2" oninput="chatInputUpdate($(this))"
+    p#question_prev style="width: 100%"
+    button id="send" value="Send Message" onclick="onSendClicked()" Send Message
+    button id="end" value="End Chat" onclick="onEndClicked()" End Chat
+    button id="show_analytics" value="Show Analytics" onclick="onShowAnalytics()" Show Analytics
+    button id="hide_analytics" value="Hide Analytics" onclick="onHideAnalytics()" Hide Analytics

@@ -61,6 +61,6 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   
-  config.site_url_for_socket = "http://localhost:5000/"
-  # http://192.168.0.52:5000/
+  # config.site_url_for_socket = "http://localhost:5000/"
+  config.site_url_for_socket = "http://192.168.0.52:5000/"
 end
