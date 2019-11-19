@@ -124,7 +124,15 @@ ActiveAdmin.register Video do
         table_for video.videoLinks do
           column :name
           column :url
-          column :time
+          column :time do |video_link|
+            s = video_link.time
+            hours = s / (60 * 60)
+            s = s - hours * (60*60)
+            minutes = s / (60) % 60
+            s = s - minutes * (60)
+            seconds = s
+            raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
+          end
           column ("View / Edit") {|videoLinks| raw('<a target="_blank" href="/admin/video_links/' + (videoLinks.id).to_s + '">View / Edit</a>')}
         end
       end

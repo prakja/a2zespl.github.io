@@ -1,22 +1,88 @@
 ActiveAdmin.register UserProfileAnalytic do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
 remove_filter :user
+preserve_default_filters!
+
+scope :video_course_students
+
+filter :test_count_present, as: :select, collection: ["yes", "no"]
 
 controller do
   def scoped_collection
     super.includes(user: :user_profile)
   end
+end
+
+index do
+  id_column
+  column :user
+  column :ansCount
+  column :testCount
+  column :videoCount
+  column :ans7DaysCount
+  column :test7DaysCount
+  column :video7DaysCount
+  column ("phone") { |user_profile_analytic|
+    if not user_profile_analytic.user.phone.nil?
+      user_profile_analytic.user.phone
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.phone
+      else
+        raw '-'
+      end
+    end
+  }
+  column ("email") { |user_profile_analytic|
+    if not user_profile_analytic.user.email.nil?
+      user_profile_analytic.user.email
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.email
+      else
+        raw '-'
+      end
+    end
+  }
+  actions
+end
+
+csv do
+  column :id 
+  column ("user") { |user_profile_analytic|
+    if not user_profile_analytic.user.user_profile.nil?
+      user_profile_analytic.user.user_profile.displayName
+    else
+      raw '-'
+    end
+  }
+  column :ansCount
+  column :testCount
+  column :videoCount
+  column :ans7DaysCount
+  column :test7DaysCount
+  column :video7DaysCount
+  column ("phone") { |user_profile_analytic|
+    if not user_profile_analytic.user.phone.nil?
+      user_profile_analytic.user.phone
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.phone
+      else
+        raw '-'
+      end
+    end
+  }
+  column ("email") { |user_profile_analytic|
+    if not user_profile_analytic.user.email.nil?
+      user_profile_analytic.user.email
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.email
+      else
+        raw '-'
+      end
+    end
+  }
 end
 
 end
