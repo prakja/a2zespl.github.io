@@ -46,4 +46,43 @@ index do
   actions
 end
 
+csv do
+  column :id 
+  column ("user") { |user_profile_analytic|
+    if not user_profile_analytic.user.user_profile.nil?
+      user_profile_analytic.user.user_profile.displayName
+    else
+      raw '-'
+    end
+  }
+  column :ansCount
+  column :testCount
+  column :videoCount
+  column :ans7DaysCount
+  column :test7DaysCount
+  column :video7DaysCount
+  column ("phone") { |user_profile_analytic|
+    if not user_profile_analytic.user.phone.nil?
+      user_profile_analytic.user.phone
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.phone
+      else
+        raw '-'
+      end
+    end
+  }
+  column ("email") { |user_profile_analytic|
+    if not user_profile_analytic.user.email.nil?
+      user_profile_analytic.user.email
+    else
+      if not user_profile_analytic.user.user_profile.nil?
+        user_profile_analytic.user.user_profile.email
+      else
+        raw '-'
+      end
+    end
+  }
+end
+
 end

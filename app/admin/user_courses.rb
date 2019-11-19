@@ -100,9 +100,18 @@ ActiveAdmin.register UserCourse do
         userCourse.user.user_profile.email
       end
     }
+    column ("user phone") { |userCourse|
+      if userCourse.user
+        userCourse.user.phone
+      end
+    }
+    column ("user profile phone") { |userCourse|
+      if userCourse.user.user_profile
+        userCourse.user.user_profile.phone
+      end
+    }
     column :startedAt
     column :expiryAt
-    column :createdAt
   end
 
   controller do

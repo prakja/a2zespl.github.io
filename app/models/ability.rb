@@ -9,7 +9,7 @@ class Ability
       can :manage, SubTopic
       can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer]
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
-      can [:read, :create, :update], [VideoAnnotation]
+      can [:read, :create, :update], [VideoAnnotation, VideoLink]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport]
@@ -19,7 +19,7 @@ class Ability
     elsif user.role == 'sales'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, CourseInvitation, UserCourse, UserAction]
-      can [:create, :read, :update], [Delivery]
+      can [:create, :read, :update], [CourseInvitation, Delivery]
     elsif user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse]
