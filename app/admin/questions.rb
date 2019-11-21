@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :detail, :topics, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests
-  permit_params :question, :correctOptionIndex, :explanation, :type, :deleted, :testId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: []
+  permit_params :question, :correctOptionIndex, :explanation, :type, :deleted, :testId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -146,11 +146,16 @@ ActiveAdmin.register Question do
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
       f.input :tests, input_html: { class: "select2" }
-
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :sequenceId
+    end
+    f.has_many :details, new_record: true, allow_destroy: true do |detail|
+      detail.inputs "Details" do
+        detail.input :exam
+        detail.input :year
+      end
     end
     f.actions
   end

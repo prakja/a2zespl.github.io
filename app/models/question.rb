@@ -67,7 +67,7 @@ class Question < ApplicationRecord
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
-  has_one :detail, class_name: "QuestionDetail", foreign_key: "questionId"
+  has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
   has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
   has_many :topics, through: :questionTopics
@@ -87,4 +87,5 @@ class Question < ApplicationRecord
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name]
   end
+  accepts_nested_attributes_for :details, allow_destroy: true
 end
