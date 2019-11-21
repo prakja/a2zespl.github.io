@@ -42,6 +42,7 @@ ActiveAdmin.register VideoLink do
             <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268" data-setup=\'{"controls": true}\'>
               <source src="' + f.object.video.url + '" type="application/x-mpegURL">
             </video>
+            </br>
             <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
           </div>
           <script>
@@ -61,6 +62,7 @@ ActiveAdmin.register VideoLink do
           params = CGI.parse(uri.query)
           raw '
             <div id="player"></div>
+            </br>
             <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
             <script>
               function updateVideoTime() {
@@ -78,10 +80,7 @@ ActiveAdmin.register VideoLink do
                 player = new YT.Player("player", {
                   height: "390",
                   width: "640",
-                  videoId: "' + params['v'].first  + '",
-                  events: {
-                    "onStateChange": onPlayerStateChange
-                  }
+                  videoId: "' + params['v'].first  + '"
                 });
               }
             </script>
@@ -92,6 +91,7 @@ ActiveAdmin.register VideoLink do
           raw '<script src="https://player.vimeo.com/api/player.js"></script>
           <div>
             <iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            </br>
             <button type="button" onclick="updateVideoTime()">Update Time With Video Time</button>
           </div>
           <script>
