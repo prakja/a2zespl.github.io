@@ -12,6 +12,8 @@ ActiveAdmin.register Group do
 #   permitted
 # end
 
+permit_params :title, :description, :startedAt, :expiryAt, :liveSessionUrl, :createdAt, :updatedAt
+
 index do
   id_column
   column :title
