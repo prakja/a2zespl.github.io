@@ -32,7 +32,7 @@ end
 form do |f|
   f.inputs "Groups" do
     f.input :title
-    f.input :title
+    f.input :description
     f.input :startedAt, as: :datetime_picker
     f.input :expiryAt, as: :datetime_picker
     f.input :liveSessionUrl, as: :string
