@@ -153,7 +153,7 @@ ActiveAdmin.register Question do
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
       detail.inputs "Details" do
-        detail.input :exam
+        detail.input :exam, as: :select, :collection => ["AIIMS", "AIPMT", "BOARD", "NEET", "PMT"]
         detail.input :year
       end
     end
