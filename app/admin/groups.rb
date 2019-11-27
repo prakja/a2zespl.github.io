@@ -12,4 +12,32 @@ ActiveAdmin.register Group do
 #   permitted
 # end
 
+permit_params :title, :description, :startedAt, :expiryAt, :liveSessionUrl, :createdAt, :updatedAt
+
+index do
+  id_column
+  column :title
+  column :description
+  column :startedAt
+  column :expiryAt
+  column :link do |group|
+    link_to  "Live Session", group.liveSessionUrl 
+  end
+  column :chat do |group|
+    link_to  "Open Chat", "/livesession/" + group.id.to_s 
+  end
+  actions
+end
+
+form do |f|
+  f.inputs "Groups" do
+    f.input :title
+    f.input :description
+    f.input :startedAt, as: :datetime_picker
+    f.input :expiryAt, as: :datetime_picker
+    f.input :liveSessionUrl, as: :string
+  end
+  f.actions
+end
+
 end

@@ -14,7 +14,7 @@ class GroupChatsController < ApplicationController
     @group_id_encoded = Base64.encode64("Group:" + @group_id.to_s).gsub("\n",'')
     @my_id = current_admin_user.userId
     @livesessionurl = @group.liveSessionUrl
-    @messages = Message.where(groupId: 1).limit(40).order('"createdAt" DESC')
+    @messages = Message.where(groupId: @group_id).limit(40).order('"createdAt" DESC')
   end
 
   def block_user
