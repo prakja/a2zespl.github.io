@@ -17,7 +17,11 @@
         " | correct percentage > " +  value[2].round(2).to_s + " %"
        end  %></b></h4>
       <h3 style="margin-top: -2px"><%= raw(value[0]) %></h3>
-      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' + (value[3] + 1).to_s) %></b></h4>
+      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' +  if value[3] != nil 
+       (value[3] + 1).to_s
+      else
+       "-"
+      end )%></b></h4>
       <% if value[1] != nil %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h4><b><%= raw('Explanation:') %></b></h4>

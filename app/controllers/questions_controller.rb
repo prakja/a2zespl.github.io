@@ -84,9 +84,9 @@ class QuestionsController < ApplicationController
       else
         @testQuestions = @test.questions.order(id: :asc)
       end
-
+ 
       @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex ]
+        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil ]
       end
     rescue => exception
 
