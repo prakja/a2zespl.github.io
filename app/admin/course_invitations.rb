@@ -96,7 +96,7 @@ ActiveAdmin.register CourseInvitation do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "CourseInvitation" do
-      f.input :course,  include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"
+      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"
       f.input :displayName, label: "Name"
       f.input :email, label: "Email"
       f.input :phone, label: "Phone"

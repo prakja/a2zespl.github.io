@@ -127,7 +127,7 @@ ActiveAdmin.register UserCourse do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "UserCourse" do
-      f.input :course, as: :select, :collection => Course.public_courses
+      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"
       f.input :userId, label: "User Id"
       f.input :invitationId, label: "Course Invitation"
       f.input :role, as: :select, :collection => ["courseStudent", "courseManager", "courseCreator", "courseAdmin"]
