@@ -16,7 +16,7 @@ ActiveAdmin.register_page "Dashboard" do
         column ("Event") { |v| v.event.underscore.humanize }
         column ("Type") { |v| v.item_type.underscore.humanize }
         column ("Modified at") { |v| v.created_at.to_s :long }
-        column ("Admin") { |v| link_to AdminUser.find(v.whodunnit).email, [:admin, AdminUser.find(v.whodunnit)] }
+        column ("Admin") { |v| if v.whodunnit.blank? then '' else link_to AdminUser.find(v.whodunnit).email, [:admin, AdminUser.find(v.whodunnit)] end }
       end
     end
 
