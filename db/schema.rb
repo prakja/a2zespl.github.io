@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_18_061437) do
+ActiveRecord::Schema.define(version: 2019_12_02_121739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -640,6 +640,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_061437) do
     t.text "referrer"
     t.boolean "isFcmTokenActive", default: true
     t.boolean "blockedUser", default: false
+    t.string "password"
     t.index ["email"], name: "User_email_key", unique: true
     t.index ["email"], name: "user_email"
     t.index ["phone"], name: "User_phone_key", unique: true
@@ -1097,7 +1098,6 @@ ActiveRecord::Schema.define(version: 2019_11_18_061437) do
   add_foreign_key "ChapterQuestionCopy", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
   add_foreign_key "ChapterTask", "\"Task\"", column: "taskId", name: "fk_chapter_task_taskid"
   add_foreign_key "ChapterTask", "\"Topic\"", column: "chapterId", name: "fk_chapter_task_chapterid"
-  add_foreign_key "ChapterTest", "\"Test\"", column: "testId", name: "fk_chapter_test_testid"
   add_foreign_key "ChapterTest", "\"Topic\"", column: "chapterId", name: "fk_chapter_test_chapterid"
   add_foreign_key "ChapterVideo", "\"Topic\"", column: "chapterId", name: "fk_chapter_video_chapterid"
   add_foreign_key "ChapterVideo", "\"Video\"", column: "videoId", name: "fk_chapter_video_videoid"
@@ -1153,3 +1153,31 @@ ActiveRecord::Schema.define(version: 2019_11_18_061437) do
   add_foreign_key "film_actor", "film", primary_key: "film_id", name: "film_actor_film_id_fkey", on_update: :cascade, on_delete: :restrict
   add_foreign_key "film_category", "category", primary_key: "category_id", name: "film_category_category_id_fkey", on_update: :cascade, on_delete: :restrict
   add_foreign_key "film_category", "film", primary_key: "film_id", name: "film_category_film_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "inventory", "film", primary_key: "film_id", name: "inventory_film_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "inventory", "store", primary_key: "store_id", name: "inventory_store_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "payment_p2017_01", "customer", primary_key: "customer_id", name: "payment_p2017_01_customer_id_fkey"
+  add_foreign_key "payment_p2017_01", "rental", primary_key: "rental_id", name: "payment_p2017_01_rental_id_fkey"
+  add_foreign_key "payment_p2017_01", "staff", primary_key: "staff_id", name: "payment_p2017_01_staff_id_fkey"
+  add_foreign_key "payment_p2017_02", "customer", primary_key: "customer_id", name: "payment_p2017_02_customer_id_fkey"
+  add_foreign_key "payment_p2017_02", "rental", primary_key: "rental_id", name: "payment_p2017_02_rental_id_fkey"
+  add_foreign_key "payment_p2017_02", "staff", primary_key: "staff_id", name: "payment_p2017_02_staff_id_fkey"
+  add_foreign_key "payment_p2017_03", "customer", primary_key: "customer_id", name: "payment_p2017_03_customer_id_fkey"
+  add_foreign_key "payment_p2017_03", "rental", primary_key: "rental_id", name: "payment_p2017_03_rental_id_fkey"
+  add_foreign_key "payment_p2017_03", "staff", primary_key: "staff_id", name: "payment_p2017_03_staff_id_fkey"
+  add_foreign_key "payment_p2017_04", "customer", primary_key: "customer_id", name: "payment_p2017_04_customer_id_fkey"
+  add_foreign_key "payment_p2017_04", "rental", primary_key: "rental_id", name: "payment_p2017_04_rental_id_fkey"
+  add_foreign_key "payment_p2017_04", "staff", primary_key: "staff_id", name: "payment_p2017_04_staff_id_fkey"
+  add_foreign_key "payment_p2017_05", "customer", primary_key: "customer_id", name: "payment_p2017_05_customer_id_fkey"
+  add_foreign_key "payment_p2017_05", "rental", primary_key: "rental_id", name: "payment_p2017_05_rental_id_fkey"
+  add_foreign_key "payment_p2017_05", "staff", primary_key: "staff_id", name: "payment_p2017_05_staff_id_fkey"
+  add_foreign_key "payment_p2017_06", "customer", primary_key: "customer_id", name: "payment_p2017_06_customer_id_fkey"
+  add_foreign_key "payment_p2017_06", "rental", primary_key: "rental_id", name: "payment_p2017_06_rental_id_fkey"
+  add_foreign_key "payment_p2017_06", "staff", primary_key: "staff_id", name: "payment_p2017_06_staff_id_fkey"
+  add_foreign_key "rental", "customer", primary_key: "customer_id", name: "rental_customer_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "rental", "inventory", primary_key: "inventory_id", name: "rental_inventory_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "rental", "staff", primary_key: "staff_id", name: "rental_staff_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "staff", "address", primary_key: "address_id", name: "staff_address_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "staff", "store", primary_key: "store_id", name: "staff_store_id_fkey"
+  add_foreign_key "store", "address", primary_key: "address_id", name: "store_address_id_fkey", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "user_actions", "\"User\"", column: "userId"
+end
