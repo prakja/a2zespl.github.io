@@ -23,8 +23,8 @@
     <% end %>
     <div style="margin-left: 20px; margin-top: -10px">
       <h2><%= raw(@doubt.content) %></h2>
-      <% if @doubt.audioLink.nil? %>
-      <%= raw('<audio controls><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
+      <% if not @doubt.audioLink.nil? %>
+        <%= raw('<audio controls><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
       <% end %>
       <h5 style="margin-top: -10px"><%= Time.parse(@doubt.createdAt.to_s).to_date.to_formatted_s(:long) %></h5>
       <h5 style="margin-top: -10px"><%= @doubt.topic.name + ' / ' + @doubt.topic.subject.name %></h5>
