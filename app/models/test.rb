@@ -22,11 +22,11 @@ class Test < ApplicationRecord
       return
     end
 
-    # HTTParty.post(
-    #   Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
-    #    body: {
-    #      id: self.id
-    # })
+    HTTParty.post(
+      Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
+       body: {
+         id: self.id
+    })
   end
 
   def questions_with_number
