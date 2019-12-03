@@ -6,17 +6,27 @@ class Test < ApplicationRecord
   end
 
   after_commit :after_update_test, if: Proc.new { |model| model.previous_changes[:sections]}, on: [:update]
+  before_create :setSections
+  before_update :setSections
+
+  def setSections
+    if self.sections.blank?
+      self.sections = nil
+    else
+      self.sections = JSON.parse(self.sections)
+    end
+  end
 
   def after_update_test
     if self.sections.blank?
       return
     end
 
-    HTTParty.post(
-      Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
-       body: {
-         id: self.id
-    })
+    # HTTParty.post(
+    #   Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
+    #    body: {
+    #      id: self.id
+    # })
   end
 
   def questions_with_number
