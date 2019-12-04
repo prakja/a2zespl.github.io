@@ -2,8 +2,8 @@ script crossorigin="anonymous" integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC
 link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet" /
 script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
 javascript:
-  var socket = io.connect('#{Rails.application.config.site_url_for_socket}');
-  //var socket = io.connect('https://dev.neetprep.com:5000/');
+  //var socket = io.connect('http://192.168.0.52:5000/');
+  var socket = io.connect('#{ENV["CHAT_SOCKET_URL"]}');
   var isQuestion = false;
   var questionId = 0;
   var chatScrollAtEnd = false;
