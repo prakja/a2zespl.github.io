@@ -3,7 +3,9 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
 script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
 javascript:
   //var socket = io.connect('http://192.168.0.52:5000/');
-  var socket = io.connect('#{ENV["CHAT_SOCKET_URL"]}');
+  var socket = io.connect('#{ENV["CHAT_SOCKET_URL"]}', {
+     transports: [ 'websocket' ]
+  });
   var isQuestion = false;
   var questionId = 0;
   var chatScrollAtEnd = false;
