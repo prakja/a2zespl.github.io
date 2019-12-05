@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   get "/livesession/:id/", to: "group_chats#group"
+  get "/teacher/livesession/:id", to: "group_chats#teacher_view"
 
   post "/livesession/create_chat", to: "group_chats#create_chat"
   post "/livesession/block_user", to: "group_chats#block_user"

@@ -1,0 +1,154 @@
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet" /
+script crossorigin="anonymous" integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54=" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js" 
+script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+
+javascript:
+  //var socket = io.connect('http://192.168.0.52:5000/');
+  var socket = io.connect('#{ENV["CHAT_SOCKET_URL"]}', {
+     transports: [ 'websocket' ]
+  });
+
+  socket.on('connect', function(){
+    console.log("Connected to neetprep");
+    socket.emit('JOIN_GROUP', '#{@group_id_encoded}');
+  });
+
+  $( document ).ready(function() {
+    console.log( "ready!" );
+    $('#chat_box').bind('scroll', function() {
+			if($('#chat_box').scrollTop() + $('#chat_box').innerHeight()>=$('#chat_box')[0].scrollHeight) {
+        chatScrollAtEnd = true;
+      } else {
+        chatScrollAtEnd = false;
+      }
+    });
+    $("#chat_box").animate({ scrollTop: $('#chat_box').prop("scrollHeight")}, 4000);
+  });
+
+  socket.on('RECEIVE_MESSAGE', function(data) {
+    append_chat(data);
+  });
+
+  socket.on('RECEIVE_SEND_QUESTION', function(data) {
+    var correctAns = data.question.correctOptionIndex;
+    correctAns = correctAns + 1 ;
+    $('#correct_option').html("Correct Answer: " + correctAns);
+    $("#question").html(data.question.question);
+  });
+
+  socket.on('RECEIVE_SEND_ANALYTICS', function(data) {
+    if (data) {
+      console.log(data);
+      var attempts = data.incorrectAnswerCount + data.correctAnswerCount;
+      opt1percent = (data.option1AnswerCount/attempts) * 100
+      opt2percent = (data.option2AnswerCount/attempts) * 100
+      opt3percent = (data.option3AnswerCount/attempts) * 100
+      opt4percent = (data.option4AnswerCount/attempts) * 100
+      $('#question_analytics').html(
+        "<p><strong>Difficulty Level: </strong>" + data.difficultyLevel + "</p>" +
+        "<p><strong>Number of Attempts: </strong>" + attempts + "</p>" + 
+        "<p><strong>Number incorrect Attempts: </strong>" + data.incorrectAnswerCount + "</p>" + 
+        "<p><strong>Number correct Attempts: </strong>" + data.correctAnswerCount + "</p>" + 
+        "<p><strong>option 1 attempts: </strong>" + data.option1AnswerCount + " percentage: " + opt1percent + "%" + "</p>" +
+        "<p><strong>option 2 attempts: </strong>" + data.option2AnswerCount + " percentage: " + opt2percent + "%" + "</p>" +
+        "<p><strong>option 3 attempts: </strong>" + data.option3AnswerCount + " percentage: " + opt3percent + "%" + "</p>" +
+        "<p><strong>option 4 attempts: </strong>" + data.option4AnswerCount + " percentage: " + opt4percent + "%" + "</p>"
+      );
+    } else {
+      $('#question_analytics').html("No one attempted");
+    }
+  });
+
+  socket.on('RECEIVE_HIDE_ANALYTICS', data => {
+    console.log("Hide analytics");
+    $("#correct_option").html("Question Here");
+    $("#question").html("");
+    $('#question_analytics').html("Question Analytics Here");
+  });
+
+  socket.on('RECEIVE_DELETE_MSG', data => {
+    console.log(data);
+    var element_to_update = $(document.getElementById(data.id + ":" + data.user).firstElementChild)
+    element_to_update.removeClass("bg-success bg-primary").addClass("bg-danger");
+  });
+
+  function append_chat(data) {
+    $('#send').html("Send Message");
+    $('#question_prev').html("");
+    var question_data
+    if (data.type == 'question') {
+      question_data = data.question.question
+    }
+    if (data.userId == '#{@my_id}') {
+      var to_append = '';
+      var student_name = data.user.profile ? data.user.profile.displayName || "NEETprep Student" : "NEETprep Student";
+      if (data.type == 'normal') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      } else if (data.type == 'question') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">' + data.question.question  + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      } 
+      
+      //'<div class="mt-2" id="95:418820"><li class="list-group-item text-right bg-success text-white float-right"><div><p class="mb-0 font-weight-bold">test</p><small class="mb-0">Sanchit Samuel, 2019-11-14</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button></p></div></li></div>'
+      $('#chat_box').append(to_append);
+    } else {
+      var to_append = ''
+      console.log(data);
+      var student_name = data.user.profile ? data.user.profile.displayName || "NEETprep Student" : "NEETprep Student";
+      if (data.type == 'normal') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.content + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      } else if (data.type == 'question') {
+        to_append = '<div class="mt-2" id="' + atob(data.id).split(':')[1] + ':' + data.userId + '"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">' + data.question.question + '</p><small class="mb-0">' + student_name + ', ' + new Date(data.createdAt).toDateString() + '</small></div></li></div>'
+      }
+      
+      //'<div class="mt-2" id="94:482807"><li class="list-group-item text-left bg-primary text-white float-left"><div><p class="mb-0 font-weight-bold">jfklsdjfl</p><small class="mb-0">Deepak Kumar, 2019-11-14</small><p class="mb-0"><button class="btn-sm" onclick="onChatDelete($(this))">X</button><button class="btn-sm" onclick="onBlockClicked($(this))">B</button></p></div></li></div>'
+      $('#chat_box').append(to_append);
+    }
+    if(chatScrollAtEnd)
+      $("#chat_box").animate({ scrollTop: $('#chat_box').prop("scrollHeight")}, 1000);
+  }
+
+div
+  .tl
+    #steam style="text-align: center;"
+      iframe src = @livesessionurl
+  .tr style="overflow: auto;"
+    p#correct_option.mx-auto.my-auto.text-center Question Here
+    #question
+  .bl
+    ul#chat_box.chat_box.list-group
+      - @messages.reverse_each do |message|
+        - if message.userId == @my_id
+          - question_data = ''
+          - if message.type == "question"
+            - question_data = ""
+          - else
+            div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+              - if not message.deleted
+                li.list-group-item.text-right.bg-success.text-white.float-right
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+              - else
+                li.list-group-item.text-right.bg-danger.text-white.float-right
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+        - else
+          div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+            - if not message.deleted
+              li.list-group-item.text-left.bg-primary.text-white.float-left
+                .
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                    / id = '#{"button:" + message.userId.to_s}'
+            - else
+              li.list-group-item.text-left.bg-danger.text-white.float-left
+                  p.mb-0.font-weight-bold = message.content
+                  - if question_data
+                    p.mb-0.font-weight-bold = raw(question_data)
+                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                    / id = '#{"button:" + message.userId.to_s}'
+  .br style="overflow: auto;"
+    p#question_analytics.mx-auto.my-auto.text-center Question Analytics Here
