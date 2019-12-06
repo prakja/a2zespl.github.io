@@ -49,10 +49,10 @@ javascript:
         "<p><strong>Number of Attempts: </strong>" + attempts + "</p>" + 
         "<p><strong>Number incorrect Attempts: </strong>" + data.incorrectAnswerCount + "</p>" + 
         "<p><strong>Number correct Attempts: </strong>" + data.correctAnswerCount + "</p>" + 
-        "<p><strong>option 1 attempts: </strong>" + data.option1AnswerCount + " percentage: " + opt1percent + "%" + "</p>" +
-        "<p><strong>option 2 attempts: </strong>" + data.option2AnswerCount + " percentage: " + opt2percent + "%" + "</p>" +
-        "<p><strong>option 3 attempts: </strong>" + data.option3AnswerCount + " percentage: " + opt3percent + "%" + "</p>" +
-        "<p><strong>option 4 attempts: </strong>" + data.option4AnswerCount + " percentage: " + opt4percent + "%" + "</p>"
+        "<p><strong>option 1 attempts: </strong>" + data.option1AnswerCount + " percentage: " + Math.round(opt1percent) + "%" + "</p>" +
+        "<p><strong>option 2 attempts: </strong>" + data.option2AnswerCount + " percentage: " + Math.round(opt2percent) + "%" + "</p>" +
+        "<p><strong>option 3 attempts: </strong>" + data.option3AnswerCount + " percentage: " + Math.round(opt3percent) + "%" + "</p>" +
+        "<p><strong>option 4 attempts: </strong>" + data.option4AnswerCount + " percentage: " + Math.round(opt4percent) + "%" + "</p>"
       );
     } else {
       $('#question_analytics').html("No one attempted");
@@ -112,8 +112,9 @@ div
     #stream style="text-align: center;"
       iframe src = @livesessionurl
   .tr style="overflow: auto;"
-    p#correct_option.mx-auto.my-auto.text-center Question Here
-    #question
+    .p-1
+      p#correct_option.mx-auto.my-auto.text-center Question Here
+      #question
   .bl
     ul#chat_box.chat_box.list-group
       - @messages.reverse_each do |message|
