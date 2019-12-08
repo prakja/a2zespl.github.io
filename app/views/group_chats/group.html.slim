@@ -2,8 +2,10 @@ script crossorigin="anonymous" integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC
 link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet" /
 script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
 javascript:
-  var socket = io.connect('#{Rails.application.config.site_url_for_socket}');
-  //var socket = io.connect('https://dev.neetprep.com:5000/');
+  //var socket = io.connect('http://192.168.0.52:5000/');
+  var socket = io.connect('#{ENV["CHAT_SOCKET_URL"]}', {
+     transports: [ 'websocket' ]
+  });
   var isQuestion = false;
   var questionId = 0;
   var chatScrollAtEnd = false;
@@ -184,61 +186,64 @@ javascript:
   }
 
 div style="padding: 16px"
-  #steam style="text-align: center"
-    iframe src = @livesessionurl
-  
-  #chat
-    / Don't fucking change this. 
-    ul#chat_box.list-group style="width: 100%; overflow: scroll; height: 420px;"
-      - @messages.reverse_each do |message|
-        - if message.userId == @my_id
-          - question_data = ''
-          - if message.type == "question"
-            - question_data = Question.find(message.questionId).question
-          div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
-            - if not message.deleted
-              li.list-group-item.text-right.bg-success.text-white.float-right
-                .
-                  p.mb-0.font-weight-bold = message.content
-                  - if question_data
-                    p.mb-0.font-weight-bold = raw(question_data)
-                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
-                  p.mb-0
-                    button.btn-sm onclick="onChatDelete($(this))" X
-            - else
-              li.list-group-item.text-right.bg-danger.text-white.float-right
-                .
-                  p.mb-0.font-weight-bold = message.content
-                  - if question_data
-                    p.mb-0.font-weight-bold = raw(question_data)
-                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
-        - else
-          div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
-            - if not message.deleted
-              li.list-group-item.text-left.bg-primary.text-white.float-left
-                .
-                  p.mb-0.font-weight-bold = message.content
-                  - if question_data
-                    p.mb-0.font-weight-bold = raw(question_data)
-                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
-                  p.mb-0
-                    button.btn-sm onclick="onChatDelete($(this))" X
-                    button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
-                    / id = '#{"button:" + message.userId.to_s}'
-            - else
-              li.list-group-item.text-left.bg-danger.text-white.float-left
-                .
-                  p.mb-0.font-weight-bold = message.content
-                  - if question_data
-                    p.mb-0.font-weight-bold = raw(question_data)
-                  small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
-                  p.mb-0
-                    button.btn-sm onclick="onChatDelete($(this))" X
-                    button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
-                    / id = '#{"button:" + message.userId.to_s}'
+  .atr
+    #stream style="text-align: center"
+      iframe src = @livesessionurl
 
+  .atl
+    #chat
+      / Don't fucking change this. 
+      ul#chat_box.chat_box.list-group style="width: 100%; overflow: scroll;"
+        - @messages.reverse_each do |message|
+          - if message.userId == @my_id
+            - question_data = ''
+            - if message.type == "question"
+              - question_data = Question.find(message.questionId).question
+            div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+              - if not message.deleted
+                li.list-group-item.text-right.bg-success.text-white.float-right
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    - if question_data
+                      p.mb-0.font-weight-bold = raw(question_data)
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                    p.mb-0
+                      button.btn-sm onclick="onChatDelete($(this))" X
+              - else
+                li.list-group-item.text-right.bg-danger.text-white.float-right
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    - if question_data
+                      p.mb-0.font-weight-bold = raw(question_data)
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+          - else
+            div.mt-2 id = '#{message.id.to_s + ":" + message.userId.to_s}'
+              - if not message.deleted
+                li.list-group-item.text-left.bg-primary.text-white.float-left
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    - if question_data
+                      p.mb-0.font-weight-bold = raw(question_data)
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                    p.mb-0
+                      button.btn-sm onclick="onChatDelete($(this))" X
+                      button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
+                      / id = '#{"button:" + message.userId.to_s}'
+              - else
+                li.list-group-item.text-left.bg-danger.text-white.float-left
+                  .
+                    p.mb-0.font-weight-bold = message.content
+                    - if question_data
+                      p.mb-0.font-weight-bold = raw(question_data)
+                    small.mb-0 = message.user.name + ", " + message.createdAt.to_date.to_s
+                    p.mb-0
+                      button.btn-sm onclick="onChatDelete($(this))" X
+                      button.btn-sm onclick="onBlockClicked($(this))" = message.user.blockedUser ? "U" : "B"
+                      / id = '#{"button:" + message.userId.to_s}'
+  
+  .abr style="overflow: auto;"
+    p#question_prev.p-3 style="width: 100%"
     textarea#msg.mt-2 style="width: 100%" rows="2" oninput="chatInputUpdate($(this))"
-    p#question_prev style="width: 100%"
     button id="send" value="Send Message" onclick="onSendClicked()" Send Message
     button id="end" value="End Chat" onclick="onEndClicked()" End Chat
     button id="show_analytics" value="Show Analytics" onclick="onShowAnalytics()" Show Analytics

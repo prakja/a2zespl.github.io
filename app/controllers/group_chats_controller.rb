@@ -17,6 +17,20 @@ class GroupChatsController < ApplicationController
     @messages = Message.where(groupId: @group_id).limit(40).order('"createdAt" DESC')
   end
 
+  def teacher_view
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @group_id = params.require(:id)
+    @group = Group.find(@group_id)
+    @group_id_encoded = Base64.encode64("Group:" + @group_id.to_s).gsub("\n",'')
+    @my_id = current_admin_user.userId
+    @livesessionurl = @group.liveSessionUrl
+    @messages = Message.where(groupId: @group_id).limit(40).order('"createdAt" DESC')
+  end
+
   def block_user
     begin
       userId = params.require(:id)
@@ -54,6 +68,7 @@ class GroupChatsController < ApplicationController
       message.save
       render :status => :ok, :json => {
         id: messageId,
+        user: message.user.id,
         type: message.type,
       }.to_json
     rescue => exception
