@@ -65,7 +65,7 @@ gem 'aws-sdk-s3', '~> 1'
 
 #gem 'aws-sdk', '~> 3'
 
-gem 'activeadmin', '= 2.0.0'
+gem 'activeadmin'
 # Plus integrations with:
 gem 'devise'
 gem 'cancancan'
@@ -84,3 +84,4 @@ gem "active_admin_import"
 gem 'chartkick'
 gem 'groupdate'
 gem 'slim'
+gem 'arctic_admin'

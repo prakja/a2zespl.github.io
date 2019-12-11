@@ -21,7 +21,7 @@
     <% name = @doubt.admin_user.name || @doubt.admin_user.email %>
     <h4>This doubt is assigned to: <%= name %></h4>
     <% end %>
-    <div style="margin-left: 20px; margin-top: -10px">
+    <div style="margin-left: 20px;">
       <h2><%= raw(@doubt.content) %></h2>
       <% if not @doubt.audioLink.nil? %>
         <%= raw('<audio controls style="margin-top: -10px"><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
