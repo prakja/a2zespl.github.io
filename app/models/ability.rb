@@ -12,8 +12,8 @@ class Ability
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport]
-      can :read, UserCourse
+      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message]
+      can :read, [UserCourse, User, UserProfile]
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard]
       can :import, Video
     elsif user.role == 'sales'
