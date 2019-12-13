@@ -78,6 +78,16 @@ ActiveAdmin.register Doubt do
     column :tagType
     column :doubtType
     column :user
+    column ("Link") {|doubt| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt.id.to_s, target: ":_blank" }
+      if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+      toggle_bool_column :goodFlag
+      else
+      column :goodFlag
+      end
+      # + '/topic/'
+      # + Base64.encode64("Doubt:" + doubt.topic.id.to_s)
+      # + '/doubt/'
+      # + Base64.encode64("Doubt:" + doubt.id.to_s)
     column "rank" do |doubt|
       doubt.user&.common_rank&.rank
     end
@@ -91,16 +101,6 @@ ActiveAdmin.register Doubt do
       doubt.admin_user.email if not doubt.admin_user.blank?
     end
     #column ("Link") {|doubt| raw('<a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + doubt.id.to_s) + '">Answer on NEETprep</a>')}
-    column ("Link") {|doubt| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt.id.to_s, target: ":_blank" }
-      if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
-      toggle_bool_column :goodFlag
-      else
-      column :goodFlag
-      end
-      # + '/topic/'
-      # + Base64.encode64("Doubt:" + doubt.topic.id.to_s)
-      # + '/doubt/'
-      # + Base64.encode64("Doubt:" + doubt.id.to_s)
     actions
   end
 
