@@ -13,12 +13,30 @@ ActiveAdmin.register Topic do
   # end
   remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subjects, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests
   permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id
+  preserve_default_filters!
+  filter :subjects_id, as: :select, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
   scope :neetprep_course
   sidebar :related_data, only: :show do
     ul do
       li link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
     end
+  end
+
+  index do
+    id_column
+    column :name
+    column :description do |topic|
+      truncate topic.description
+    end
+    column :seqId
+    column ("Videos") { |topic|
+      link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
+    }
+    column ("Questions") { |topic|
+      link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
+    }
+    actions
   end
 
   controller do
