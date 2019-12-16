@@ -18,32 +18,35 @@
     <%= raw(@test.name) %>
   </div>
   <div style="margin: 32px">
+    <div>
+      Question Ids:
+      <textarea placeholder="select questions from test or directly paste question ids (Required format : 1,2,3,4,5) ..." id="selectedIds"></textarea>
+    </div>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="addTestQuestions()">Add Selected Questions</button>
+    </div>
     <label>Tests :</label>
     <select name="test" id="testList" onchange="onTestChange()">
       <option value=''>Select Test</option>
       <% @tests_data.each do |key, value| %>
-        <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+        <%= raw("<option value='" + key.to_s + "'>" + " (" + key.to_s + ") " + value[0].to_s + "</option>") %>
       <% end %>
     </select>
-    <br/><br/>
-    Questions :
     <br/></br>
-    <div>
-      <textarea id="selectedIds"></textarea>
-    </div>
     <div>
       <input type="checkbox" id="selectAllQuestions"></input>
       <label for="selectAllQuestions">Select All Questions</label>
       <span id="selectedIdsCount"></span>
     </div>
-    <div style="margin: 32px">
-      <button style="width: 300px; padding: 15px" onclick="addTestQuestions()">Add Selected Questions</button>
-    </div>
     <ul id="questionsList"></ul>
     <br/><br/>
   </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
   <script type="text/javascript">
+
+    $(function () {
+      $("select").select2();
+    });
 
     function onTestChange() {
       $("#questionsList").html("");
