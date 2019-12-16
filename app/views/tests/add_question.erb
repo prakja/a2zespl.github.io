@@ -1,0 +1,114 @@
+<head>
+  <style>
+    .questionData {
+      display: inline-block;
+      border: 1px solid;
+      padding: 15px;
+      width: 50%;
+      height: 300px;
+      overflow: auto;
+    }
+    .questionBox {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw(@test.name) %>
+  </div>
+  <div style="margin: 32px">
+    <label>Tests :</label>
+    <select name="test" id="testList" onchange="onTestChange()">
+      <option value=''>Select Test</option>
+      <% @tests_data.each do |key, value| %>
+        <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+      <% end %>
+    </select>
+    <br/><br/>
+    Questions :
+    <br/></br>
+    <div>
+      <textarea id="selectedIds"></textarea>
+    </div>
+    <div>
+      <input type="checkbox" id="selectAllQuestions"></input>
+      <label for="selectAllQuestions">Select All Questions</label>
+      <span id="selectedIdsCount"></span>
+    </div>
+    <div style="margin: 32px">
+      <button style="width: 300px; padding: 15px" onclick="addTestQuestions()">Add Selected Questions</button>
+    </div>
+    <ul id="questionsList"></ul>
+    <br/><br/>
+  </div>
+
+  <script type="text/javascript">
+
+    function onTestChange() {
+      $("#questionsList").html("");
+      $("#selectAllQuestions"). prop("checked", false);
+      $("#selectedIdsCount").html("");
+      $("#selectedIds").val("");
+      let url = window.location.origin + "/tests/getTestQuestionsList";
+      let testId = $('#testList').val();
+      $.ajax({
+        type: "POST",
+        url: url,
+        dataType: "json",
+        data: {
+          "testId": testId
+        }
+      }).done (function (data) {
+        li = "";
+        $.each(data, function(key, value) {
+          li += "<li class='questionData'><input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id= " + key + "></input><span>(" + key + ")</span><label class='questionBox' for="+ key +">" + value[0] + "</label></li>";
+        });
+        $("#questionsList").html(li);
+      });
+    }
+
+    $("#selectAllQuestions").click(function () {
+      $(".questionCheckbox").prop('checked', $(this).prop('checked'));
+      pushSelectedIds();
+    });
+
+    function pushSelectedIds() {
+      idCount = 0;
+      ids = "";
+      $("input:checkbox").each(function(){
+        var $this = $(this);
+        if($this.is(":checked") && $this.hasClass("questionCheckbox")){
+          idCount += 1;
+          ids +=  $this.prop("id") + ",";
+        }
+      });
+      $("#selectedIdsCount").html("(" + idCount + ")");
+      var textarea = $("#selectedIds");
+      var trimIds = ids.replace(/(^,)|(,$)/g, "")
+      textarea.val(trimIds);
+    }
+
+    function addTestQuestions() {
+      let questionIds = $("#selectedIds").val();
+      var questionIdsArray = questionIds.split(",");
+      let testId = '<%= @test.id %>';
+      if (questionIds == ""){
+        alert('Questions not selected');
+        return
+      }
+      let url = window.location.origin + "/tests/createTestQuestion";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIdsArray,
+          "testId": testId
+        }
+      }).done (function (data) {
+        alert("done");
+      });
+    }
+
+  </script>
+</body>
