@@ -9,31 +9,31 @@
     <th>Entity</th>
     <th>Count</th> 
   </tr>
-  <tr>
+  <tr style="text-align: center;">
     <td>Subjects</td>
     <td><%= link_to  @course.subjects.count, admin_subjects_path(q: {courseId_eq: @course_id}) %></td>
   </tr>
-  <tr>
+  <tr style="text-align: center;">
     <td>Topics</td>
     <td><%= link_to @course_topics.count, admin_topics_path(q: {subjectId_in: @course.subjects.pluck("id")}) %></td>
   </tr>
-  <tr>
+  <tr style="text-align: center;">
     <td>Sub Topics</td>
     <td><%= link_to @course_subTopics_count, admin_sub_topics_path(q: {topicId_in: @course_topics.pluck("id")}) %></td>
   </tr>
-  <tr>
+  <tr style="text-align: center;">
     <td>Tests</td>
     <td><%= link_to @course.tests.count, admin_tests_path(q: {courses_id_ed: @course_id}) %></td>
   </tr>
 
   <tr>
     <table style="margin-left: 16px; width:50%; border: grey solid 1px">
-      <tr class="header">
+      <tr class="header" style="text-align: center;">
         <th>Subject Name</th>
         <th>Topic Count</th> 
       </tr>
       <% @course_subjects.each do |subject| %>
-        <tr>
+        <tr style="text-align: center;">
           <td><%= subject.name %></td>
           <td><%= link_to subject.topics.count, admin_topics_path(q: {subjectId_eq: subject.id}) %></td>
         </tr>
@@ -43,14 +43,14 @@
 
   <tr>
     <table id="chaper_table" style="margin-left: 16px; width:50%; border: grey solid 1px">
-      <tr class="header">
+      <tr class="header" style="text-align: center;">
         <th>Topic Name</th>
         <th>SubTopic Count</th>
         <th>Question Count</th> 
         <th>Video Count</th>  
       </tr>
       <% @course_topics.each do |topic| %>
-        <tr>
+        <tr style="text-align: center;">
           <td><%= topic.name + " (" + topic.subject.name + ")" %></td>
           <td><%= link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) %></td>
           <!-- link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) -->
