@@ -52,9 +52,9 @@ ActiveAdmin.register Video do
         Remove the header from the CSV before uploading.",
         csv_headers: ['name',	'description', 'thumbnail', 'url', 'language', 'createdAt', 'updatedAt']
     )
-  remove_filter :topics, :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats, :videoLinks
+  remove_filter :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats, :videoLinks
   filter :id_eq, as: :number, label: "Video ID"
-  filter :topics_name, as: :string, label: "Chapter"
+  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
   filter :subTopics_name, as: :string, label: "Sub Topic"
   # filter :subTopics_id_not_cont_any, label: "Has Sub-topics", as: :boolean
   preserve_default_filters!

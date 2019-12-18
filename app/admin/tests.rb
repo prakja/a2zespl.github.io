@@ -1,13 +1,21 @@
 ActiveAdmin.register Test do
 permit_params :name, :sections, :description, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
-remove_filter :topics, :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests
+remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests
 
 filter :id_eq, as: :number, label: "Test ID"
+filter :courses, as: :searchable_select, multiple: true, collection: -> {Course.public_courses}, label: "Course"
+filter :topics, as: :searchable_select, multiple: true, collection: -> {Topic.name_with_subject}, label: "Topic"
+
 preserve_default_filters!
 
 scope :neet_course
 scope :test_series_2018
 scope :test_series_2019
+
+scope :botany
+scope :chemistry
+scope :physics
+scope :zoology
 
 index do
   id_column
