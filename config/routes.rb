@@ -19,8 +19,11 @@ Rails.application.routes.draw do
   post "videos/getChaptersList"
   post "videos/createChapterVideo"
   get "tests/add_chapter_test/:testId", to: "tests#add_chapter_test"
+  get "tests/add_question/:testId", to: "tests#add_question"
   post "tests/getSubjectsList"
+  post "/tests/getTestQuestionsList"
   post "tests/getChaptersList"
+  post "tests/createTestQuestion"
   post "tests/createChapterTest"
   get "course_details/booster"
   get "payments/generate_url", to: "payments#generate_url"
@@ -38,4 +41,3 @@ Rails.application.routes.draw do
   post "/livesession/check_question", to: "group_chats#check_question"
   post "/livesession/show_analytics", to: "group_chats#show_analytics"
 end
-

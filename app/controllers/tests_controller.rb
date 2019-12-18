@@ -20,6 +20,63 @@ class TestsController < ApplicationController
     end
   end
 
+  def add_question
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @testId = params[:testId]
+    @test = Test.where(id: @testId).first
+    @tests_data = {}
+    @tests = Test.where.not(id: @test.id)
+    @tests.each do |test|
+      @tests_data[test.id] = [test.name]
+    end
+  end
+
+  def getTestQuestionsList
+    @questions_data = {}
+    @testId = params.require(:testId)
+    @test = Test.find(@testId)
+    @testQuestions = @test.questions.order(id: :asc)
+    @testQuestions.each do |question|
+      @questions_data[question.id] = [question.question]
+    end
+    respond_to do |format|
+      format.html { render :new }
+      format.json { render json: @questions_data.to_json, status: 200 }
+    end
+  end
+
+  def createTestQuestion
+    begin
+      @testId = params[:testId]
+      @questionIds = params[:questionIds]
+      @test = Test.where(id: @testId).first
+      @rowsArray = []
+
+      @questionIds.each do |questionId|
+        @row = {}
+        @row["testId"] = @test.id
+        @row["questionId"] = questionId
+        @rowsArray.push(@row)
+      end
+
+      if(@questionIds.length() > 0)
+        TestQuestion.create(@rowsArray)
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+
+    end
+  end
+
   def add_chapter_test
     if not current_admin_user
       redirect_to "/admin/login"
