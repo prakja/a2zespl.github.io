@@ -172,7 +172,10 @@
     
           loader.style.display = 'none';
         } else {
-          var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+          if (!uploadFromFile)
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+          else
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name;
           insertIntoExplanation('<%= @questionId %>', fileUrl);
           reset ();
         }
