@@ -60,4 +60,10 @@ class Test < ApplicationRecord
   scope :neet_course, -> {course_name(8)}
   scope :test_series_2018, -> {course_name(128)}
   scope :test_series_2019, -> {course_name(148)}
+
+  scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [53, 478, 495]}})}
+  scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [54, 477, 494]}})}
+  scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
+  scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
+
 end

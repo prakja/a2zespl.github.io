@@ -11,10 +11,10 @@ ActiveAdmin.register Topic do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subjects, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests
+  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests
   permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id
   preserve_default_filters!
-  filter :subjects_id, as: :select, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
+  filter :subjects, as: :searchable_select, multiple: true, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
   scope :neetprep_course
   sidebar :related_data, only: :show do
     ul do

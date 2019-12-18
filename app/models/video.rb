@@ -17,10 +17,10 @@ class Video < ApplicationRecord
   has_many :notes, through: :video_annotations
   has_many :user_video_stats, class_name: "UserVideoStat", foreign_key: "videoId"
 
-  scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  53}})}
-  scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  54}})}
-  scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  55}})}
-  scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  56}})}
+  scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [53, 478, 495]}})}
+  scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [54, 477, 494]}})}
+  scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
+  scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
 
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now

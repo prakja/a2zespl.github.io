@@ -80,11 +80,11 @@ class QuestionsController < ApplicationController
       @test = Test.find(@testId)
       @testQuestions = nil
       if @limit.to_i > 0
-        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i).order(id: :asc)
+        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i).order(sequenceId: :asc, id: :asc)
       else
-        @testQuestions = @test.questions.order(id: :asc)
+        @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
       end
- 
+
       @testQuestions.each do |question|
         @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil ]
       end
