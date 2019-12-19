@@ -1,3 +1,10 @@
+<head>
+  <style>
+    .select2-container {
+      min-width: 300px !important;
+    }
+  </style>
+</head>
 <body>
   <div style="margin: 32px">
     <%= raw(@video.name) %>
@@ -18,7 +25,12 @@
     <select name="chapter" id="chapterList"></select>
   </div>
   <button onclick="addChapterVideo()">Add selected Chapter video</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
   <script type="text/javascript">
+
+    $(function () {
+      $("select").select2();
+    });
 
     function onCourseChange() {
       $("#subjectList").html("");
