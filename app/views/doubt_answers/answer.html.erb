@@ -1,3 +1,10 @@
+<head>
+  <style>
+    .solutionImg {
+      display: none;
+    }
+  </style>
+</head>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script>
   window.onload = function() {
@@ -23,6 +30,7 @@
     <% end %>
     <div style="margin-left: 20px;">
       <h2><%= raw(@doubt.content) %></h2>
+      <div id="solutionImgs" style="display: none;"></div>
       <% if not @doubt.audioLink.nil? %>
         <%= raw('<audio controls style="margin-top: -10px"><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
       <% end %>
@@ -106,6 +114,44 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
 <script>
+
+var imgSolutionElements = document.getElementsByClassName("solutionImg");
+if(imgSolutionElements.length > 0) {
+  document.getElementById("solutionImgs").style.display = "block";
+}
+var allSolutionImgsrc = '<div class="canvas-container" style="width: 1000px; height: 500px;"><canvas id="c" width="1000" height="500" style="border: 1px solid rgb(204, 204, 204); width: 1000px; height: 500px; left: 0px; top: 0px; touch-action: none; user-select: none;" class="lower-canvas"></canvas>';
+for (var i = 0; i < imgSolutionElements.length; ++i) {
+  allSolutionImgsrc += '<img src="' +  imgSolutionElements[i].getAttribute("src") + '" class="solution-image" style="display: none;"></img>';
+}
+
+var solutionImgBox = document.getElementById("solutionImgs");
+solutionImgBox.innerHTML = allSolutionImgsrc;
+
+var canvas = new fabric.Canvas("c");
+var imgSolution = document.getElementsByClassName("solution-image");
+for (var i = 0; i < imgSolution.length; ++i) {
+  var imgElement = imgSolution[i];
+  var imgInstance = new fabric.Image(imgElement, {
+    left: 300 * i,
+    top: 0,
+    angle: 0
+  });
+  canvas.add(imgInstance);
+}
+canvas.setZoom(0.5);
+canvas.on("mouse:wheel", function(opt) {
+  var minZoom = 0.1;
+  var delta = opt.e.deltaY;
+  var zoom = canvas.getZoom();
+  zoom = zoom + delta/3000;
+  if (zoom > 20) zoom = 20;
+  if (zoom < minZoom) zoom = minZoom;
+  canvas.setZoom(zoom);
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+});
+
+
 tinymce.init({
   selector: '#doubtAnswer_content',
   plugins: "link image code paste media",
