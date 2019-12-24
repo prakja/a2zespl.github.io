@@ -7,8 +7,7 @@ class AdminUser < ApplicationRecord
 
   has_many :doubt_admins, class_name: "DoubtAdmin", foreign_key: "admin_user_id"
   has_many :doubts, through: :doubt_admins
-  has_many :studentCoachs, foreign_key: "coachId", class_name: 'StudentCoach'
-  has_many :coaches, through: :studentCoachs
+  has_many :coachStudents, foreign_key: "coachId", class_name: 'StudentCoach'
 
   def self.distinct_faculty_name
     AdminUser.where(role: 'faculty').pluck("email")
