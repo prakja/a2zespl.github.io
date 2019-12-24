@@ -896,6 +896,8 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
   end
 
+<<<<<<< HEAD
+=======
   create_table "student_coaches", force: :cascade do |t|
     t.integer "studentId", null: false
     t.integer "coachId", null: false
@@ -905,6 +907,7 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.index ["studentId", "coachId"], name: "index_student_coaches_on_studentId_and_coachId", unique: true
   end
 
+>>>>>>> 0e554f6caa7500b21851490536b3656f018fda5f
   create_table "user_actions", force: :cascade do |t|
     t.integer "userId"
     t.integer "count"
@@ -982,7 +985,10 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
   add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
+<<<<<<< HEAD
+=======
   add_foreign_key "student_coaches", "\"User\"", column: "studentId"
   add_foreign_key "student_coaches", "admin_users", column: "coachId"
+>>>>>>> 0e554f6caa7500b21851490536b3656f018fda5f
   add_foreign_key "user_actions", "\"User\"", column: "userId"
 end
