@@ -6,6 +6,7 @@ class User < ApplicationRecord
  has_many :customer_supports, class_name: "CustomerSupport", foreign_key: "userId"
 
  has_many :doubts, class_name: "Doubt", foreign_key: "userId"
+ has_many :user_todos, class_name: "UserTodo", foreign_key: "userId"
  has_many :test_attempts, class_name: "TestAttempt", foreign_key: "userId"
  has_one :user_profile_analytics, class_name: "UserProfileAnalytic", foreign_key: "userId"
  has_one :user_action, foreign_key: "userId"

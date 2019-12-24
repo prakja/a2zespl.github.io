@@ -31,6 +31,10 @@ action_item :user, only: :show do
   link_to 'User Activity', "/user_analytics/show?userId=" + resource.id.to_s
 end
 
+action_item :add_link, only: :show do
+  link_to 'Assign Coach', '../../admin/student_coaches/new?student_coach[studentId]=' + resource.id.to_s
+end
+
 # controller do
 #   def scoped_collection
 #     super.left_outer_joins(:user_video_stats).select('"User".*, COUNT("UserVideoStat"."id") as video_count').group('"User"."id"')
@@ -92,6 +96,7 @@ sidebar :user_activity, only: :show do
     li link_to "Topic Ranks", admin_topic_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
     li link_to "Overall Rank", admin_common_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
     li link_to "Videos Watched ", admin_user_video_stats_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "User Todos ", admin_user_todos_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
   end
 end
 

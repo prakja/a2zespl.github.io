@@ -18,6 +18,18 @@ class QuestionsController < ApplicationController
     @orderBy = params[:order] or default_order
     @limit = params[:limit] or default_limit
 
+    @subjectListIds = {
+      'physics' => 55,
+      'chemistry' => 54,
+      'botany' => 53,
+      'zoology' => 56
+    }
+    @chapters_data = {}
+    @chapters = Topic.where(subject: @subjectListIds[@subject])
+    @chapters.each do |chapter|
+      @chapters_data[chapter.id] = [chapter.name]
+    end
+
     if @subject == 'physics' && @topicId
       @questions = Question.physics_mcqs_difficult(@topicId).includes(:question_analytic)
     elsif @subject == 'chemistry'  && @topicId
