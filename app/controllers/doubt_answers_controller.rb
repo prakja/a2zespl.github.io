@@ -82,9 +82,9 @@ class DoubtAnswersController < ApplicationController
       if @video.url.include? ".m3u8"
         @ism3u8 = "yes"
         @doubt_data =+
-        '<script src="https://unpkg.com/video.js/dist/video.js"></script>
-        <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
-        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        '<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@1.2.4/dist/videojs-http-streaming.min.js"></script>
+        <link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet">
         <div>
           <video-js id="my_video_1" class="vjs-default-skin" controls preload="auto" width="640" height="268">
             <source src="' + @video.url + '" type="application/x-mpegURL">
@@ -94,7 +94,7 @@ class DoubtAnswersController < ApplicationController
         uri = URI.parse(@video.url)
         params = CGI.parse(uri.query)
         @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
-      else  
+      else
         @urlArray = @video.url.to_s.split('/')
         @vimeoId = @urlArray[-1]
         @doubt_data += '<div><iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
