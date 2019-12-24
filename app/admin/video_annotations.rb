@@ -34,9 +34,9 @@ form do |f|
       f.input :videoTimeStampInSeconds, hint: "To be entered in seconds. Ex: 493 would mean 8 minutes 13 seconds", label: "Show At"
       panel 'Video' do
         if f.object.video.url.include? ".m3u8"
-          raw '<script src="https://unpkg.com/video.js/dist/video.js"></script>
-          <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
-          <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"></link>
+          raw '<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@1.2.4/dist/videojs-http-streaming.min.js"></script>
+          <link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet"></link>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css"></link>
           <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
           <div>
