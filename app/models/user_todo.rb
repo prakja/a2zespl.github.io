@@ -12,15 +12,15 @@ class UserTodo < ApplicationRecord
   }
 
   scope :last_7_days, -> {
-    UserTodo.where(:createdAt => 7.days.ago.midnight..Date.today.midnight)
+    UserTodo.where(:createdAt => 7.days.ago.midnight..Time.now)
   }
 
   scope :last_3_days, -> {
-    UserTodo.where(:createdAt => 3.days.ago.midnight..Date.today.midnight)
+    UserTodo.where(:createdAt => 3.days.ago.midnight..Time.now)
   }
 
   scope :today, -> {
-    UserTodo.where(:createdAt => 1.days.ago.midnight..Time.now)
+    UserTodo.where(:createdAt => Date.today.midnight..Time.now)
   }
 
   scope :tomorrow, -> {
