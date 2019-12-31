@@ -13,7 +13,7 @@ ActiveAdmin.register Schedule do
 # end
 
   remove_filter :scheduleItems
-  permit_params :createdAt, :updatedAt, :name, :description
+  permit_params :createdAt, :updatedAt, :name, :description, :isActive
 
   index do
     id_column
