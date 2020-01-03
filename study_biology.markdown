@@ -4,8 +4,8 @@ title: Study Biology
 permalink: /study_biology/
 ---
 
-## **NEET 2019: How to score 300+ in Biology?**
-_With only a couple of months left for the National Eligibility Entrance Test (NEET) her is what, how and how much you need to study. Check the detailed preparation strategy by experts to score over 300+ score._
+## **NEET 2020: How to score 300+ in Biology?**
+_With only a few months left for the National Eligibility Entrance Test (NEET) her is what, how and how much you need to study. Check the detailed preparation strategy by experts to score over 300+ score._
 
 ![alt text](https://images.indianexpress.com/2018/12/study759.jpg)
 
