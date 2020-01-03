@@ -15,7 +15,7 @@ class GoogleAdsController < ApplicationController
     @report_data = {}
 
     @campaign_reports.each do |report|
-      @report_data[report[0]] = [(report[1]/1000000).to_f]
+      @report_data[report[0].to_date] = ["₹" + (report[1]/1000000).to_f.round(2).to_s]
     end
 
   end

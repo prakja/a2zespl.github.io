@@ -1,6 +1,10 @@
 ActiveAdmin.register CampaignPerformanceReport do
   config.sort_order = 'day_desc'
 
+  action_item :see_day_wise_campaign_report, only: :index do
+    link_to 'Day Wise Campaign Report', '../../google_ads/report'
+  end
+
   index do
     column :day
     column :_sdc_sequence
