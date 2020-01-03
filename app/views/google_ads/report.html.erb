@@ -1,0 +1,13 @@
+<h2>Google Ads Campaign Report</h2>
+<table style="margin-left: 16px; width:50%; ; margin-top: 30px">
+  <tr class="header" style="text-align: center;">
+    <th>Day</th>
+    <th>Cost</th>
+  </tr>
+  <% @report_data.each do |key, value| %>
+    <tr style="text-align: center;">
+      <td><%= key.to_s %></td>
+      <td><%= value[0].to_s %></td>
+    </tr>
+  <% end %>
+</table>

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get "course_details/booster"
   get "payments/generate_url", to: "payments#generate_url"
   get "matviews/forced_update"
+  get "google_ads/report"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   get "/livesession/:id/", to: "group_chats#group"
