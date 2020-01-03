@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_23_131103) do
+ActiveRecord::Schema.define(version: 2020_01_03_052947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -452,6 +452,7 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.datetime "updatedAt", null: false
     t.text "name"
     t.text "description"
+    t.boolean "isActive"
   end
 
   create_table "ScheduleItem", id: :serial, force: :cascade do |t|
@@ -769,8 +770,8 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
   create_table "UserTodo", force: :cascade do |t|
     t.integer "userId", null: false
     t.integer "task_type", null: false
-    t.integer "subjectId", null: false
-    t.integer "chapterId", null: false
+    t.integer "subjectId"
+    t.integer "chapterId"
     t.float "hours", null: false
     t.integer "num_questions"
     t.float "hours_taken"
@@ -778,6 +779,8 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.boolean "completed", default: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.string "student_response"
+    t.string "todo"
   end
 
   create_table "UserVideoStat", id: :serial, force: :cascade do |t|
@@ -896,8 +899,6 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
   end
 
-<<<<<<< HEAD
-=======
   create_table "student_coaches", force: :cascade do |t|
     t.integer "studentId", null: false
     t.integer "coachId", null: false
@@ -907,7 +908,6 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
     t.index ["studentId", "coachId"], name: "index_student_coaches_on_studentId_and_coachId", unique: true
   end
 
->>>>>>> 0e554f6caa7500b21851490536b3656f018fda5f
   create_table "user_actions", force: :cascade do |t|
     t.integer "userId"
     t.integer "count"
@@ -985,10 +985,7 @@ ActiveRecord::Schema.define(version: 2019_12_23_131103) do
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
   add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
-<<<<<<< HEAD
-=======
   add_foreign_key "student_coaches", "\"User\"", column: "studentId"
   add_foreign_key "student_coaches", "admin_users", column: "coachId"
->>>>>>> 0e554f6caa7500b21851490536b3656f018fda5f
   add_foreign_key "user_actions", "\"User\"", column: "userId"
 end
