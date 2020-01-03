@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_03_044530) do
+ActiveRecord::Schema.define(version: 2020_01_03_052947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -770,8 +770,8 @@ ActiveRecord::Schema.define(version: 2020_01_03_044530) do
   create_table "UserTodo", force: :cascade do |t|
     t.integer "userId", null: false
     t.integer "task_type", null: false
-    t.integer "subjectId", null: false
-    t.integer "chapterId", null: false
+    t.integer "subjectId"
+    t.integer "chapterId"
     t.float "hours", null: false
     t.integer "num_questions"
     t.float "hours_taken"
