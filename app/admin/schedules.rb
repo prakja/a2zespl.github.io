@@ -13,12 +13,13 @@ ActiveAdmin.register Schedule do
 # end
 
   remove_filter :scheduleItems
-  permit_params :createdAt, :updatedAt, :name, :description
+  permit_params :createdAt, :updatedAt, :name, :description, :isActive
 
   index do
     id_column
     column :name
     column (:description) { |schedule| raw(schedule.description) }
+    toggle_bool_column :isActive
     actions
   end
 
@@ -27,6 +28,7 @@ ActiveAdmin.register Schedule do
       render partial: 'tinymce'
       f.input :name, as: :string
       f.input :description
+      f.input :isActive
     end
     f.actions
   end

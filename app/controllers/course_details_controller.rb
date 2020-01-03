@@ -9,7 +9,7 @@ class CourseDetailsController < ApplicationController
     end
     @course_id = params.require(:courseId)
     @course = Course.includes(subjects: :topics).find(@course_id)
-    
+
     @course_subjects = @course.subjects
 
     @course_topics = []
@@ -19,11 +19,15 @@ class CourseDetailsController < ApplicationController
 
     @course_topics_subTopics = {}
     @course_topics_videos = {}
+    @course_topics_english_videos = {}
+    @course_topics_hinglish_videos = {}
     @course_topics_questions = {}
 
     @course_videos_count = 0
     @course_questions_count = 0
-    @course_subTopics_count = 0  
+    @course_subTopics_count = 0
+    @course_english_videos_count = 0
+    @course_hinglish_videos_count = 0
 
 
 
@@ -35,10 +39,12 @@ class CourseDetailsController < ApplicationController
       # @course_videos += videos
       # @course_questions += questions
       # @course_subTopics += subtopics
-    
+
       @course_topics_videos[topic.id] = topic.videos.count
       @course_topics_questions[topic.id] = topic.questions.count
       @course_topics_subTopics[topic.id] = topic.subTopics.count
+      @course_topics_english_videos[topic.id] = topic.videos.where(language: 'english').count.to_s + ' (' + Time.at(topic.videos.where(language: 'english').sum(:duration)).utc.strftime("%H:%M:%S").to_s + ') '
+      @course_topics_hinglish_videos[topic.id] = topic.videos.where(language: 'hinglish').count.to_s + ' (' + Time.at(topic.videos.where(language: 'hinglish').sum(:duration)).utc.strftime("%H:%M:%S").to_s + ') '
 
       @course_subTopics_count += @course_topics_subTopics[topic.id]
     end
@@ -53,15 +59,15 @@ class CourseDetailsController < ApplicationController
     @paidUser = params[:paidUser] && params[:paidUser] === "false" ? false : true
     begin
       @users = nil
-      if @paidUser === true  
+      if @paidUser === true
         @users = User.connection.select_all("SELECT \"UVS\".\"userId\" AS \"uUserId\", \"totalVideos\", \"UserCourse\".\"courseId\", \"UserCourse1\".\"courseId\", \"UserProfile\".\"displayName\",\"User\".\"id\" AS \"userId\",\"User\".\"email\" AS \"email\",\"User\".\"phone\" AS \"phone\",\"UserProfile\".\"displayName\" AS \"displayName\",\"UserProfile\".\"phone\" AS \"uphone\",\"UserProfile\".\"email\" AS \"uemail\" FROM (SELECT \"UserVideoStat\".\"userId\" , COUNT (\"UserVideoStat\".\"userId\") AS \"totalVideos\" FROM \"UserVideoStat\" WHERE \"UserVideoStat\".\"videoId\" IN (SELECT \"ChapterVideo\".\"videoId\" FROM \"Subject\",\"Course\",\"SubjectChapter\",\"ChapterVideo\" WHERE  \"ChapterVideo\".\"chapterId\" = \"SubjectChapter\".\"chapterId\" AND \"SubjectChapter\".\"subjectId\" = \"Subject\".\"id\" AND \"Subject\".\"courseId\" = \"Course\".\"id\" AND \"Course\".\"id\" = 149 )  GROUP BY \"UserVideoStat\".\"userId\") AS \"UVS\" LEFT OUTER JOIN \"UserCourse\" ON \"UserCourse\".\"userId\" = \"UVS\".\"userId\" AND \"UserCourse\".\"courseId\" = 8 LEFT OUTER JOIN \"UserCourse\" AS \"UserCourse1\" ON \"UserCourse1\".\"userId\" = \"UVS\".\"userId\"  LEFT OUTER JOIN \"UserProfile\" ON \"UserProfile\".\"userId\" = \"UVS\".\"userId\"  LEFT OUTER JOIN \"User\" ON \"UVS\".\"userId\" = \"User\".\"id\" WHERE \"UserCourse\".\"courseId\" IS  NULL AND \"UserCourse1\".\"courseId\" IS NOT NULL ORDER BY \"totalVideos\" DESC");
       else
         @users = User.connection.select_all("SELECT \"UVS\".\"userId\" AS \"uUserId\", \"totalVideos\", \"UserCourse\".\"courseId\", \"UserCourse1\".\"courseId\", \"UserProfile\".\"displayName\",\"User\".\"id\" AS \"userId\",\"User\".\"email\" AS \"email\",\"User\".\"phone\" AS \"phone\",\"UserProfile\".\"displayName\" AS \"displayName\",\"UserProfile\".\"phone\" AS \"uphone\",\"UserProfile\".\"email\" AS \"uemail\" FROM (SELECT \"UserVideoStat\".\"userId\" , COUNT (\"UserVideoStat\".\"userId\") AS \"totalVideos\" FROM \"UserVideoStat\" WHERE \"UserVideoStat\".\"videoId\" IN (SELECT \"ChapterVideo\".\"videoId\" FROM \"Subject\",\"Course\",\"SubjectChapter\",\"ChapterVideo\" WHERE  \"ChapterVideo\".\"chapterId\" = \"SubjectChapter\".\"chapterId\" AND \"SubjectChapter\".\"subjectId\" = \"Subject\".\"id\" AND \"Subject\".\"courseId\" = \"Course\".\"id\" AND \"Course\".\"id\" = 149 )  GROUP BY \"UserVideoStat\".\"userId\") AS \"UVS\" LEFT OUTER JOIN \"UserCourse\" ON \"UserCourse\".\"userId\" = \"UVS\".\"userId\" AND \"UserCourse\".\"courseId\" = 8 LEFT OUTER JOIN \"UserCourse\" AS \"UserCourse1\" ON \"UserCourse1\".\"userId\" = \"UVS\".\"userId\"  LEFT OUTER JOIN \"UserProfile\" ON \"UserProfile\".\"userId\" = \"UVS\".\"userId\"  LEFT OUTER JOIN \"User\" ON \"UVS\".\"userId\" = \"User\".\"id\" WHERE \"UserCourse\".\"courseId\" IS  NULL AND \"UserCourse1\".\"courseId\" IS  NULL ORDER BY \"totalVideos\" DESC");
-      end 
-      
+      end
+
     rescue => exception
-      
+
     end
-    
+
   end
 end
