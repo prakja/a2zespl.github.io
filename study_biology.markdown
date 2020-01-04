@@ -54,3 +54,4 @@ If you know that ‘ATP is ribonucleoside triphosphate’ than you can explain t
 <script>
   document.getElementsByClassName("post-header")[0].style.display = 'none'
 </script>
+<link rel="stylesheet" href="/styles/custom.css">
