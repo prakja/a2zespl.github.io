@@ -20,8 +20,11 @@
 
 title: A2Z ESPL
 email: support@a2zespl.com
+address: A2ZESPL 78, FIRST FLOOR MANAK VIHAR DELHI - 110092
+company: A2Z Educational Services Pvt Ltd
 description: >- # this means to ignore newlines until "baseurl:"
-  This is a description that exists in _config.yml
+A2ZESPL is all about empowering not so privileged yet determined youth with the most powerful tool –
+the right education.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ""
