@@ -50,3 +50,7 @@ Total expected questions: 62
 Students are time and again told to read NCERT to score well in NEET. These chapters do not require more than one reading of the NCERT books. Students also need to attempt questions from various sources to test the understanding of concepts. Also, applying the same concepts, again and again, builds confidence.
 
 If you know that ‘ATP is ribonucleoside triphosphate’ than you can explain the deoxyribonucleotide triphosphates serving a dual purpose in DNA replication. Now can you think what can be used as substrate and source of energy in transcription and what is Sanger’s chain termination method?
+
+<script>
+  document.getElementsByClassName("post-header")[0].style.display = 'none'
+</script>
