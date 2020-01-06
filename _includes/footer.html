@@ -5,9 +5,9 @@
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
-          <li class="p-name"><strog>A2Z Educational Services Pvt Ltd</strog></li>
-          <li class="p-name">78, FIRST FLOOR, MANAK VIHAR, DELHI - 110092</li>
-          <li><a class="u-email" href="mailto:support@a2zespl.com">support@a2zespl.com</a></li>
+          <li class="p-name"><strog>{{ site.title }}</strog></li>
+          <li class="p-name">{{ site.address }}</li>
+          <li><a class="u-email" href="mailto:{{ site.email }}">{{ site.email }}</a></li>
         </ul>
       </div>
 
@@ -23,8 +23,7 @@
       </div>
 
       <div class="footer-col footer-col-3">
-        <p>A2ZESPL is all about empowering not so privileged yet determined youth with the most powerful tool –
-          the right education.</p>
+        <p>{{ site.description }}</p>
       </div>
     </div>
 
