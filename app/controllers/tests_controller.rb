@@ -21,10 +21,10 @@ class TestsController < ApplicationController
   end
 
   def add_question
-    # if not current_admin_user
-    #   redirect_to "/admin/login"
-    #   return
-    # end
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
 
     @testId = params[:testId]
     @test = Test.where(id: @testId).first
