@@ -56,12 +56,12 @@
 
     <div style="margin: 8px">
       <p>Add video to answer</p>
-      <input id="select_video" list="videos">
-      <datalist id="videos">
-        <%= Video.neetprep_course.pluck("id", "name").each do |video| %>
-          <option value="<%= video %>">
+      <select id="videos">
+        <option value=''>Select Video</option>
+        <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
+          <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
         <% end %>
-      </datalist>
+      </select>
       <button onclick="addVideo()">Add selected video</button>
     </div>
 
@@ -178,8 +178,12 @@ tinymce.init({
 <div style="text-align: center">
   <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
 <script>
+
+$(function () {
+  $("select").select2();
+});
 
 var loader = document.getElementById("loader");
 var audioButton = document.getElementById("audio_button");
@@ -361,8 +365,8 @@ function insertIntoTiny(url) {
 }
 
 function addVideo() {
-  var video_id = window.document.getElementById('select_video').value.split(',')[0].replace('[','');
-  var video_name = document.getElementById('select_video').value.split(',')[1].replace(']','').trim();
+  let video_id = $("#videos option:selected").val().split(',')[0].replace('[','');
+  var video_name = $("#videos option:selected").val().split(',')[1].replace(']','').trim();
   this.tinyMCE.editors[0].execCommand('mceInsertContent', false, '<a href="https://www.neetprep.com/video-class/' + video_id + '">' + video_name + '</a>');
 }
 </script>
