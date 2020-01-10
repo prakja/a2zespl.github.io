@@ -15,8 +15,8 @@ class AdminUser < ApplicationRecord
     AdminUser.where(role: 'faculty').pluck("email")
   end
 
-  def self.distinct_faculty_email_id
-    AdminUser.where(role: 'faculty').pluck("email", "id")
+  def self.distinct_email_id
+    AdminUser.pluck("email", "id")
   end
 
   def before_create_admin_user
