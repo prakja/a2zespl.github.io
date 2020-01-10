@@ -97,8 +97,8 @@ class QuestionsController < ApplicationController
         @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
       end
 
-      @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil ]
+      @testQuestions.each_with_index do |question, index|
+        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
       end
     rescue => exception
 

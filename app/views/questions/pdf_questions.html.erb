@@ -21,7 +21,7 @@
 <div style="margin: 32px">
   <% @questions_data.each do |key, value| %>
     <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-      <h4><b><%= raw('Question: <a target="_blank" href="/questions/add_explanation/' + key.to_s + '">(' + key.to_s + ')</a>' + " | correct percentage: " + value[2].round(2).to_s + " %") %></b></h4>
+      <h4><b><%= raw('Question ' + key.to_s + ' : <a target="_blank" href="https://admin1.neetprep.com/admin/questions/' + key.to_s + '/edit">(' + 'Edit Question' + ')</a>'  + ' : <a target="_blank" href="/questions/add_explanation/' + key.to_s + '">(' + 'Add Audio Explanation' + ')</a>' + " | correct percentage: " + value[2].round(2).to_s + " %") %></b></h4>
       <h3 style="margin-top: -2px"><%= raw(value[0]) %></h3>
       <h3>Correct Answer: <%= value[3].to_i + 1 %></h3>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
