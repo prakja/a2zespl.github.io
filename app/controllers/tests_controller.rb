@@ -35,6 +35,22 @@ class TestsController < ApplicationController
     end
   end
 
+  def add_sequence
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @testId = params[:testId]
+    @test = Test.where(id: @testId).first
+    @questions_data = ""
+
+    @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
+    @testQuestions.each do |question|
+      @questions_data += question.id.to_s + ","
+    end
+  end
+
   def getTestQuestionsList
     @questions_data = {}
     @testId = params.require(:testId)
@@ -70,6 +86,25 @@ class TestsController < ApplicationController
 
       if @sequenceId != ""
         Question.where('id IN (?)', @questionIds).update_all(sequenceId: @sequenceId)
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+
+    end
+  end
+
+  def addTestQuestionSequence
+    begin
+      @sequenceIds = params[:sequenceIds]
+      @questionIds = params[:questionIds]
+
+      @questionIds.each_with_index do |questionId, index|
+        Question.find(questionId).update_column(:sequenceId, @sequenceIds[index])
       end
 
       respond_to do |format|

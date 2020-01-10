@@ -1,0 +1,56 @@
+<body>
+  <div style="margin: 32px">
+    <%= raw(@test.name) %>
+  </div>
+  <div style="margin: 32px">
+    <div>
+      Question Ids:
+      <textarea placeholder="directly paste question ids (Required format : 1,2,3,4,5) ..." id="selectedQuestionIds"><%= raw(@questions_data.gsub(/(^,)|(,$)/, "")) %></textarea>
+    </div>
+    <br/></br>
+    <div>
+      Sequence Ids:
+      <textarea placeholder="directly paste sequence ids (Required format : 1,2,3,4,5) ..." id="selectedSequenceIds"></textarea>
+    </div>
+    <br/></br>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="addTestQuestionSequence()">Link Question's Sequence</button>
+    </div>
+    <br/></br>
+  </div>
+  <script type="text/javascript">
+
+    function addTestQuestionSequence() {
+      let questionIds = $("#selectedQuestionIds").val();
+      let sequenceIds = $("#selectedSequenceIds").val();
+      var questionIdsArray = questionIds.split(",");
+      var sequenceIdsArray = sequenceIds.split(",");
+      let testId = '<%= @test.id %>';
+      if (questionIds == ""){
+        alert('Questions Ids Empty');
+        return
+      }
+      if (sequenceIds == ""){
+        alert('Sequence Ids Empty');
+        return
+      }
+      if (questionIdsArray.length != sequenceIdsArray.length){
+        alert('Question Ids count ' + questionIdsArray.length + ' and Sequence Ids count ' + sequenceIdsArray.length + ' is not same');
+        return
+      }
+      let url = window.location.origin + "/tests/addTestQuestionSequence";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIdsArray,
+          "testId": testId,
+          "sequenceIds": sequenceIdsArray
+        }
+      }).done (function (data) {
+        alert("done");
+      });
+    }
+
+  </script>
+</body>
