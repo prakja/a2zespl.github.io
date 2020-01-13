@@ -19,6 +19,10 @@ class AdminUser < ApplicationRecord
     AdminUser.pluck("email", "id")
   end
 
+  def self.distinct_user_id
+    AdminUser.pluck("email", "userId")
+  end
+
   def before_create_admin_user
     if self.email.blank? or self.name.blank?
       return

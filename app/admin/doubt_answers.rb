@@ -2,7 +2,8 @@ ActiveAdmin.register DoubtAnswer do
   permit_params :content, :deleted, :imgUrl
   remove_filter :doubt, :user
 
-  filter :userId_eq, as: :number, label: "User ID"
+  # filter :userId_eq, as: :number, label: "User ID"
+  filter :userId_eq, as: :searchable_select, label: "Faculty", :collection => AdminUser.distinct_user_id
   filter :doubtId_eq, as: :number, label: "Doubt ID"
   filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
