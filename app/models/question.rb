@@ -2,6 +2,7 @@ class Question < ApplicationRecord
   before_save :default_values
   def default_values
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
+    self.level = nil if self.level.blank?
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
