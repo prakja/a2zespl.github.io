@@ -84,6 +84,10 @@ class Question < ApplicationRecord
     Question.connection.select_all("select distinct \"type\" from \"Question\"")
   end
 
+  def self.distinct_level
+    Question.connection.select_all("select distinct \"level\" from \"Question\"")
+  end
+
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name]
   end

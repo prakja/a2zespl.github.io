@@ -6,7 +6,7 @@ ActiveAdmin.register Course do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Course" do
       f.input :name
-      f.input :description
+      f.input :description, as: :quill_editor
       f.input :package
       f.input :fee
       f.input :public

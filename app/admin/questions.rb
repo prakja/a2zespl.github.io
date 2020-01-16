@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests
-  permit_params :question, :correctOptionIndex, :sequenceId, :explanation, :type, :deleted, :testId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  permit_params :question, :correctOptionIndex, :sequenceId, :explanation, :type, :level, :deleted, :testId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -32,6 +32,7 @@ ActiveAdmin.register Question do
   filter :subject_name, as: :select, collection: -> {Subject.subject_names}, label: "Subject"
   filter :tests
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
+  filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
   filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   # brings back the default filters
@@ -101,6 +102,7 @@ ActiveAdmin.register Question do
         question.tests
       end
       row :type
+      row :level
       row :sequenceId
     end
   end
@@ -150,6 +152,7 @@ ActiveAdmin.register Question do
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topics.length > 0 ? question.topics.map(&:id) : [])
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
+      f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :sequenceId
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
