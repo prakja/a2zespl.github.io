@@ -8,6 +8,7 @@ class Payment < ApplicationRecord
   scope :cash_payments, -> {unscope(:where).where(paymentMode: 'cash')}
   scope :direct_payments, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil)}
   scope :direct_payments_test_series, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 31)}
+  scope :direct_payments_test_series, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 253)}
 
   validates_presence_of  :amount, :paymentMode
 
