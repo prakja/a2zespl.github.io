@@ -3,7 +3,7 @@ ActiveAdmin.register FcmToken do
 batch_action :notify, form: {
   title: :text,
   message: :textarea,
-  type: ["", "ExternalWebsite", "InternalWebsite"],
+  type: ["", "ExternalWebsite", "InternalWebsite", "MorningSchedule", "EveningSchedule", "DoubtAnswer", "ContinueTrial", "ContactCounsellor", "ViewPayment", "BuyCourse"],
   redirectUrl: :text,
   imageUrl: :text,
   sendTo: ["Selected", "AllPaid", "AllNonPaid", "AllUsers"]
