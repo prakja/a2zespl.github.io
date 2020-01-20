@@ -1,6 +1,6 @@
-class CreateTargetChapter < ActiveRecord::Migration[5.2]
+class CreateTargetChapterToPublicAgain < ActiveRecord::Migration[5.2]
   def change
-    create_table "TargetChapter" do |t|
+    create_table ("public.TargetChapter") do |t|
       t.integer :subjectId, null: false
       t.integer :chapterId, null: false
       t.datetime :createdAt, null: false
