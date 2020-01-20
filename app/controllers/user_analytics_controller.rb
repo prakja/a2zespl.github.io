@@ -63,23 +63,23 @@ class UserAnalyticsController < ApplicationController
     @mediumQuestionsCorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @mediumQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"').count
     @difficultQuestionsCorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @difficultQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"').count
 
-    @easyQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @easyQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"').count
-    @mediumQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @mediumQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"').count
-    @difficultQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @difficultQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"').count
+    @easyQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @easyQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" != "userAnswer"').count
+    @mediumQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @mediumQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" != "userAnswer"').count
+    @difficultQuestionsIncorrectCount = Answer.where("\"userId\" = ? AND \"questionId\" IN (?) AND \"testAttemptId\" is ?", @userId, @difficultQuestions, nil).joins(:question).where('"Question"."correctOptionIndex" != "userAnswer"').count
 
-    @easyQuestionAccuracy = 0
-    @mediumQuestionAccuracy = 0
-    @difficultQuestionAccuracy = 0
+    @easyQuestionAccuracy = nil
+    @mediumQuestionAccuracy = nil
+    @difficultQuestionAccuracy = nil
 
-    if(@easyQuestionsCorrectCount > 0)
+    if(@easyQuestionsCorrectCount + @easyQuestionsIncorrectCount > 0)
       @easyQuestionAccuracy = 100 * @easyQuestionsCorrectCount / (@easyQuestionsCorrectCount + @easyQuestionsIncorrectCount)
     end
 
-    if(@mediumQuestionsCorrectCount > 0)
+    if(@mediumQuestionsCorrectCount + @mediumQuestionsIncorrectCount > 0)
       @mediumQuestionAccuracy = 100 * @mediumQuestionsCorrectCount / (@mediumQuestionsCorrectCount + @mediumQuestionsIncorrectCount)
     end
 
-    if(@difficultQuestionsCorrectCount > 0)
+    if(@difficultQuestionsCorrectCount + @difficultQuestionsIncorrectCount > 0)
       @difficultQuestionAccuracy = 100 * @difficultQuestionsCorrectCount / (@difficultQuestionsCorrectCount + @difficultQuestionsIncorrectCount)
     end
 
