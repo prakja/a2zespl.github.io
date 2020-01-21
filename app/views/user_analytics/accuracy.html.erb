@@ -4,7 +4,8 @@
       min-width: 300px !important;
     }
     .accuracyData {
-      font-size: 25px;
+      border: 1px solid;
+      padding: 20px;
     }
   </style>
 </head>
@@ -101,7 +102,7 @@
       }).done (function (data) {
         li = "";
         $.each(data, function(key, value) {
-          li += "<li class='accuracyData'><b>" + key + "</b> : " + value + "</li>";
+          li += "<li class='accuracyData'>" + key + "<p><b>Total : </b>" + value["Total"] + "</p>" + "<p><b>Attempted : </b>" + value["Attempted"] + "</p>" + "<p><b>Correct : </b>" + value["Correct"] + "</p>" + "<p><b>Accuracy : </b>" + value["Accuracy"] + "</p>" + "</li>";
         });
         $("#accuracyList").html(li);
       });

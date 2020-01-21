@@ -84,10 +84,27 @@ class UserAnalyticsController < ApplicationController
     end
 
     @accuracy_data = {
-      "Easy Questions Accuracy": @easyQuestionAccuracy,
-      "Medium Questions Accuracy": @mediumQuestionAccuracy,
-      "Difficult Questions Accuracy": @difficultQuestionAccuracy,
+      "Easy" => {
+        "Total": @easyQuestions.length(),
+        "Attempted": @easyQuestionsCorrectCount + @easyQuestionsIncorrectCount,
+        "Correct": @easyQuestionsCorrectCount,
+        "Accuracy": @easyQuestionAccuracy
+      },
+      "Medium" => {
+        "Total": @mediumQuestions.length(),
+        "Attempted": @mediumQuestionsCorrectCount + @mediumQuestionsIncorrectCount,
+        "Correct": @mediumQuestionsCorrectCount,
+        "Accuracy": @mediumQuestionAccuracy
+      },
+      "Difficult" => {
+        "Total": @difficultQuestions.length(),
+        "Attempted": @difficultQuestionsCorrectCount + @difficultQuestionsIncorrectCount,
+        "Correct": @difficultQuestionsCorrectCount,
+        "Accuracy": @difficultQuestionAccuracy
+      }
     }
+
+    p @accuracy_data.to_json
 
     respond_to do |format|
       format.html { render :new }
