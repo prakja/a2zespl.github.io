@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get "user_doubt_counts/stats"
   get "course_details/show"
   get "user_analytics/show"
+  get "user_analytics/accuracy"
+  post "user_analytics/showAccuracy"
   post "user_analytics/populate_user_activites"
   get "questions/pdf_questions"
   get "questions/add_explanation/:id", to: "questions#add_explanation"
