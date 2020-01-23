@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_21_110528) do
+ActiveRecord::Schema.define(version: 2020_01_23_085448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -533,6 +533,17 @@ ActiveRecord::Schema.define(version: 2020_01_21_110528) do
     t.index ["year"], name: "scheduled_task_year"
   end
 
+  create_table "SelfAnalysis", force: :cascade do |t|
+    t.integer "targetChapterId", null: false
+    t.integer "userId", null: false
+    t.string "task"
+    t.text "type", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.datetime "from", null: false
+    t.datetime "to", null: false
+  end
+
   create_table "SequelizeMeta", primary_key: "name", id: :string, limit: 255, force: :cascade do |t|
   end
 
@@ -1014,6 +1025,8 @@ ActiveRecord::Schema.define(version: 2020_01_21_110528) do
   add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
   add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
   add_foreign_key "ScheduleItemUser", "\"User\"", column: "userId", name: "fk_schedule_item_user_user"
+  add_foreign_key "SelfAnalysis", "\"TargetChapter\"", column: "targetChapterId"
+  add_foreign_key "SelfAnalysis", "\"User\"", column: "userId"
   add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "TargetChapter", "\"Subject\"", column: "subjectId"
   add_foreign_key "TargetChapter", "\"Topic\"", column: "chapterId"
