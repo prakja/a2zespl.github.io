@@ -1,0 +1,50 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  };
+</script>
+
+<%
+=begin%>
+ <div style="margin: 32px">
+  <label>Topics :</label>
+  <select name="topic" id="topicList">
+    <option value=''>Select Chapter</option>
+    <% @chapters_data.each do |key, value| %>
+      <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+    <% end %>
+  </select>
+  <button onclick="getChapterQuestions()">Get Questions</button>
+  <h3 style="margin-top: -2px"><%= raw("Total Questions : " + @questions_data.length.to_s) %></h3>
+</div> 
+<%
+=end%>
+
+<div style="margin: 32px">
+  <% @questions_data.each do |key, value| %>
+    <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
+      <h4><b><%= raw('Question ' + key.to_s + " | correct percentage: " + value[0].round(2).to_s + " %") %></b></h4>
+      <h4><%= value[1] %></h4>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+
+  // $(function () {
+  //   $("select").select2();
+  // });
+
+  // function getChapterQuestions() {
+  //   let chapterId = $("#topicList option:selected").val();
+  //   let subject = '<%= @subject %>';
+  //   if (chapterId == null){
+  //     alert('Chapter is not selected');
+  //     return
+  //   }
+  //   window.location = window.location.origin + "/questions/pdf_questions?subject=" + subject + "&topic=" + chapterId;
+  // }
+
+</script>

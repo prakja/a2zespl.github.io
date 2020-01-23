@@ -46,6 +46,10 @@ class Question < ApplicationRecord
     joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" in ('medium','difficult')")
   }
 
+  scope :easy, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"correctPercentage\" >= 60")
+  }
+
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
   scope :physics_mcqs_difficult, ->(topic_id) {

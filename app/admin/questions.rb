@@ -140,6 +140,22 @@ ActiveAdmin.register Question do
     link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
   end
 
+  action_item :see_physics_easy_questions, only: :index do
+    link_to 'Physics easy Questions', '../../questions/easy_questions?subject=physics'
+  end
+
+  action_item :see_chemistry_easy_questions, only: :index do
+    link_to 'Chemistry easy Questions', '../../questions/easy_questions?subject=chemistry'
+  end
+
+  action_item :see_botany_easy_questions, only: :index do
+    link_to 'Botany easy Questions', '../../questions/easy_questions?subject=botany'
+  end
+
+  action_item :see_zoology_easy_questions, only: :index do
+    link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
