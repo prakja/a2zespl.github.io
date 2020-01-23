@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_20_065055) do
+ActiveRecord::Schema.define(version: 2020_01_21_110528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -577,6 +577,8 @@ ActiveRecord::Schema.define(version: 2020_01_20_065055) do
     t.datetime "expiryAt", null: false
     t.boolean "active", default: true
     t.integer "userId", null: false
+    t.datetime "startedAt", null: false
+    t.integer "userCourseId", null: false
   end
 
   create_table "Task", id: :serial, force: :cascade do |t|
