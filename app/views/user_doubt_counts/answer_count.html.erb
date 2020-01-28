@@ -1,0 +1,66 @@
+<div style="padding: 8px">
+  <div style="width: 40%">
+    Email: <input id="faculty_email_input" onchange="uncheck()" list="faculty_email_list">
+    <datalist id="faculty_email_list">
+      <% @admin_users.each do |admin_user| %>
+        <option value="<%= admin_user.email %>">
+      <% end %>
+    </datalist>
+    <p></p>
+    Start Date: <input onchange="uncheck()" id="start" type="date" value="Date.now()">
+    End Date: <input onchange="uncheck()" id="end" type="date">
+    <p></p>
+    <input type="checkbox" id="today_checkbox" name="today" onchange="setEndDate(this)"> One Day
+    <p></p>
+    <button type="button" onclick="getCount()">Get</button>
+  </div>
+
+  <p id=count_p>Enter detail and press Get</p>
+</div>
+<script>
+  console.log("Starting");
+  function setEndDate(e) {
+    if ($("#start").val() && $("#today_checkbox").is(":checked")) {
+      let date = new Date($("#start").val());
+      date.setDate(date.getDate() + 1);
+      $("#end").val(date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) +'-' + date.getDate().toString().padStart(2, 0));
+    }
+  }
+  function uncheck() {
+    $('#today_checkbox').prop('checked', false);
+  }
+  function getCount(params) {
+    if (!$("#faculty_email_input").val()){
+      alert("Email missing");
+      return;
+    }
+    if (!$("#start").val()){
+      alert("Start Date missing");
+      return;
+    }
+    if (!$("#end").val()){
+      alert("End Date missing");
+      return;
+    }
+    $("#count_p").html("Getting");
+
+    var email = $("#faculty_email_input").val();
+    var start_date = $("#start").val();
+    var end_date = $("#end").val();
+
+    $.ajax({
+        type: "POST",
+        url: "/admin/get_count",
+        dataType: "json",
+        data: {
+          "email": email,
+          "start_date": start_date,
+          "end_date": end_date
+        }
+      }).done (function (data) {
+        $("#count_p").html("Count: <a target='_blank' href='/admin/doubt_answers?q[userId_eq]=" + data.userId + "&q[createdAt_gteq_datetime]=" + start_date + "&q[createdAt_lt_datetime]=" + end_date + "'>" + data.value + "</a> (<- click there to see the answers on admin)");
+      }).fail(function (data) {
+        
+      });
+  }
+</script>

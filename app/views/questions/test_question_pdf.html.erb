@@ -13,11 +13,11 @@
 <div style="margin: 32px">
   <% @questions_data.each do |key, value| %>
     <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-      <h4><b><%= raw('Question: (' + key.to_s + ')')  + if value[2] != nil
-        " | correct percentage > " +  value[2].round(2).to_s + " %"
+      <h4><b><%= raw( value[4].to_s + ' - Question: (' + key.to_s + ')' + ' : <a target="_blank" href="https://admin1.neetprep.com/admin/questions/' + key.to_s + '/edit">(' + 'Edit Question' + ')</a>'  + ' : <a target="_blank" href="/questions/add_explanation/' + key.to_s + '">(' + 'Add Audio Explanation' + ')</a>' )  + if value[2] != nil
+        " | correct percentage : " +  value[2].round(2).to_s + " %"
        end  %></b></h4>
       <h3 style="margin-top: -2px"><%= raw(value[0]) %></h3>
-      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' +  if value[3] != nil 
+      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' +  if value[3] != nil
        (value[3] + 1).to_s
       else
        "-"

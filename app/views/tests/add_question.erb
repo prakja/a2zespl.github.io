@@ -22,6 +22,15 @@
       Question Ids:
       <textarea placeholder="select questions from test or directly paste question ids (Required format : 1,2,3,4,5) ..." id="selectedIds"></textarea>
     </div>
+    <p>If you are adding questions from subjcet test then select sequenceId from  below (1 for chemistry and 2 for physics)</p>
+    <select name="sequence" id="sequenceList">
+      <option value=''>Sequence Id</option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+    <br/></br>
     <div style="margin-bottom: 30px; margin-top: 15px">
       <button style="width: 300px; padding: 15px" onclick="addTestQuestions()">Add Selected Questions</button>
     </div>
@@ -65,7 +74,7 @@
       }).done (function (data) {
         li = "";
         $.each(data, function(key, value) {
-          li += "<li class='questionData'><input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id= " + key + "></input><span>(" + key + ")</span><label class='questionBox' for="+ key +">" + value[0] + "</label></li>";
+          li += "<li class='questionData'><input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id= " + key + "></input><span>(" + key + ") sequenceId: " + value[1]  + "</span><label class='questionBox' for="+ key +">" + value[0] + "</label></li>";
         });
         $("#questionsList").html(li);
       });
@@ -96,6 +105,7 @@
       let questionIds = $("#selectedIds").val();
       var questionIdsArray = questionIds.split(",");
       let testId = '<%= @test.id %>';
+      let selectedSequenceId = $('#sequenceList').val();
       if (questionIds == ""){
         alert('Questions not selected');
         return
@@ -106,7 +116,8 @@
         url: url,
         data: {
           "questionIds": questionIdsArray,
-          "testId": testId
+          "testId": testId,
+          "sequenceId": selectedSequenceId
         }
       }).done (function (data) {
         alert("done");

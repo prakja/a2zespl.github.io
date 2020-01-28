@@ -1,5 +1,6 @@
 class UserDoubtCountsController < ApplicationController
   before_action :set_user_doubt_count, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /user_doubt_counts
   # GET /user_doubt_counts.json
@@ -37,5 +38,22 @@ class UserDoubtCountsController < ApplicationController
         @doubts_subject_time[subject] = doubts
       end
     end
-  end  
+  end
+
+  def answer_count
+    @admin_users = AdminUser.where(role: "faculty")
+  end
+
+  def get_count
+    email = params[:email]
+    admin_user = AdminUser.where(email: email).first
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+    doubt_answers_count = DoubtAnswer.where(userId: admin_user.userId, createdAt: start_date...end_date).count
+    response = {
+      value: doubt_answers_count,
+      userId: admin_user.userId
+    }
+    render json: response, :status => 200
+  end
 end

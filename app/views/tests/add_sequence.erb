@@ -1,0 +1,104 @@
+<body>
+  <div style="margin: 32px">
+    <%= raw(@test.name) %>
+  </div>
+  <div style="margin: 32px">
+    <div>
+      Question Ids:
+      <textarea placeholder="directly paste question ids (Required format : 1,2,3,4,5) ..." id="selectedQuestionIds"><%= raw(@questions_data.gsub(/(^,)|(,$)/, "")) %></textarea>
+    </div>
+    <br/></br>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="useSequenceSeries()">Use Sequence (1,2,3,4,5....)</button>
+      <select name="sequence" id="sequenceList">
+        <option value=''>Sequence Id</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <button style="width: 300px; padding: 15px" onclick="useGivenSequence()">Use Selected Sequence</button>
+    </div>
+    <div>
+      Sequence Ids:
+      <textarea placeholder="directly paste sequence ids (Required format : 1,2,3,4,5) ..." id="selectedSequenceIds"></textarea>
+    </div>
+    <br/></br>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="addTestQuestionSequence()">Link Question's Sequence</button>
+    </div>
+    <br/></br>
+  </div>
+  <script type="text/javascript">
+
+    function useGivenSequence() {
+      let selectedSequenceId = $('#sequenceList').val();
+      if (selectedSequenceId == null || selectedSequenceId == '') {
+        alert('Please Select Sequence From list');
+        return
+      } else {
+        let questionIds = $("#selectedQuestionIds").val();
+        let questionIdsArray = questionIds.split(",");
+
+        let sequenceIdsSeriesWise = '';
+
+        if(questionIdsArray.length > 0) {
+          for(i=0; i < questionIdsArray.length; i++) {
+            sequenceIdsSeriesWise += selectedSequenceId + ',';
+          }
+        }
+
+        $("#selectedSequenceIds").val(sequenceIdsSeriesWise.replace(/(^,)|(,$)/g, ""));
+      }
+    }
+
+    function useSequenceSeries() {
+      let questionIds = $("#selectedQuestionIds").val();
+      let questionIdsArray = questionIds.split(",");
+
+      let sequenceIdsSeriesWise = '';
+
+
+      if(questionIdsArray.length > 0) {
+        for(i=1; i < questionIdsArray.length + 1; i++) {
+          sequenceIdsSeriesWise += i + ',';
+        }
+      }
+
+      $("#selectedSequenceIds").val(sequenceIdsSeriesWise.replace(/(^,)|(,$)/g, ""));
+    }
+
+    function addTestQuestionSequence() {
+      let questionIds = $("#selectedQuestionIds").val();
+      let sequenceIds = $("#selectedSequenceIds").val();
+      var questionIdsArray = questionIds.split(",");
+      var sequenceIdsArray = sequenceIds.split(",");
+      let testId = '<%= @test.id %>';
+      if (questionIds == ""){
+        alert('Questions Ids Empty');
+        return
+      }
+      if (sequenceIds == ""){
+        alert('Sequence Ids Empty');
+        return
+      }
+      if (questionIdsArray.length != sequenceIdsArray.length){
+        alert('Question Ids count ' + questionIdsArray.length + ' and Sequence Ids count ' + sequenceIdsArray.length + ' is not same');
+        return
+      }
+      let url = window.location.origin + "/tests/addTestQuestionSequence";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIdsArray,
+          "testId": testId,
+          "sequenceIds": sequenceIdsArray
+        }
+      }).done (function (data) {
+        alert("done");
+      });
+    }
+
+  </script>
+</body>

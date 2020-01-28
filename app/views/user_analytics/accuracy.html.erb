@@ -1,0 +1,112 @@
+<head>
+  <style>
+    .select2-container {
+      min-width: 300px !important;
+    }
+    .accuracyData {
+      border: 1px solid;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw(@userName) %>
+  </div>
+  <div style="margin: 32px">
+    <label>Courses :</label>
+    <select name="course" id="courseList" onchange="onCourseChange()">
+      <option value=''>Select Course</option>
+      <% @courses_data.each do |key, value| %>
+        <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+      <% end %>
+    </select>
+    <br/><br/>
+    <label>Subjects :</label>
+    <select name="subject" id="subjectList" onchange="onSubjectChange()"></select>
+    <br/><br/>
+    <label>Chapters :</label>
+    <select name="chapter" id="chapterList"></select>
+  </div>
+  <div style="margin: 32px">
+    <button onclick="showAccuracy()">Show Accuracy</button>
+  </div>
+  <div style="margin: 32px">
+    <ul id="accuracyList"></ul>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+  <script type="text/javascript">
+
+    $(function () {
+      $("select").select2();
+    });
+
+    function onCourseChange() {
+      $("#subjectList").html("");
+      $("#chapterList").html("");
+      let url = window.location.origin + "/videos/getSubjectsList";
+      let courseId = $('#courseList').val();
+      $.ajax({
+        type: "POST",
+        url: url,
+        dataType: "json",
+        data: {
+          "courseId": courseId
+        }
+      }).done (function (data) {
+        option = "<option value=''>Select Subject</option>";
+        $.each(data, function(key, value) {
+          option += "<option value='" + key + "'>" + value[0] + "</option>";
+        });
+        $("#subjectList").html(option);
+      });
+    }
+
+    function onSubjectChange() {
+      $("#chapterList").html("");
+      let url = window.location.origin + "/videos/getChaptersList";
+      let subjectId = $('#subjectList').val();
+      $.ajax({
+        type: "POST",
+        url: url,
+        dataType: "json",
+        data: {
+          "subjectId": subjectId
+        }
+      }).done (function (data) {
+        option = "<option value=''>Select Chapter</option>";
+        $.each(data, function(key, value) {
+          option += "<option value='" + key + "'>" + value[0] + "</option>";
+        });
+        $("#chapterList").html(option);
+      });
+    }
+
+    function showAccuracy() {
+      $("#accuracyList").html("");
+      let chapterId = $("#chapterList option:selected").val();
+      let userId = '<%= @user.id %>';
+      if (chapterId == null){
+        alert('Chapter is not selected');
+        return
+      }
+      let url = window.location.origin + "/user_analytics/showAccuracy";
+      $.ajax({
+        type: "POST",
+        url: url,
+        dataType: "json",
+        data: {
+          "chapterId": chapterId,
+          "userId": userId
+        }
+      }).done (function (data) {
+        li = "";
+        $.each(data, function(key, value) {
+          li += "<li class='accuracyData'>" + key + "<p><b>Total : </b>" + value["Total"] + "</p>" + "<p><b>Attempted : </b>" + value["Attempted"] + "</p>" + "<p><b>Correct : </b>" + value["Correct"] + "</p>" + "<p><b>Accuracy : </b>" + value["Accuracy"] + "</p>" + "</li>";
+        });
+        $("#accuracyList").html(li);
+      });
+    }
+
+  </script>
+</body>

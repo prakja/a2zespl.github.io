@@ -2,6 +2,7 @@ class Question < ApplicationRecord
   before_save :default_values
   def default_values
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
+    self.level = nil if self.level.blank?
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
@@ -45,6 +46,10 @@ class Question < ApplicationRecord
     joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" in ('medium','difficult')")
   }
 
+  scope :easy, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"correctPercentage\" >= 60")
+  }
+
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
   scope :physics_mcqs_difficult, ->(topic_id) {
@@ -82,6 +87,10 @@ class Question < ApplicationRecord
 
   def self.distinct_type
     Question.connection.select_all("select distinct \"type\" from \"Question\"")
+  end
+
+  def self.distinct_level
+    Question.connection.select_all("select distinct \"level\" from \"Question\"")
   end
 
   def self.ransackable_scopes(_auth_object = nil)

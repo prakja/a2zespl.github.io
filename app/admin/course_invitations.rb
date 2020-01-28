@@ -32,6 +32,10 @@ ActiveAdmin.register CourseInvitation do
     end
   end
 
+  action_item :send_multiple_course_invitations, only: :index do
+    link_to 'Send Multiple Course Invitations', '../../course_invitations/multiple_courses'
+  end
+
   action_item :resend_course_invitation, only: :show do
     link_to 'Resend Course Invite', resource.id.to_s + '/resendinvite'
   end

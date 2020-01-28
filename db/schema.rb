@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_03_052947) do
+ActiveRecord::Schema.define(version: 2020_01_23_085448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -62,6 +62,34 @@ ActiveRecord::Schema.define(version: 2020_01_03_052947) do
     t.index ["questionId"], name: "bookmark_question_question_id"
     t.index ["userId", "questionId"], name: "bookmarkquestion_user_id_question_id", unique: true
     t.index ["userId"], name: "bookmark_question_user_id"
+  end
+
+  create_table "CAMPAIGN_PERFORMANCE_REPORT", primary_key: "__sdc_primary_key", id: :text, force: :cascade do |t|
+    t.datetime "_sdc_batched_at"
+    t.text "_sdc_customer_id"
+    t.datetime "_sdc_extracted_at"
+    t.datetime "_sdc_received_at"
+    t.datetime "_sdc_report_datetime"
+    t.bigint "_sdc_sequence"
+    t.bigint "_sdc_table_version"
+    t.bigint "avgCost"
+    t.bigint "bidStrategyID"
+    t.text "bidStrategyType"
+    t.bigint "budget"
+    t.bigint "budgetID"
+    t.text "campaign"
+    t.bigint "campaignID"
+    t.text "campaignState"
+    t.text "campaignTrialType"
+    t.float "convRate"
+    t.float "conversions"
+    t.bigint "cost"
+    t.bigint "costConv"
+    t.text "currency"
+    t.datetime "day"
+    t.bigint "impressions"
+    t.float "interactionRate"
+    t.bigint "interactions"
   end
 
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
@@ -505,6 +533,17 @@ ActiveRecord::Schema.define(version: 2020_01_03_052947) do
     t.index ["year"], name: "scheduled_task_year"
   end
 
+  create_table "SelfAnalysis", force: :cascade do |t|
+    t.integer "targetChapterId", null: false
+    t.integer "userId", null: false
+    t.string "task"
+    t.text "type", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.datetime "from", null: false
+    t.datetime "to", null: false
+  end
+
   create_table "SequelizeMeta", primary_key: "name", id: :string, limit: 255, force: :cascade do |t|
   end
 
@@ -538,6 +577,19 @@ ActiveRecord::Schema.define(version: 2020_01_03_052947) do
     t.index ["chapterId"], name: "subject_chapter_chapter_id"
     t.index ["deleted"], name: "subject_chapter_deleted"
     t.index ["subjectId"], name: "subject_chapter_subject_id"
+  end
+
+  create_table "TargetChapter", force: :cascade do |t|
+    t.integer "subjectId", null: false
+    t.integer "chapterId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "goal", null: false
+    t.datetime "expiryAt", null: false
+    t.boolean "active", default: true
+    t.integer "userId", null: false
+    t.datetime "startedAt", null: false
+    t.integer "userCourseId", null: false
   end
 
   create_table "Task", id: :serial, force: :cascade do |t|
@@ -860,6 +912,13 @@ ActiveRecord::Schema.define(version: 2020_01_03_052947) do
     t.index ["userId"], name: "vote_user_id"
   end
 
+  create_table "_sdc_rejected", id: false, force: :cascade do |t|
+    t.text "record"
+    t.text "reason"
+    t.text "table_name"
+    t.datetime "_sdc_rejected_at"
+  end
+
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -966,7 +1025,12 @@ ActiveRecord::Schema.define(version: 2020_01_03_052947) do
   add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
   add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
   add_foreign_key "ScheduleItemUser", "\"User\"", column: "userId", name: "fk_schedule_item_user_user"
+  add_foreign_key "SelfAnalysis", "\"TargetChapter\"", column: "targetChapterId"
+  add_foreign_key "SelfAnalysis", "\"User\"", column: "userId"
   add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "TargetChapter", "\"Subject\"", column: "subjectId"
+  add_foreign_key "TargetChapter", "\"Topic\"", column: "chapterId"
+  add_foreign_key "TargetChapter", "\"User\"", column: "userId"
   add_foreign_key "TestQuestion", "\"Question\"", column: "questionId", name: "fk_test_question_questionid"
   add_foreign_key "TestQuestion", "\"Test\"", column: "testId", name: "fk_test_question_testid"
   add_foreign_key "Topic", "\"Subject\"", column: "subjectId", name: "Topic_subjectId_fkey", on_update: :cascade, on_delete: :cascade

@@ -5,7 +5,7 @@ ActiveAdmin.register StudentCoach do
   filter :studentId_eq, as: :number, label: "Student ID"
   filter :user_email, as: :string, label: "Student Email"
   filter :user_phone, as: :string, label: "Student Phone"
-  filter :coachId_eq, as: :searchable_select, label: "Coach", :collection => AdminUser.distinct_faculty_email_id
+  filter :coachId_eq, as: :searchable_select, label: "Coach", :collection => AdminUser.distinct_email_id
 
   index do
     id_column
@@ -29,7 +29,7 @@ ActiveAdmin.register StudentCoach do
     f.semantic_errors *f.object.errors.keys
     f.inputs "StudentCoach" do
       f.input :studentId, label: "Student Id"
-      f.input :admin_user, input_html: { class: "select2" }, :collection => AdminUser.distinct_faculty_email_id, label: "Coach"
+      f.input :admin_user, input_html: { class: "select2" }, :collection => AdminUser.distinct_email_id, label: "Coach"
       f.input :role, as: :select, :collection => ["PrimaryCoach", "PhysicsCoach", "ChemistryCoach", "BiologyCoach"]
     end
     f.actions

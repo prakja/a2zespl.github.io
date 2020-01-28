@@ -94,6 +94,10 @@ action_item :add_question_from_test, only: :show do
   link_to 'Add Questions from Test', '/tests/add_question/' + resource.id.to_s, target: :_blank
 end
 
+action_item :add_sequence_of_test_questions, only: :show do
+  link_to 'Add Sequence Of Test Questions', '/tests/add_sequence/' + resource.id.to_s, target: :_blank
+end
+
 form do |f|
   f.object.positiveMarks = 4
   f.object.negativeMarks = 1

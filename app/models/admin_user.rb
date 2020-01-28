@@ -9,11 +9,36 @@ class AdminUser < ApplicationRecord
   has_many :doubts, through: :doubt_admins
   has_many :coachStudents, foreign_key: "coachId", class_name: 'StudentCoach'
 
+  before_create :before_create_admin_user
+
   def self.distinct_faculty_name
     AdminUser.where(role: 'faculty').pluck("email")
   end
 
-  def self.distinct_faculty_email_id
-    AdminUser.where(role: 'faculty').pluck("email", "id")
+  def self.distinct_email_id
+    AdminUser.pluck("email", "id")
   end
+
+  def self.distinct_user_id
+    AdminUser.pluck("email", "userId")
+  end
+
+  def before_create_admin_user
+    if self.email.blank? or self.name.blank?
+      return
+    end
+
+    @neetUser = User.where(email: self.email).first
+    if @neetUser
+      p "NEETprep user found"
+      @neetUserProfile = UserProfile.where(userId: @neetUser.id).first
+      @neetUserProfile.displayName = self.name
+      @neetUserProfile.save
+      self.userId = @neetUser.id
+    else
+      p "user not found"
+    end
+
+  end
+
 end

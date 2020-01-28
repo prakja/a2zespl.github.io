@@ -2,7 +2,8 @@ ActiveAdmin.register DoubtAnswer do
   permit_params :content, :deleted, :imgUrl
   remove_filter :doubt, :user
 
-  filter :userId_eq, as: :number, label: "User ID"
+  # filter :userId_eq, as: :number, label: "User ID"
+  filter :userId_eq, as: :searchable_select, label: "Faculty", :collection => AdminUser.where(role: "faculty").distinct_user_id
   filter :doubtId_eq, as: :number, label: "Doubt ID"
   filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
@@ -58,6 +59,10 @@ ActiveAdmin.register DoubtAnswer do
       }
       end
     actions
+  end
+  
+  action_item :see_botany_difficult_questions, only: :index do
+    link_to 'Answer Count', '/admin/answer_count'
   end
 
   form do |f|
