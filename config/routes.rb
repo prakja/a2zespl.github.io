@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   post "user_analytics/populate_user_activites"
   get "questions/pdf_questions"
   get "questions/easy_questions"
+  get "course_invitations/multiple_courses"
+  post "course_invitations/createCourseInvitation"
   get "questions/add_explanation/:id", to: "questions#add_explanation"
   post "questions/update_explanation", to: "questions#update_explanation"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'

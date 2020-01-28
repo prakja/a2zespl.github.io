@@ -1,0 +1,73 @@
+<div style="margin: 32px">
+  <b>Send Course Invitation on Multiple Courses</b>
+</div>
+<div style="margin: 32px">
+  <label>Courses :</label>
+  <select name="course" id="courseList" class='js-example-basic-multiple' multiple="multiple">
+    <option value=''>Select Course</option>
+    <% @courses_data.each do |key, value| %>
+      <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+    <% end %>
+  </select>
+  </br>
+  <label>Name :</label>
+  <input type="text" name="name" id="name"></input></br>
+  <label>Email :</label>
+  <input type="email" name="email" id="email"></input></br>
+  <label>Phone :</label>
+  <input type="phone" name="phone" id="phone"></input>
+  <br>
+  <label>Expiry At :</label>
+  <input type="date" name="expiry" id="expiry"></input>
+  </br>
+  <button onclick="createCourseInvitation()">Send Course Invitation</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+<script type="text/javascript">
+
+  $(function () {
+    $(".js-example-basic-multiple").select2();
+  });
+
+  function createCourseInvitation() {
+    let admin_role = '<%= @current_admin_role %>';
+    let courseIds = $("#courseList").val();
+    let name = $("#name").val();
+    let email = $("#email").val();
+    let phone = $("#phone").val();
+    let expiry = $("#expiry").val();
+
+    let today = new Date();
+    today.setDate(today.getDate() + 3);
+
+    if(phone.length < 10) {
+      alert('phone is less than 10 digit');
+    }
+
+    if (courseIds.length < 1 || name == null || email == null || phone == null || expiry == null){
+      alert('Fill All Details');
+      return
+    }
+
+    if(admin_role == 'sales' && new Date(expiry) > today) {
+      alert('can not send access for more than 2 days');
+    }
+
+    let url = window.location.origin + "/course_invitations/createCourseInvitation";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        "courseIds": courseIds,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "expiry": expiry
+      }
+    }).done (function (data) {
+      alert("done");
+    });
+  }
+
+</script>

@@ -103,7 +103,7 @@ class QuestionsController < ApplicationController
       question.topics.each do |topic|
         topic_list << topic.name
       end
-      @questions_data[question.id] = [question.question_analytic.correctPercentage, topic_list]
+      @questions_data[question.id] = [question.question, question.question_analytic.correctPercentage, topic_list]
     end
   end
 
