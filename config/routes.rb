@@ -38,6 +38,9 @@ Rails.application.routes.draw do
   get "google_ads/report"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
+  get "/admin/answer_count", to: "user_doubt_counts#answer_count"
+  post "/admin/get_count", to: "user_doubt_counts#get_count"
+
   get "/livesession/:id/", to: "group_chats#group"
   get "/teacher/livesession/:id", to: "group_chats#teacher_view"
 

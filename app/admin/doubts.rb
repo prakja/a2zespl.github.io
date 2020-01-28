@@ -32,7 +32,7 @@ ActiveAdmin.register Doubt do
   preserve_default_filters!
 
   batch_action :assign_doubts, form: -> do {
-    assignTo: AdminUser.distinct_faculty_name
+    assignTo: AdminUser.where(role: "faculty").distinct_faculty_name
   } end do |ids, inputs|
     assign_to = inputs['assignTo']
     p ids
