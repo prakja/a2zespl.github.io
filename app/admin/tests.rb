@@ -1,5 +1,5 @@
 ActiveAdmin.register Test do
-permit_params :name, :sections, :description, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
+permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
 remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests
 
 filter :id_eq, as: :number, label: "Test ID"
@@ -115,7 +115,7 @@ form do |f|
     f.input :positiveMarks, label: "Positive Marks", hint: "No '+' sign is required"
     f.input :numQuestions, label: "Number of Questions"
     f.input :exam, as: :select, :collection => ["AIIMS", "NEET", "AIPMT", "JIPMER"], label: "Exam Type"
-    f.input :sections, as: :string, hint: 'Required format for test sections - [["Biology", 1], ["Chemistry", 91], ["Physics", 136]]'
+    f.input :sections, hint: 'Required format for test sections - [["Biology", 1], ["Chemistry", 91], ["Physics", 136]]'
     f.input :startedAt, as: :datetime_picker, label: "Started Test At"
     f.input :expiryAt, as: :datetime_picker, label: "Expire Test At"
     f.input :pdfURL, as: :string
