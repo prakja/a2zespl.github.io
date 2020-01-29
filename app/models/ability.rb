@@ -18,11 +18,11 @@ class Ability
       can :import, Video
     elsif user.role == 'sales'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can [:read], [Payment, CourseInvitation, UserCourse, UserAction]
+      can [:read], [Payment, CourseInvitation, UserCourse, UserAction, User, UserVideoStat]
       can [:create, :read, :update], [CourseInvitation, Delivery]
     elsif user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can [:read], [Payment, UserCourse]
+      can [:read], [Payment, UserCourse, User, UserVideoStat]
       can [:create, :read, :update], [CourseInvitation, Delivery]
     elsif user.role == 'accounts'
       can :read, ActiveAdmin::Page, :name => "Dashboard"

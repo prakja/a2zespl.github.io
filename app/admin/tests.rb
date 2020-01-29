@@ -104,8 +104,8 @@ form do |f|
   f.inputs "Test" do
     render partial: 'tinymce'
     f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"
-    f.input :description
-    f.input :instructions
+    f.input :description, as: :string
+    f.input :instructions, as: :string
     f.input :syllabus
     f.input :durationInMin, label: "Duration in Minutes"
     f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
@@ -115,9 +115,10 @@ form do |f|
     f.input :positiveMarks, label: "Positive Marks", hint: "No '+' sign is required"
     f.input :numQuestions, label: "Number of Questions"
     f.input :exam, as: :select, :collection => ["AIIMS", "NEET", "AIPMT", "JIPMER"], label: "Exam Type"
-    f.input :sections, hint: 'Required format for test sections - [["Physics", 1], ["Chemistry", 20], ["Biology", 40]]'
+    f.input :sections, as: :string, hint: 'Required format for test sections - [["Biology", 1], ["Chemistry", 91], ["Physics", 136]]'
     f.input :startedAt, as: :datetime_picker, label: "Started Test At"
     f.input :expiryAt, as: :datetime_picker, label: "Expire Test At"
+    f.input :pdfURL, as: :string
   end
 
   f.inputs "Additional Information" do
