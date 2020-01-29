@@ -16,6 +16,29 @@
   </div>
 
   <p id=count_p>Enter detail and press Get</p>
+
+  <table style="border: 1px dotted #999999;text-align: center;" cellpadding="2" cellspacing="2">
+    <tr>
+      <td style="border: 1px dotted #999999;text-align: center;">Faculty</td>
+      <% (1.months.ago.midnight.to_date ... 1.day.ago.midnight.to_date).each do |date| %>
+        <td style="border: 1px dotted #999999;text-align: center;"><%= date.strftime("%-d %b") %></td>
+      <% end %>
+    </tr>
+  
+    <% @final_data.each do |key, value| %>
+      <tr>
+        <td style="border: 1px dotted #999999;text-align: center;"><p><%= key %></p></td>
+        <% value.each do |val| %>
+          <% if val != 0 %>
+            <td style="border: 1px dotted #999999;text-align: center;"><%= val %></td>
+          <% else %>
+            <td style="border: 1px dotted #999999;text-align: center;">-</td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
 </div>
 <script>
   console.log("Starting");
