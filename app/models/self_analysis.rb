@@ -1,0 +1,2 @@
+class SelfAnalysis < ApplicationRecord
+end

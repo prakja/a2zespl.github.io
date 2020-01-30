@@ -56,6 +56,57 @@ class QuestionsController < ApplicationController
 
   end
 
+  def easy_questions
+    @subject = params[:subject]
+    @orderBy = params[:order] or 'asc'
+    @limit = params[:limit] or 50
+    @offset = params[:offset] or 1
+    @questions_data = {}
+    @questions = {}
+
+    @subjectListIds = {
+      'physics' => 55,
+      'chemistry' => 54,
+      'botany' => 53,
+      'zoology' => 56
+    }
+
+    if @subject == 'physics'
+      @questions = Question.physics_mcqs.easy.includes(:topics, :question_analytic)
+    elsif @subject == 'chemistry'
+      @questions = Question.chemistry_mcqs.easy.includes(:topics, :question_analytic)
+    elsif @subject == 'botany'
+      @questions = Question.botany_mcqs.easy.includes(:question_analytic)
+    elsif @subject == 'zoology'
+      @questions = Question.zoology_mcqs.easy.includes(:question_analytic)
+    end
+
+    if @orderBy == 'desc'
+      @questions = @questions.order(correctPercentage: :desc)
+    elsif @orderBy == 'asc'
+      @questions = @questions.order(correctPercentage: :asc)
+    end
+
+    @count = @questions.count
+
+    # if @limit
+    #   @questions = @questions.limit(@limit)
+    # end
+
+    # if @offset
+    #   @questions = @questions.offset(@offset)
+    # end
+
+    topic_list = []
+    @questions.each do |question|
+      topic_list = []
+      question.topics.each do |topic|
+        topic_list << topic.name
+      end
+      @questions_data[question.id] = [question.question, question.question_analytic.correctPercentage, topic_list]
+    end
+  end
+
   def update_explanation
     id = params.require(:id)
     new_explanation = params.require(:explanation)
@@ -97,8 +148,8 @@ class QuestionsController < ApplicationController
         @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
       end
 
-      @testQuestions.each do |question|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil ]
+      @testQuestions.each_with_index do |question, index|
+        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
       end
     rescue => exception
 

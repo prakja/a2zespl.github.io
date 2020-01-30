@@ -1,0 +1,2 @@
+class StudentOnboardingEvent < ApplicationRecord
+end

@@ -1,14 +1,15 @@
 class CourseInvitation < ApplicationRecord
-  attr_accessor :admin_user
+   attr_accessor :admin_user
+   attr_accessor :skip_callback
    self.table_name = "CourseInvitation"
    has_paper_trail
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation  :mobileValidate, :course_expiry_not_valid
+   after_validation  :mobileValidate, :course_expiry_not_valid, unless: :skip_callback
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
-   
+
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
 

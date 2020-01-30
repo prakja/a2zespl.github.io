@@ -10,4 +10,8 @@ ActiveAdmin.register UserTodo do
   scope :today
   scope :tomorrow
 
+  scope "My Students" do |student_coach|
+    UserTodo.my_students(current_admin_user.id.to_s)
+  end
+
 end

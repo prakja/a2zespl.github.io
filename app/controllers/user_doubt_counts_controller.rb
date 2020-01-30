@@ -1,5 +1,6 @@
 class UserDoubtCountsController < ApplicationController
   before_action :set_user_doubt_count, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /user_doubt_counts
   # GET /user_doubt_counts.json
@@ -37,5 +38,49 @@ class UserDoubtCountsController < ApplicationController
         @doubts_subject_time[subject] = doubts
       end
     end
-  end  
+  end
+
+  def answer_count
+    @admin_users = AdminUser.where(role: "faculty")
+    @faculty_id_list = @admin_users.pluck(:userId)
+    @table = DoubtAnswer.joins(:user).where(['"userId" in (?)', AdminUser.where(role: "faculty").pluck(:userId)]).group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).group('userId').count("id")
+    @final_data = {}
+  
+    @faculty_id_list.each do |userId|
+      temp_val = []
+      (1.months.ago.midnight.to_date ... 1.day.ago.midnight.to_date).each_with_index do |date, index|
+        @table.each do |table_row|
+          row_date = table_row[0][0]
+          row_id = table_row[0][1]
+          # p row_date, row_id
+          if row_id == userId && row_date.to_date == date
+            temp_val << table_row[1].to_i
+          end
+        end
+        if temp_val.count < index + 1
+          temp_val << 0
+        end
+      end
+      if userId
+        @final_data[User.try(:find, userId).try(:name)] = temp_val
+      end
+    end
+  end
+  
+  # def answer_count
+  #   @admin_users = AdminUser.where(role: "faculty")
+  # end
+
+  def get_count
+    email = params[:email]
+    admin_user = AdminUser.where(email: email).first
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+    doubt_answers_count = DoubtAnswer.where(userId: admin_user.userId, createdAt: start_date...end_date).count
+    response = {
+      value: doubt_answers_count,
+      userId: admin_user.userId
+    }
+    render json: response, :status => 200
+  end
 end

@@ -1,5 +1,5 @@
 ActiveAdmin.register Test do
-permit_params :name, :sections, :description, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
+permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
 remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests
 
 filter :id_eq, as: :number, label: "Test ID"
@@ -34,7 +34,7 @@ index do
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
   column ("All Questions") {|test| link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + test.id.to_s}
-  column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white&showId=true>Get PDF</a>')}
+  column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white&showId=true&orderBy=SEQASC>Get PDF</a>')}
   column ("Get PDF with Solution") {|test| raw('<a target="_blank" href=https://admin1.neetprep.com/questions/test_question_pdf/' + test.id.to_s + '>Get PDF with Solution</a>')}
   column ("History") {|test| raw('<a target="_blank" href="/admin/tests/' + (test.id).to_s + '/history">View History</a>')}
   actions
@@ -94,14 +94,18 @@ action_item :add_question_from_test, only: :show do
   link_to 'Add Questions from Test', '/tests/add_question/' + resource.id.to_s, target: :_blank
 end
 
+action_item :add_sequence_of_test_questions, only: :show do
+  link_to 'Add Sequence Of Test Questions', '/tests/add_sequence/' + resource.id.to_s, target: :_blank
+end
+
 form do |f|
   f.object.positiveMarks = 4
   f.object.negativeMarks = 1
   f.inputs "Test" do
     render partial: 'tinymce'
     f.input :name, hint: "Mention the name of the test here, Eg. Scholarship test 2019"
-    f.input :description
-    f.input :instructions
+    f.input :description, as: :string
+    f.input :instructions, as: :string
     f.input :syllabus
     f.input :durationInMin, label: "Duration in Minutes"
     f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
@@ -111,9 +115,10 @@ form do |f|
     f.input :positiveMarks, label: "Positive Marks", hint: "No '+' sign is required"
     f.input :numQuestions, label: "Number of Questions"
     f.input :exam, as: :select, :collection => ["AIIMS", "NEET", "AIPMT", "JIPMER"], label: "Exam Type"
-    f.input :sections, hint: 'Required format for test sections - [["Physics", 1], ["Chemistry", 20], ["Biology", 40]]'
+    f.input :sections, hint: 'Required format for test sections - [["Biology", 1], ["Chemistry", 91], ["Physics", 136]]'
     f.input :startedAt, as: :datetime_picker, label: "Started Test At"
     f.input :expiryAt, as: :datetime_picker, label: "Expire Test At"
+    f.input :pdfURL, as: :string
   end
 
   f.inputs "Additional Information" do

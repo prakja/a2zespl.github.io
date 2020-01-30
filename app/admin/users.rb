@@ -27,6 +27,11 @@ action_item :user, only: :show do
   link_to 'User Doubt Stat', "/user_doubt_counts/stats?user=" + resource.id.to_s
 end
 
+action_item :user_topic_wise_accuracy, only: :show do
+  link_to 'User Accuracy Stat', "/user_analytics/accuracy?userId=" + resource.id.to_s
+end
+
+
 action_item :user, only: :show do
   link_to 'User Activity', "/user_analytics/show?userId=" + resource.id.to_s
 end

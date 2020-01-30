@@ -1,13 +1,23 @@
+<head>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    tbody tr th {
+      font-size: 20px;
+    }
+  </style>
+</head>
 <h2><%= @course.name %></h2>
 <div>
   <button onclick="sortTable(1, 'sortST')">Sort By SubTopic Count</button>
   <button onclick="sortTable(2, 'sortQ')">Sort By Question Count</button>
   <button onclick="sortTable(3, 'sortV')">Sort By Video Count</button>
 </div>
-<table style="width:100%">
+<table style="width:50%; margin-left: 16px; margin-top: 30px">
   <tr>
     <th>Entity</th>
-    <th>Count</th> 
+    <th>Count</th>
   </tr>
   <tr style="text-align: center;">
     <td>Subjects</td>
@@ -27,10 +37,10 @@
   </tr>
 
   <tr>
-    <table style="margin-left: 16px; width:50%; border: grey solid 1px">
+    <table style="margin-left: 16px; width:50%; margin-top: 30px">
       <tr class="header" style="text-align: center;">
         <th>Subject Name</th>
-        <th>Topic Count</th> 
+        <th>Topic Count</th>
       </tr>
       <% @course_subjects.each do |subject| %>
         <tr style="text-align: center;">
@@ -42,12 +52,14 @@
   </tr>
 
   <tr>
-    <table id="chaper_table" style="margin-left: 16px; width:50%; border: grey solid 1px">
+    <table id="chaper_table" style="margin-left: 16px; width:50%; margin-top: 30px">
       <tr class="header" style="text-align: center;">
         <th>Topic Name</th>
         <th>SubTopic Count</th>
-        <th>Question Count</th> 
-        <th>Video Count</th>  
+        <th>Question Count</th>
+        <th>Video Count</th>
+        <th>English Videos Count (duration)</th>
+        <th>Hinglish Videos Count (duration)</th>
       </tr>
       <% @course_topics.each do |topic| %>
         <tr style="text-align: center;">
@@ -57,6 +69,8 @@
           <td><%= link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) %></td>
           <!-- link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) -->
           <td><%= link_to @course_topics_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id}) %></td>
+          <td><%= link_to @course_topics_english_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id, language_equals: 'english'}) %></td>
+          <td><%= link_to @course_topics_hinglish_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id, language_equals: 'hinglish'}) %></td>
         </tr>
       <% end %>
     </table>

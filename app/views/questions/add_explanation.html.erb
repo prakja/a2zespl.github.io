@@ -17,13 +17,13 @@
     -webkit-animation: spin 2s linear infinite; /* Safari */
     animation: spin 2s linear infinite;
   }
-  
+
   /* Safari */
   @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
   }
-  
+
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -31,11 +31,15 @@
 </style>
 
 <div style="padding: 8px">
-  <p>Question</p>
-  <p><%= raw(@questionBody) %></p>
+  <p>Question <%= raw('<a href="https://admin1.neetprep.com/admin/questions/'+ @question.id.to_s + '/edit" target="_blank">(Edit Question)</a>') %></p>
+  <div style="border: 1px solid black">
+    <p><%= raw(@questionBody) %></p>
+  </div>
 
   <p>Explanation</p>
-  <p><%= raw(@questionExplanation) %></p>
+  <div style="border: 1px solid black">
+    <p><%= raw(@questionExplanation) %></p>
+  </div>
 
   <div style="margin: 8px">
     <p>Record audio explanation</p>
@@ -85,7 +89,7 @@
     inputStopDiv.style.display = 'block';
     uploadDiv.style.display = 'block';
     previewDiv.style.display = 'block';
-  
+
     var file = fileInput.files[0];
     if (file) {
       var reader = new FileReader();
@@ -95,7 +99,7 @@
       reader.readAsDataURL(file);
     }
   }
-  
+
   function startRecording () {
     loader.style.display = 'block';
     inputDiv.style.display = 'none';
@@ -104,46 +108,46 @@
     .then(stream => {
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
-  
+
       mediaRecorder.addEventListener("dataavailable", event => {
         audioChunks.push(event.data);
       });
     });
   }
-  
+
   function stopRecording () {
     loader.style.display = 'none';
     stopRecordingButton.innerHTML = "Cancel";
     stopRecordingButton.onclick = reset;
-  
+
     mediaRecorder.addEventListener("stop", () => {
       console.log ("Preparing audio");
       audioBlob = new Blob(audioChunks);
       audioUrl = URL.createObjectURL(audioBlob);
       audio.src = audioUrl;
       console.log (audioUrl);
-  
+
       previewDiv.style.display = 'block';
       uploadDiv.style.display = 'block';
     });
     console.log ("Stopping recording");
     mediaRecorder.stop();
   }
-  
+
   function uploadAndAttachRecording () {
     loader.style.display = 'block'
     var bucketName = 'questionexplanation';
     var bucketRegion = 'us-west-2';
-  
+
     var config = new AWS.Config({
       accessKeyId: 'AKIAYEPQTPG6K7CEFU6D', secretAccessKey: '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', region: 'us-west-2'
     });
-  
+
     var credentials = new AWS.Credentials('AKIAYEPQTPG6K7CEFU6D', 'XtUqnXWkwvPvlK+t8gwuShuESJA1fjnBV1q6AwTX');
     AWS.config.region = bucketRegion;
     AWS.config.credentials = credentials;
     console.log(AWS.config.credentials);
-    
+
     var bucket = new AWS.S3({
       params: {
           Bucket: bucketName
@@ -151,9 +155,9 @@
     });
     if (!uploadFromFile)
       var file = new File([audioBlob], "question_explanations_" + "<%= @doubt_id %>" + "_" + Date.now() + ".ogg");
-    else 
+    else
       var file = fileInput.files[0];
-  
+
     if (!file) {
       alert ("File error");
       loader.style.display = 'none';
@@ -169,7 +173,7 @@
         if (err) {
           console.log(" Error while  UPLOADING Audio :" + err);
           alert ('Error uploading audio');
-    
+
           loader.style.display = 'none';
         } else {
           if (!uploadFromFile)
@@ -198,7 +202,7 @@
         }
       }
   }
-  
+
   function reset() {
     audioChunks = [];
     stopRecordingButton.innerHTML = "Stop Recording";
