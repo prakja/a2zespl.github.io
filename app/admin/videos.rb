@@ -80,7 +80,14 @@ ActiveAdmin.register Video do
   index do
     id_column
     column :name
-    column :duration
+    column :duration do |video|
+      seconds = video.duration.to_i
+      hours = seconds / (60 * 60)
+      seconds = seconds - hours * (60*60)
+      minutes = seconds / (60) % 60
+      seconds = seconds - minutes * (60)
+      raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
+    end
     column :language
     column ("Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
@@ -93,7 +100,14 @@ ActiveAdmin.register Video do
       row :name
       row :description
       row :url
-      row :duration
+      row :duration do |video|
+        seconds = video.duration.to_i
+        hours = seconds / (60 * 60)
+        seconds = seconds - hours * (60*60)
+        minutes = seconds / (60) % 60
+        seconds = seconds - minutes * (60)
+        raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
+      end
       row :language
       row :seqId
       row :youtubeUrl
