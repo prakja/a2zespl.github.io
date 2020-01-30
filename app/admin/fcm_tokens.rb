@@ -6,6 +6,7 @@ batch_action :notify, form: {
   type: ["", "ExternalWebsite", "InternalWebsite", "MorningSchedule", "EveningSchedule", "DoubtAnswer", "ContinueTrial", "ContactCounsellor", "ViewPayment", "BuyCourse"],
   redirectUrl: :text,
   imageUrl: :text,
+  courseId: :text,
   sendTo: ["Selected", "AllPaid", "AllNonPaid", "AllUsers"]
   
 } do |ids, inputs|
@@ -20,6 +21,7 @@ batch_action :notify, form: {
   redirect = inputs['redirectUrl']
   type = inputs['type']
   imgUrl = inputs['imageUrl']
+  courseId = inputs['courseId']
 
   HTTParty.post(
     Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
@@ -30,6 +32,7 @@ batch_action :notify, form: {
       actionUrl: redirect,
       contextType: type,
       imageUrl: imgUrl,
+      courseId: courseId,
       studentType: inputs['sendTo'],
       userId: userId
     }
