@@ -6,7 +6,7 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  config.node_site_url = 'http://localhost:3001/'
+  config.node_site_url = 'https://dev.neetprep.com/'
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -60,7 +60,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-  
+
   # config.site_url_for_socket = "http://localhost:5000/"
   # config.site_url_for_socket = "http://192.168.0.52:5000/"
   config.site_url_for_socket = "http://192.168.0.52:5000/"

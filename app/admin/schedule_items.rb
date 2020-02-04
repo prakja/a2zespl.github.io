@@ -1,5 +1,6 @@
 ActiveAdmin.register ScheduleItem do
   config.create_another = true
+  scope :boost_up_today
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

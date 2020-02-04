@@ -10,6 +10,12 @@ class Test < ApplicationRecord
   before_update :setSections
 
   def setSections
+    if self.pdfURL.blank?
+      self.pdfURL = nil
+    else
+      self.pdfURL = self.pdfURL
+    end
+
     if self.sections.blank?
       self.sections = nil
     else
