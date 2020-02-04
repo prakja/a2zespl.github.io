@@ -99,7 +99,7 @@ namespace :update do
           :scheduledAt => DateTime.parse(date.to_s).at_noon,
           :topicId => task_chapter,
           :scheduleId => 4,
-          :hours: => final_hours
+          :hours => final_hours
         })
       end
     end
