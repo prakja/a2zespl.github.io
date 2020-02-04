@@ -63,6 +63,14 @@ ActiveAdmin.register Doubt do
     end
   end
 
+  batch_action :delete_flag do |ids|
+    batch_action_collection.find(ids).each do |doubt|
+      doubt.deleted = true
+      doubt.save
+    end
+    redirect_to collection_path, alert: "The Doubts have been deleted."
+  end
+
   action_item :see_unsolved_data, only: :index do
     link_to 'Pending Doubts Count', '../../doubts/pending_stats'
   end
