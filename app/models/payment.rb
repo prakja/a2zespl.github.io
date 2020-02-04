@@ -9,7 +9,7 @@ class Payment < ApplicationRecord
   scope :direct_payments, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil)}
   scope :direct_payments_test_series, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 31)}
   scope :direct_payments_master_class, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 253)}
-
+  scope :direct_payments_master_class2, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 254)}
   validates_presence_of  :amount, :paymentMode
 
   has_paper_trail
