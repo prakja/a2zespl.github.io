@@ -5,10 +5,11 @@ ActiveAdmin.register Doubt do
   remove_filter :topic, :answers, :user, :question, :doubt_admin
   permit_params :content, :deleted, :teacherReply, :imgUrl, :goodFlag
 
-  filter :topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+  filter :topic_id_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :id_eq, as: :number, label: "Doubt ID"
   filter :userId_eq, as: :number, label: "User ID"
-  filter :subject_name, as: :select, collection: -> {Subject.subject_names}, label: "Subject"
+  filter :course_name, as: :searchable_select, collection: -> {Course.course_names}, label: "Course"
+  filter :subject_name, as: :searchable_select, collection: -> {Subject.subject_names}, label: "Subject"
   filter :solved, as: :select, collection: ["yes", "no"]
   filter :paid, as: :select, collection: ["yes", "no"]
   filter :student_name, as: :string
