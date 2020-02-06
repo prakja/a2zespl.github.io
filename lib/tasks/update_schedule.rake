@@ -4,43 +4,7 @@ namespace :update do
   # [].insert(at, what)
   task :english_schedule => :environment do
     new_order_chapter_list = 
-    "7815|Read NCERT Chapter|2,
-    7815|Watch NEETprep Videos & Take Notes|11,
-    7815|Practice Questions & Revision|6,
-    7815|Live Session|2,
-    7822|Read NCERT Chapter|2,
-    7822|Watch NEETprep Videos & Take Notes|4,
-    7822|Practice Questions & Revision|4,
-    7822|Live Session|2,
-    7826|Read NCERT Chapter|2,
-    7826|Watch NEETprep Videos & Take Notes|13,
-    7826|Practice Questions & Revision|6,
-    7826|Live Session|2,
-    7811|Read NCERT Chapter|4,
-    7811|Watch NEETprep Videos & Take Notes|11,
-    7811|Practice Questions & Revision|6,
-    7811|Live Session|2,
-    7816|Read NCERT Chapter|3,
-    7816|Watch NEETprep Videos & Take Notes|12,
-    7816|Practice Questions & Revision|6,
-    7816|Live Session|2,
-    7801|Read NCERT Chapter|3,
-    7801|Watch NEETprep Videos & Take Notes|10,
-    7801|Practice Questions & Revision|5,
-    7801|Live Session|2,
-    7805|Read NCERT Chapter|2,
-    7805|Watch NEETprep Videos & Take Notes|10,
-    7805|Practice Questions & Revision|6,
-    7805|Live Session|2,
-    7808|Read NCERT Chapter|3,
-    7808|Watch NEETprep Videos & Take Notes|8,
-    7808|Practice Questions & Revision|5,
-    7808|Live Session|2,
-    7813|Read NCERT Chapter|5,
-    7813|Watch NEETprep Videos & Take Notes|17,
-    7813|Practice Questions & Revision|10,
-    7813|Live Session|2".split(",")
-
+    "7889|Read NCERT Chapter|3,7889|Watch NEETprep Videos & Take Notes|8,7889|Practice Questions & Revision|1,7889|Live Session|1,7891|Read NCERT Chapter|3,7891|Watch NEETprep Videos & Take Notes|12,7891|Practice Questions & Revision|5,7891|Live Session|1,7876|Read NCERT Chapter|4,7876|Watch NEETprep Videos & Take Notes|8,7876|Practice Questions & Revision|6,7876|Live Session|1,7879|Read NCERT Chapter|3,7879|Watch NEETprep Videos & Take Notes|8,7879|Practice Questions & Revision|5,7879|Live Session|1".split(",")
     # new_order_chapter_list_stripted
     # new_order_chapter_list.each do |item|
     #   item_split = item.split("|")
@@ -48,7 +12,7 @@ namespace :update do
 
     # end
     # p new_order_chapter_list
-    hours_per_day = ScheduleItem.where(['"scheduleId" = ? and "topicId" in (?)', 4, [7815,7815,7815,7815,7822,7822,7822,7822,7826,7826,7826,7826,7811,7811,7811,7811,7816,7816,7816,7816,7801,7801,7801,7801,7805,7805,7805,7805,7808,7808,7808,7808,7813,7813,7813,7813]]).group_by_day(:scheduledAt, range: 1.day.from_now.midnight...Date.parse("27-04-2020").midnight).sum(:hours)
+    hours_per_day = ScheduleItem.where(['"scheduleId" = ? and "topicId" in (?)', 4, [7876, 7879, 7889, 7891]]).group_by_day(:scheduledAt).sum(:hours)
     # p hours_per_day
     sum_hours_day = 0
     hours_per_day.each do |per_day|
