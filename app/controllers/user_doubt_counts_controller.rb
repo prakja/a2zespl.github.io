@@ -76,7 +76,7 @@ class UserDoubtCountsController < ApplicationController
     admin_user = AdminUser.where(email: email).first
     start_date = params[:start_date]
     end_date = params[:end_date]
-    doubt_answers_count = DoubtAnswer.where(userId: admin_user.userId, createdAt: start_date...end_date).count
+    doubt_answers_count = DoubtAnswer.where(userId: admin_user.userId, createdAt: DateTime.parse(start_date).midnight...DateTime.parse(end_date).midnight + 1.days).count
     response = {
       value: doubt_answers_count,
       userId: admin_user.userId

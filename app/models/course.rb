@@ -14,6 +14,11 @@ class Course < ApplicationRecord
     self.updatedAt = Time.now
   end
 
+  def self.course_names
+    Course.all
+      .pluck(:name,:id).map{|course_name, course_id| [course_name, course_id]}
+  end
+
   scope :public_courses, -> {where(package: 'neet').order('"id" ASC')}
   has_many :payments, class_name: "Payment", foreign_key: "paymentForId"
   has_many :courseInvitations, class_name: "CourseInvitation", foreign_key: "courseId"
