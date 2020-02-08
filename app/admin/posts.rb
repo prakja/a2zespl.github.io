@@ -4,6 +4,18 @@ ActiveAdmin.register Post do
   filter :id_eq, as: :number, label: "Post ID"
   preserve_default_filters!
 
+  show do
+    attributes_table do
+      row :id
+      row :url
+      row :title
+      row :description
+      row :section_1 do |post|
+        raw(post.section_1)
+      end
+    end
+  end
+
   index do
     id_column
     column :url
