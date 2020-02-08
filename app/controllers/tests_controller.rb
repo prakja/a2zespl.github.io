@@ -77,6 +77,7 @@ class TestsController < ApplicationController
         @row = {}
         @row["testId"] = @test.id
         @row["questionId"] = questionId
+        @row["seqNum"] = @sequenceId != "" ? @sequenceId.to_i : 0;
         @rowsArray.push(@row)
       end
 
@@ -102,8 +103,10 @@ class TestsController < ApplicationController
     begin
       @sequenceIds = params[:sequenceIds]
       @questionIds = params[:questionIds]
+      @testId = params[:testId]
 
       @questionIds.each_with_index do |questionId, index|
+        TestQuestion.where('"testId" = ? and "questionId" = ?', @testId, questionId).update_all(seqNum: @sequenceIds[index])
         Question.find(questionId).update_column(:sequenceId, @sequenceIds[index])
       end
 
@@ -113,7 +116,7 @@ class TestsController < ApplicationController
       end
 
     rescue => exception
-
+     p exception
     end
   end
 
