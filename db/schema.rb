@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_053638) do
+ActiveRecord::Schema.define(version: 2020_02_10_055726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -582,6 +582,15 @@ ActiveRecord::Schema.define(version: 2020_02_10_053638) do
     t.integer "testId"
     t.datetime "targetDate"
     t.string "status", default: "active"
+  end
+
+  create_table "TargetChapter", force: :cascade do |t|
+    t.integer "chapterId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "targetId", null: false
+    t.integer "hours", null: false
+    t.boolean "revision", default: false
   end
 
   create_table "Task", id: :serial, force: :cascade do |t|
@@ -1212,6 +1221,8 @@ ActiveRecord::Schema.define(version: 2020_02_10_053638) do
   add_foreign_key "StudentOnboardingEvents", "\"User\"", column: "userId"
   add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Target", "\"User\"", column: "userId"
+  add_foreign_key "TargetChapter", "\"Target\"", column: "targetId"
+  add_foreign_key "TargetChapter", "\"Topic\"", column: "chapterId"
   add_foreign_key "Test", "\"User\"", column: "userId"
   add_foreign_key "TestQuestion", "\"Question\"", column: "questionId", name: "fk_test_question_questionid"
   add_foreign_key "TestQuestion", "\"Test\"", column: "testId", name: "fk_test_question_testid"
