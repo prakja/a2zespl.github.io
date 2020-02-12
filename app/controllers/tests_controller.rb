@@ -45,7 +45,7 @@ class TestsController < ApplicationController
     @test = Test.where(id: @testId).first
     @questions_data = ""
 
-    @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
     @testQuestions.each do |question|
       @questions_data += question.id.to_s + ","
     end
@@ -55,7 +55,7 @@ class TestsController < ApplicationController
     @questions_data = {}
     @testId = params.require(:testId)
     @test = Test.find(@testId)
-    @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
     @testQuestions.each do |question|
       @questions_data[question.id] = [question.question, question.sequenceId]
     end
