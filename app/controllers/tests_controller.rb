@@ -85,10 +85,6 @@ class TestsController < ApplicationController
         TestQuestion.create(@rowsArray)
       end
 
-      if @sequenceId != ""
-        Question.where('id IN (?)', @questionIds).update_all(sequenceId: @sequenceId)
-      end
-
       respond_to do |format|
         format.html { render :new }
         format.json { render json: "Done", status: 200 }
@@ -107,7 +103,6 @@ class TestsController < ApplicationController
 
       @questionIds.each_with_index do |questionId, index|
         TestQuestion.where('"testId" = ? and "questionId" = ?', @testId, questionId).update_all(seqNum: @sequenceIds[index])
-        Question.find(questionId).update_column(:sequenceId, @sequenceIds[index])
       end
 
       respond_to do |format|
