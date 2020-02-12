@@ -3,7 +3,7 @@ ActiveAdmin.register Motivation do
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
-    f.inputs "Delivery" do
+    f.inputs "Motivation" do
       f.input :message, as: :text
       f.input :author
     end
