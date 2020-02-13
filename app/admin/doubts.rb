@@ -29,7 +29,7 @@ ActiveAdmin.register Doubt do
     f.actions
   end
 
-  filter :admin_user, as: :select, collection: proc { AdminUser.distinct_email_id }, label: "Admin User"
+  filter :admin_user, as: :searchable_select, collection: proc { AdminUser.distinct_faculty_name_id }, label: "Admin User"
   preserve_default_filters!
 
   batch_action :assign_doubts, form: -> do {
