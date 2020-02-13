@@ -45,7 +45,7 @@ class TestsController < ApplicationController
     @test = Test.where(id: @testId).first
     @questions_data = ""
 
-    @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
     @testQuestions.each do |question|
       @questions_data += question.id.to_s + ","
     end
@@ -55,7 +55,7 @@ class TestsController < ApplicationController
     @questions_data = {}
     @testId = params.require(:testId)
     @test = Test.find(@testId)
-    @testQuestions = @test.questions.order(sequenceId: :asc, id: :asc)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
     @testQuestions.each do |question|
       @questions_data[question.id] = [question.question, question.sequenceId]
     end
@@ -85,10 +85,6 @@ class TestsController < ApplicationController
         TestQuestion.create(@rowsArray)
       end
 
-      if @sequenceId != ""
-        Question.where('id IN (?)', @questionIds).update_all(sequenceId: @sequenceId)
-      end
-
       respond_to do |format|
         format.html { render :new }
         format.json { render json: "Done", status: 200 }
@@ -107,7 +103,6 @@ class TestsController < ApplicationController
 
       @questionIds.each_with_index do |questionId, index|
         TestQuestion.where('"testId" = ? and "questionId" = ?', @testId, questionId).update_all(seqNum: @sequenceIds[index])
-        Question.find(questionId).update_column(:sequenceId, @sequenceIds[index])
       end
 
       respond_to do |format|

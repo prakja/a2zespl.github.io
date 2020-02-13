@@ -33,7 +33,7 @@ index do
   column :startedAt
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
-  column ("All Questions") {|test| link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + test.id.to_s}
+  # column ("All Questions") {|test| link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + test.id.to_s}
   column ("Get PDF") {|test| raw('<a target="_blank" href=https://www.neetprep.com/test-question/' + test.id.to_s + '?white&showId=true&orderBy=SEQASC>Get PDF</a>')}
   column ("Get PDF with Solution") {|test| raw('<a target="_blank" href=https://admin1.neetprep.com/questions/test_question_pdf/' + test.id.to_s + '>Get PDF with Solution</a>')}
   column ("History") {|test| raw('<a target="_blank" href="/admin/tests/' + (test.id).to_s + '/history">View History</a>')}
@@ -73,10 +73,10 @@ end
 action_item :add_question, only: :show do
   link_to 'Add Question', '../../admin/questions/new?question[test_ids][]=' + resource.id.to_s
 end
-
-action_item :show_question, only: :show do
-  link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + resource.id.to_s
-end
+# 
+# action_item :show_question, only: :show do
+#   link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + resource.id.to_s
+# end
 
 action_item :show_leaderboard, only: :show do
   link_to 'LeaderBoard', "../../admin/test_leader_boards?order=score_desc&q[testId_eq]=" + resource.id.to_s
