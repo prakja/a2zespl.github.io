@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_055726) do
+ActiveRecord::Schema.define(version: 2020_02_12_095316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
 # Could not dump table "Advertisement" because of following StandardError
@@ -359,6 +360,13 @@ ActiveRecord::Schema.define(version: 2020_02_10_055726) do
 # Could not dump table "Message" because of following StandardError
 #   Unknown type '"enum_Message_type"' for column 'type'
 
+  create_table "Motivation", id: :serial, force: :cascade do |t|
+    t.string "message", limit: 255, null: false
+    t.string "author", limit: 255
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "NewUserVideoStat", id: false, force: :cascade do |t|
     t.integer "id"
     t.integer "userId"
@@ -582,6 +590,7 @@ ActiveRecord::Schema.define(version: 2020_02_10_055726) do
     t.integer "testId"
     t.datetime "targetDate"
     t.string "status", default: "active"
+    t.integer "maxMarks", default: 720
   end
 
   create_table "TargetChapter", force: :cascade do |t|
@@ -638,11 +647,23 @@ ActiveRecord::Schema.define(version: 2020_02_10_055726) do
     t.index ["userId"], name: "test_attempt_user_id"
   end
 
+  create_table "TestAttemptPostmartem", id: :serial, force: :cascade do |t|
+    t.integer "questionId", null: false
+    t.integer "userId", null: false
+    t.integer "testAttemptId", null: false
+    t.string "mistake", limit: 255
+    t.string "action", limit: 255
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["testAttemptId", "userId", "questionId"], name: "testAttempt_postmartem_testAttempt_id_user_id_question_id", unique: true
+  end
+
   create_table "TestQuestion", id: :serial, force: :cascade do |t|
     t.integer "testId"
     t.integer "questionId"
     t.datetime "createdAt", default: -> { "now()" }, null: false
     t.datetime "updatedAt", default: -> { "now()" }, null: false
+    t.integer "seqNum"
     t.index ["questionId"], name: "test_question_question_id"
     t.index ["testId", "questionId"], name: "index_TestQuestion_on_testId_and_questionId", unique: true
     t.index ["testId"], name: "test_question_test_id"
