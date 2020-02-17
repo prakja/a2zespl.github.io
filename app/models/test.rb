@@ -37,8 +37,8 @@ class Test < ApplicationRecord
 
   def questions_with_number
     questions = ""
-    self.questions.order(seqNum: :asc, id: :asc).each_with_index {|question, index|
-       questions = questions + (index + 1).to_s + ' > ' + '<a target="_blank" href="/admin/questions/' + question.id.to_s + '">' + question.id.to_s + '</a><br/>'
+    self.questions.order(seqNum: :asc, id: :asc).select(:id, :seqNum).each_with_index {|question, index|
+       questions = questions + (index + 1).to_s + ' > ' + '<a target="_blank" href="/admin/questions/' + question.id.to_s + '">' + question.id.to_s + '</a>' + ' ( ' + question.seqNum.to_s + ' )' + '<br/>'
     }
     return questions
   end
