@@ -109,7 +109,8 @@ form do |f|
     f.input :syllabus
     f.input :durationInMin, label: "Duration in Minutes"
     f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
-    f.input :showAnswer, hint: "Mark un-checked only for Scholarship tests"
+    f.input :scholarship, hint: "Mark checked only for Scholarship tests"
+    f.input :showAnswer, hint: "Uncheck if you don't want student to see test solution after exam"
     f.input :resultMsgHtml, hint: "result message on test result page"
     f.input :negativeMarks, label: "Negative Marks", hint: "No '-' sign is required"
     f.input :positiveMarks, label: "Positive Marks", hint: "No '+' sign is required"
