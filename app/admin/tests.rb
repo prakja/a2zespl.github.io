@@ -98,6 +98,10 @@ action_item :add_sequence_of_test_questions, only: :show do
   link_to 'Add Sequence Of Test Questions', '/tests/add_sequence/' + resource.id.to_s, target: :_blank
 end
 
+action_item :two_columns_test_pdf, only: :show do
+  link_to 'PDF (Two Columns)', 'https://www.neetprep.com/tests/questions/' + resource.id.to_s, target: :_blank
+end
+
 form do |f|
   f.object.positiveMarks = 4
   f.object.negativeMarks = 1
