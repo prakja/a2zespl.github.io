@@ -24,6 +24,18 @@ ActiveAdmin.register Target do
     id_column
     column :user
     column ("Targeted Score") { |target| target.score }
+    column ("Scored") { |target|
+      if not target.test.nil?
+        test = target.test
+        test_attempt = test.test_attempt(target.userId)
+        if not test_attempt.nil?
+          result_hash = test_attempt.result
+          p result_hash
+          score = result_hash["totalMarks"]
+          raw('<p>' + score.to_s + '</p>')
+        end
+      end
+    }
     column :testId
     column :maxMarks
     column ("Target Chapters") { |target|

@@ -23,6 +23,10 @@ class Test < ApplicationRecord
     end
   end
 
+  def test_attempt(user_id)
+    self.test_attempts.where(userId: user_id).order(createdAt: :asc).first
+  end
+
   def after_update_test
     if self.sections.blank?
       return
@@ -58,6 +62,9 @@ class Test < ApplicationRecord
 
   has_many :testQuestions, foreign_key: :testId, class_name: 'TestQuestion', dependent: :destroy
   has_many :questions, through: :testQuestions, dependent: :destroy
+
+  has_many :test_attempts, class_name: "TestAttempt", foreign_key: "testId"
+  has_many :target, class_name: "Target", foreign_key: "testId"
 
   scope :course_name, ->(course_id) {
     joins(:testCourseTests => :course).where(testCourseTests: {Course: {id: course_id}})
