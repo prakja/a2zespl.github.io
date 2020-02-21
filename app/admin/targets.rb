@@ -19,4 +19,23 @@ ActiveAdmin.register Target do
   preserve_default_filters!
 
   filter :userId_eq, as: :number, label: "User ID"
+
+  index do
+    id_column
+    column :user
+    column ("Targeted Score") { |target| target.score }
+    column :testId
+    column :maxMarks
+    column ("Target Chapters") { |target|
+      target_id = target.id
+      target_chapters = target.target_chapters.includes(:chapter).limit(5)
+      chapters = ""
+      target_chapters.each do |target_chapter|
+        chapters += '<p>' + target_chapter.chapter.name + '</p>'
+      end
+      raw('<a href="admin/target_chapters?q[targetId_eq]=' + target_id.to_s + '">Count: '  + target_chapters.count.to_s + '</a>' + chapters)
+    }
+    column :status
+    actions
+  end
 end
