@@ -29,11 +29,12 @@ ActiveAdmin.register Target do
     column ("Target Chapters") { |target|
       target_id = target.id
       target_chapters = target.target_chapters.includes(:chapter).limit(5)
+      all_target_chapters_count = target.target_chapters.count
       chapters = ""
       target_chapters.each do |target_chapter|
         chapters += '<p>' + target_chapter.chapter.name + '</p>'
       end
-      raw('<a href="admin/target_chapters?q[targetId_eq]=' + target_id.to_s + '">Count: '  + target_chapters.count.to_s + '</a>' + chapters)
+      raw('<a href="/admin/target_chapters?q[targetId_eq]=' + target_id.to_s + '">Count: '  + all_target_chapters_count.to_s + '</a>' + chapters)
     }
     column :status
     actions
