@@ -5,6 +5,11 @@ class Course < ApplicationRecord
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
   has_paper_trail
+  before_save :default_values
+  def default_values
+    self.year = nil if self.year.blank?
+    self.image = nil if self.image.blank?
+  end
 
   def setCreatedTime
     self.createdAt = Time.now

@@ -15,7 +15,7 @@ ActiveAdmin.register Delivery do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Delivery" do
       f.input :deliveryType, as: :select, :collection => ["new", "renewal", "replacement", "installment"]
-      f.input :course, as: :select, :collection => ["Full Course + Pendrive", "Physics Course + Pendrive", "Chemistry Course + Pendrive", "Biology Course + Pendrive", "Physics + Biology + Pendrive", "Chemistry + Biology + Pendrive", "Physics + Chemistry + Pendrive", "Dongle Only", "9th Class Course + Pendrive", "10th Class Course + Pendrive", "11th Class Course + Pendrive", "12th Class Course + Pendrive"]
+      f.input :course, as: :select, :collection => ["Full Course + Pendrive", "Physics Course + Pendrive", "Chemistry Course + Pendrive", "Biology Course + Pendrive", "Physics + Biology + Pendrive", "Chemistry + Biology + Pendrive", "Physics + Chemistry + Pendrive", "Dongle Only", "9th Class Course + Pendrive", "10th Class Course + Pendrive", "11th Class Course + Pendrive", "12th Class Course + Pendrive", "NEET 2020 Short Duration Revision Course"]
       f.input :source, label: "Source of Sale", as: :select, :collection => ["neetprep"]
       f.input :description, hint: "Useful information about delivery, Example: send 64 GB pendrive only, send dongle only...etc"
       f.input :courseValidity, as: :date_picker, label: "Course Validity"
