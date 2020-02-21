@@ -4,7 +4,7 @@ class Target < ApplicationRecord
 
   has_many :target_chapters, class_name: "TargetChapter", foreign_key: "targetId"
   belongs_to :user, class_name: "User", foreign_key: "userId"
-  belongs_to :test, class_name: "Test", foreign_key: "testId"
+  belongs_to :test, class_name: "Test", foreign_key: "testId", optional: true
 
   def check_current_active
     p "Checking for past targets"
