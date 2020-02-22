@@ -11,12 +11,14 @@ class QuestionsController < ApplicationController
 
     default_order = 'asc'
     default_limit = 50
+    default_level = ['medium', 'difficult'];
     @questions_data = {}
     @questions = {}
     @subject = params[:subject]
     @topicId = params[:topic]
     @orderBy = params[:order] or default_order
     @limit = params[:limit] or default_limit
+    @level = params[:level] or default_level
 
     @subjectListIds = {
       'physics' => 55,
@@ -31,13 +33,13 @@ class QuestionsController < ApplicationController
     end
 
     if @subject == 'physics' && @topicId
-      @questions = Question.physics_mcqs_difficult(@topicId).includes(:question_analytic)
+      @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question.chemistry_mcqs_difficult(@topicId).includes(:question_analytic)
+      @questions = Question.subject_name(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
     elsif @subject == 'botany' && @topicId
-      @questions = Question.botany_mcqs_difficult(@topicId).includes(:question_analytic)
+      @questions = Question.subject_name(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
     elsif @subject == 'zoology' && @topicId
-      @questions = Question.zoology_mcqs_difficult(@topicId).includes(:question_analytic)
+      @questions = Question.subject_name(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
     end
 
     if @orderBy == 'desc'
