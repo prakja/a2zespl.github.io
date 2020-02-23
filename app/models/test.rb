@@ -24,7 +24,7 @@ class Test < ApplicationRecord
   end
 
   def test_attempt(user_id)
-    self.test_attempts.where(userId: user_id).order(createdAt: :asc).first
+    self.test_attempts.where(userId: user_id, completed: true).order(createdAt: :desc).first
   end
 
   def after_update_test
