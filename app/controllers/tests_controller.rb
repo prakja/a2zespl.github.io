@@ -72,6 +72,16 @@ class TestsController < ApplicationController
       @questionIds = params[:questionIds]
       @test = Test.where(id: @testId).first
       @rowsArray = []
+      question_ids = []
+
+      @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
+      @testQuestions.each do |question|
+        question_ids.push(question.id.to_s)
+      end
+
+      @questionIds = @questionIds.uniq
+
+      @questionIds = @questionIds - question_ids
 
       @questionIds.each do |questionId|
         @row = {}
@@ -91,7 +101,7 @@ class TestsController < ApplicationController
       end
 
     rescue => exception
-
+      p exception
     end
   end
 
