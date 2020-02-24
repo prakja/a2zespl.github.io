@@ -93,6 +93,17 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.middleware.use ExceptionNotification::Rack,  
+  slack: {
+    webhook_url: "https://hooks.slack.com/services/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",
+    channel: "#np-admin-exceptions",
+    username: "admin-exception", # ENV based username to distinguish Staging Exceptions in channel
+    additional_parameters: { 
+      icon_emoji: ":large_blue_circle:",  # BLUE CIRCLE icon to distinguish Staging Exceptions in channel
+      mrkdwn: true 
+    } 
+  }
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
