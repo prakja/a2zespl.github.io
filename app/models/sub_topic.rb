@@ -20,7 +20,7 @@ class SubTopic < ApplicationRecord
   scope :zoology, -> {joins(:topic => :subject).where(topic: {Subject: {id:  56}})}
 
   def self.distinct_name
-    SubTopic.connection.select_all("select \"name\", \"id\" from \"SubTopic\"").pluck("name", "id")
+    SubTopic.connection.select_all("select \"SubTopic\".\"name\", \"SubTopic\".\"id\", \"Topic\".\"name\" as \"topicName\" from \"SubTopic\", \"Topic\" where \"SubTopic\".\"topicId\" = \"Topic\".\"id\"").pluck("name", "id", "topicName").map{|sub_topic_name, id, topic_name| [topic_name + " - " + sub_topic_name, id]}
   end
 
 end
