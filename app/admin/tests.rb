@@ -73,7 +73,7 @@ end
 action_item :add_question, only: :show do
   link_to 'Add Question', '../../admin/questions/new?question[test_ids][]=' + resource.id.to_s
 end
-# 
+#
 # action_item :show_question, only: :show do
 #   link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + resource.id.to_s
 # end
