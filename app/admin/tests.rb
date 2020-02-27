@@ -16,6 +16,7 @@ scope :botany
 scope :chemistry
 scope :physics
 scope :zoology
+scope :dynamic_tests
 
 index do
   id_column

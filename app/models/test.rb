@@ -1,5 +1,7 @@
 class Test < ApplicationRecord
   before_save :default_values
+  default_scope {where(userId: nil)}
+  scope :dynamic_tests, -> {unscope(:where).where.not(userId: nil)}
   def default_values
     self.ownerType = nil if self.ownerId.blank?
     self.exam = nil if self.exam.blank?
