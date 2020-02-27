@@ -16,9 +16,9 @@ class QuestionsController < ApplicationController
     @questions = {}
     @subject = params[:subject]
     @topicId = params[:topic]
-    @orderBy = params[:order] or default_order
-    @limit = params[:limit] or default_limit
-    @level = params[:level] or default_level
+    @orderBy = params[:order] ? params[:order] : default_order
+    @limit = params[:limit] ? params[:limit] : default_limit
+    @level = params[:level] ? params[:level] : default_level
 
     @subjectListIds = {
       'physics' => 55,
@@ -31,6 +31,8 @@ class QuestionsController < ApplicationController
     @chapters.each do |chapter|
       @chapters_data[chapter.id] = [chapter.name]
     end
+
+    p @level
 
     if @subject == 'physics' && @topicId
       @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
