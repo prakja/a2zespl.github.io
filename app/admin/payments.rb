@@ -12,6 +12,7 @@ ActiveAdmin.register Payment do
   scope :direct_payments_test_series
   scope :direct_payments_master_class
   scope :direct_payments_master_class2
+  scope :direct_payments_master_class3
 
   action_item :fetch_quickbook_payments, only: :index do
     link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
