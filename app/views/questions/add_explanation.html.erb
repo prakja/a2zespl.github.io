@@ -154,7 +154,7 @@
       }
     });
     if (!uploadFromFile)
-      var file = new File([audioBlob], "question_explanations_" + "<%= @doubt_id %>" + "_" + Date.now() + ".ogg");
+      var file = new File([audioBlob], "question_explanations_" + "<%= @questionId%>" + "_" + Date.now() + ".ogg");
     else
       var file = fileInput.files[0];
 
@@ -177,9 +177,9 @@
           loader.style.display = 'none';
         } else {
           if (!uploadFromFile)
-            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name + file.type;
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + @questionId + "_" + Date.now() + "_" + file.name + file.type;
           else
-            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name;
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + @questionId + "_" + Date.now() + "_" + file.name;
           insertIntoExplanation('<%= @questionId %>', fileUrl);
           reset ();
         }
