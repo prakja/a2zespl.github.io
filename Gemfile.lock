@@ -162,6 +162,9 @@ GEM
       activesupport (>= 5.0)
       request_store (>= 1.0)
     erubi (1.9.0)
+    exception_notification (4.4.0)
+      actionmailer (>= 4.0, < 7)
+      activesupport (>= 4.0, < 7)
     execjs (2.7.0)
     ffi (1.11.3)
     font-awesome-sass (5.6.1)
@@ -314,6 +317,7 @@ GEM
     selenium-webdriver (3.142.6)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    slack-notifier (2.3.2)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -376,6 +380,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise
   draper
+  exception_notification
   formtastic-fake_input
   groupdate
   httparty
@@ -388,6 +393,7 @@ DEPENDENCIES
   rails (~> 5.2.3)
   sass-rails (~> 5.0)
   selenium-webdriver
+  slack-notifier
   slim
   spring
   spring-watcher-listen (~> 2.0.0)
@@ -401,4 +407,4 @@ RUBY VERSION
    ruby 2.6.3p62
 
 BUNDLED WITH
-   2.0.2
+    2.0.2

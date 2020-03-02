@@ -23,7 +23,7 @@ ActiveAdmin.register Question do
 
   # make a drop down menu
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
-  filter :subTopics_id_eq, as: :select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
+  filter :subTopics_id_eq, as: :searchable_select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :details_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :details_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"

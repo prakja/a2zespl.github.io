@@ -1,5 +1,7 @@
 class Test < ApplicationRecord
   before_save :default_values
+  default_scope {where(userId: nil)}
+  scope :dynamic_tests, -> {unscope(:where).where.not(userId: nil)}
   def default_values
     self.ownerType = nil if self.ownerId.blank?
     self.exam = nil if self.exam.blank?
@@ -24,7 +26,7 @@ class Test < ApplicationRecord
   end
 
   def test_attempt(user_id)
-    self.test_attempts.where(userId: user_id).order(createdAt: :asc).first
+    self.test_attempts.where(userId: user_id, completed: true).order(createdAt: :desc).first
   end
 
   def after_update_test
