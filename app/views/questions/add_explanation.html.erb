@@ -138,6 +138,7 @@
     loader.style.display = 'block'
     var bucketName = 'questionexplanation';
     var bucketRegion = 'us-west-2';
+    var currentTime = Date.now();
 
     var config = new AWS.Config({
       accessKeyId: 'AKIAYEPQTPG6K7CEFU6D', secretAccessKey: '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', region: 'us-west-2'
@@ -154,7 +155,7 @@
       }
     });
     if (!uploadFromFile)
-      var file = new File([audioBlob], "question_explanations_" + "<%= @questionId%>" + "_" + Date.now() + ".ogg");
+      var file = new File([audioBlob], "question_explanations_" + "<%= @questionId%>" + "_" + currentTime + ".ogg");
     else
       var file = fileInput.files[0];
 
@@ -164,7 +165,7 @@
       return;
     } else {
       var params = {
-        Key: file.name,
+        Key: (!uploadFromFile ? file.name : (<%=@questionId%> + "_" + currentTime + "_" + file.name)),
         ContentType: file.type,
         Body: file,
         ACL: 'public-read'
@@ -177,9 +178,9 @@
           loader.style.display = 'none';
         } else {
           if (!uploadFromFile)
-            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + @questionId + "_" + Date.now() + "_" + file.name + file.type;
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + file.name + file.type;
           else
-            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + @questionId + "_" + Date.now() + "_" + file.name;
+            var fileUrl = 'https://questionexplanation.s3-us-west-2.amazonaws.com/' + <%=@questionId%> + "_" + currentTime + "_" + file.name;
           insertIntoExplanation('<%= @questionId %>', fileUrl);
           reset ();
         }
