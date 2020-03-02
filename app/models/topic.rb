@@ -26,13 +26,26 @@ class Topic < ApplicationRecord
   has_many :topicChapterTests, foreign_key: :chapterId, class_name: 'ChapterTest'
   has_many :tests, through: :topicChapterTests
 
+  has_many :sections, class_name: "Section", foreign_key: "chapterId"
+
   def self.distinct_name
     Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id, Rails.configuration.boostup_course_id]).all().pluck("name", "id")
+  end
+
+  def self.main_course_topic_name_with_subject
+    Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id])
+      .pluck(:name, :'Subject.name', :'Course.name', :id, :'Course.id', :'Subject.id')
+      .map{|topic_name, subject_name, course_name, topic_id| [topic_name + " - " + subject_name + " - " + course_name, topic_id]}
   end
 
   def self.name_with_subject
     Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id, Rails.configuration.boostup_course_id])
       .pluck(:name, :'Subject.name', :'Course.name', :id, :'Course.id', :'Subject.id')
       .map{|topic_name, subject_name, course_name, topic_id| [topic_name + " - " + subject_name + " - " + course_name, topic_id]}
+  end
+
+  def self.get_assets(topic_id)
+    p topic_id
+    Topic.where(id: topic_id).first.videos;
   end
 end

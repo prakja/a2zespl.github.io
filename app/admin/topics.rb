@@ -11,8 +11,8 @@ ActiveAdmin.register Topic do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests
-  permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id
+  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests, :sections
+  permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id, :sectionReady
   preserve_default_filters!
   filter :subjects, as: :searchable_select, multiple: true, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
   scope :neetprep_course
@@ -36,6 +36,7 @@ ActiveAdmin.register Topic do
     column ("Questions") { |topic|
       link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
     }
+    toggle_bool_column :sectionReady
     actions
   end
 
