@@ -32,27 +32,25 @@ class QuestionsController < ApplicationController
       @chapters_data[chapter.id] = [chapter.name]
     end
 
-    p @level
-
     if @subject == 'physics' && @topicId
-      @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
+      @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question.subject_name(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
+      @questions = Question.subject_name(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'botany' && @topicId
-      @questions = Question.subject_name(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
+      @questions = Question.subject_name(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'zoology' && @topicId
-      @questions = Question.subject_name(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']});
+      @questions = Question.subject_name(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     end
-
-    if @orderBy == 'desc'
-      @questions = @questions.order(correctPercentage: :desc)
-    elsif @orderBy == 'asc'
-      @questions = @questions.order(correctPercentage: :asc)
-    end
-
-    if @limit
-      @questions = @questions.limit(@limit)
-    end
+    #
+    # if @orderBy == 'desc'
+    #   @questions = @questions.order(correctPercentage: :desc)
+    # elsif @orderBy == 'asc'
+    #   @questions = @questions.order(correctPercentage: :asc)
+    # end
+    #
+    # if @limit
+    #   @questions = @questions.limit(@limit)
+    # end
 
     @questions.each do |question|
       @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage, question.correctOptionIndex]
