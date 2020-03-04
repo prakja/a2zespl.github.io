@@ -45,10 +45,18 @@ class ChaptersController < ApplicationController
     @sections_data = {}
     @section_contents = Section.where(chapterId: @chapter.id).includes(:contents).order('"Section"."position","SectionContent"."position"')
 
+    videoContentIds = []
+    noteContentIds = []
+    @section_contents.each do |section_content|
+      if content.contentType == 'video'
+        videoContentIds.push(content.contentId)
+      elsif content.contentType == 'note'
+        noteContentIds.push(content.contentId)
+      end
+    end
+
     @section_contents.each do |section_content|
       contents = []
-      videoContentIds = []
-      noteContentIds = []
       section_content.contents.each do |content|
         contents.push({
           "id" => content.id,
@@ -58,14 +66,9 @@ class ChaptersController < ApplicationController
           "position" => content.position,
           "sectionId" => content.sectionId
         })
-        if content.contentType == 'video'
-          videoContentIds.push(content.contentId)
-        elsif content.contentType == 'note'
-          noteContentIds.push(content.contentId)
-        end
       end
 
-      not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
+      not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
       not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).pluck('"Note"."id","Note"."externalURL"')
       @sections_data[section_content.id] = [section_content.name, contents, not_linked_chapter_videos, not_linked_chapter_notes]
     end

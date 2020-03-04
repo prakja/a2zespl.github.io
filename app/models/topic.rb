@@ -32,6 +32,10 @@ class Topic < ApplicationRecord
 
   has_many :sections, class_name: "Section", foreign_key: "chapterId"
 
+  def hinglish_videos
+    self.videos.where(language: 'hinglish')
+  end
+
   def self.distinct_name
     Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id, Rails.configuration.boostup_course_id]).all().pluck("name", "id")
   end
