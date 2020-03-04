@@ -93,6 +93,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts_as_list (1.0.1)
+      activerecord (>= 4.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     arbre (1.2.1)
@@ -369,6 +371,7 @@ DEPENDENCIES
   activeadmin-searchable_select
   activeadmin_addons
   activeadmin_quill_editor!
+  acts_as_list
   arctic_admin
   aws-sdk-s3 (~> 1)
   bootsnap (>= 1.1.0)
@@ -407,4 +410,4 @@ RUBY VERSION
    ruby 2.6.3p62
 
 BUNDLED WITH
-    2.0.2
+   2.0.2

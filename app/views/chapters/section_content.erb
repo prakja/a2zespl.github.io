@@ -1,0 +1,143 @@
+<head>
+  <style>
+    .select2-container {
+      min-width: 300px !important;
+    }
+    .maroon {
+      color: #85144b;
+    }
+    .bg-blue {
+      background-color: #0074d9 !important;
+      color: white;
+    }
+    .bg-maroon {
+      background-color: #85144b !important;
+      color: #ffdc00;
+    }
+    .sections li {
+      width: 100%;
+      margin-bottom: 20px;
+      background-color: #ffdc00;
+      padding: 5px;
+    }
+    .p2 {
+      padding: 1rem;
+    }
+    .border {
+      border: 1px solid #85144b;
+    }
+    .mb {
+      margin-bottom: 25px;
+    }
+    .items-content{
+      width: 30%;
+      height: 200px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw("<h3 class='maroon'>" + @chapter.name + "</h3>") %>
+  </div>
+  <div style="margin: 32px">
+    <label>Chapters :</label>
+    <select name="chapter" id="chapterList" onchange="onChapterChange()">
+      <option value=''>Select Chapter</option>
+      <% @chapters_data.each do |key, value| %>
+        <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+      <% end %>
+    </select>
+  </div>
+  <div style="margin: 32px" class="sections">
+    <p>Sections :</p>
+    <ul>
+      <% @sections_data.each do |key, value| %>
+        <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + value[0].to_s + "</h3>")%>
+        <%= raw("<div style='margin: 12px; border: 1px solid #d3d3d3; display: inline-flex; width: 99%;'>")%>
+          <%= raw("<p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
+            <% value[1].each_with_index do |val, index| %>
+                <%= raw("<li class='bg-blue' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + val["title"].to_s + "</li>")%>
+            <% end %>
+          <%= raw("</ul>")%>
+          <%= raw("<p>Video List</p><ul class='mb items-content list-reset js-sortable-copy'>") %>
+            <% value[2].each_with_index do |val, index| %>
+                <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='video' data-id='" + val[0].to_s  + "'>" + val[1].to_s + "</li>")%>
+            <% end %>
+          <%= raw("</ul>")%>
+          <%= raw("<p>NCERT List</p><ul class='mb items-content list-reset js-sortable-copy'>") %>
+            <% value[3].each_with_index do |val, index| %>
+                <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='note' data-id='" + val[0].to_s  + "'>" + val[1].to_s + "</li>")%>
+            <% end %>
+          <%= raw("</ul></div></li>")%>
+      <% end %>
+    </ul>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
+  <script type="text/javascript">
+
+    $(function () {
+      $("select").select2();
+    });
+
+    function onChapterChange() {
+      let url = window.location.origin + "/chapters/section_content";
+      let chapterId = $('#chapterList').val();
+      if (chapterId != null && chapterId != ''){
+        window.location.href = url + "?chapterId=" + chapterId;
+      }
+    }
+
+    $(document).on('turbolinks:load', function() {
+      sortable('.js-sortable-copy', {
+  		  forcePlaceholderSize: true,
+  		  copy: true,
+  				acceptFrom: false,
+  		  placeholderClass: 'mb1 bg-navy border border-yellow',
+		  });
+  		sortable('.js-sortable-copy-target', {
+    		forcePlaceholderSize: true,
+    			acceptFrom: '.js-sortable-copy,.js-sortable-copy-target',
+    		placeholderClass: 'mb1 border border-maroon',
+  	  });
+
+      sortable('.sortable', {
+        items: 'li'
+      });
+      if (typeof sortable('.sortable')[0] != 'undefined'){
+        $('.sortable').on('sortupdate', function(e) {
+          let dataIDList = [];
+          let dataTypeList = [];
+          let dataSectionList = [];
+          let dataTitleList = [];
+          $(this).children().map(function(index){
+             dataTitleList.push($(this).data("title"));
+          });
+          $(this).children().map(function(index){
+             dataSectionList.push($(this).data("section"));
+          });
+          $(this).children().map(function(index){
+             dataIDList.push($(this).data("id"));
+          });
+          $(this).children().map(function(index){
+             dataTypeList.push($(this).data("type"));
+          });
+          $.ajax({
+            type: "POST",
+            url: $(this).data("url"),
+            data: {
+              "ids": dataIDList,
+              "types": dataTypeList,
+              "sections": dataSectionList,
+              "titles": dataTitleList
+            }
+          }).done (function (data) {
+            console.log('done')
+          });
+        });
+      }
+    })
+
+  </script>
+</body>

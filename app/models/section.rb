@@ -1,5 +1,6 @@
 class Section < ApplicationRecord
  self.table_name = "Section"
+# acts_as_list scope: :topic
 
  attribute :createdAt, :datetime, default: Time.now
  attribute :updatedAt, :datetime, default: Time.now

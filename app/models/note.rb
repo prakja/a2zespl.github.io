@@ -1,7 +1,10 @@
 class Note < ApplicationRecord
- self.table_name = "Note"
- attribute :createdAt, :datetime, default: Time.now
- attribute :updatedAt, :datetime, default: Time.now
+  self.table_name = "Note"
+  attribute :createdAt, :datetime, default: Time.now
+  attribute :updatedAt, :datetime, default: Time.now
+
+  has_many :noteTopics, foreign_key: :noteId, class_name: 'ChapterNote', dependent: :destroy
+  has_many :topics, through: :noteTopics
 
   has_one :video_annotation,  -> { where(annotationType: "Note") }, class_name: "VideoAnnotation", foreign_key: "annotationId"
   has_one :video, through: :video_annotation
