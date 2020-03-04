@@ -48,10 +48,12 @@ class ChaptersController < ApplicationController
     videoContentIds = []
     noteContentIds = []
     @section_contents.each do |section_content|
-      if content.contentType == 'video'
-        videoContentIds.push(content.contentId)
-      elsif content.contentType == 'note'
-        noteContentIds.push(content.contentId)
+      section_content.contents.each do |content|
+        if content.contentType == 'video'
+          videoContentIds.push(content.contentId)
+        elsif content.contentType == 'note'
+          noteContentIds.push(content.contentId)
+        end
       end
     end
 
