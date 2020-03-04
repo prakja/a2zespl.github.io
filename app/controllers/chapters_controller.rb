@@ -66,7 +66,7 @@ class ChaptersController < ApplicationController
       end
 
       not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
-      not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?)', noteContentIds]).pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.pluck('"Note"."id","Note"."externalURL"')
+      not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.pluck('"Note"."id","Note"."externalURL"')
       @sections_data[section_content.id] = [section_content.name, contents, not_linked_chapter_videos, not_linked_chapter_notes]
     end
   end
