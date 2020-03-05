@@ -60,7 +60,7 @@
         <%= raw("<div style='margin: 12px; border: 1px solid #d3d3d3; display: inline-flex; width: 99%;'>")%>
           <%= raw("<p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
             <% value[1].each_with_index do |val, index| %>
-                <%= raw("<li class='bg-blue' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + val["title"].to_s + "</li>")%>
+                <%= raw("<li class='bg-blue' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'><button data-content='" + val["id"].to_s + "' class='removeBtn'>Remove</button>" + val["title"].to_s + "</li>")%>
             <% end %>
           <%= raw("</ul>")%>
           <%= raw("<p>Video List</p><ul class='mb items-content list-reset js-sortable-copy'>") %>
@@ -93,15 +93,32 @@
     }
 
     $(document).on('turbolinks:load', function() {
+      $('.removeBtn').on('click', function(e){
+        let sectionContentId = $(this).data("content");
+        if (sectionContentId == null){
+          alert('Content not selected');
+          return
+        }
+        let url = window.location.origin + "/chapters/remove_section_content";
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: {
+            "sectionContentId": sectionContentId
+          }
+        }).done (function (data) {
+          window.location.reload();
+        });
+      });
       sortable('.js-sortable-copy', {
   		  forcePlaceholderSize: true,
   		  copy: true,
-  				acceptFrom: false,
+  			acceptFrom: false,
   		  placeholderClass: 'mb1 bg-navy border border-yellow',
 		  });
   		sortable('.js-sortable-copy-target', {
     		forcePlaceholderSize: true,
-    			acceptFrom: '.js-sortable-copy,.js-sortable-copy-target',
+    		acceptFrom: '.js-sortable-copy,.js-sortable-copy-target',
     		placeholderClass: 'mb1 border border-maroon',
   	  });
 

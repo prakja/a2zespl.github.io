@@ -2,6 +2,24 @@ class ChaptersController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+
+  def remove_section_content
+    begin
+      sectionContentId = params[:sectionContentId]
+      section_content = SectionContent.where(id: sectionContentId).first
+
+      SectionContent.delete(section_content.id)
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+
+    end
+  end
+
   def update_and_sort
     typesList = params[:types]
     sectionsList = params[:sections]
