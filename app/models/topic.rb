@@ -13,7 +13,7 @@ class Topic < ApplicationRecord
   belongs_to :subject, foreign_key: 'subjectId', class_name: 'Subject'
 
   has_many :topicVideos, foreign_key: :chapterId, class_name: 'ChapterVideo'
-  has_many :videos, -> { order(seqId: :asc) }, through: :topicVideos
+  has_many :videos, -> { order(seqId: :asc, id: :asc) }, through: :topicVideos
 
   has_many :topicNotes, foreign_key: :chapterId, class_name: 'ChapterNote'
   has_many :notes, through: :topicNotes
