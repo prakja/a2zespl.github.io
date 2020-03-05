@@ -33,7 +33,6 @@
       margin-bottom: 25px;
     }
     .items-content{
-      width: 30%;
       height: 200px;
       overflow: auto;
     }
@@ -58,21 +57,21 @@
       <% @sections_data.each do |key, value| %>
         <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + value[0].to_s + "</h3>")%>
         <%= raw("<div style='margin: 12px; border: 1px solid #d3d3d3; display: inline-flex; width: 99%;'>")%>
-          <%= raw("<p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
+          <%= raw("<div style='flex: 1; padding: 1em;'><p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
             <% value[1].each_with_index do |val, index| %>
-                <%= raw("<li class='bg-blue' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'><button data-content='" + val["id"].to_s + "' class='removeBtn'>Remove</button>" + val["title"].to_s + "</li>")%>
+                <%= raw("<li class='bg-" + (val['contentType'] == 'video' ? 'blue' : 'maroon') + "' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + val["title"].to_s.gsub(/.*\/OEBPS\/Text\//, "") + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
             <% end %>
-          <%= raw("</ul>")%>
-          <%= raw("<p>Video List</p><ul class='mb items-content list-reset js-sortable-copy'>") %>
+          <%= raw("</ul></div>")%>
+          <%= raw("<div style='flex: 1; padding: 1em;'><p>Video List</p><ul class='mb items-content list-reset p2 js-sortable-copy'>") %>
             <% value[2].each_with_index do |val, index| %>
-                <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='video' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' href='" + "https://www.neetprep.com/video-class/" + val[0].to_s + "-admin" + "'>" + val[1].to_s + "</a>" + "</li>")%>
+                <%= raw("<li class='bg-blue' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='video' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val[0].to_s + "-admin" + "'>" + val[1].to_s + "</a>" + "</li>")%>
             <% end %>
-          <%= raw("</ul>")%>
-          <%= raw("<p>NCERT List</p><ul class='mb items-content list-reset js-sortable-copy'>") %>
+          <%= raw("</ul></div>")%>
+          <%= raw("<div style='flex: 1; padding: 1em;'><p>NCERT List</p><ul class='mb items-content list-reset p2 js-sortable-copy'>") %>
             <% value[3].each_with_index do |val, index| %>
-                <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='note' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' href='" + val[1].to_s + "'>" + val[1].to_s + "</a>" + "</li>")%>
+                <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-section='" + key.to_s + "' data-type='note' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' href='" + val[1].to_s + "'>" + val[1].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + "</li>")%>
             <% end %>
-          <%= raw("</ul></div></li>")%>
+          <%= raw("</ul></div></div></li>")%>
       <% end %>
     </ul>
   </div>
