@@ -235,6 +235,7 @@ ActiveAdmin.setup do |config|
   #
     config.namespace :admin do |admin|
       admin.build_menu :utility_navigation do |menu|
+        menu.add label: "Chapter Sections", url: "/chapters/section_content", html_options: { target: :blank, :class => 'custom-menu-item' }
         menu.add label: "NEET Syllabus", url: "https://www.neetprep.com/exam-info/syllabus", html_options: { target: :blank, :class => 'custom-menu-item' }
         menu.add label: "NEET Schedules", url: "https://www.neetprep.com/schedule/1-neet-2020-12-class-schedule", html_options: { target: :blank, :class => 'custom-menu-item' }
         menu.add label: "NEET Test Series", url: "https://www.neetprep.com/neet-course/31-NEET--Test-Series--NEETprep", html_options: { target: :blank, :class => 'custom-menu-item' }
