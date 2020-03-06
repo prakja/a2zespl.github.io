@@ -55,7 +55,7 @@
     <p>Sections :</p>
     <ul>
       <% @sections_data.each do |key, value| %>
-        <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + "<a target='_blank' href='" + admin_section_path(key) + "'>" + value[0].to_s + "</a>"+ "</h3>")%>
+        <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + "<a target='_blank' href='" + admin_section_path(key) + "'>" + value[4].to_s + ". " +  value[0].to_s + "</a>"+ "</h3>")%>
         <%= raw("<div style='margin: 12px; border: 1px solid #d3d3d3; display: inline-flex; width: 99%;'>")%>
           <%= raw("<div style='flex: 1; padding: 1em;'><p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
             <% value[1].each_with_index do |val, index| %>
