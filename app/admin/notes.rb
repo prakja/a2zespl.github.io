@@ -54,7 +54,7 @@ ActiveAdmin.register Note do
       f.input :description
       f.input :externalURL, as: :string
       f.input :epubURL, as: :string
-      f.input :epubContent, hint: link_to('Epub Html', note.githubEpubContent)
+      # f.input :epubContent, hint: link_to('Epub Html', note.githubEpubContent)
     end
     f.actions
   end

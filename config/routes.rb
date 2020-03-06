@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   get "chapters/section_content"
+  get "notes/edit_content/:id", to: "notes#edit_content"
+  post "notes/update_content", to: "notes#update_content"
   post "chapters/remove_section_content", to: "chapters#remove_section_content"
   post "chapters/update_and_sort", to: "chapters#update_and_sort"
   get "doubts/pending_stats"
