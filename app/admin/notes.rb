@@ -1,11 +1,13 @@
 ActiveAdmin.register Note do
-  remove_filter :video_annotation, :video
+  remove_filter :video_annotation, :video, :noteTopics, :topics
   permit_params :name, :content, :description, :externalURL, :epubURL, :epubContent, :createdAt, :updatedAt
 
   index do
     id_column
     column :name
-    column :content
+    column "Content" do |note|
+      truncate(note.content, omision: "...", length: 100)
+    end
     column :description
     column :externalURL
     column :epubURL
