@@ -1,11 +1,18 @@
 <div style="margin: 32px; margin-top: 4px;">
-  <h4>Edit Note</h4>
-  <%= raw("<textarea id='note_content'>" + @content + "</textarea>") %>
+  <div id="view_note">
+    <div style="background: white;"><%=raw(@content)%></div>
+    <div style="text-align: center">
+      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>
+    </div>
+  </div>
+  <div id="edit_note" style="display: none;">
+    <h4>Edit Note</h4>
+    <%= raw("<textarea id='note_content'>" + @content + "</textarea>") %>
+    <div style="text-align: center">
+      <button name="update_button" id="update_button" type="button">UPDATE NOTE</button>
+    </div>
+  </div>
 </div>
-<div style="text-align: center">
-  <button name="update_button" id="update_button" type="button">UPDATE NOTE</button>
-</div>
-
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>

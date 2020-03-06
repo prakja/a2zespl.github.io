@@ -55,14 +55,14 @@
     <p>Sections :</p>
     <ul>
       <% @sections_data.each do |key, value| %>
-        <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + value[0].to_s + "</h3>")%>
+        <%= raw("<li style='padding: 18px;'><h3 class='maroon'>" + "<a target='_blank' href='" + admin_section_path(key) + "'>" + value[0].to_s + "</a>"+ "</h3>")%>
         <%= raw("<div style='margin: 12px; border: 1px solid #d3d3d3; display: inline-flex; width: 99%;'>")%>
           <%= raw("<div style='flex: 1; padding: 1em;'><p>Content List</p><ul class='items-content sortable p2 border mb js-sortable-copy-target sortable list list-reset' data-url = '/chapters/update_and_sort'>") %>
             <% value[1].each_with_index do |val, index| %>
               <% if val["contentType"] == 'video' %>
-                <%= raw("<li class='bg-" + (val['contentType'] == 'video' ? 'blue' : 'maroon') + "' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val["id"].to_s + "-admin" + "'>" + val["title"] + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
+                <%= raw("<li class='bg-" + (val['contentType'] == 'video' ? 'blue' : 'maroon') + "' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val["contentId"].to_s + "-admin" + "'>" + val["title"] + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
               <% elsif val["contentType"] == 'note' %>
-                <%= raw("<li class='bg-" + (val['contentType'] == 'video' ? 'blue' : 'maroon') + "' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' href='" + val["title"].to_s + "'>" + val["title"].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
+                <%= raw("<li class='bg-" + (val['contentType'] == 'video' ? 'blue' : 'maroon') + "' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' href='" + "/notes/edit_content/" + val["contentId"].to_s + "'>" + val["title"].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
               <% end %>
             <% end %>
           <%= raw("</ul></div>")%>
