@@ -1,0 +1,53 @@
+<div style="margin: 32px; margin-top: 4px;">
+  <h4>Edit Note</h4>
+  <%= raw("<textarea id='note_content'>" + @content + "</textarea>") %>
+</div>
+<div style="text-align: center">
+  <button name="update_button" id="update_button" type="button">UPDATE NOTE</button>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
+<script>
+let cssLink = document.getElementById('note_content').value.split('rel="stylesheet" type="text/css"/>')[0];
+let css = cssLink.includes("<link href=") ? cssLink + 'rel="stylesheet" type="text/css"/>' : "";
+
+tinymce.init({
+  selector: '#note_content',
+  height: 600,
+  plugins: "link image code paste media",
+  external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
+  language: 'en',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media',
+  paste_data_images: true,
+  extended_valid_elements : 'a[id|class|style|width|height|onclick|href],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset]',
+  images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
+  editorObject: {'id': 'note_content'},
+  setup: function (editor) {
+    editor.on('blur', function (e) {
+      document.getElementById('note_content').value = css + editor.getContent();
+    });
+    editor.settings.images_dataimg_filter = function () {return undefined;};
+  }
+});
+
+$('#update_button').on('click', function(e){
+  let content = document.getElementById('note_content').value;
+  if (!content)
+    return;
+
+  var noteId = "<%= @note.id %>";
+  let url = window.location.origin + "/notes/update_content";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      "noteId": noteId,
+      "content": content
+    }
+  }).done (function (data) {
+    window.location.reload();
+  });
+});
+</script>
