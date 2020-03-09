@@ -4,7 +4,7 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
 script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
 
 .container.mt-2
-  form#notify-form role="form" method="POST" name="f1" action="https://www.neetprep.com/api/v1/job/importantNewsNotification"
+  form#notify-form role="form" method="POST" name="f1" action="https://dev.neetprep.com/api/v1/job/importantNewsNotification"
     .form-group
       lable for="title" Title
       input#title.form-control type="text" placeholder="Message Title" name="title" required="true"
@@ -25,7 +25,7 @@ script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4I
       lable for="imgUrl" Image URL
       input#imgUrl.form-control type="text" placeholder="https://www.youtube.com/image" name="imageUrl"
     .form-group
-      label for="notify-type" Targret
+      label for="notify-type" Target
       select#notify-type.form-control name="contextType" onchange="targetChanged()"
         option BuyCourse
         option LinkUrl
@@ -34,7 +34,7 @@ script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4I
       input#actionUrl.form-control type="text" placeholder="https://www.youtube.com/ydo4Fskedc" name="actionUrl"
     .form-group.courseSelectGroup
       lable for="courses-input" Course 
-      input#courses-input.form-control list="courses" onchange="courseChanged()" /
+      input#courses-input.form-control list="courses" onchange="courseChanged()" required="true" /
       datalist#courses
         = @courses.each do |course|
           option value="#{course.id}" #{course.name}
@@ -54,10 +54,12 @@ javascript:
       $(".actionUrlGroup").hide();
       $(".courseSelectGroup").show();
       $("#actionUrl").val("");
+      $("#courses-input").attr('required', 'true');
     } else if ($("#notify-type").val() == "LinkUrl") {
       $(".actionUrlGroup").show();
       $(".courseSelectGroup").hide();
       $("#courses-input").val("");
+      $("#courses-input").attr('required', 'false');
     }
   }
 
@@ -107,6 +109,8 @@ javascript:
           userId: $("#userId").val() || null
         }
       }).done (function (data) {
+        console.log("sent");
+        alert("Request sent to: " + value);
       });
     });
   });
