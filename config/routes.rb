@@ -49,6 +49,8 @@ Rails.application.routes.draw do
   get "/livesession/:id/", to: "group_chats#group"
   get "/teacher/livesession/:id", to: "group_chats#teacher_view"
 
+  get "/sent-notification", to: "notifications#send_notification"
+
   post "/livesession/create_chat", to: "group_chats#create_chat"
   post "/livesession/block_user", to: "group_chats#block_user"
   post "/livesession/delete_message", to: "group_chats#delete_message"
