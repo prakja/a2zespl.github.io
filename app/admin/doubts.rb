@@ -21,6 +21,7 @@ ActiveAdmin.register Doubt do
   scope :chemistry_paid_student_doubts
   scope :physics_paid_student_doubts
   scope :zoology_paid_student_doubts
+  scope :masterclass_paid_student_doubts
 
   form do |f|
     f.inputs "Doubt" do
