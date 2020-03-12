@@ -94,12 +94,12 @@ class ChaptersController < ApplicationController
         end
 
         if @chapter.hinglish_videos.length > 0
-          not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
+          @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
         else
-          not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
+          @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
         end
-        not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
-        @sections_data[section_content.id] = [section_content.name, contents, not_linked_chapter_videos, not_linked_chapter_notes, index + 1]
+        @not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
+        @sections_data[section_content.id] = [section_content.name, contents, index + 1]
       end
     else
       render json: {error: "UnAuthorized Access!", status: 500}.to_json
