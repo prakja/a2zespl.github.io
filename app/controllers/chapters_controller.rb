@@ -26,10 +26,14 @@ class ChaptersController < ApplicationController
     titleList = params[:titles]
 
     params[:ids].each_with_index do |id, index|
-      if (typesList[index] == 'video' or typesList[index] == 'note') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i)
+      if (typesList[index] == 'video' or typesList[index] == 'note') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
         SectionContent.create(sectionId: sectionsList[index].to_i, title: titleList[index], contentType: typesList[index], contentId: id, position: index + 1)
       else
-        SectionContent.where(id: id).update_all(position: index + 1)
+        if (typesList[index] == 'video' or typesList[index] == 'note')
+          SectionContent.where(contentId: id, contentType: typesList[index], sectionId: sectionsList[index].to_i).update_all(position: index + 1)
+        else
+          SectionContent.where(id: id).update_all(position: index + 1)
+        end
       end
     end
     respond_to do |format|
@@ -89,9 +93,9 @@ class ChaptersController < ApplicationController
           })
         end
 
-        not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
-        not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
-        @sections_data[section_content.id] = [section_content.name, contents, not_linked_chapter_videos, not_linked_chapter_notes, index + 1]
+        @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
+        @not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
+        @sections_data[section_content.id] = [section_content.name, contents, index + 1]
       end
     else
       render json: {error: "UnAuthorized Access!", status: 500}.to_json
