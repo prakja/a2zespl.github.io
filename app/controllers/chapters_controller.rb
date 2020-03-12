@@ -26,10 +26,14 @@ class ChaptersController < ApplicationController
     titleList = params[:titles]
 
     params[:ids].each_with_index do |id, index|
-      if (typesList[index] == 'video' or typesList[index] == 'note') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i)
+      if (typesList[index] == 'video' or typesList[index] == 'note') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
         SectionContent.create(sectionId: sectionsList[index].to_i, title: titleList[index], contentType: typesList[index], contentId: id, position: index + 1)
       else
-        SectionContent.where(id: id).update_all(position: index + 1)
+        if (typesList[index] == 'video' or typesList[index] == 'note')
+          SectionContent.where(contentId: id, contentType: typesList[index], sectionId: sectionsList[index].to_i).update_all(position: index + 1)
+        else
+          SectionContent.where(id: id).update_all(position: index + 1)
+        end
       end
     end
     respond_to do |format|
