@@ -9,6 +9,7 @@ ActiveAdmin.register CampaignPerformanceReport do
     column :day
     column :_sdc_sequence
     column (:campaign) { |campaign_performance_report| raw(campaign_performance_report.campaign)  }
+    column (:campaignID)
     column (:cost) { |campaign_performance_report| raw(campaign_performance_report.cost/1000000).to_f  }
     column (:avgCost) { |campaign_performance_report| raw(campaign_performance_report.avgCost/1000000).to_f  }
     column (:campaignState) { |campaign_performance_report| raw(campaign_performance_report.campaignState)  }
