@@ -26,10 +26,10 @@ class ChaptersController < ApplicationController
     titleList = params[:titles]
 
     params[:ids].each_with_index do |id, index|
-      if (typesList[index] == 'video' or typesList[index] == 'note') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
+      if (typesList[index] == 'video' or typesList[index] == 'note' or typesList[index] == 'test') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
         SectionContent.create(sectionId: sectionsList[index].to_i, title: titleList[index], contentType: typesList[index], contentId: id, position: index + 1)
       else
-        if (typesList[index] == 'video' or typesList[index] == 'note')
+        if (typesList[index] == 'video' or typesList[index] == 'note' or typesList[index] == 'test')
           SectionContent.where(contentId: id, contentType: typesList[index], sectionId: sectionsList[index].to_i).update_all(position: index + 1)
         else
           SectionContent.where(id: id).update_all(position: index + 1)
@@ -70,12 +70,15 @@ class ChaptersController < ApplicationController
 
       videoContentIds = []
       noteContentIds = []
+      testContentIds = []
       @section_contents.each do |section_content|
         section_content.contents.each do |content|
           if content.contentType == 'video'
             videoContentIds.push(content.contentId)
           elsif content.contentType == 'note'
             noteContentIds.push(content.contentId)
+          elsif content.contentType == 'test'
+            testContentIds.push(content.contentId)
           end
         end
       end
@@ -95,9 +98,13 @@ class ChaptersController < ApplicationController
 
         if @chapter.hinglish_videos.length > 0
           @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.hinglish_videos.pluck('"Video"."id","Video"."name"')
+          vidIds = @chapter.hinglish_videos.pluck('"Video"."id"')
         else
           @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
+          vidIds = @chapter.videos.pluck('"Video"."id"')
         end
+        testIds = VideoTest.where(videoId: vidIds).pluck('testId')
+        @not_linked_chapter_video_tests = Test.where(id: testIds).pluck('"Test"."id","Test"."name"')
         @not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
         @sections_data[section_content.id] = [section_content.name, contents, index + 1]
       end
