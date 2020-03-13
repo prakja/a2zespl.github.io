@@ -9,6 +9,10 @@
     .bg-maroon > a {
       color: white;
     }
+    .bg-green {
+      background-color: #298e08 !important;
+      color: white;
+    }
     .bg-blue {
       background-color: #0074d9 !important;
       color: white;
@@ -54,7 +58,7 @@
       <% end %>
     </select>
   </div>
-  <div style="margin: 32px; display: inline-flex; width: 95%" class="sections">
+  <div style="margin: 10px; display: inline-flex; width: 98%" class="sections">
     <div class="items-list">
       <p>Sections :</p>
       <ul>
@@ -80,6 +84,11 @@
     <%= raw("<div class='items-list'><p>Video List:</p><ul class='mb list-reset js-sortable-copy'>") %>
         <% @not_linked_chapter_videos.each_with_index do |val, index| %>
           <%= raw("<li class='bg-blue' data-title='" + val[1].to_s + "' data-type='video' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val[0].to_s + "-admin" + "'>" + val[1].to_s + "</a>" + "</li>")%>
+        <% end %>
+        <%= raw("</ul></div>")%>
+    <%= raw("<div class='items-list'><p>Test List:</p><ul class='mb list-reset js-sortable-copy'>") %>
+        <% @not_linked_chapter_video_tests.each_with_index do |val, index| %>
+          <%= raw("<li class='bg-green' data-title='" + val[1].to_s + "' data-type='test' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/admin/tests/" + val[0].to_s + "'>" + val[1].to_s + "</a>" + "</li>")%>
         <% end %>
         <%= raw("</ul></div>")%>
   </div>
