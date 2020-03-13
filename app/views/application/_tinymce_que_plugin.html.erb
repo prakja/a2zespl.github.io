@@ -1,0 +1,32 @@
+<script>
+tinymce.PluginManager.add('questionIframe', function(editor) {
+  // Add a button that opens a window
+  editor.addButton('questionIframe', {
+    text: 'Add Question Iframe',
+    icon: false,
+    onclick: function() {
+      // Open window
+      editor.windowManager.open({
+        title: 'Question Iframe plugin',
+        body: [
+          {type: 'textbox', name: 'QuestionId', label: 'Question Id'}
+        ],
+        onsubmit: function(e) {
+          var questionId = e.data.QuestionId;
+          // Insert content when the window form is submitted
+          editor.insertContent('<h4>Question:</h4><p><iframe src="https://neetprep.com/epubQuestion/' + questionId + '" width="560" height="315"></iframe></p>');
+        }
+      });
+    }
+  });
+
+  return {
+    getMetadata: function () {
+      return  {
+        name: "Example plugin",
+        url: "http://exampleplugindocsurl.com"
+      };
+    }
+  };
+});
+</script>

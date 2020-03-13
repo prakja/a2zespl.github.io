@@ -5,8 +5,9 @@ ActiveAdmin.register Course do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Course" do
+      render partial: 'tinymce'
       f.input :name
-      f.input :description, as: :quill_editor
+      f.input :description
       f.input :image
       f.input :package
       f.input :fee

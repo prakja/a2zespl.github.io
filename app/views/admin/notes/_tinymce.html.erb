@@ -1,47 +1,16 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
-<script>
-tinymce.PluginManager.add('questionIframe', function(editor) {
-  // Add a button that opens a window
-  editor.addButton('questionIframe', {
-    text: 'Add Question Iframe',
-    icon: false,
-    onclick: function() {
-      // Open window
-      editor.windowManager.open({
-        title: 'Question Iframe plugin',
-        body: [
-          {type: 'textbox', name: 'QuestionId', label: 'Question Id'}
-        ],
-        onsubmit: function(e) {
-          var questionId = e.data.QuestionId;
-          // Insert content when the window form is submitted
-          editor.insertContent('<h4>Question:</h4><p><iframe src="https://neetprep.com/epubQuestion/' + questionId + '" width="560" height="315"></iframe></p>');
-        }
-      });
-    }
-  });
-
-  return {
-    getMetadata: function () {
-      return  {
-        name: "Example plugin",
-        url: "http://exampleplugindocsurl.com"
-      };
-    }
-  };
-});
-</script>
+<%= render partial: "tinymce_ext_scripts" %>
+<%= render partial: "tinymce_youtube_plugin" %>
+<%= render partial: "tinymce_que_plugin" %>
 <script>
 tinymce.init({
   selector: '#note_epubContent',
-  plugins: "link image code paste media questionIframe",
+  plugins: "link image code paste media questionIframe youtubeIframe",
   // TODO: to be added only if secure loading of plugin.js below is not working
   // content_security_policy: "default-src 'self' *.wiris.net *.amazonaws.com *.cloudflare.com; style-src 'self' 'unsafe-inline' *.cloudflare.com; img-src * data:;",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   // TODO: not sure why was this required but language going undefined in wiris editor somehow and gets fixed now
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframe',
   paste_data_images: true,
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better? this is especially added for data image which exist and images_dataimg_filter was anyway getting called for that
@@ -83,9 +52,3 @@ tinymce.init({
   }
 });
 </script>
-<style>
-.mce-tinymce.mce-container.mce-panel {
-  display: inline-block !important;
-  width: calc(80% - 22px) !important;
-}
-</style>

@@ -1,37 +1,5 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
-<script>
-tinymce.PluginManager.add('youtubeIframe', function(editor) {
-  // Add a button that opens a window
-  editor.addButton('youtubeIframe', {
-    text: 'Add Youtube Iframe',
-    icon: false,
-    onclick: function() {
-      // Open window
-      editor.windowManager.open({
-        title: 'Youtube Iframe plugin',
-        body: [
-          {type: 'textbox', name: 'IframeURL', label: 'Iframe URL'}
-        ],
-        onsubmit: function(e) {
-          var youtubeVideoEmbedUrl = "https://www.youtube.com/embed/" + e.data.IframeURL.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/embed\/|\/)([^\s&]+)/)[1];
-          // Insert content when the window form is submitted
-          editor.insertContent('<h2>Video Solution:</h2><p><iframe src="' + youtubeVideoEmbedUrl + '" width="560" height="315"></iframe></p>');
-        }
-      });
-    }
-  });
-
-  return {
-    getMetadata: function () {
-      return  {
-        name: "Example plugin",
-        url: "http://exampleplugindocsurl.com"
-      };
-    }
-  };
-});
-</script>
+<%= render partial: "tinymce_ext_scripts" %>
+<%= render partial: "tinymce_youtube_plugin" %>
 <script>
 tinymce.init({
   selector: '#schedule_description',
@@ -83,9 +51,3 @@ tinymce.init({
   }
 });
 </script>
-<style>
-.mce-tinymce.mce-container.mce-panel {
-  display: inline-block !important;
-  width: calc(80% - 22px) !important;
-}
-</style>

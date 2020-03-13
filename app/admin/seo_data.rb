@@ -1,15 +1,15 @@
 ActiveAdmin.register SEOData do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  permit_params :title, :keywords, :description, :paragraph
 
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+    f.inputs "SEOData" do
+      render partial: 'tinymce'
+      f.input :title
+      f.input :description
+      f.input :keywords
+      f.input :paragraph
+    end
+    f.actions
+  end
 end

@@ -67,7 +67,8 @@ ActiveAdmin.register DoubtAnswer do
 
   form do |f|
     f.inputs "Doubt Answer" do
-      f.input :content, as: :quill_editor
+      render partial: 'tinymce'
+      f.input :content
       f.input :deleted
     end
     f.actions
