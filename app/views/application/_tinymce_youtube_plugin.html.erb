@@ -14,7 +14,7 @@ tinymce.PluginManager.add('youtubeIframe', function(editor) {
         onsubmit: function(e) {
           var youtubeVideoEmbedUrl = "https://www.youtube.com/embed/" + e.data.IframeURL.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/embed\/|\/)([^\s&]+)/)[1] + "?rel=0";
           // Insert content when the window form is submitted
-          editor.insertContent('<h2>Video Solution:</h2><p><div class="embed-responsive embed-responsive-16by9"><iframe src="' + youtubeVideoEmbedUrl + '" width="100%" allowfullscreen></iframe></div></p>');
+          editor.insertContent('<div class="embed-responsive embed-responsive-16by9"><iframe src="' + youtubeVideoEmbedUrl + '" width="100%" allowfullscreen></iframe></div>');
         }
       });
     }

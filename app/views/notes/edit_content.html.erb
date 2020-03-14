@@ -14,7 +14,7 @@
   </div>
 </div>
 <%= render partial: "tinymce_ext_scripts" %>
-<%= render partial: "tinymce_youtube_plugin" %>
+<%= render partial: "tinymce_yt_async_plugin" %>
 <%= render partial: "tinymce_que_plugin" %>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
 <script>
@@ -24,10 +24,10 @@ let css = cssLink.includes("<link href=") ? cssLink + 'rel="stylesheet" type="te
 tinymce.init({
   selector: '#note_content',
   height: 600,
-  plugins: "link image code paste media questionIframe youtubeIframe",
+  plugins: "link image code paste media questionIframe youtubeIframeAsync",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframe',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync',
   paste_data_images: true,
   extended_valid_elements : 'a[id|class|style|width|height|onclick|href],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset]',
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
