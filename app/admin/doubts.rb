@@ -17,11 +17,11 @@ ActiveAdmin.register Doubt do
   filter :student_phone, as: :string
   preserve_default_filters!
 
-  scope :botany_paid_student_doubts
-  scope :chemistry_paid_student_doubts
-  scope :physics_paid_student_doubts
-  scope :zoology_paid_student_doubts
-  scope :masterclass_paid_student_doubts
+  scope :botany_paid_student_doubts, show_count: false
+  scope :chemistry_paid_student_doubts, show_count: false
+  scope :physics_paid_student_doubts, show_count: false
+  scope :zoology_paid_student_doubts, show_count: false
+  scope :masterclass_paid_student_doubts, show_count: false
 
   form do |f|
     f.inputs "Doubt" do
