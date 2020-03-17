@@ -3,7 +3,7 @@ namespace :update do
 
   # [].insert(at, what)
   task :english_schedule => :environment do
-    new_order_chapter_list = 
+    new_order_chapter_list =
     "7889|Read NCERT Chapter|3,7889|Watch NEETprep Videos & Take Notes|8,7889|Practice Questions & Revision|1,7889|Live Session|1,7891|Read NCERT Chapter|3,7891|Watch NEETprep Videos & Take Notes|12,7891|Practice Questions & Revision|5,7891|Live Session|1,7876|Read NCERT Chapter|4,7876|Watch NEETprep Videos & Take Notes|8,7876|Practice Questions & Revision|6,7876|Live Session|1,7879|Read NCERT Chapter|3,7879|Watch NEETprep Videos & Take Notes|8,7879|Practice Questions & Revision|5,7879|Live Session|1".split(",")
     # new_order_chapter_list_stripted
     # new_order_chapter_list.each do |item|
