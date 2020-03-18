@@ -57,6 +57,14 @@ controller do
   end
 end
 
+csv do
+  column ("name") {|user| user.name}
+  column :email
+  column ("user_profile email") {|user| user.user_profile.email if not user.user_profile.nil?}
+  column :phone
+  column ("user_profile phone") {|user| user.user_profile.phone if not user.user_profile.nil?}
+end
+
 index do
   id_column
   column :name
