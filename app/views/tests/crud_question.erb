@@ -1,0 +1,194 @@
+<head>
+  <style>
+    .bg-maroon {
+        background-color: #85144b;
+    }
+    #questionsList{
+      width: 50%;
+      overflow: auto;
+      height: 700px;
+    }
+    .questionData {
+      border: 1px solid;
+      padding: 5px;
+      width: 85%;
+      height: 100px;
+      overflow: auto;
+    }
+    .questionBox {
+      cursor: pointer;
+    }
+    .border-maroon{
+      border: 1px solid #85144b;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <b><%= raw(@test.name) %></b>
+  </div>
+  <div style="margin: 32px">
+    Add Question Ids:
+    <button onclick="addTestQuestions()">Add Selected Questions</button>
+    <textarea placeholder="comma seperated questions ids to be added in test" id="addIds"></textarea>
+  </div>
+  <div style="margin: 32px">
+
+    <div>
+      Selected Question Ids:
+      <span id="selectedIdsCount"></span>
+      <button id="deletedSeletedTestQuestions">Delete Selected Questions</button>
+      <textarea placeholder="selected question ids" id="selectedIds" disabled></textarea>
+    </div>
+    <div>
+      Unselected Question Ids:
+      <span id="unselectedIdsCount"></span>
+      <button id="deletedUnSeletedTestQuestions">Delete Unselected Questions</button>
+      <textarea placeholder="unselected question ids" id="unselectedIds" disabled></textarea>
+    </div>
+    <div>
+      <input type="checkbox" id="selectAllQuestions"></input>
+      <label for="selectAllQuestions">Select All Questions</label>
+    </div>
+    <ul id="questionsList" class="js-grid sortable grid" data-url = '/tests/update_and_sort'>
+      <% @questions_data.each do |key, value| %>
+        <%= raw("<li class='questionData' data-id='" + key.to_s + "'>") %>
+          <%= raw("<input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id='" + key.to_s + "'></input>") %>
+          <%= raw("<span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
+  <script>
+
+    $(document).on('turbolinks:load', function() {
+      sortable('.js-grid', {
+        forcePlaceholderSize: true,
+        placeholderClass: 'border-maroon'
+      });
+
+      sortable('.sortable', {
+        items: 'li'
+      });
+      if (typeof sortable('.sortable')[0] != 'undefined'){
+        $('.sortable').on('sortupdate', function(e) {
+          let dataIDList = [];
+          let testId = '<%= @test.id %>';
+
+          $(this).children().map(function(index){
+             dataIDList.push($(this).data("id"));
+          });
+
+          $.ajax({
+            type: "POST",
+            url: $(this).data("url"),
+            data: {
+              "ids": dataIDList,
+              "testId": testId
+            }
+          }).done (function (data) {
+            console.log('done')
+          });
+        });
+      }
+
+    });
+    function addTestQuestions() {
+      let questionIds = $("#addIds").val();
+      var questionIdsArray = questionIds.split(",");
+      let testId = '<%= @test.id %>';
+      let selectedSequenceId = 0;
+
+      if (questionIds == ""){
+        alert('Questions not selected');
+        return
+      }
+      let url = window.location.origin + "/tests/createTestQuestion";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIdsArray,
+          "testId": testId,
+          "sequenceId": selectedSequenceId
+        }
+      }).done (function (data) {
+        alert("done");
+        window.location.reload();
+      });
+    }
+
+    $('#deletedSeletedTestQuestions').on('click', function(e){
+      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(',') : null;
+      let testId = '<%= @test.id %>';
+      if (questionIds == null){
+        alert('questionIds not selected');
+        return
+      }
+      let url = window.location.origin + "/tests/remove_test_question";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIds,
+          "testId": testId
+        }
+      }).done (function (data) {
+        window.location.reload();
+      });
+    });
+
+    $('#deletedUnSeletedTestQuestions').on('click', function(e){
+      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(',') : null;
+      let testId = '<%= @test.id %>';
+      if (questionIds == null){
+        alert('questionIds not selected');
+        return
+      }
+      let url = window.location.origin + "/tests/remove_test_question";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIds,
+          "testId": testId
+        }
+      }).done (function (data) {
+        window.location.reload();
+      });
+    });
+
+    $("#selectAllQuestions").click(function () {
+      $(".questionCheckbox").prop('checked', $(this).prop('checked'));
+      pushSelectedIds();
+    });
+
+    function pushSelectedIds() {
+      seletedIdCount = 0;
+      unSelectedIdCount = 0;
+
+      seletedIds = "";
+      unSeletedIds = "";
+
+      $("input:checkbox").each(function(){
+        var $this = $(this);
+        if($this.is(":checked") && $this.hasClass("questionCheckbox")){
+          seletedIdCount += 1;
+          seletedIds +=  $this.prop("id") + ",";
+        } else if($this.is(":checked") ==  false && $this.hasClass("questionCheckbox")) {
+          unSelectedIdCount += 1;
+          unSeletedIds +=  $this.prop("id") + ",";
+        }
+      });
+
+      $("#selectedIdsCount").html("(" + seletedIdCount + ")");
+      var selectedTextarea = $("#selectedIds");
+      selectedTextarea.val(seletedIds.replace(/(^,)|(,$)/g, ""));
+
+      $("#unselectedIdsCount").html("(" + unSelectedIdCount + ")");
+      var unseletedTextarea = $("#unselectedIds");
+      unseletedTextarea.val(unSeletedIds.replace(/(^,)|(,$)/g, ""));
+    }
+  </script>
+</body>

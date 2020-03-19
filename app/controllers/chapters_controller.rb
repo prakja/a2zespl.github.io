@@ -104,7 +104,7 @@ class ChaptersController < ApplicationController
           vidIds = @chapter.videos.pluck('"Video"."id"')
         end
         testIds = VideoTest.where(videoId: vidIds).pluck('testId')
-        @not_linked_chapter_video_tests = Test.where(['"id" not in (?)', testContentIds]).where(id: testIds).pluck('"Test"."id","Test"."name"')
+        @not_linked_chapter_video_tests = Test.where(id: testIds - testContentIds).pluck('"Test"."id","Test"."name"')
         @not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')
         @sections_data[section_content.id] = [section_content.name, contents, index + 1]
       end

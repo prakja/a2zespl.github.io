@@ -35,6 +35,52 @@ class TestsController < ApplicationController
     end
   end
 
+  def update_and_sort
+    ids = params[:ids]
+    testId = params[:testId]
+
+    ids.each_with_index do |id, index|
+      TestQuestion.where(testId: testId, questionId: id).update_all(seqNum: index + 1)
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def crud_question
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @questions_data = {}
+    @testId = params.require(:testId)
+    @test = Test.find(@testId)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
+    @testQuestions.each_with_index do |question, index|
+      @questions_data[question.id] = [question.question, index+1]
+    end
+
+  end
+
+  def remove_test_question
+    begin
+      testId = params[:testId]
+      questionIds = params[:questionIds]
+
+      TestQuestion.where(testId: testId).where(questionId: questionIds).delete_all
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+
+    end
+  end
+
   def add_sequence
     if not current_admin_user
       redirect_to "/admin/login"

@@ -69,9 +69,9 @@
                     <% if val["contentType"] == 'video' %>
                       <%= raw("<li class='bg-blue' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val["contentId"].to_s + "-admin" + "'>" + val["title"] + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
                     <% elsif val["contentType"] == 'note' %>
-                      <%= raw("<li class='bg-maroon' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' href='" + "/notes/edit_content/" + val["contentId"].to_s + "'>" + val["title"].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
+                      <%= raw("<li class='bg-maroon' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/notes/edit_content/" + val["contentId"].to_s + "'>" + val["title"].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
                     <% elsif val["contentType"] == 'test' %>
-                      <%= raw("<li class='bg-green' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' href='" + "/admin/tests/" + val["contentId"].to_s + "'>" + val["title"] + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
+                      <%= raw("<li class='bg-green' data-title='" + val["title"].to_s + "' data-section='" + key.to_s + "' data-type='saved' data-id='" + val["id"].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/tests/crud_question/" + val["contentId"].to_s + "'>" + val["title"] + "</a>" + " <button data-content='" + val["id"].to_s + "' class='removeBtn' style='float: right;'>Remove</button>" + "</li>")%>
                     <% end %>
                   <% end %>
                   <%= raw("</ul></li>")%>
@@ -90,7 +90,7 @@
         <%= raw("</ul></div>")%>
     <%= raw("<div class='items-list'><p>Test List:</p><ul class='mb list-reset js-sortable-copy'>") %>
         <% @not_linked_chapter_video_tests.each_with_index do |val, index| %>
-          <%= raw("<li class='bg-green' data-title='" + val[1].to_s + "' data-type='test' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/admin/tests/" + val[0].to_s + "'>" + val[1].to_s + "</a>" + "</li>")%>
+          <%= raw("<li class='bg-green' data-title='" + val[1].to_s + "' data-type='test' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/tests/crud_question/" + val[0].to_s + "'>" + val[1].to_s + "</a>" + "</li>")%>
         <% end %>
         <%= raw("</ul></div>")%>
   </div>
