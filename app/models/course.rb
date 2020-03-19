@@ -30,4 +30,5 @@ class Course < ApplicationRecord
   has_many :courseCourseTests, foreign_key: :courseId, class_name: 'CourseTest'
   has_many :tests, through: :courseCourseTests
   has_many :subjects, class_name: "Subject", foreign_key: "courseId"
+  has_one :course_offer, class_name: "CourseOffer", foreign_key: "courseId"
 end

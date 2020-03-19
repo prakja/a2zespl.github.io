@@ -8,6 +8,7 @@ class AdminUser < ApplicationRecord
   has_many :doubt_admins, class_name: "DoubtAdmin", foreign_key: "admin_user_id"
   has_many :doubts, through: :doubt_admins
   has_many :coachStudents, foreign_key: "coachId", class_name: 'StudentCoach'
+  has_one :course_offer, class_name: "CourseOffer", foreign_key: "admin_user_id"
 
   before_create :before_create_admin_user
 
