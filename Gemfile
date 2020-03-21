@@ -89,3 +89,4 @@ gem 'activeadmin-searchable_select'
 gem 'exception_notification'
 gem 'slack-notifier'
 gem 'acts_as_list'
+gem "nilify_blanks"
