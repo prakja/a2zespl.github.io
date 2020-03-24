@@ -9,8 +9,8 @@ namespace :video_question do
     questions = file_content.scan(/[0-9]{2}:[0-9]{2}.*?Answer.*?\n/m)
     test_name = file_name.gsub(".txt", "").gsub(/.*\//, "")
     p test_name
-    test = Test.create!(name: test_name)
-    VideoTest.create!(videoId: video_id, testId: test.id)
+    video_test = VideoTest.find_by videoId: video_id || VideoTest.create!(videoId: video_id, testId: test.id)
+    test = Test.find(video_test.testId) || Test.create!(name: test_name)
     questions.each do |question|
       match_data = question.match(/([0-9]{2}):([0-9]{2})(.*?)Answer: \((.*?)\)\s?\r\n/m)
       p question
