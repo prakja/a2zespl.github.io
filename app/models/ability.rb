@@ -7,7 +7,7 @@ class Ability
     elsif user.role == 'faculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, SubTopic
-      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer]
+      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest]
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
     elsif user.role == 'support'
