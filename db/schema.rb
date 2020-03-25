@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_02_052953) do
+ActiveRecord::Schema.define(version: 2020_03_25_081700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
 # Could not dump table "Advertisement" because of following StandardError
@@ -128,5 +129,62 @@ ActiveRecord::Schema.define(version: 2020_03_02_052953) do
     t.datetime "updatedAt", null: false
     t.index ["chapterId"], name: "chapter_task_chapter_id"
     t.index ["taskId"], name: "chapter_task_task_id"
+  end
+
+  create_table "ChapterTest", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "testId"
+    t.datetime "createdAt", default: -> { "now()" }, null: false
+    t.datetime "updatedAt", default: -> { "now()" }, null: false
+    t.index ["chapterId", "testId"], name: "chaptertest_chapter_id_test_id", unique: true
+    t.index ["chapterId"], name: "chapter_test_chapter_id"
+    t.index ["testId"], name: "chapter_test_test_id"
+  end
+
+  create_table "ChapterVideo", id: :serial, force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "videoId"
+    t.datetime "createdAt", default: -> { "now()" }, null: false
+    t.datetime "updatedAt", default: -> { "now()" }, null: false
+    t.index ["chapterId", "videoId"], name: "chaptervideo_chapter_id_video_id", unique: true
+    t.index ["chapterId"], name: "chapter_video_chapter_id"
+    t.index ["videoId"], name: "chapter_video_video_id"
+  end
+
+  create_table "ChatAnswer", id: :serial, force: :cascade do |t|
+    t.integer "userAnswer"
+    t.integer "questionId", null: false
+    t.integer "messageId"
+    t.integer "groupId"
+    t.integer "userId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "Comment", id: :serial, force: :cascade do |t|
+    t.text "text"
+    t.text "imgUrl"
+    t.string "ownerType", limit: 255
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "ownerId"
+    t.integer "userId"
+  end
+
+  create_table "ConfigValue", id: :serial, force: :cascade do |t|
+    t.text "accessToken"
+    t.string "refreshToken", limit: 255
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
+  create_table "CopyAnswer", id: :serial, force: :cascade do |t|
+    t.integer "userAnswer"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "questionId"
+    t.integer "userId"
+    t.integer "testAttemptId"
+    t.integer "durationInSec"
   end
 
