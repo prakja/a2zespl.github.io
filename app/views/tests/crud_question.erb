@@ -25,7 +25,7 @@
 </head>
 <body>
   <div style="margin: 32px">
-    <b><%= raw(@test.name) %></b>
+    <b><a href="/admin/tests/<%=@test.id%>" target="_blank"><%= raw(@test.name) %></a></b>
   </div>
   <div style="margin: 32px">
     Add Question Ids:
@@ -54,7 +54,7 @@
       <% @questions_data.each do |key, value| %>
         <%= raw("<li class='questionData' data-id='" + key.to_s + "'>") %>
           <%= raw("<input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id='" + key.to_s + "'></input>") %>
-          <%= raw("<span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
+          <%= raw("<a href='/admin/questions/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
         </li>
       <% end %>
     </ul>
