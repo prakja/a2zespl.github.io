@@ -1,5 +1,5 @@
 ActiveAdmin.register Course do
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses
 
   form do |f|
@@ -20,6 +20,7 @@ ActiveAdmin.register Course do
       f.input :recommended
       f.input :discountedFee
       f.input :expiryAt, as: :date_picker
+      f.input :hasVideo
     end
     f.actions
   end
