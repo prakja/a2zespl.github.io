@@ -6,19 +6,24 @@ namespace :video_question do
     file_name = ARGV[1]
     video_id = ARGV[2].to_i;
     file_content = File.read(file_name)
-    questions = file_content.scan(/[0-9]{2}:[0-9]{2}.*?Answer.*?\)/m)
+    questions = file_content.scan(/[0-9]{2}[:;][0-9]{2}.*?Answer.*?\)/m)
     test_name = file_name.gsub(".docx", "").gsub(".txt", "").gsub(/.*\//, "")
     p test_name
     test = nil
     video_test = VideoTest.find_by videoId: video_id
     if video_test.nil?
-      test = Test.create!(name: test_name)
+      test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1)
       VideoTest.create!(videoId: video_id, testId: test.id)
     else
       test = Test.find(video_test.testId)
+      if test.positiveMarks.blank? or test.negativeMarks.blank?
+        test.positiveMarks = 4
+        test.negativeMarks = 1
+        test.save!
+      end
     end
     questions.each do |question|
-      match_data = question.match(/([0-9]{2}):([0-9]{2})(.*?)Answer[ :;]+\((.*?)\)\s?/m)
+      match_data = question.match(/([0-9]{2})[:;]([0-9]{2})(.*?)Answer[ :;]+\((.*?)\)\s?/m)
       if not match_data.nil? and match_data.length == 5
         timestamp = match_data[1].to_i * 60 + match_data[2].to_i
         question_content = match_data[3].gsub("\r\n", "<br />")
