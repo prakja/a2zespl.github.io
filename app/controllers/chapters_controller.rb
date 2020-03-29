@@ -103,6 +103,11 @@ class ChaptersController < ApplicationController
           @not_linked_chapter_videos = videoContentIds.length > 0 ? @chapter.videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : @chapter.videos.pluck('"Video"."id","Video"."name"')
           vidIds = @chapter.videos.pluck('"Video"."id"')
         end
+
+        # added "mathematical tools" videos to show in "motion in a plane" chapter for section content linking
+        if @chapterId == '678'
+          @not_linked_chapter_videos += videoContentIds.length > 0 ? Topic.where(id: 676).first.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : Topic.where(id: 676).first.hinglish_videos.pluck('"Video"."id","Video"."name"')
+        end
         testIds = VideoTest.where(videoId: vidIds).pluck('testId')
         @not_linked_chapter_video_tests = Test.where(id: testIds - testContentIds).pluck('"Test"."id","Test"."name"')
         @not_linked_chapter_notes = noteContentIds.length > 0 ? @chapter.notes.where(['"Note"."id" not in (?) and "Note"."description"=(?)', noteContentIds, 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"') : @chapter.notes.where(['"Note"."description"=(?)', 'section']).order('"Note"."name"').pluck('"Note"."id","Note"."externalURL"')

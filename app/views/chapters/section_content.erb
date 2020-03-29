@@ -78,21 +78,27 @@
         <% end %>
       </ul>
     </div>
-    <%= raw("<div class='items-list'><p>NCERT List:</p><ul class='mb list-reset js-sortable-copy'>") %>
+    <% if @not_linked_chapter_notes != nil %>
+      <%= raw("<div class='items-list'><p>NCERT List:</p><ul class='mb list-reset js-sortable-copy'>") %>
         <% @not_linked_chapter_notes.each_with_index do |val, index| %>
           <%= raw("<li class='bg-maroon' data-title='" + val[1].to_s + "' data-type='note' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' href='" +  "/notes/edit_content/"  + val[0].to_s + "'>" + val[1].to_s.gsub(/.*\/OEBPS\/Text\//, "") + "</a>" + "</li>")%>
         <% end %>
-        <%= raw("</ul></div>")%>
-    <%= raw("<div class='items-list'><p>Video List:</p><ul class='mb list-reset js-sortable-copy'>") %>
+      <%= raw("</ul></div>")%>
+    <% end %>
+    <% if @not_linked_chapter_videos != nil %>
+      <%= raw("<div class='items-list'><p>Video List:</p><ul class='mb list-reset js-sortable-copy'>") %>
         <% @not_linked_chapter_videos.each_with_index do |val, index| %>
           <%= raw("<li class='bg-blue' data-title='" + val[1].to_s + "' data-type='video' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "https://www.neetprep.com/video-class/" + val[0].to_s + "-admin" + "'>" + val[1].to_s + "</a>" + "</li>")%>
         <% end %>
-        <%= raw("</ul></div>")%>
-    <%= raw("<div class='items-list'><p>Test List:</p><ul class='mb list-reset js-sortable-copy'>") %>
+      <%= raw("</ul></div>")%>
+    <% end %>
+    <% if @not_linked_chapter_video_tests != nil %>
+      <%= raw("<div class='items-list'><p>Test List:</p><ul class='mb list-reset js-sortable-copy'>") %>
         <% @not_linked_chapter_video_tests.each_with_index do |val, index| %>
           <%= raw("<li class='bg-green' data-title='" + val[1].to_s + "' data-type='test' data-id='" + val[0].to_s  + "'>" + "<a target='_blank' style='color: white;' href='" + "/tests/crud_question/" + val[0].to_s + "'>" + val[1].to_s + "</a>" + "</li>")%>
         <% end %>
-        <%= raw("</ul></div>")%>
+      <%= raw("</ul></div>")%>
+    <% end %>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
