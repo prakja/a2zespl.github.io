@@ -68,4 +68,35 @@ namespace :update do
       end
     end
   end
+
+  task :revised_schedule => :environment do
+    to_add ="2020-04-03, Read NCERT Chapter ,Chemistry: Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Nomenclature) | Read NCERT Chapter - 2 hrs,656,2,https://www.neetprep.com/ncert-book-pdf/54-Chemistry/656-~2020-04-04, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Nomenclature) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-05, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Nomenclature) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-06, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Nomenclature) | Watch NEETprep Videos & Take Notes - 2 hrs,656,2,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-07, Practice Questions & Revision ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Nomenclature) | Practice Questions & Revision - 3 hrs,656,3,https://www.neetprep.com/questions/54-Chemistry/656-~2020-04-08, Read NCERT Chapter ,Chemistry: Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Isomerism) | Read NCERT Chapter - 2 hrs,656,2,https://www.neetprep.com/ncert-book-pdf/54-Chemistry/656-~2020-04-14, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Isomerism) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-17, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Isomerism) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-18, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Isomerism) | Watch NEETprep Videos & Take Notes - 4 hrs,656,4,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-19, Practice Questions & Revision ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Isomerism) | Practice Questions & Revision - 4 hrs,656,4,https://www.neetprep.com/questions/54-Chemistry/656-~2020-04-22, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Effects) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-23, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Effects) | Watch NEETprep Videos & Take Notes - 3 hrs,656,3,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-26, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Effects) | Watch NEETprep Videos & Take Notes - 4 hrs,656,4,https://www.neetprep.com/video-classes/54-Chemistry/656-~2020-04-27, Practice Questions & Revision ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Effects) | Practice Questions & Revision - 4 hrs,656,4,https://www.neetprep.com/questions/54-Chemistry/656-~2020-04-30, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Reaction Mechanism) | Watch NEETprep Videos & Take Notes - 3 hrs,7464,3,https://www.neetprep.com/video-classes/54-Chemistry/7464-~2020-05-01, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Reaction Mechanism) | Watch NEETprep Videos & Take Notes - 3 hrs,7464,3,https://www.neetprep.com/video-classes/54-Chemistry/7464-~2020-05-02, Watch NEETprep Videos & Take Notes ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Reaction Mechanism) | Watch NEETprep Videos & Take Notes - 4 hrs,7464,4,https://www.neetprep.com/video-classes/54-Chemistry/7464-~2020-05-03, Practice Questions & Revision ,Chemistry: Organic Chemistry - Some Basic Principles And Techniques (Reaction Mechanism) | Practice Questions & Revision - 4 hrs,7464,4,https://www.neetprep.com/questions/54-Chemistry/7464-"
+    added_ids = []
+    to_add.split("~").each do |line|
+      begin
+        row_data = line.split(',')
+        date = row_data[0]
+        name = row_data[1]
+        desc = row_data[2]
+        chapter = row_data[3]
+        hours = row_data[4]
+        link = row_data[5]
+        item = ScheduleItem.create({
+          :createdAt => Time.now,
+          :updatedAt => Time.now,
+          :name => name.strip,
+          :description => desc.strip,
+          :scheduledAt => DateTime.parse(date.to_s).at_noon,
+          :topicId => chapter.to_i,
+          :scheduleId => 7,
+          :hours => hours.to_i,
+          :link => link
+        })
+        added_ids << item.id
+      rescue => exception
+        p exception
+      end
+    end
+    p added_ids
+  end
 end

@@ -19,9 +19,7 @@ ActiveAdmin.register CourseOffer do
   permit_params :title, :text, :courseId, :fee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
     # f.object.admin_user_id = current_admin_user.id
-    p f.object
     f.inputs "Course Offer" do
       f.input :title
       f.input :description
@@ -34,7 +32,6 @@ ActiveAdmin.register CourseOffer do
       f.input :offerStartedAt, as: :datetime_picker
       f.input :position
       f.input :hidden
-
       f.input :admin_user_id, :input_html => { :value => current_admin_user.id } if f.object.admin_user_id.blank?
       f.input :admin_user_id if not f.object.admin_user_id.blank?
     end
