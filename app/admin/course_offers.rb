@@ -26,9 +26,10 @@ ActiveAdmin.register CourseOffer do
       f.input :course, input_html: { class: "select2" }
       f.input :fee
       f.input :discountedFee
+      f.input :durationInDays
+      f.input :expiryAt
       f.input :email
       f.input :phone
-      f.input :durationInDays
       f.input :offerExpiryAt, as: :datetime_picker
       f.input :offerStartedAt, as: :datetime_picker
       f.input :position
