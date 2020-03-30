@@ -25,6 +25,7 @@ ActiveAdmin.register CourseOffer do
       f.input :description
       f.input :course, input_html: { class: "select2" }
       f.input :fee
+      f.input :discountedFee
       f.input :email
       f.input :phone
       f.input :durationInDays
