@@ -17,7 +17,7 @@ ActiveAdmin.register Section do
     f.has_many :contents, new_record: true, allow_destroy: true do |content|
       content.inputs "" do
         content.input :title
-        content.input :contentType, :input_html => {value: 'video'}
+        content.input :contentType, :input_html => {value: 'Video'}
         content.input :contentId, as: :select, :collection => Topic.get_assets(f.object.chapterId)
         content.input :position
       end
