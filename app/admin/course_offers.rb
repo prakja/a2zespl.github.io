@@ -27,7 +27,7 @@ ActiveAdmin.register CourseOffer do
       f.input :fee
       f.input :discountedFee
       f.input :durationInDays
-      f.input :expiryAt
+      f.input :expiryAt, as: :datetime_picker
       f.input :email
       f.input :phone
       f.input :offerExpiryAt, as: :datetime_picker
