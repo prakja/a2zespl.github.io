@@ -16,7 +16,7 @@ ActiveAdmin.register CourseOffer do
   # end
 
   remove_filter :admin_user, :course
-  permit_params :title, :text, :courseId, :fee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course
+  permit_params :title, :text, :courseId, :fee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :discountedFee, :expiryAt
 
   form do |f|
     # f.object.admin_user_id = current_admin_user.id
