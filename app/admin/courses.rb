@@ -21,6 +21,7 @@ ActiveAdmin.register Course do
       f.input :discountedFee
       f.input :expiryAt, as: :date_picker
       f.input :hasVideo
+      f.input :hasPartTest
       f.input :allowCallback
     end
     f.actions
