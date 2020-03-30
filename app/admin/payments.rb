@@ -2,7 +2,9 @@ ActiveAdmin.register Payment do
   config.sort_order = 'createdAt_desc'
 
   permit_params :amount, :paymentMode, :saleType, :userName, :userEmail, :userPhone, :userState, :userCity, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut ,:netRevenue, :course, :paymentForId, :createdAt
-  remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut, :netRevenue
+  remove_filter :course, :courseInvitation, :versions, :courseInvitations, :paymentCourseInvitations, :paymentForType, :purchasedItemId, :purchasedItemType, :salesPerson, :revenue, :paytmCut, :gstCut, :pendriveCut, :netRevenue, :user
+  preserve_default_filters!
+  filter :userId_eq, as: :number, label: "User ID"
 
   scope :failed_payments
   scope :kotak_payments

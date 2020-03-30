@@ -16,6 +16,7 @@ class User < ApplicationRecord
  has_many :studentCoches, foreign_key: "studentId", class_name: 'StudentCoach'
 
  has_many :user_courses, class_name: "UserCourse", foreign_key: "userId"
+ has_many :payments, class_name: "Payment", foreign_key: "userId"
 
  scope :student_name, ->(name) {
    joins(:user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
