@@ -1,6 +1,6 @@
 ActiveAdmin.register Course do
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt
-  remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest
+  remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
@@ -21,6 +21,7 @@ ActiveAdmin.register Course do
       f.input :discountedFee
       f.input :expiryAt, as: :date_picker
       f.input :hasVideo
+      f.input :hasPartTest
       f.input :allowCallback
     end
     f.actions

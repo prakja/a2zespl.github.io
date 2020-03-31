@@ -26,10 +26,10 @@ class ChaptersController < ApplicationController
     titleList = params[:titles]
 
     params[:ids].each_with_index do |id, index|
-      if (typesList[index] == 'video' or typesList[index] == 'note' or typesList[index] == 'test') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
+      if (typesList[index] == 'Video' or typesList[index] == 'Note' or typesList[index] == 'Test') and !SectionContent.exists?(:contentId => id,:sectionId => sectionsList[index].to_i, :contentType => typesList[index])
         SectionContent.create(sectionId: sectionsList[index].to_i, title: titleList[index], contentType: typesList[index], contentId: id, position: index + 1)
       else
-        if (typesList[index] == 'video' or typesList[index] == 'note' or typesList[index] == 'test')
+        if (typesList[index] == 'Video' or typesList[index] == 'Note' or typesList[index] == 'Test')
           SectionContent.where(contentId: id, contentType: typesList[index], sectionId: sectionsList[index].to_i).update_all(position: index + 1)
         else
           SectionContent.where(id: id).update_all(position: index + 1)
@@ -73,11 +73,11 @@ class ChaptersController < ApplicationController
       testContentIds = []
       @section_contents.each do |section_content|
         section_content.contents.each do |content|
-          if content.contentType == 'video'
+          if content.contentType == 'Video'
             videoContentIds.push(content.contentId)
-          elsif content.contentType == 'note'
+          elsif content.contentType == 'Note'
             noteContentIds.push(content.contentId)
-          elsif content.contentType == 'test'
+          elsif content.contentType == 'Test'
             testContentIds.push(content.contentId)
           end
         end

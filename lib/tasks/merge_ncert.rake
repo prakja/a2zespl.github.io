@@ -14,7 +14,7 @@ namespace :merge do
         length_sum = 0
 
         section_contents.each_with_index do |section_content, index|
-          if section_content.contentType == 'note' and length_sum < 5000
+          if section_content.contentType == 'Note' and length_sum < 5000
             if index == (section_contents.count - 1)
               htmlContent = Note.find(section_content.contentId).content.gsub!(/<link.*?>|<\/>/, '')
               if htmlContent.length > 1000
@@ -30,8 +30,8 @@ namespace :merge do
               htmlContent = Note.find(section_content.contentId).content.gsub!(/<link.*?>|<\/>/, '')
               length_sum += htmlContent.length if not htmlContent.nil?
             end
-            
-          elsif section_content.contentType == 'note' and length_sum >= 5000
+
+          elsif section_content.contentType == 'Note' and length_sum >= 5000
             p section_content.contentId.to_s + " :>5000"
             global_array.push(temp) if not temp.empty?
             temp = []
@@ -44,7 +44,7 @@ namespace :merge do
               temp = []
               length_sum = 0
             end
-          elsif section_content.contentType != 'note'
+          elsif section_content.contentType != 'Note'
             global_array.push(temp) if not temp.empty?
             temp = []
             length_sum = 0
@@ -69,7 +69,7 @@ namespace :merge do
         htmlContent += Note.find(note_id).content
       else
         htmlContent += Note.find(note_id).content.gsub!(/<link.*?>|<\/>/, '')
-        section_content_to_delete = SectionContent.where(contentType: 'note', contentId: note_id).first
+        section_content_to_delete = SectionContent.where(contentType: 'Note', contentId: note_id).first
         SectionContent.delete(section_content_to_delete.id)
       end
     end

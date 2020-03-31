@@ -12,7 +12,7 @@ permit_params :blockedUser
 #   permitted
 # end
 
-remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone
+remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone, :payments
 filter :student_name, as: :string
 filter :student_email, as: :string
 filter :student_phone, as: :string
@@ -110,6 +110,7 @@ sidebar :user_activity, only: :show do
     li link_to "Overall Rank", admin_common_leader_boards_path(q: {userId_eq: user.id}, order: 'rank_asc')
     li link_to "Videos Watched ", admin_user_video_stats_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Todos ", admin_user_todos_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "User Payments", admin_payments_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
   end
 end
 
