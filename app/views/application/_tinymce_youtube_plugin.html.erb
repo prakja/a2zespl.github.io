@@ -9,10 +9,18 @@ tinymce.PluginManager.add('youtubeIframe', function(editor) {
       editor.windowManager.open({
         title: 'Youtube Iframe plugin',
         body: [
-          {type: 'textbox', name: 'IframeURL', label: 'Iframe URL'}
+          {type: 'textbox', name: 'IframeURL', label: 'Iframe URL'},
+          {type: 'textbox', name: 'startTime', label: 'start time in seconds'},
+          {type: 'textbox', name: 'endtime', label: 'end time in seconds'}
         ],
         onsubmit: function(e) {
           var youtubeVideoEmbedUrl = "https://www.youtube.com/embed/" + e.data.IframeURL.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/embed\/|\/)([^\s&]+)/)[1] + "?rel=0";
+          if(e.data.startTime != null && e.data.startTime != '') {
+            youtubeVideoEmbedUrl += '&start=' + e.data.startTime;
+          }
+          if(e.data.endtime != null && e.data.endtime != '') {
+            youtubeVideoEmbedUrl += '&end=' + e.data.endtime;
+          }
           // Insert content when the window form is submitted
           editor.insertContent('<div class="embed-responsive embed-responsive-16by9"><iframe src="' + youtubeVideoEmbedUrl + '" width="100%" allowfullscreen></iframe></div>');
         }
