@@ -34,6 +34,14 @@ class Video < ApplicationRecord
     })
   end
 
+  def videoUrl 
+    if not self.url.blank?
+      return self.url 
+    else
+      return self.youtubeUrl
+    end
+  end
+
   # scope :subject_name_by_id, ->(subject_id) {
   #   joins(:topics => :subject).where(topic: {Subject: {id: subject_id}})
   # }
