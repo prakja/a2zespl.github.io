@@ -56,7 +56,7 @@ class CourseInvitation < ApplicationRecord
    end
 
    scope :invitation_created_more_than_7days_by_sales, -> {
-     where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit"::int in (?) and "item_type" = ? and "event" = ?', AdminUser.sales_role, 'CourseInvitation', 'create').exists).where('"CourseInvitation"."expiryAt"> ?', (Time.now + 7.day));
+     where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit"::int in (?) and "item_type" = ? and "event" = ?', AdminUser.sales_role, 'CourseInvitation', 'create').exists).where('"CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day');
    }
 
    scope :invitations_without_payment, -> {
