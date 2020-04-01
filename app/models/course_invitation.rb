@@ -13,7 +13,7 @@ class CourseInvitation < ApplicationRecord
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
 
-   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "adminUserId", optional: true
+   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "admin_user_id", optional: true
 
    def setCreatedTime
      self.createdAt = Time.now
@@ -58,7 +58,7 @@ class CourseInvitation < ApplicationRecord
    end
 
    scope :invitation_created_more_than_7days_by_sales, -> {
-      where('"CourseInvitation"."adminUserId" in (?) and "CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day', AdminUser.sales_role);
+      where('"CourseInvitation"."admin_user_id" in (?) and "CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day', AdminUser.sales_role);
    }
 
    scope :invitations_without_payment, -> {

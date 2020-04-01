@@ -8,7 +8,7 @@ class CourseOffer < ApplicationRecord
 
   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "admin_user_id", optional: true
   belongs_to :course, class_name: "Course", foreign_key: "courseId"
-  
+
   scope :user_via_email, -> {
     joins(:user).where('"User"."email" = "email"')
   }
