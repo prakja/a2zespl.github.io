@@ -95,6 +95,9 @@ ActiveAdmin.register CourseInvitation do
     end
     column :expiryAt
     column :createdAt
+    column "adminUser" do |courseInvitation|
+      courseInvitation.admin_user
+    end
     column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
     actions
   end
