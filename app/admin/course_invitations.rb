@@ -2,7 +2,7 @@ ActiveAdmin.register CourseInvitation do
   before_save do |course_invitation|
     course_invitation.admin_user = current_admin_user
   end
-  permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
+  permit_params :course, :displayName, :email, :phone, :role, :adminUserId, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
   active_admin_import validate: true,
     timestamps: true,
@@ -95,9 +95,7 @@ ActiveAdmin.register CourseInvitation do
     end
     column :expiryAt
     column :createdAt
-    column "adminUser" do |courseInvitation|
-      courseInvitation.admin_user
-    end
+    column :admin_user
     column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
     actions
   end
@@ -112,6 +110,8 @@ ActiveAdmin.register CourseInvitation do
       f.input :role, as: :select, :collection => ["courseStudent", "courseManager", "courseCreator", "courseAdmin"]
       f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.all_payments_3_months
       f.input :expiryAt, as: :date_picker, label: "Expire Course At"
+      f.input :adminUserId, as: :hidden, :input_html => { :value => current_admin_user.id } if f.object.adminUserId.blank?
+      f.input :adminUserId, as: :hidden if not f.object.adminUserId.blank?
     end
     f.actions
   end

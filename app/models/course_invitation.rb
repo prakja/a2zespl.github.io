@@ -13,6 +13,8 @@ class CourseInvitation < ApplicationRecord
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
 
+   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "admin_user_id", optional: true
+
    def setCreatedTime
      self.createdAt = Time.now
    end
@@ -55,18 +57,8 @@ class CourseInvitation < ApplicationRecord
      })
    end
 
-   def admin_user
-     admin_id = PaperTrail::Version.where('"item_id" = ? and "item_type" = ? and "event" = ?', self.id, 'CourseInvitation', 'create').pluck('whodunnit');
-     p admin_id
-     if admin_id != nil
-       return AdminUser.where(id: admin_id).pluck(:email)
-     else
-       return ""
-     end
-   end
-
    scope :invitation_created_more_than_7days_by_sales, -> {
-     where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit"::int in (?) and "item_type" = ? and "event" = ?', AdminUser.sales_role, 'CourseInvitation', 'create').exists).where('"CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day');
+      where('"CourseInvitation"."adminUserId" in (?) and "CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day', AdminUser.sales_role);
    }
 
    scope :invitations_without_payment, -> {
