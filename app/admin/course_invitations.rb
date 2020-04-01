@@ -110,8 +110,7 @@ ActiveAdmin.register CourseInvitation do
       f.input :role, as: :select, :collection => ["courseStudent", "courseManager", "courseCreator", "courseAdmin"]
       f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.all_payments_3_months
       f.input :expiryAt, as: :date_picker, label: "Expire Course At"
-      f.input :adminUserId, as: :hidden, :input_html => { :value => current_admin_user.id } if f.object.adminUserId.blank?
-      f.input :adminUserId, as: :hidden if not f.object.adminUserId.blank?
+      f.input :adminUserId, as: :hidden, :input_html => { :value => current_admin_user.id }
     end
     f.actions
   end
