@@ -157,6 +157,8 @@ ActiveAdmin.register Video do
     column (:subject) {|video| raw(video.topics[0].subject.name)}
     column (:chapter) {|video| raw(video.topics[0].name)}
     column :name
+    column (:url) {|video| video.videoUrl}
+    column (:position) {|video| video.seqId}
   end
 
   member_action :history do

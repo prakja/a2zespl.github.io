@@ -13,8 +13,15 @@ class CourseDetailsController < ApplicationController
     @course_subjects = @course.subjects
 
     @course_topics = []
+    @subject_topics = {}
     @course_subjects.each do |subject|
       @course_topics += subject.topics
+      if @subject_topics[subject.id].nil?
+        @subject_topics[subject.id] = []
+      end
+      subject.topics.each do |topic|
+        @subject_topics[subject.id] << topic.id
+      end 
     end
 
     @course_topics_subTopics = {}
@@ -28,8 +35,6 @@ class CourseDetailsController < ApplicationController
     @course_subTopics_count = 0
     @course_english_videos_count = 0
     @course_hinglish_videos_count = 0
-
-
 
     @course_topics.each do |topic|
       # videos = topic.videos
