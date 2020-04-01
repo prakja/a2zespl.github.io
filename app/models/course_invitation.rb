@@ -13,7 +13,7 @@ class CourseInvitation < ApplicationRecord
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
 
-   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "admin_user_id", optional: true
+   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "adminUserId", optional: true
 
    def setCreatedTime
      self.createdAt = Time.now
