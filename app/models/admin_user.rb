@@ -16,6 +16,10 @@ class AdminUser < ApplicationRecord
     AdminUser.where(role: 'faculty').pluck("email")
   end
 
+  def self.sales_role
+    AdminUser.where(role: 'sales').pluck("id")
+  end
+
   def self.distinct_faculty_name_id
     AdminUser.where(role: 'faculty').pluck("email", "id")
   end

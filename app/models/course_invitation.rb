@@ -6,7 +6,7 @@ class CourseInvitation < ApplicationRecord
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation  :mobileValidate, :course_expiry_not_valid, unless: :skip_callback
+   after_validation  :mobileValidate, unless: :skip_callback
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
@@ -54,6 +54,10 @@ class CourseInvitation < ApplicationRecord
           id: self.id,
      })
    end
+
+   scope :invitation_created_more_than_7days_by_sales, -> {
+     where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit"::int in (?) and "item_type" = ? and "event" = ?', AdminUser.sales_role, 'CourseInvitation', 'create').exists).where('"CourseInvitation"."expiryAt"> ?', (Time.now + 7.day));
+   }
 
    scope :invitations_without_payment, -> {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);

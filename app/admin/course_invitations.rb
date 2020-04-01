@@ -56,6 +56,8 @@ ActiveAdmin.register CourseInvitation do
     courseInvitation.my_invitations_expiring_by_tomorrow(current_admin_user.id.to_s)
   end
 
+  scope :invitation_created_more_than_7days_by_sales
+
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])
     @versions = PaperTrail::Version.where(item_type: 'CourseInvitation', item_id: @courseinvitation.id)

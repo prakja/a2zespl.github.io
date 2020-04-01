@@ -50,9 +50,9 @@
       return
     }
 
-    if(admin_role == 'sales' && new Date(expiry) > today) {
-      alert('can not send access for more than 2 days');
-    }
+    // if(admin_role == 'sales' && new Date(expiry) > today) {
+    //   alert('can not send access for more than 2 days');
+    // }
 
     let url = window.location.origin + "/course_invitations/createCourseInvitation";
     $.ajax({
