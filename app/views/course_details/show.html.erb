@@ -33,8 +33,14 @@
   </tr>
   <tr style="text-align: center;">
     <td>Tests</td>
-    <td><%= link_to @course.tests.count, admin_tests_path(q: {courses_id_ed: @course_id}) %></td>
+    <td><%= link_to @course.tests.count, admin_tests_path(q: {courses_id_eq: @course_id}) %></td>
   </tr>
+  <% @course_subjects.each do |subject| %>
+    <tr style="text-align: center;">
+      <td><%= subject.name + " Videos" %></td>
+      <td><%= link_to Video.joins(:topics).where('"Topic"."id" in (?)', @subject_topics[subject.id]).count.to_s, admin_videos_path(q: {videoTopics_chapterId_in: @subject_topics[subject.id]}) %></td>
+    </tr>
+  <% end %>
 
   <tr>
     <table style="margin-left: 16px; width:50%; margin-top: 30px">
