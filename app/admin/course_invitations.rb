@@ -2,7 +2,7 @@ ActiveAdmin.register CourseInvitation do
   before_save do |course_invitation|
     course_invitation.admin_user = current_admin_user
   end
-  permit_params :course, :displayName, :email, :phone, :role, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
+  permit_params :course, :displayName, :email, :phone, :role, :admin_user_id, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
   active_admin_import validate: true,
     timestamps: true,
@@ -56,6 +56,8 @@ ActiveAdmin.register CourseInvitation do
     courseInvitation.my_invitations_expiring_by_tomorrow(current_admin_user.id.to_s)
   end
 
+  scope :invitation_created_more_than_7days_by_sales
+
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])
     @versions = PaperTrail::Version.where(item_type: 'CourseInvitation', item_id: @courseinvitation.id)
@@ -86,13 +88,14 @@ ActiveAdmin.register CourseInvitation do
     column (:displayName) { |courseInvitation| raw(courseInvitation.displayName)  }
     column (:email) { |courseInvitation| raw(courseInvitation.email)  }
     column (:phone) { |courseInvitation| raw(courseInvitation.phone)  }
-    column (:role) { |courseInvitation| raw(courseInvitation.role)  }
-    column :payments
-    column "Amount" do |courseInvitation|
-     courseInvitation.payments.map { |payment| payment.amount }.compact
-    end
+    # column (:role) { |courseInvitation| raw(courseInvitation.role)  }
+    # column :payments
+    # column "Amount" do |courseInvitation|
+    #  courseInvitation.payments.map { |payment| payment.amount }.compact
+    # end
     column :expiryAt
     column :createdAt
+    column ("Admin User") { |courseInvitation|  courseInvitation.admin_user_id != nil ? raw(AdminUser.find(courseInvitation.admin_user_id).email) : ""}
     column ("History") {|courseInvitation| raw('<a target="_blank" href="/admin/course_invitations/' + (courseInvitation.id).to_s + '/history">View History</a>')}
     actions
   end
@@ -100,13 +103,15 @@ ActiveAdmin.register CourseInvitation do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "CourseInvitation" do
-      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"
+      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"  if f.object.new_record?
+      f.input :course, include_hidden: false, input_html: { class: "select2", readonly: true, disabled: true }, :collection => Course.public_courses, hint: "Can not change Course from here, set *Expire Course At* to a *past date* from below to expire course invitation and create a new invitation to give course access on different course" unless f.object.new_record?
       f.input :displayName, label: "Name"
       f.input :email, label: "Email"
       f.input :phone, label: "Phone"
-      f.input :role, as: :select, :collection => ["courseStudent", "courseManager", "courseCreator", "courseAdmin"]
-      f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.all_payments_3_months
+      f.input :role, as: :hidden, :input_html => { :value => "courseStudent"}
+      # f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.all_payments_3_months
       f.input :expiryAt, as: :date_picker, label: "Expire Course At"
+      f.input :admin_user_id, as: :hidden, :input_html => { :value => current_admin_user.id }
     end
     f.actions
   end

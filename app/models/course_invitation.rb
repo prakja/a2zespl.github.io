@@ -6,12 +6,14 @@ class CourseInvitation < ApplicationRecord
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation  :mobileValidate, :course_expiry_not_valid, unless: :skip_callback
+   after_validation  :mobileValidate, unless: :skip_callback
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
    attribute :createdAt, :datetime, default: Time.now
    attribute :updatedAt, :datetime, default: Time.now
+
+   belongs_to :admin_user, class_name: "AdminUser", foreign_key: "admin_user_id", optional: true
 
    def setCreatedTime
      self.createdAt = Time.now
@@ -54,6 +56,10 @@ class CourseInvitation < ApplicationRecord
           id: self.id,
      })
    end
+
+   scope :invitation_created_more_than_7days_by_sales, -> {
+      where('"CourseInvitation"."admin_user_id" in (?) and "CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day', AdminUser.sales_role);
+   }
 
    scope :invitations_without_payment, -> {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
