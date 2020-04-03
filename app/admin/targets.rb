@@ -3,7 +3,22 @@ ActiveAdmin.register Target do
   remove_filter :target_chapters, :user, :test
   preserve_default_filters!
 
+  permit_params :createdAt, :updatedAt, :userId, :score, :testId, :targetDate, :status, :maxMarks
+
   filter :userId_eq, as: :number, label: "User ID"
+
+  form do |f|
+    f.object.updatedAt = Time.now
+    f.inputs "Target" do
+      f.input :userId
+      f.input :score
+      f.input :testId
+      f.input :targetDate, as: :date_picker
+      f.input :status, as: :select, :collection => ["active", "complete", "abandoned"]
+      f.input :maxMarks
+    end
+    f.actions
+  end
 
   index do
     id_column
