@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_111747) do
+ActiveRecord::Schema.define(version: 2020_04_03_101324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -299,6 +299,7 @@ ActiveRecord::Schema.define(version: 2020_04_02_111747) do
     t.datetime "updatedAt", null: false
     t.string "email"
     t.string "userData"
+    t.integer "adminUserId"
   end
 
   create_table "Delivery", id: :serial, force: :cascade do |t|
@@ -1134,6 +1135,7 @@ ActiveRecord::Schema.define(version: 2020_04_02_111747) do
   add_foreign_key "CustomerIssue", "\"Topic\"", column: "topicId", name: "customer_issue_topic_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"User\"", column: "userId", name: "CustomerIssue_userId_fkey"
   add_foreign_key "CustomerIssue", "\"Video\"", column: "videoId", name: "customer_issue_video_id_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "CustomerSupport", "admin_users", column: "adminUserId"
   add_foreign_key "Doubt", "\"Note\"", column: "noteId", name: "doubt_note_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Doubt", "\"Question\"", column: "questionId", name: "doubt_question_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Doubt", "\"Test\"", column: "testId", name: "doubt_test_id_fkey", on_update: :cascade, on_delete: :cascade

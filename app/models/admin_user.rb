@@ -10,11 +10,16 @@ class AdminUser < ApplicationRecord
   has_many :coachStudents, foreign_key: "coachId", class_name: 'StudentCoach'
   has_one :course_offer, class_name: "CourseOffer", foreign_key: "admin_user_id"
   has_many :course_invitations, class_name: "CourseInvitation", foreign_key: "admin_user_id"
+  has_many :customer_supports, class_name: "CustomerSupport", foreign_key: "adminUserId"
 
   before_create :before_create_admin_user
 
   def self.distinct_faculty_name
     AdminUser.where(role: 'faculty').pluck("email")
+  end
+
+  def self.distinct_name
+    AdminUser.pluck("email")
   end
 
   def self.sales_role
