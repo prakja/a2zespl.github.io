@@ -30,6 +30,7 @@ ActiveAdmin.register Question do
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
   filter :subject_name, as: :select, collection: -> {Subject.subject_names}, label: "Subject"
+  filter :similar_questions, as: :number, label: "Similar to ID"
   filter :tests
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
@@ -124,7 +125,7 @@ ActiveAdmin.register Question do
   #scope :include_deleted, label: "Include Deleted"
 
   action_item :similar_question, only: :show do
-    link_to 'Find Similar Questions', '../../admin/questions?q[question_eq]=' + resource.question
+    link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
   end
 
   action_item :see_physics_difficult_questions, only: :index do
