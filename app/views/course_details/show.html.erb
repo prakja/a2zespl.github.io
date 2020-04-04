@@ -42,6 +42,13 @@
     </tr>
   <% end %>
 
+  <% @course_subjects.each do |subject| %>
+    <tr style="text-align: center;">
+      <td><%= subject.name + " Questions" %></td>
+      <td><%= link_to Question.joins(:topics).where('"Topic"."id" in (?)', @subject_topics[subject.id]).count.to_s, admin_questions_path(q: {topics_id_in: @subject_topics[subject.id]}) %></td>
+    </tr>
+  <% end %>
+
   <tr>
     <table style="margin-left: 16px; width:50%; margin-top: 30px">
       <tr class="header" style="text-align: center;">
