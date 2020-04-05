@@ -40,6 +40,11 @@ ActiveAdmin.register Topic do
     actions
   end
 
+  member_action :duplicate_questions do
+    @topic = Topic.find(resource.id)
+    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false INNER JOIN "Topic" ON "Topic"."id" = "ChapterQuestion"."chapterId" INNER JOIN "SubjectChapter" ON "SubjectChapter"."chapterId" = "Topic"."id" INNER JOIN "Subject" ON "Subject"."id" = "SubjectChapter"."subjectId" and "Subject"."courseId" = 8 INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+  end
+
   controller do
     def scoped_collection
       super.includes(:subject)
