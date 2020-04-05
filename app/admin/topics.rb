@@ -16,10 +16,15 @@ ActiveAdmin.register Topic do
   preserve_default_filters!
   filter :subjects, as: :searchable_select, multiple: true, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
   scope :neetprep_course
+  scope :botany
+  scope :chemistry
+  scope :physics
+  scope :zoology
   sidebar :related_data, only: :show do
     ul do
       li link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
+      li link_to "Duplicate Questions", duplicate_questions_admin_topic_path(topic)
     end
   end
 
@@ -43,6 +48,12 @@ ActiveAdmin.register Topic do
   member_action :duplicate_questions do
     @topic = Topic.find(resource.id)
     @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false INNER JOIN "Topic" ON "Topic"."id" = "ChapterQuestion"."chapterId" INNER JOIN "SubjectChapter" ON "SubjectChapter"."chapterId" = "Topic"."id" INNER JOIN "Subject" ON "Subject"."id" = "SubjectChapter"."subjectId" and "Subject"."courseId" = 8 INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+  end
+
+  # remove one of the duplicate question
+  member_action :remove_duplicate, method: :post do
+    ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
+    redirect_to duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
   end
 
   controller do
