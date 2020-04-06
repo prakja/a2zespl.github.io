@@ -1,0 +1,5 @@
+<% tests.each do |test| %>
+  <% if not Test.pluck("id").include?(test.id) %>
+    <input type="hidden" name="question[test_ids][]" value="<%=test.id%>"/>
+  <% end %>
+<% end %>
