@@ -111,8 +111,8 @@ ActiveAdmin.register Question do
   csv do
     column (:chapter) {|question| question.topics.first.name}
     column (:subject) {|question| question.topics.first.subject.name} 
-    column (:question) {|question| question.question.strip} 
-    column (:explanation) {|question| question.explanation.strip} 
+    column (:question) {|question| question.question.squish} 
+    column (:explanation) {|question| question.explanation.squish} 
     column :options
     column :correctOptionIndex
   end
