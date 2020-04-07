@@ -30,6 +30,7 @@ ActiveAdmin.register Question do
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
   filter :subject_name, as: :select, collection: -> {Subject.subject_names}, label: "Subject"
+  filter :similar_questions, as: :number, label: "Similar to ID"
   filter :tests
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
@@ -37,7 +38,7 @@ ActiveAdmin.register Question do
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   # brings back the default filters
   preserve_default_filters!
-  scope :neetprep_course
+  scope :neetprep_course, show_count: false
 
   controller do
     def scoped_collection
@@ -117,14 +118,14 @@ ActiveAdmin.register Question do
   end
 
   # Label works with filters but not with scope xD
-  scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
-  scope :AIIMS_Questions
-  scope :empty_explanation
+  scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions", show_count: false
+  scope :AIIMS_Questions, show_count: false
+  scope :empty_explanation, show_count: false
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
 
   action_item :similar_question, only: :show do
-    link_to 'Find Similar Questions', '../../admin/questions?q[question_eq]=' + resource.question
+    link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
   end
 
   action_item :see_physics_difficult_questions, only: :index do
@@ -166,7 +167,8 @@ ActiveAdmin.register Question do
       f.input :question
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
-      f.input :tests, input_html: { class: "select2" }
+      f.input :tests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.order(createdAt: :desc).limit(100)
+      render partial: 'hidden_test_ids', locals: {tests: f.object.tests}
       f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : [])

@@ -7,9 +7,10 @@ class Ability
     elsif user.role == 'faculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, SubTopic
-      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest]
+      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic]
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
+      can [:duplicate_questions, :remove_duplicate], [Topic]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message]

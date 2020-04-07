@@ -7,6 +7,11 @@ class Topic < ApplicationRecord
   }
   # only include pcb topics for now
   scope :neetprep_course, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [53,54,55,56]}).includes(:subject)}
+  scope :physics, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [55]}).includes(:subject)}
+  scope :chemistry, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [54]}).includes(:subject)}
+  scope :botany, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [53]}).includes(:subject)}
+  scope :zoology, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.hinglish_full_course_id, id: [53]}).includes(:subject)}
+
   scope :neetprep_english_course, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.english_full_course_id}).includes(:subject)}
   has_many :topicQuestions, foreign_key: :chapterId, class_name: 'ChapterQuestion'
   has_many :questions, through: :topicQuestions
