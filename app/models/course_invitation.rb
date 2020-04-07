@@ -30,6 +30,7 @@ class CourseInvitation < ApplicationRecord
    def mobileValidate
      errors.add(:phone, 'length can not be less than 10') if phone.length < 10
      errors.add(:phone, 'length can not be more than 15') if phone.length > 15
+     errors.add(:phone, 'can only end with a digit. Check if any other character is at the end of phone number') if not phone.match(/[0-9]\s?$/)
    end
 
    def self.recent_course_invitations
