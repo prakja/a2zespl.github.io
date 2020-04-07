@@ -29,6 +29,7 @@ class CourseInvitation < ApplicationRecord
 
    def mobileValidate
      errors.add(:phone, 'length can not be less than 10') if phone.length < 10
+     errors.add(:phone, 'length can not be more than 15') if phone.length > 15
    end
 
    def self.recent_course_invitations
