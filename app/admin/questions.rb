@@ -38,7 +38,7 @@ ActiveAdmin.register Question do
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   # brings back the default filters
   preserve_default_filters!
-  scope :neetprep_course
+  scope :neetprep_course, show_count: false
 
   controller do
     def scoped_collection
@@ -111,16 +111,16 @@ ActiveAdmin.register Question do
   csv do
     column (:chapter) {|question| question.topics.first.name}
     column (:subject) {|question| question.topics.first.subject.name} 
-    column :question
-    column :explanation
+    column (:question) {|question| question.question.squish} 
+    column (:explanation) {|question| question.explanation.squish} 
     column :options
     column :correctOptionIndex
   end
 
   # Label works with filters but not with scope xD
-  scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions"
-  scope :AIIMS_Questions
-  scope :empty_explanation
+  scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions", show_count: false
+  scope :AIIMS_Questions, show_count: false
+  scope :empty_explanation, show_count: false
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
 
@@ -167,7 +167,8 @@ ActiveAdmin.register Question do
       f.input :question
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
-      f.input :tests, input_html: { class: "select2" }
+      f.input :tests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.order(createdAt: :desc).limit(100)
+      render partial: 'hidden_test_ids', locals: {tests: f.object.tests}
       f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : [])
