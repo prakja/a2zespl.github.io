@@ -17,10 +17,12 @@ class CourseInvitation < ApplicationRecord
 
    def setCreatedTime
      self.createdAt = Time.now
+     self.email = self.email.downcase
    end
 
    def setUpdatedTime
      self.updatedAt = Time.now
+     self.email = self.email.downcase
    end
 
    def course_expiry_not_valid
