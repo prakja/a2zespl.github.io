@@ -13,7 +13,7 @@ ActiveAdmin.register CustomerSupport do
 # end
 
 remove_filter :user, :admin_user
-permit_params :resolved, :deleted
+permit_params :resolved, :deleted, :userId, :content, :phone, :email, :issueType, :admin_user, :adminUserId
 
 filter :issueType_eq, as: :select, collection: ["Pendrive_Not_Working", "Video_Not_Playing", "Test_Not_Working", "Website_Not_Working"], label: "Issue Type"
 filter :resolved
@@ -22,6 +22,8 @@ preserve_default_filters!
 action_item :show_more, only: :index do
   link_to 'More phones', "/admin/customer_supports?showMorePhone=1"
 end
+
+scope :not_resolved, :show_count => true
 
 batch_action :assign_issues, form: -> do {
   assignTo: AdminUser.distinct_name
@@ -81,8 +83,12 @@ end
 
 form do |f|
   f.inputs "Issues" do
-    f.input :resolved
-    f.input :deleted
+    f.input :userId
+    f.input :content, as: :text
+    f.input :phone
+    f.input :email
+    f.input :issueType, as: :select, :collection => ["Pendrive_Not_Working", "Video_Not_Playing", "Test_Not_Working", "Website_Not_Working"]
+    f.input :admin_user, as: :searchable_select
   end
   f.actions
 end
