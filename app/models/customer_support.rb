@@ -19,11 +19,23 @@ class CustomerSupport < ApplicationRecord
     end
   }
 
-  scope :not_resolved, ->() {
-    where(resolved: false).order(createdAt: "DESC")
+  scope :paid, ->(course_ids, paid) {
+    if paid == "yes"
+      where(UserCourse.where('"UserCourse"."userId" = "CustomerSupport"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').where(courseId: course_ids).exists)
+    else
+      where.not(UserCourse.where('"UserCourse"."userId" = "CustomerSupport"."userId" AND "expiryAt" >= CURRENT_TIMESTAMP').where(courseId: course_ids).exists)
+    end
+  }
+
+  scope :not_resolved_paid, ->() {
+    where(resolved: false).paid([8, 141, 20, 149, 100, 51], 'yes').order(createdAt: "DESC")
+  }
+
+  scope :not_resolved_not_paid, ->() {
+    where(resolved: false).paid([8, 141, 20, 149, 100, 51], 'no').order(createdAt: "DESC")
   }
 
   def self.ransackable_scopes(_auth_object = nil)
-    [ :rsolved, :not_resolved ]
+    [ :rsolved, :not_resolved_paid, :not_resolved_not_paid ]
   end
 end
