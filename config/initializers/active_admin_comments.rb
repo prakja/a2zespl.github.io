@@ -16,7 +16,7 @@ module ActiveAdmin
           HTTParty.post(
             Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
             body: {
-              studentType: 'selected',
+              studentType: 'Selected',
               message: comment_body.gsub("Resolved:", "").squish,
               title: "Issue Resolved",
               imageUrl: nil,
