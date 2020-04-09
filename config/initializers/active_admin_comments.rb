@@ -13,15 +13,21 @@ module ActiveAdmin
         if not customer_support.resolved? and comment_body.start_with?("Resolved:")
           customer_support.resolved = true
           customer_support.save
+          message = comment_body.gsub("Resolved:", "").squish
+          url = message.scan(/(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/).first || nil
+          if not url.nil?
+            url = url.first
+          end
+          p url
           HTTParty.post(
             Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
             body: {
               studentType: 'Selected',
-              message: comment_body.gsub("Resolved:", "").squish,
+              message: message,
               title: "Issue Resolved",
               imageUrl: nil,
               contextType: "LinkUrl",
-              actionUrl: nil,
+              actionUrl: url || nil,
               courseId: nil,
               userId: user_id
           })
@@ -30,7 +36,7 @@ module ActiveAdmin
             body: {
               to: user.email,
               subject: "Issue Resolved",
-              message: comment_body.gsub("Resolved:", "").squish,
+              message: message,
               altText: ""
           })
         else
