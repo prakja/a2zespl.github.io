@@ -17,10 +17,10 @@ ActiveAdmin.register TestLeaderBoard do
     column :rank
     column :user
     column (:email) { |tlb|
-      raw(tlb.user.email || tlb.user&.user_profile.email)
+      raw(tlb.user.email || tlb.user&.user_profile&.email)
     }
     column (:phone) { |tlb|
-      raw(tlb.user.phone || tlb.user&.user_profile.phone )
+      raw(tlb.user.phone || tlb.user&.user_profile&.phone )
     }
     column :test
     column :test_attempt
