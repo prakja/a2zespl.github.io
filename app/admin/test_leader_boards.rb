@@ -1,7 +1,8 @@
 ActiveAdmin.register TestLeaderBoard do
   remove_filter :test, :user, :test_attempt
   preserve_default_filters!
-  scope :paid_students
+  scope :paid_students, show_count: false
+  scope :high_yield_paid_students, show_count: false
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
   filter :test_attempt_createdAt, as: :date_range, label: "Test Attempt Date"
@@ -10,6 +11,26 @@ ActiveAdmin.register TestLeaderBoard do
     def scoped_collection
       super.includes(:test, :test_attempt, user: :user_profile)
     end
+  end
+
+  csv do
+    column :rank
+    column (:user) { |tlb|
+      raw(tlb.user&.user_profile&.displayName)
+    }
+    column (:email) { |tlb|
+      raw(tlb.user.email || tlb.user&.user_profile&.email)
+    }
+    column (:phone) { |tlb|
+      raw(tlb.user.phone || tlb.user&.user_profile&.phone )
+    }
+    column :score
+    column (:correctAnswerCount) { |test_attempt|
+      test_attempt.correctAnswerCount
+    }
+    column (:incorrectAnswerCount) { |test_attempt|
+      test_attempt.incorrectAnswerCount
+    }
   end
 
   index do

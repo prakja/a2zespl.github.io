@@ -5,4 +5,6 @@ class TestLeaderBoard < ApplicationRecord
   belongs_to :user, class_name: "User", foreign_key: "userId"
   belongs_to :test_attempt, class_name: "TestAttempt", foreign_key: "testAttemptId"
   scope :paid_students, -> {where(UserCourse.where('"UserCourse"."userId" = "TestLeaderBoard"."userId"').limit(1).arel.exists)}
+  scope :high_yield_paid_students, -> {where(UserCourse.where('"UserCourse"."userId" = "TestLeaderBoard"."userId" and "UserCourse"."courseId" = 270').limit(1).arel.exists)}
+
 end
