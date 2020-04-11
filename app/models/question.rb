@@ -42,6 +42,10 @@ class Question < ApplicationRecord
     neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.6 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" in (SELECT "chapterId" from "ChapterQuestion" cq2 where cq2."questionId" = ?))', question_id, question_id);
   }
 
+  scope :image_question, -> {
+    neetprep_course.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
+  }
+
   scope :topic, ->(topic_id) {
     joins(:topics).where("\"Topic\".\"id\"="+topic_id)
   }

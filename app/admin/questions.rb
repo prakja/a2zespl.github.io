@@ -39,6 +39,7 @@ ActiveAdmin.register Question do
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course, show_count: false
+  scope :image_question, show_count: false
 
   controller do
     def scoped_collection
