@@ -12,6 +12,14 @@ class Question < ApplicationRecord
    errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
   end
 
+  def correctOption
+    if not self.options.blank? and self.options.kind_of?(Array) and not self.correctOptionIndex.blank? and self.correctOptionIndex >= 0
+      return self.options[self.correctOptionIndex]
+    else
+     return nil
+    end
+  end
+
   def test_addition_validation
    errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
   end

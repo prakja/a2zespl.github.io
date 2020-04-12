@@ -25,6 +25,7 @@ ActiveAdmin.register Topic do
       li link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Duplicate Questions", duplicate_questions_admin_topic_path(topic)
+      li link_to "Question Issues", question_issues_admin_topic_path(topic)
     end
   end
 
@@ -48,6 +49,12 @@ ActiveAdmin.register Topic do
   member_action :duplicate_questions do
     @topic = Topic.find(resource.id)
     @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false INNER JOIN "Topic" ON "Topic"."id" = "ChapterQuestion"."chapterId" INNER JOIN "SubjectChapter" ON "SubjectChapter"."chapterId" = "Topic"."id" INNER JOIN "Subject" ON "Subject"."id" = "SubjectChapter"."subjectId" and "Subject"."courseId" = 8 INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+  end
+
+  member_action :question_issues do
+    @topic = Topic.find(resource.id)
+    @question_ids = ActiveRecord::Base.connection.query('Select "Question"."id", count(*) as "issue_count" from "Question" INNER JOIN "CustomerIssue" on "CustomerIssue"."questionId" = "Question"."id" INNER JOIN "ChapterQuestion" ON "Question"."id" = "ChapterQuestion"."questionId" and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' and "Question"."deleted" = false INNER JOIN "Topic" ON "Topic"."id" = "ChapterQuestion"."chapterId" INNER JOIN "SubjectChapter" ON "SubjectChapter"."chapterId" = "Topic"."id" INNER JOIN "Subject" ON "Subject"."id" = "SubjectChapter"."subjectId" and "Subject"."courseId" = 8 group by "Question"."id" order by count(*) DESC');
+    @questions = Question.where(id: @question_ids.map{ |id, count| id}).index_by(&:id)
   end
 
   # remove one of the duplicate question
