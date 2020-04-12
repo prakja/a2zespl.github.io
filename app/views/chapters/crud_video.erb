@@ -1,0 +1,195 @@
+<head>
+  <style>
+    .bg-maroon {
+        background-color: #85144b;
+    }
+    #videosList{
+      width: 50%;
+      overflow: auto;
+      height: 700px;
+    }
+    .videoData {
+      border: 1px solid;
+      padding: 5px;
+      width: 85%;
+      height: auto;
+      overflow: auto;
+    }
+    .videoBox {
+      cursor: pointer;
+      color :#85144b;
+    }
+    .border-maroon{
+      border: 1px solid #85144b;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <b><a href="/admin/topics/<%=@chapter.id%>" target="_blank"><%= raw(@chapter.name) %></a></b>
+  </div>
+  <div style="margin: 32px">
+    Add Video Ids:
+    <button onclick="addChapterVideos()">Add Selected Videos</button>
+    <textarea placeholder="comma seperated video ids to be added in chapter" id="addIds"></textarea>
+  </div>
+  <div style="margin: 32px">
+
+    <div>
+      Selected Video Ids:
+      <span id="selectedIdsCount"></span>
+      <button id="deletedSeletedChapterVideos">Delete Selected Videos</button>
+      <textarea placeholder="selected video ids" id="selectedIds" disabled></textarea>
+    </div>
+    <div>
+      Unselected Video Ids:
+      <span id="unselectedIdsCount"></span>
+      <button id="deletedUnSeletedChapterVideos">Delete Unselected Videos</button>
+      <textarea placeholder="unselected video ids" id="unselectedIds" disabled></textarea>
+    </div>
+    <div>
+      <input type="checkbox" id="selectAllVideos"></input>
+      <label for="selectAllVideos">Select All Videos</label>
+    </div>
+    <ul id="videosList" class="js-grid sortable grid" data-url = '/chapters/update_and_sort_videos'>
+      <% @videos_data.each do |key, value| %>
+        <%= raw("<li class='videoData' data-id='" + key.to_s + "'>") %>
+          <%= raw("<input onchange='pushSelectedIds()' class='videoCheckbox' type='checkbox' id='" + key.to_s + "'></input>") %>
+          <%= raw("<a href='/admin/videos/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a><label class='videoBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
+  <script>
+
+    $(document).on('turbolinks:load', function() {
+      sortable('.js-grid', {
+        forcePlaceholderSize: true,
+        placeholderClass: 'border-maroon'
+      });
+
+      sortable('.sortable', {
+        items: 'li'
+      });
+      if (typeof sortable('.sortable')[0] != 'undefined'){
+        $('.sortable').on('sortupdate', function(e) {
+          let dataIDList = [];
+          let chapterId = '<%= @chapter.id %>';
+
+          $(this).children().map(function(index){
+             dataIDList.push($(this).data("id"));
+          });
+
+          $.ajax({
+            type: "POST",
+            url: $(this).data("url"),
+            data: {
+              "ids": dataIDList,
+              "chapterId": chapterId
+            }
+          }).done (function (data) {
+            console.log('done')
+          });
+        });
+      }
+
+    });
+    function addChapterVideos() {
+      let videoIds = $("#addIds").val();
+      var videoIdsArray = videoIds.split(",");
+      let chapterId = '<%= @chapter.id %>';
+      let selectedSequenceId = 0;
+
+      if (videoIds == ""){
+        alert('Videos not selected');
+        return
+      }
+      let url = window.location.origin + "/chapters/createChapterVideo";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "videoIds": videoIdsArray,
+          "chapterId": chapterId,
+          "sequenceId": selectedSequenceId
+        }
+      }).done (function (data) {
+        alert("done");
+        window.location.reload();
+      });
+    }
+
+    $('#deletedSeletedChapterVideos').on('click', function(e){
+      let videoIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(',') : null;
+      let chapterId = '<%= @chapter.id %>';
+      if (videoIds == null){
+        alert('videoIds not selected');
+        return
+      }
+      let url = window.location.origin + "/chapters/remove_chapter_video";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "videoIds": videoIds,
+          "chapterId": chapterId
+        }
+      }).done (function (data) {
+        window.location.reload();
+      });
+    });
+
+    $('#deletedUnSeletedChapterVideos').on('click', function(e){
+      let videoIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(',') : null;
+      let chapterId = '<%= @chapter.id %>';
+      if (videoIds == null){
+        alert('videoIds not selected');
+        return
+      }
+      let url = window.location.origin + "/chapters/remove_chapter_video";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "videoIds": videoIds,
+          "chapterId": chapterId
+        }
+      }).done (function (data) {
+        window.location.reload();
+      });
+    });
+
+    $("#selectAllVideos").click(function () {
+      $(".videoCheckbox").prop('checked', $(this).prop('checked'));
+      pushSelectedIds();
+    });
+
+    function pushSelectedIds() {
+      seletedIdCount = 0;
+      unSelectedIdCount = 0;
+
+      seletedIds = "";
+      unSeletedIds = "";
+
+      $("input:checkbox").each(function(){
+        var $this = $(this);
+        if($this.is(":checked") && $this.hasClass("videoCheckbox")){
+          seletedIdCount += 1;
+          seletedIds +=  $this.prop("id") + ",";
+        } else if($this.is(":checked") ==  false && $this.hasClass("videoCheckbox")) {
+          unSelectedIdCount += 1;
+          unSeletedIds +=  $this.prop("id") + ",";
+        }
+      });
+
+      $("#selectedIdsCount").html("(" + seletedIdCount + ")");
+      var selectedTextarea = $("#selectedIds");
+      selectedTextarea.val(seletedIds.replace(/(^,)|(,$)/g, ""));
+
+      $("#unselectedIdsCount").html("(" + unSelectedIdCount + ")");
+      var unseletedTextarea = $("#unselectedIds");
+      unseletedTextarea.val(unSeletedIds.replace(/(^,)|(,$)/g, ""));
+    }
+  </script>
+</body>

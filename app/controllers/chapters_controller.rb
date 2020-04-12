@@ -2,6 +2,106 @@ class ChaptersController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  def crud_video
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @videos_data = {}
+    @chapterId = params.require(:chapterId)
+    @chapter = Topic.find(@chapterId)
+    @chapterVideos = @chapter.videos.order(seqId: :asc, id: :asc)
+    @chapterVideos.each_with_index do |video, index|
+      @videos_data[video.id] = [video.name, index+1]
+    end
+
+  end
+
+  def createChapterVideo
+    begin
+      @chapterId = params[:chapterId]
+      @sequenceId = params[:sequenceId]
+      @videoIds = params[:videoIds]
+      @chapter = Topic.where(id: @chapterId).first
+      @rowsArray = []
+      video_ids = []
+
+      @chapterVideos = @chapter.videos.order(seqId: :asc, id: :asc)
+      @chapterVideos.each do |video|
+        video_ids.push(video.id.to_s)
+      end
+
+      @videoIds = @videoIds.uniq
+
+      @videoIds = @videoIds - video_ids
+
+      @videoIds.each do |videoId|
+        @row = {}
+        @row["chapterId"] = @chapter.id
+        @row["videoId"] = videoId
+        @rowsArray.push(@row)
+      end
+
+      if(@videoIds.length() > 0)
+        ChapterVideo.create(@rowsArray)
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+      p exception
+    end
+  end
+
+  def remove_chapter_video
+    begin
+      chapterId = params[:chapterId]
+      videoIds = params[:videoIds]
+
+      ChapterVideo.where(chapterId: chapterId).where(videoId: videoIds).delete_all
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: "Done", status: 200 }
+      end
+
+    rescue => exception
+
+    end
+  end
+
+  def update_and_sort_videos
+    ids = params[:ids]
+    chapterId = params[:chapterId]
+
+    ids.each_with_index do |id, index|
+      Video.where(id: id).update_all(seqId: index + 1)
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def crud_question
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @questions_data = {}
+    @testId = params.require(:testId)
+    @test = Test.find(@testId)
+    @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
+    @testQuestions.each_with_index do |question, index|
+      @questions_data[question.id] = [question.question, index+1]
+    end
+
+  end
 
   def remove_section_content
     begin
