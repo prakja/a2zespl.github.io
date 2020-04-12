@@ -33,6 +33,7 @@ ActiveAdmin.register CustomerIssue do
   end
 
   index do
+    selectable_column
     id_column
     column :description
     column ("Type") {|issue| CustomerIssueType.find(issue.typeId).displayName}
@@ -43,5 +44,19 @@ ActiveAdmin.register CustomerIssue do
     toggle_bool_column :resolved
     column :user
     actions
+  end
+
+  batch_action :resolve do |ids|
+    batch_action_collection.find(ids).each do |customer_issue|
+      customer_issue.resolved = true
+      customer_issue.save
+    end
+    redirect_to collection_path, alert: "Resolved Issues."
+  end
+
+  controller do
+    def scoped_collection
+      super.includes(:topic, :question, user: :user_profile)
+    end
   end
 end
