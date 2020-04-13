@@ -76,7 +76,7 @@ ActiveAdmin.register CustomerSupport do
     column :phone
     column :email
     column :issueType
-    column (:userData) {|customer_support| userData.blank? ? '' : raw(simple_format(sanitize(customer_support.userData.gsub('\n', '<br />').gsub(/https:\/\/www.neetprep.com\S+/, '<a target="_blank" href="\0">\0</a>'),  attributes: ["href", "target"]), {}, sanitize: false)) }
+    column (:userData) {|customer_support| customer_support.userData.blank? ? '' : raw(simple_format(sanitize(customer_support.userData.gsub('\n', '<br />').gsub(/https:\/\/www.neetprep.com\S+/, '<a target="_blank" href="\0">\0</a>'),  attributes: ["href", "target"]), {}, sanitize: false)) }
     column :deleted
     toggle_bool_column :resolved
     column :admin_user
