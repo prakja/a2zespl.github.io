@@ -74,7 +74,7 @@ ActiveAdmin.register CustomerSupport do
     column :phone
     column :email
     column :issueType
-    column :userData
+    column (:userData) {|customer_support| raw(simple_format(customer_support.userData).gsub('\n', '<br />')) }
     column :deleted
     toggle_bool_column :resolved
     column :admin_user
