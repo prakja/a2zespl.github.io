@@ -11,12 +11,16 @@ class CustomerSupport < ApplicationRecord
   #   where(adminUserId: proc { current_admin_user.id }).where(resolved: false)
   # }
 
-  scope :rsolved, ->(rsolved) {
-    if rsolved == "yes"
-      where(CustomerSupport.where('"CustomeSupport"."resolved" = true'))
+  scope :resolved, ->(resolved) {
+    if resolved == "yes"
+      where(resolved: true)
     else
-      where(CustomerSupport.where('"CustomeSupport"."resolved" = false'))
+      where(resolved: false)
     end
+  }
+
+  scope :open, -> {
+    resolved("no")
   }
 
   scope :paid, ->(course_ids, paid) {
@@ -27,15 +31,15 @@ class CustomerSupport < ApplicationRecord
     end
   }
 
-  scope :not_resolved_paid, ->() {
+  scope :open_paid_students, ->() {
     where(resolved: false).paid([8, 141, 20, 149, 100, 51], 'yes').order(createdAt: "DESC")
   }
 
-  scope :not_resolved_not_paid, ->() {
+  scope :open_other_students, ->() {
     where(resolved: false).paid([8, 141, 20, 149, 100, 51], 'no').order(createdAt: "DESC")
   }
 
   def self.ransackable_scopes(_auth_object = nil)
-    [ :rsolved, :not_resolved_paid, :not_resolved_not_paid ]
+    [ :resolved, :not_resolved_paid, :not_resolved_not_paid ]
   end
 end

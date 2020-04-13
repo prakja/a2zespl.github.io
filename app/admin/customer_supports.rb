@@ -23,8 +23,10 @@ ActiveAdmin.register CustomerSupport do
     link_to 'More phones', "/admin/customer_supports?showMorePhone=1"
   end
 
-  scope :not_resolved_paid, :show_count => true
-  scope :not_resolved_not_paid, :show_count => true
+  scope :open, default: true
+  scope :all, :show_count => false
+  scope :open_paid_students, :show_count => true
+  scope :open_other_students, :show_count => true
 
   batch_action :assign_issues, form: -> do {
     assignTo: AdminUser.distinct_name
