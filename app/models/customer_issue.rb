@@ -4,6 +4,7 @@ class CustomerIssue < ApplicationRecord
  belongs_to :topic, foreign_key: :topicId, optional: true
  belongs_to :question, foreign_key: :questionId, optional: true
  belongs_to :video, foreign_key: :videoId, optional: true
+ belongs_to :test, foreign_key: :testId, optional: true
  belongs_to :user, foreign_key: :userId
 
  scope :subject_name, ->(subject_id) {
