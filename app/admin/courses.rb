@@ -2,11 +2,18 @@ ActiveAdmin.register Course do
   permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
+  sidebar :related_data, only: :show do
+    ul do
+      li link_to "Tests", admin_tests_path(q: {testCourseTests_courseId_eq: course.id}, order: 'startedAt_asc')
+    end
+  end
 
   index do
     id_column
     column :name
-    column :description
+    column :description do |course|
+      raw(course.description)
+    end
     column :package
     column :fee
     column :discountedFee
