@@ -20,10 +20,12 @@ ActiveAdmin.register CustomerIssue do
   filter :user_id_eq, label: "User ID"
   preserve_default_filters!
 
+  scope "Open", :non_resolved, default: true
   scope :botany_issues, show_count: true
   scope :chemistry_issues, show_count: true
   scope :physics_issues, show_count: true
   scope :zoology_issues, show_count: true
+  scope :all, :show_count => false
 
   form do |f|
     f.inputs "Issues" do
