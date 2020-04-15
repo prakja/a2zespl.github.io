@@ -12,7 +12,7 @@ ActiveAdmin.register CustomerIssue do
   #   permitted
   # end
 
-  remove_filter :topic, :question, :video, :user
+  remove_filter :topic, :question, :video, :user, :test
 
   permit_params :resolved
 
@@ -43,6 +43,7 @@ ActiveAdmin.register CustomerIssue do
     column :video
     column :note
     column :topic
+    column :test
     toggle_bool_column :resolved
     column :user
     actions
