@@ -34,9 +34,9 @@ class Video < ApplicationRecord
     })
   end
 
-  def videoUrl 
+  def videoUrl
     if not self.url.blank?
-      return self.url 
+      return self.url
     else
       return self.youtubeUrl
     end
