@@ -17,10 +17,10 @@
         " | correct percentage : " +  value[2].round(2).to_s + " %"
        end  %></b></h4>
       <h3 style="margin-top: -2px"><%= raw(value[0]) %></h3>
-      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' +  if value[3] != nil
+      <h4><b style="margin-top: -2px"><%= raw('Correct Option: ' +  if !value[3].blank?
        (value[3] + 1).to_s
       else
-       "-"
+        "<b><span style='color: red;font-size: 50px;'>CORRECT OPTION NOT MARKED.</span></b> <a target='_blank' href='https://admin1.neetprep.com/admin/questions/#{key.to_s}/edit'>Edit Question</a>"
       end )%></b></h4>
       <% if value[1] != nil %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
