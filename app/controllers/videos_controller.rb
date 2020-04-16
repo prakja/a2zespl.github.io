@@ -52,7 +52,7 @@ class VideosController < ApplicationController
   def getChaptersList
     @chapters_data = {}
     @subject = params.require(:subjectId)
-    @chapters = Topic.where(subject: @subject)
+    @chapters = Topic.includes(:topicSubjects).where(SubjectChapter: {subjectId: @subject})
     @chapters.each do |chapter|
       @chapters_data[chapter.id] = [chapter.name]
     end
