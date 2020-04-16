@@ -29,7 +29,7 @@ ActiveAdmin.register Video do
       importer.options['topicId'] = topicId
       importer.options['time'] = time
     },
-    after_import:  ->(importer){
+    after_batch_import:  ->(importer){
       p "after_import"
       time = importer.options['time']
       topicId = importer.options['topicId']
