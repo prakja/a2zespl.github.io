@@ -13,6 +13,7 @@ ActiveAdmin.register Video do
 #   permitted
 # end
   active_admin_import validate: true,
+    batch_size: 1,
     timestamps: true,
     headers_rewrites: { 'name': :name, 'description': :description, 'thumbnail': :thumbnail, 'url': :url, 'language': :language, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
