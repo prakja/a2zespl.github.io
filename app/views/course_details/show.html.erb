@@ -73,6 +73,7 @@
         <th>Video Count</th>
         <th>English Videos Count (duration)</th>
         <th>Hinglish Videos Count (duration)</th>
+        <th>Add Videos</th>
       </tr>
       <% @course_topics.each do |topic| %>
         <tr style="text-align: center;">
@@ -84,6 +85,7 @@
           <td><%= link_to @course_topics_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id}) %></td>
           <td><%= link_to @course_topics_english_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id, language_equals: 'english'}) %></td>
           <td><%= link_to @course_topics_hinglish_videos[topic.id], admin_videos_path(q: {topics_id_eq: topic.id, language_equals: 'hinglish'}) %></td>
+          <td><%= raw('<a target="_blank" href=/chapters/crud_video/' + topic.id.to_s + '>Add Videos</a>') %></td>
         </tr>
       <% end %>
     </table>

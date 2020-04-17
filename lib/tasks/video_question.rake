@@ -45,13 +45,14 @@ namespace :video_question do
     test = nil
     video_test = VideoTest.find_by videoId: video_id
     if video_test.nil?
-      test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1)
+      test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1, free: true)
       VideoTest.create!(videoId: video_id, testId: test.id)
     else
       test = Test.find(video_test.testId)
       if test.positiveMarks.blank? or test.negativeMarks.blank?
         test.positiveMarks = 4
         test.negativeMarks = 1
+        test.free = true
         test.save!
       end
     end

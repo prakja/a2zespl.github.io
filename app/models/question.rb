@@ -12,6 +12,14 @@ class Question < ApplicationRecord
    errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
   end
 
+  def correctOption
+    if not self.options.blank? and self.options.kind_of?(Array) and not self.correctOptionIndex.blank? and self.correctOptionIndex >= 0
+      return self.options[self.correctOptionIndex]
+    else
+     return nil
+    end
+  end
+
   def test_addition_validation
    errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
   end
@@ -40,6 +48,10 @@ class Question < ApplicationRecord
 
   scope :similar_questions, ->(question_id) {
     neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.6 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" in (SELECT "chapterId" from "ChapterQuestion" cq2 where cq2."questionId" = ?))', question_id, question_id);
+  }
+
+  scope :image_question, -> {
+    neetprep_course.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
   }
 
   scope :topic, ->(topic_id) {

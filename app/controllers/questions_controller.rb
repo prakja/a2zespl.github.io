@@ -145,9 +145,9 @@ class QuestionsController < ApplicationController
       @test = Test.find(@testId)
       @testQuestions = nil
       if @limit.to_i > 0
-        @testQuestions = @test.questions.limit(@limit.to_i).offset(@offset.to_i).order(seqNum: :asc, id: :asc)
+        @testQuestions = @test.questions.includes(:question_analytic).limit(@limit.to_i).offset(@offset.to_i).order(seqNum: :asc, id: :asc)
       else
-        @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
+        @testQuestions = @test.questions.includes(:question_analytic).order(seqNum: :asc, id: :asc)
       end
 
       @testQuestions.each_with_index do |question, index|

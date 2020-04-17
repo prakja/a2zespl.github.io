@@ -1,0 +1,22 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    reset();
+  };
+</script>
+<h1>Chapter Question Issues from <%=@topic.name%></h1>
+<style>
+table {border-collapse:collapse; table-layout:fixed; width:100%;}
+table td {border:solid 1px #fab; width:100px; word-wrap:break-word;}
+</style>
+<div>
+  <table>
+    <tr><th><h4>Questions</h4></th></tr>
+    <% @question_ids.each do |id, count| %>
+      <tr>
+        <td style="vertical-align: top;"><a target="_blank" href="/admin/questions/<%=id%>/edit"><b>Question ID: <%=id%></b></a><br /><br /><a target="_blank" href="/admin/customer_issues?q[questionId_eq]=<%=id%>"><b>Issue Count: <%=count%></b></a><br /><br /><b>Question:</b> <%=raw(@questions[id].question)%><div><b>Answer: <%=@questions[id].correctOption%></b><br /><br /></div><b>Explanation:</b> <%=raw(@questions[id].explanation)%></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
