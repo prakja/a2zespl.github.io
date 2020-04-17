@@ -1,5 +1,38 @@
 namespace :video_question do
   desc "import video timestamp based questions"
+  task test: :environment do 
+    p "We here"
+  end
+
+  task import_question: :environment do 
+    ARGV.each { |a| task a.to_sym do ; end }
+    video_id = ARGV[1].to_i
+    test_name = ARGV[2]
+    question = ARGV[3]
+    correct_option_index = ARGV[4]
+    timestamp = ARGV[5]
+    p test_name
+    test = nil
+    video_test = VideoTest.find_by videoId: video_id
+    if video_test.nil?
+      # test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1)
+      # VideoTest.create!(videoId: video_id, testId: test.id)
+      p "Create Test and Video Test"
+    else
+      test = Test.find(video_test.testId)
+      if test.positiveMarks.blank? or test.negativeMarks.blank?
+        test.positiveMarks = 4
+        test.negativeMarks = 1
+        # test.save!
+        p "Update Test"
+      end
+    end
+    # q = Question.create!(question: question_content, correctOptionIndex: correct_option_index)
+    # VideoQuestion.create!(videoId: video_id, questionId: q.id, timestamp: timestamp)
+    # TestQuestion.create!(testId: test.id, questionId: q.id)
+    p "Create Question and VideoQuestion and TestQuestion"
+  end
+
   task import: :environment do
     ARGV.each { |a| task a.to_sym do ; end }
     # Read Text File and get questions
