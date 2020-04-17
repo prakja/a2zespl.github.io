@@ -54,7 +54,7 @@ ActiveAdmin.register CustomerIssue do
       customer_issue.resolved = true
       customer_issue.save
     end
-    redirect_to collection_path, alert: "Resolved Issues."
+    redirect_to collection_path, notice: "Resolved Issues."
   end
 
   controller do
