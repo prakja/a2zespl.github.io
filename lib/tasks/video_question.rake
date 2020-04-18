@@ -9,14 +9,14 @@ namespace :video_question do
     video_id = ARGV[1].to_i
     test_name = ARGV[2]
     question = ARGV[3]
-    correct_option_index = ARGV[4]
+    correct_option_index = ARGV[4].to_i - 1
     timestamp = ARGV[5]
     p test_name
     test = nil
     video_test = VideoTest.find_by videoId: video_id
     if video_test.nil?
-      # test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1, free: true)
-      # VideoTest.create!(videoId: video_id, testId: test.id)
+      test = Test.create!(name: test_name, positiveMarks: 4, negativeMarks: 1, free: true)
+      VideoTest.create!(videoId: video_id, testId: test.id)
       p "Create Test and Video Test"
     else
       test = Test.find(video_test.testId)
@@ -24,13 +24,13 @@ namespace :video_question do
         test.positiveMarks = 4
         test.negativeMarks = 1
         test.free = true
-        # test.save!
+        test.save!
         p "Update Test"
       end
     end
-    # q = Question.create!(question: question_content, correctOptionIndex: correct_option_index)
-    # VideoQuestion.create!(videoId: video_id, questionId: q.id, timestamp: timestamp)
-    # TestQuestion.create!(testId: test.id, questionId: q.id)
+    q = Question.create!(question: question, correctOptionIndex: correct_option_index)
+    VideoQuestion.create!(videoId: video_id, questionId: q.id, timestamp: timestamp)
+    TestQuestion.create!(testId: test.id, questionId: q.id)
     p "Create Question and VideoQuestion and TestQuestion"
   end
 
