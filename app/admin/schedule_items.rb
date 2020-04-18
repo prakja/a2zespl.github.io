@@ -1,19 +1,33 @@
 ActiveAdmin.register ScheduleItem do
   config.create_another = true
   scope :boost_up_today
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
-
+  active_admin_import validate: true,
+                      batch_size: 1,
+                      timestamps: false,
+                      # rubocop:disable Metrics/LineLength
+                      headers_rewrites: { 'name': :name, 'description': :description, 'scheduleId': :scheduleId, 'topicId': :topicId, 'hours': :hours, 'link': :link, 'scheduledAt': :scheduledAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+                      # csv_options: { col_sep: ",", row_sep: :auto, quote_char: '"', field_size_limit: nil, converters: nil, unconverted_fields: nil, headers: false, return_headers: false, header_converters: nil, skip_blanks: false, force_quotes: false, skip_lines: nil, liberal_parsing: false, },
+                      # rubocop:enable Metrics/LineLength
+                      before_batch_import: lambda { |importer|
+                                             # add created at and upated at
+                                             time = Time.zone.now
+                                             importer.csv_lines.each do |line|
+                                               p line
+                                               importer.options['time'] = time
+                                               line.insert(-1, time)
+                                               line.insert(-1, time)
+                                             end
+                                           },
+                      after_batch_import: lambda { |importer|
+                                            p "after_import"
+                                          },
+                      template_object: ActiveAdminImport::Model.new(
+                        hint: "File will be imported with such header format: name, description, scheduleId, topicId, hours, link, scheduledAt.
+      Remove the header from the CSV before uploading.",
+                        csv_headers: ['name', 'description', 'scheduleId',  'topicId', 'hours', 'link', 'scheduledAt', 'createdAt', 'updatedAt']
+                        # csv_options: { col_sep: ",", row_sep: :auto, quote_char: '"', field_size_limit: nil, converters: nil, unconverted_fields: nil, headers: false, return_headers: false, header_converters: nil, skip_blanks: false, force_quotes: false, skip_lines: nil, liberal_parsing: false, }
+                        # rubocop:enable Metrics/LineLength
+                      )
 remove_filter :scheduleItemUsers, :topic, :scheduleItemAssets
 permit_params :name, :schedule, :scheduleId, :topic, :topicId, :hours, :link, :scheduledAt, :createdAt, :updatedAt, :description
 
