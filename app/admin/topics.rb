@@ -55,7 +55,7 @@ ActiveAdmin.register Topic do
 
   member_action :question_issues do
     @topic = Topic.find(resource.id)
-    @question_ids = ActiveRecord::Base.connection.query('Select "Question"."id", count(*) as "issue_count" from "Question" INNER JOIN "CustomerIssue" on "CustomerIssue"."questionId" = "Question"."id" and "CustomerIssue"."resolved" = false INNER JOIN "ChapterQuestion" ON "Question"."id" = "ChapterQuestion"."questionId" and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' and "Question"."deleted" = false INNER JOIN "Topic" ON "Topic"."id" = "ChapterQuestion"."chapterId" INNER JOIN "SubjectChapter" ON "SubjectChapter"."chapterId" = "Topic"."id" INNER JOIN "Subject" ON "Subject"."id" = "SubjectChapter"."subjectId" and "Subject"."courseId" = 8 group by "Question"."id" order by count(*) DESC');
+    @question_ids = ActiveRecord::Base.connection.query('Select "Question"."id", count(*) as "issue_count" from "Question" INNER JOIN "CustomerIssue" on "CustomerIssue"."questionId" = "Question"."id" and "CustomerIssue"."resolved" = false INNER JOIN "ChapterQuestion" ON "Question"."id" = "ChapterQuestion"."questionId" and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' and "Question"."deleted" = false group by "Question"."id" order by count(*) DESC');
     @questions = Question.where(id: @question_ids.map{ |id, count| id}).index_by(&:id)
   end
 
