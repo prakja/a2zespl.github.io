@@ -3,6 +3,10 @@ class Question < ApplicationRecord
   def default_values
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
     self.level = nil if self.level.blank?
+    # find subjectId to be populated
+    if (not self.topicId.blank?)
+      self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take().subjectId;
+    end
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
