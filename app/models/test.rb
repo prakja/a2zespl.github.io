@@ -29,11 +29,39 @@ class Test < ApplicationRecord
     self.test_attempts.where(userId: user_id, completed: true).order(createdAt: :desc).first
   end
 
+  def update_section_question_subject
+    if not self.sections.blank?
+      # update subjectId in question if not present
+      self.sections.each_with_index do |section, index|
+        subjectId = nil
+        if section[0] == "Physics"
+          subjectId = 55
+        elsif section[0] == "Chemistry"
+          subjectId = 54
+        elsif section[0] == "Biology"
+          # TODO: how to get Botany and Zoology differentiated?? for now, Botany is default
+          subjectId = 53
+        end
+        limit = self.sections[index + 1].nil? ? (self.numQuestions - section[1] + 1) : self.sections[index + 1][1] - section[1]
+        offset = section[1] - 1
+        questions = self.questions.order(seqNum: :asc, id: :asc).select(:id, :subjectId, :topicId).limit(limit).offset(offset);
+        question_ids = []
+        questions.each do |question|
+          if question.subjectId.blank? and question.topicId.blank?
+            question_ids << question.id
+          end
+        end
+        Question.where(id: question_ids).update_all(subjectId: subjectId)
+      end
+    end
+  end
+
   def after_update_test
     if self.sections.blank?
       return
     end
 
+    self.update_section_question_subject
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/updateTestAttempts",
        body: {

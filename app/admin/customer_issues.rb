@@ -21,10 +21,22 @@ ActiveAdmin.register CustomerIssue do
   preserve_default_filters!
 
   scope "Open", :non_resolved, default: true
-  scope :botany_issues, show_count: true
-  scope :chemistry_issues, show_count: true
-  scope :physics_issues, show_count: true
-  scope :zoology_issues, show_count: true
+  scope :biology_test_issues, show_count: false
+  scope :botany_test_issues, show_count: false
+  scope :chemistry_test_issues, show_count: false
+  scope :physics_test_issues, show_count: false
+  scope :zoology_test_issues, show_count: false
+  scope :full_tests, show_count: false
+  scope :masterclass, show_count: false
+  scope :masterclass_tests, show_count: false
+  scope :botany_question_issues, show_count: false
+  scope :chemistry_question_issues, show_count: false
+  scope :physics_question_issues, show_count: false
+  scope :zoology_question_issues, show_count: false
+  scope :botany_video_issues, show_count: false
+  scope :chemistry_video_issues, show_count: false
+  scope :physics_video_issues, show_count: false
+  scope :zoology_video_issues, show_count: false
   scope :all, :show_count => false
 
   form do |f|
@@ -59,7 +71,7 @@ ActiveAdmin.register CustomerIssue do
 
   controller do
     def scoped_collection
-      super.includes(:topic, :question, user: :user_profile)
+      super.includes(:topic, :test, :question, user: :user_profile)
     end
   end
 end

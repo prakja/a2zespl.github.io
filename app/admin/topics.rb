@@ -26,6 +26,8 @@ ActiveAdmin.register Topic do
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Duplicate Questions", duplicate_questions_admin_topic_path(topic)
       li link_to "Question Issues", question_issues_admin_topic_path(topic)
+      li link_to "Question Bookmarks", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'bookmarks_count_desc')
+      li link_to "Question Doubts", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'doubts_count_desc')
     end
   end
 

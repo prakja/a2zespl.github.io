@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
@@ -43,7 +43,7 @@ ActiveAdmin.register Question do
 
   controller do
     def scoped_collection
-      super.left_outer_joins(:doubts).select('"Question".*, COUNT("Doubt"."id") as doubts_count').group('"Question"."id"')
+      super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
     end
   end
 
@@ -70,6 +70,7 @@ ActiveAdmin.register Question do
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
       column :doubts_count, sortable: true
+      column :bookmarks_count, sortable: true
       column ("Add explanation") { |question|
         raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
       }
