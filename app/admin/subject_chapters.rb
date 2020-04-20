@@ -1,15 +1,20 @@
 ActiveAdmin.register SubjectChapter do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
-
+  remove_filter :subject, :topic
+  permit_params :deleted
+  index do
+    selectable_column
+    id_column
+    column ("Subject") { |sc|
+      auto_link(sc.subject)
+    }
+    column ("Chapter") {|sc|
+      auto_link(sc.topic)
+    }
+    toggle_bool_column :deleted
+  end
+  controller do
+    def scoped_collection
+      super.includes(:subject, :topic)
+    end
+  end
 end
