@@ -56,7 +56,7 @@ index do
   }
   column :name
   column :hours
-  column (:link) { |schedule_item| 
+  column (:link) { |schedule_item|
     raw('<a target="_blank" href="' + schedule_item.link + '">' + schedule_item.link + '</a>') if not schedule_item.link.blank?
   }
   column :schedule

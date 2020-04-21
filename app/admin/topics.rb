@@ -15,6 +15,50 @@ ActiveAdmin.register Topic do
   permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id, :sectionReady
   preserve_default_filters!
   filter :subjects, as: :searchable_select, multiple: true, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
+
+  active_admin_import validate: true,
+    batch_size: 1,
+    timestamps: true,
+    headers_rewrites: { 'name': :name, 'description': :description, 'subjectId': :subjectId, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    before_batch_import: ->(importer) {
+      # add created at and upated at
+      time = Time.now
+      subjectId = nil
+      importer.csv_lines.each do |line|
+        subjectId = line[-1]
+        # line.pop
+        line.insert(-1, time)
+        line.insert(-1, time)
+      end
+      p subjectId
+      importer.options['subjectId'] = subjectId
+      importer.options['time'] = time
+    },
+    after_batch_import:  ->(importer){
+      p "after_import"
+      time = importer.options['time']
+      subjectId = importer.options['subjectId']
+      topics = Topic.where(createdAt: time)
+      topics.each do |topic|
+        topicId = topic[:id]
+        Topic.find(topicId).update(updatedAt: Time.now)
+        if subjectId.include? "|"
+          subjectIds = subjectId.split("|")
+          subjectIds.each do |id|
+            p id
+            SubjectChapter.create(subjectId: id.to_i, chapterId: topicId)
+          end
+        else
+          SubjectChapter.create(subjectId: subjectId.to_i, chapterId: topicId)
+        end
+      end
+    },
+    template_object: ActiveAdminImport::Model.new(
+        hint: "File will be imported with such header format: name', 'description', 'subjectId'.
+        Remove the header from the CSV before uploading.",
+        csv_headers: ['name',	'description', 'subjectId', 'createdAt', 'updatedAt']
+    )
+
   scope :neetprep_course
   scope :botany
   scope :chemistry
