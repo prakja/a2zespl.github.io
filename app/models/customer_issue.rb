@@ -36,7 +36,7 @@ class CustomerIssue < ApplicationRecord
   }
 
   scope :full_tests, -> () {
-    joins(:test).where(Test: {numQuestions: 180})
+    joins(:test).where(Test: {numQuestions: 180}).non_resolved()
   }
 
   scope :botany_question_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().question_issue}
