@@ -41,4 +41,11 @@ ActiveAdmin.register SubjectChapter do
       super.includes(:subject, :topic)
     end
   end
+
+  csv do
+    column :id
+    column :subjectId
+    column :chapterId
+  end
+
 end
