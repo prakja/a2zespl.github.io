@@ -12,6 +12,7 @@ class Ability
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
+      can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message]
