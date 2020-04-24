@@ -53,6 +53,44 @@ ActiveAdmin.register TestAttempt do
     actions
   end
 
+  csv do
+    column (:name) do |testAttempt|
+      testAttempt.user.name
+    end
+    column (:email) do |testAttempt|
+      testAttempt.user.email || ""
+    end
+    column (:profile_email) do |testAttempt|
+      testAttempt.user.user_profile.nil? ? "" : testAttempt.user.user_profile.email || ''
+    end
+    column (:phone) do |testAttempt|
+      testAttempt.user.phone || ""
+    end
+    column (:profile_phone) do |testAttempt|
+      testAttempt.user.user_profile.nil? ? "" : testAttempt.user.user_profile.phone || ""
+    end
+    column "Total" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
+        testAttempt.result['totalMarks']
+      end
+    end
+    column "Physics Score" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][2].present?
+        testAttempt.result['sections'][2]['totalMarks']
+      end
+    end
+    column "Chemistry Score" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][1].present?
+        testAttempt.result['sections'][1]['totalMarks']
+      end
+    end
+    column "Biology Score" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][0].present?
+        testAttempt.result['sections'][0]['totalMarks']
+      end
+    end
+  end
+
   show do
     attributes_table do
       row :id
