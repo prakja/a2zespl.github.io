@@ -93,7 +93,11 @@ action_item :add_chapter, only: :show do
 end
 
 action_item :add_question_from_test, only: :show do
-  link_to 'Add Questions from Test', '/tests/add_question/' + resource.id.to_s, target: :_blank
+  link_to 'Bulk Add Questions from Test', '/tests/add_question/' + resource.id.to_s, target: :_blank
+end
+
+action_item :crud_test_questions, only: :show do
+  link_to 'Add/Delete/Reorder Questions from Test', '/tests/crud_question/' + resource.id.to_s, target: :_blank
 end
 
 action_item :add_sequence_of_test_questions, only: :show do
