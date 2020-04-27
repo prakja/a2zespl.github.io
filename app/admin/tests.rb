@@ -135,6 +135,7 @@ form do |f|
 
   f.inputs "Additional Information" do
     f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject,  hint: "Select topic (only applicable for live session test)", multiple: true
+    render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
     f.input :ownerType, as: :hidden, :input_html => { :value => 'topic' }
     f.input :courses, as: :select, :collection => Course.public_courses, input_html: { class: "select2" }, multiple: true
   end
