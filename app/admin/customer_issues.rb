@@ -71,7 +71,7 @@ ActiveAdmin.register CustomerIssue do
 
   controller do
     def scoped_collection
-      super.includes(:topic, :test, :question, user: :user_profile)
+      super.includes(:topic, :customer_issue_type, :user)
     end
   end
 end
