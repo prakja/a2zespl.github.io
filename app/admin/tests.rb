@@ -1,5 +1,5 @@
 ActiveAdmin.register Test do
-permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
+permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :ownerType, :ownerId, course_ids: [], topic_ids: []
 remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests, :test_attempts, :target
 
 filter :id_eq, as: :number, label: "Test ID"
@@ -129,6 +129,7 @@ form do |f|
     f.input :sections, hint: 'Required format for test sections - [["Biology", 1], ["Chemistry", 91], ["Physics", 136]]'
     f.input :startedAt, as: :datetime_picker, label: "Started Test At"
     f.input :expiryAt, as: :datetime_picker, label: "Expire Test At"
+    f.input :reviewAt, as: :datetime_picker, label: "Review Test At"
     f.input :pdfURL, as: :string
   end
 
