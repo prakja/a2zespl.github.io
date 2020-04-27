@@ -6,7 +6,6 @@ class CustomerIssue < ApplicationRecord
   belongs_to :video, foreign_key: :videoId, optional: true
   belongs_to :test, foreign_key: :testId, optional: true
   belongs_to :customer_issue_type, foreign_key: :typeId
-  belongs_to :test_columns, -> {select('id', 'name')}, foreign_key: :testId, optional: true, class_name: "Test"
   belongs_to :user, foreign_key: :userId
 
   scope :subject_name, ->(subject_id) {
