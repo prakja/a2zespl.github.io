@@ -1,5 +1,5 @@
 ActiveAdmin.register Course do
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
   sidebar :related_data, only: :show do
@@ -41,8 +41,12 @@ ActiveAdmin.register Course do
       f.input :recommended
       f.input :discountedFee
       f.input :expiryAt, as: :date_picker
+      f.input :hasQuestionBank
       f.input :hasVideo
       f.input :hasPartTest
+      f.input :hasNCERT
+      f.input :hasDoubt
+      f.input :hasLeaderBoard
       f.input :allowCallback
     end
     f.actions
