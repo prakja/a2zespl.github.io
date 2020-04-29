@@ -5,6 +5,7 @@ class CustomerIssue < ApplicationRecord
   belongs_to :question, foreign_key: :questionId, optional: true
   belongs_to :video, foreign_key: :videoId, optional: true
   belongs_to :test, foreign_key: :testId, optional: true
+  belongs_to :customer_issue_type, foreign_key: :typeId
   belongs_to :user, foreign_key: :userId
 
   scope :subject_name, ->(subject_id) {
@@ -39,24 +40,24 @@ class CustomerIssue < ApplicationRecord
     joins(:test).where(Test: {numQuestions: 180}).non_resolved()
   }
 
-  scope :botany_question_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().question_issue}
-  scope :chemistry_question_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().question_issue}
-  scope :physics_question_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().question_issue}
-  scope :zoology_question_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().question_issue}
+  scope :botany_question_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().question_issue.distinct}
+  scope :chemistry_question_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().question_issue.distinct}
+  scope :physics_question_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().question_issue.distinct}
+  scope :zoology_question_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().question_issue.distinct}
 
-  scope :physics_test_issues, -> {test_subject(55).non_resolved().question_issue.test_issue}
-  scope :chemistry_test_issues, -> {test_subject(54).non_resolved().question_issue.test_issue}
-  scope :biology_test_issues, -> {test_subject_topic_nil(53).non_resolved().question_issue.test_issue}
-  scope :zoology_test_issues, -> {test_subject(56).non_resolved().question_issue.test_issue}
-  scope :botany_test_issues, -> {test_subject(53).non_resolved().question_issue.test_issue}
+  scope :physics_test_issues, -> {test_subject(55).non_resolved().question_issue.test_issue.distinct}
+  scope :chemistry_test_issues, -> {test_subject(54).non_resolved().question_issue.test_issue.distinct}
+  scope :biology_test_issues, -> {test_subject_topic_nil(53).non_resolved().question_issue.test_issue.distinct}
+  scope :zoology_test_issues, -> {test_subject(56).non_resolved().question_issue.test_issue.distinct}
+  scope :botany_test_issues, -> {test_subject(53).non_resolved().question_issue.test_issue.distinct}
 
-  scope :botany_video_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().video_issue}
-  scope :chemistry_video_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().video_issue}
-  scope :physics_video_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().video_issue}
-  scope :zoology_video_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().video_issue}
+  scope :botany_video_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().video_issue.distinct}
+  scope :chemistry_video_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().video_issue.distinct}
+  scope :physics_video_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().video_issue.distinct}
+  scope :zoology_video_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().video_issue.distinct}
 
-  scope :masterclass, -> {subject_name([627..630]).non_resolved().question_issue}
-  scope :masterclass_tests, -> {subject_name([627..630]).non_resolved().question_issue.test_issue}
+  scope :masterclass, -> {subject_name([627..630]).non_resolved().question_issue.distinct}
+  scope :masterclass_tests, -> {subject_name([627..630]).non_resolved().question_issue.test_issue.distinct}
 
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name]

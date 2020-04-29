@@ -12,7 +12,7 @@ ActiveAdmin.register CustomerIssue do
   #   permitted
   # end
 
-  remove_filter :topic, :question, :video, :user, :test
+  remove_filter :topic, :question, :video, :user, :test, :customer_issue_type
 
   permit_params :resolved
 
@@ -71,7 +71,7 @@ ActiveAdmin.register CustomerIssue do
 
   controller do
     def scoped_collection
-      super.includes(:topic, :test, :question, user: :user_profile)
+      super.includes(:topic, :customer_issue_type, :user)
     end
   end
 end

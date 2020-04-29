@@ -184,6 +184,7 @@ ActiveAdmin.register Video do
       f.input :language, as: :select, :collection => ["hinglish", "english"]
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
+      render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
       f.input :subTopics, input_html: { class: "select2" }, :collection => SubTopic.topic_sub_topics(f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])
     end
     f.actions

@@ -205,7 +205,7 @@ class ChaptersController < ApplicationController
         end
 
         # added "mathematical tools" videos to show in "motion in a plane" chapter for section content linking
-        if @chapterId == '678'
+        if @chapterId == '678' or @chapterId == '677'
           @not_linked_chapter_videos += videoContentIds.length > 0 ? Topic.where(id: 676).first.hinglish_videos.where(['"Video"."id" not in (?)', videoContentIds]).pluck('"Video"."id","Video"."name"') : Topic.where(id: 676).first.hinglish_videos.pluck('"Video"."id","Video"."name"')
         end
         testIds = VideoTest.where(videoId: vidIds).pluck('testId')

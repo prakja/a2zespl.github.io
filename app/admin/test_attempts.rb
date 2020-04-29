@@ -55,7 +55,7 @@ ActiveAdmin.register TestAttempt do
 
   csv do
     column (:name) do |testAttempt|
-      testAttempt.user.name
+      testAttempt.user&.user_profile&.displayName
     end
     column (:email) do |testAttempt|
       testAttempt.user.email || ""
