@@ -50,6 +50,6 @@ class Video < ApplicationRecord
   #   joins(:topics => :subject).where(topic: {Subject: {courseId: course_id}})
   # }
 
-  scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
-  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}})}
+  scope :neetprep_course, -> {joins(:topics => :subjects).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}}).distinct()}
+  scope :maths_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_math_course_id}}).distinct()}
 end
