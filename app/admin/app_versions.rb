@@ -12,4 +12,6 @@ ActiveAdmin.register AppVersion do
 #   permitted
 # end
 
+permit_params :name, :version, :description, :forceUpdate
+
 end
