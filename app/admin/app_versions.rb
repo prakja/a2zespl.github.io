@@ -14,4 +14,12 @@ ActiveAdmin.register AppVersion do
 
 permit_params :name, :version, :description, :forceUpdate, :created_At, :updated_At
 
+form do |f|
+  f.input :name
+  f.input :description, as: :string
+  f.input :version, as: :string
+  f.input :forceUpdate
+  f.actions
+end
+
 end
