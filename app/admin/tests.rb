@@ -85,7 +85,7 @@ action_item :show_leaderboard, only: :show do
 end
 
 action_item :update_test_attempts, only: :show do
-  link_to 'Update Test Attempts', Rails.configuration.node_site_url + 'api/v1/webhook/updateTestAttempts?testId=' + resource.id.to_s
+  link_to 'Update Test Attempts', Rails.configuration.node_site_url + 'api/v1/webhook/updateTestAttempts?testId=' + resource.id.to_s, method: :post
 end
 
 action_item :add_chapter, only: :show do

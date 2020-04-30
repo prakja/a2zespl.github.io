@@ -130,4 +130,12 @@ ActiveAdmin.register TestAttempt do
     active_admin_comments
   end
 
+  action_item :calculate_test_result, only: :show do
+    link_to 'Calculate Test Result', Rails.configuration.node_site_url + 'api/v1/webhook/updateTestAttempt?testAttemptId=' + resource.id.to_s, method: :post
+  end
+
+  action_item :update_test_answers, only: :show do
+    link_to 'Update Test Answers', Rails.configuration.node_site_url + 'api/v1/webhook/updateSingleTestAttemptAnswers?testAttemptId=' + resource.id.to_s, method: :post
+  end
+
 end
