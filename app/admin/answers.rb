@@ -34,7 +34,7 @@ ActiveAdmin.register Answer do
     column (:userAnswer) {|answer| answer.question&.options[answer.userAnswer]}
     column (:correctOption) {|answer| answer.question&.options[answer.question&.correctOptionIndex]}
     column "difficulty Level" do |answer|
-     answer.questionAnalytic.difficultyLevel
+     answer.questionAnalytic&.difficultyLevel
     end
     column (:durationInSec) {|answer| answer.durationInSec ? answer.durationInSec : nil}
     column :correct_percentage, :sortable => true
