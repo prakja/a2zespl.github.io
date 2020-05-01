@@ -58,7 +58,6 @@ class Topic < ApplicationRecord
   end
 
   def self.get_assets(topic_id)
-    p topic_id
-    Topic.where(id: topic_id).first.videos;
+    Topic.where(id: topic_id)&.first&.videos;
   end
 end
