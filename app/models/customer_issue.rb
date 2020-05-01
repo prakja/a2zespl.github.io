@@ -51,10 +51,10 @@ class CustomerIssue < ApplicationRecord
   scope :zoology_test_issues, -> {test_subject(56).non_resolved().question_issue.test_issue.distinct}
   scope :botany_test_issues, -> {test_subject(53).non_resolved().question_issue.test_issue.distinct}
 
-  scope :botany_video_issues, -> {subject_name([53, 478, 132, 495, 390, 222]).non_resolved().video_issue.distinct}
-  scope :chemistry_video_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().video_issue.distinct}
-  scope :physics_video_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().video_issue.distinct}
-  scope :zoology_video_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().video_issue.distinct}
+  scope :botany_video_issues, -> {subject_name([53, 478, 480, 132, 495, 390, 222]).non_resolved().video_issue.distinct}
+  scope :chemistry_video_issues, -> {subject_name([54, 477, 481, 129, 494, 391, 229, 169]).non_resolved().video_issue.distinct}
+  scope :physics_video_issues, -> {subject_name([55, 476, 482, 126, 493, 392, 232, 170]).non_resolved().video_issue.distinct}
+  scope :zoology_video_issues, -> {subject_name([56, 479, 483, 135, 496, 393, 234]).non_resolved().video_issue.distinct}
 
   scope :masterclass, -> {subject_name([627..630]).non_resolved().question_issue.distinct}
   scope :masterclass_tests, -> {subject_name([627..630]).non_resolved().question_issue.test_issue.distinct}
