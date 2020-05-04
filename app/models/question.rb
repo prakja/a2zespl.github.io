@@ -7,6 +7,11 @@ class Question < ApplicationRecord
     if (not self.topicId.blank?)
       self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take().subjectId;
     end
+    # replace s3 urls with cdn urls
+    if (not self.explanation.blank?) and (self.explanation.include? 'https://questionexplanation.s3-us-west-2.amazonaws.com/' or self.explanation.include? 'https://learner-users.s3.ap-south-1.amazonaws.com/')
+      self.explanation.gsub!("https://questionexplanation.s3-us-west-2.amazonaws.com/", "https://neetprepa.b-cdn.net/")
+      self.explanation.gsub!("https://learner-users.s3.ap-south-1.amazonaws.com/", "https://neetprepa1.b-cdn.net/")
+    end
   end
   has_paper_trail
   after_commit :after_update_question, if: Proc.new { |model| model.previous_changes[:correctOptionIndex]}, on: [:update]
