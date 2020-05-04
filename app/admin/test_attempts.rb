@@ -116,6 +116,9 @@ ActiveAdmin.register TestAttempt do
       end
       row :createdAt
       row :updatedAt
+      row ("Question Answers") { |testAttempt|
+        raw("<pre>#{JSON.pretty_generate(testAttempt.userAnswers)}</pre>")
+      }
       row (:correctAnswerCount) { |test_attempt|
         raw('<a target="_blank" href=answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=correct_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + "Correct Answers" + '</a>')
       }
