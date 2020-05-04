@@ -1,0 +1,117 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Customer Issue Pending</h2>
+
+<table style="width:50%">
+  <tr>
+    <th>Issue Type</th>
+    <th>2 days</th>
+    <th>5 days</th>
+    <th>7 days</th>
+  </tr>
+
+  <tr>
+    <th>Botany Question</th>
+    <th><%= link_to @botany_question_two_days.count, "../../admin/customer_issues?scope=botany_question_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @botany_question_five_days.count, "../../admin/customer_issues?scope=botany_question_five_days&q[createdAt_gt]=" + 5.days.ago.to_s %></th>
+    <th><%= link_to @botany_question_seven_days.count, "../../admin/customer_issues?scope=botany_question_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Chemistry Question</th>
+    <th><%= link_to @chemistry_question_two_days.count, "../../admin/customer_issues?scope=chemistry_question_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @chemistry_question_five_days.count, "../../admin/customer_issues?scope=chemistry_question_five_days&q[createdAt_gt]=" + 5.days.ago.to_s %></th>
+    <th><%= link_to @chemistry_question_seven_days.count, "../../admin/customer_issues?scope=chemistry_question_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Physics Question</th>
+    <th><%= link_to @physics_question_two_days.count, "../../admin/customer_issues?scope=physics_question_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @physics_question_five_days.count, "../../admin/customer_issues?scope=physics_question_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @physics_question_seven_days.count, "../../admin/customer_issues?scope=physics_question_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Zoology Question</th>
+    <th><%= link_to @zoology_question_two_days.count, "../../admin/customer_issues?scope=zoology_question_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @zoology_question_five_days.count, "../../admin/customer_issues?scope=zoology_question_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @zoology_question_seven_days.count, "../../admin/customer_issues?scope=zoology_question_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Physics Test</th>
+    <th><%= link_to @physics_test_two_days.count, "../../admin/customer_issues?scope=physics_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @physics_test_five_days.count, "../../admin/customer_issues?scope=physics_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @physics_test_seven_days.count, "../../admin/customer_issues?scope=physics_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Chemistry Test</th>
+    <th><%= link_to @chemistry_test_two_days.count, "../../admin/customer_issues?scope=chemistry_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @chemistry_test_five_days.count, "../../admin/customer_issues?scope=chemistry_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @chemistry_test_seven_days.count, "../../admin/customer_issues?scope=chemistry_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Biology Test</th>
+    <th><%= link_to @biology_test_two_days.count, "../../admin/customer_issues?scope=biology_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @biology_test_five_days.count, "../../admin/customer_issues?scope=biology_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @biology_test_seven_days.count, "../../admin/customer_issues?scope=biology_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Zoology Test</th>
+    <th><%= link_to @zoology_test_two_days.count, "../../admin/customer_issues?scope=zoology_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @zoology_test_five_days.count, "../../admin/customer_issues?scope=zoology_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @zoology_test_seven_days.count, "../../admin/customer_issues?scope=zoology_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Botany Test</th>
+    <th><%= link_to @botany_test_two_days.count, "../../admin/customer_issues?scope=botany_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @botany_test_five_days.count, "../../admin/customer_issues?scope=botany_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @botany_test_seven_days.count, "../../admin/customer_issues?scope=botany_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Chemistry Video</th>
+    <th><%= link_to @chemistry_video_two_days.count, "../../admin/customer_issues?scope=chemistry_video_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @chemistry_video_five_days.count, "../../admin/customer_issues?scope=chemistry_video_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @chemistry_video_seven_days.count, "../../admin/customer_issues?scope=chemistry_video_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Physics Video</th>
+    <th><%= link_to @physics_video_two_days.count, "../../admin/customer_issues?scope=physics_video_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @physics_video_five_days.count, "../../admin/customer_issues?scope=physics_video_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @physics_video_seven_days.count, "../../admin/customer_issues?scope=physics_video_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Zoology Video</th>
+    <th><%= link_to @zoology_video_two_days.count, "../../admin/customer_issues?scope=zoology_video_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @zoology_video_five_days.count, "../../admin/customer_issues?scope=zoology_video_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @zoology_video_seven_days.count, "../../admin/customer_issues?scope=zoology_video_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>MasterClass Question</th>
+    <th><%= link_to @masterclass_question_two_days.count, "../../admin/customer_issues?scope=masterclass_question_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @masterclass_question_five_days.count, "../../admin/customer_issues?scope=masterclass_question_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @masterclass_question_seven_days.count, "../../admin/customer_issues?scope=masterclass_question_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>MasterClass Test</th>
+    <th><%= link_to @masterclass_test_two_days.count, "../../admin/customer_issues?scope=masterclass_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @masterclass_test_five_days.count, "../../admin/customer_issues?scope=masterclass_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @masterclass_test_seven_days.count, "../../admin/customer_issues?scope=masterclass_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+
+  <tr>
+    <th>Full Test</th>
+    <th><%= link_to @full_test_two_days.count, "../../admin/customer_issues?scope=full_test_two_days&q[createdAt_gt]=" + 2.days.ago.to_s %></th>
+    <th><%= link_to @full_test_five_days.count, "../../admin/customer_issues?scope=full_test_five_days&q[createdAt_gt]=" + 5.days.ago.to_s  %></th>
+    <th><%= link_to @full_test_seven_days.count, "../../admin/customer_issues?scope=full_test_seven_days&q[createdAt_gt]=" + 7.days.ago.to_s %></th>
+  </tr>
+</table>

@@ -69,6 +69,10 @@ ActiveAdmin.register CustomerIssue do
     redirect_to collection_path, notice: "Resolved Issues."
   end
 
+  action_item :see_unsolved_data, only: :index do
+    link_to 'Pending Customer Issue Count', '../../customer_issues/pending_stats'
+  end
+
   controller do
     def scoped_collection
       super.includes(:topic, :customer_issue_type, :user)
