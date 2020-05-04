@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post "chapters/remove_section_content", to: "chapters#remove_section_content"
   post "chapters/update_and_sort", to: "chapters#update_and_sort"
   get "doubts/pending_stats"
+  get "customer_supports/pending_stats"
   get "doubt_answers/answer"
   get "doubt_answers/connect_user"
   post "doubt_answers/post_answer"

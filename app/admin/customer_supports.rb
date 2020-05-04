@@ -23,6 +23,10 @@ ActiveAdmin.register CustomerSupport do
     link_to 'More phones', "/admin/customer_supports?showMorePhone=1"
   end
 
+  action_item :see_unsolved_data, only: :index do
+    link_to 'Pending Customer Support Count', '../../customer_supports/pending_stats'
+  end
+
   scope :open, default: true
   scope :all, :show_count => false
   scope :open_paid_students, :show_count => true
