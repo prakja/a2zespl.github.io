@@ -39,6 +39,18 @@ class CustomerSupport < ApplicationRecord
     where(resolved: false).paid([8, 141, 20, 149, 100, 51], 'no').order(createdAt: "DESC")
   }
 
+  scope :seven_days_pending, ->(type) {
+    where(createdAt: 7.days.ago..DateTime::Infinity.new,resolved: false,issueType: type).paid([8, 141, 20, 149, 100, 51], 'yes')
+  }
+
+  scope :five_days_pending, ->(type) {
+    where(createdAt: 5.days.ago..DateTime::Infinity.new,resolved: false,issueType: type).paid([8, 141, 20, 149, 100, 51], 'yes')
+  }
+
+  scope :two_days_pending, ->(type) {
+    where(createdAt: 2.days.ago..DateTime::Infinity.new,resolved: false,issueType: type).paid([8, 141, 20, 149, 100, 51], 'yes')
+  }
+
   def self.ransackable_scopes(_auth_object = nil)
     [ :resolved, :not_resolved_paid, :not_resolved_not_paid ]
   end
