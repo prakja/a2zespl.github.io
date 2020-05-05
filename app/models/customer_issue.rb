@@ -59,6 +59,114 @@ class CustomerIssue < ApplicationRecord
   scope :masterclass, -> {subject_name([627..630]).non_resolved().question_issue.distinct}
   scope :masterclass_tests, -> {subject_name([627..630]).non_resolved().question_issue.test_issue.distinct}
 
+  scope :seven_days_pending, ->(type) {
+    if(type == 'botany_question')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).botany_question_issues
+    elsif (type == 'chemistry_question')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).chemistry_question_issues
+    elsif (type == 'physics_question')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).physics_question_issues
+    elsif (type == 'zoology_question')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).zoology_question_issues
+    elsif (type == 'physics_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).physics_test_issues
+    elsif (type == 'chemistry_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).chemistry_test_issues
+    elsif (type == 'biology_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).biology_test_issues
+    elsif (type == 'zoology_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).zoology_test_issues
+    elsif (type == 'botany_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).botany_test_issues
+    elsif (type == 'botany_video')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).botany_video_issues
+    elsif (type == 'chemistry_video')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).chemistry_video_issues
+    elsif (type == 'physics_video')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).physics_video_issues
+    elsif (type == 'zoology_video')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).zoology_video_issues
+    elsif (type == 'masterclass_question')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).masterclass
+    elsif (type == 'masterclass_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).masterclass_tests
+    elsif (type == 'full_test')
+      where(createdAt: 7.days.ago..DateTime::Infinity.new).full_tests
+    end
+  }
+
+  scope :five_days_pending, ->(type) {
+    if(type == 'botany_question')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).botany_question_issues
+    elsif (type == 'chemistry_question')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).chemistry_question_issues
+    elsif (type == 'physics_question')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).physics_question_issues
+    elsif (type == 'zoology_question')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).zoology_question_issues
+    elsif (type == 'physics_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).physics_test_issues
+    elsif (type == 'chemistry_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).chemistry_test_issues
+    elsif (type == 'biology_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).biology_test_issues
+    elsif (type == 'zoology_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).zoology_test_issues
+    elsif (type == 'botany_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).botany_test_issues
+    elsif (type == 'botany_video')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).botany_video_issues
+    elsif (type == 'chemistry_video')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).chemistry_video_issues
+    elsif (type == 'physics_video')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).physics_video_issues
+    elsif (type == 'zoology_video')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).zoology_video_issues
+    elsif (type == 'masterclass_question')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).masterclass
+    elsif (type == 'masterclass_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).masterclass_tests
+    elsif (type == 'full_test')
+      where(createdAt: 5.days.ago..DateTime::Infinity.new).full_tests
+    end
+  }
+
+  scope :two_days_pending, ->(type) {
+    if(type == 'botany_question')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).botany_question_issues
+    elsif (type == 'chemistry_question')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).chemistry_question_issues
+    elsif (type == 'physics_question')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).physics_question_issues
+    elsif (type == 'zoology_question')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).zoology_question_issues
+    elsif (type == 'physics_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).physics_test_issues
+    elsif (type == 'chemistry_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).chemistry_test_issues
+    elsif (type == 'biology_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).biology_test_issues
+    elsif (type == 'zoology_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).zoology_test_issues
+    elsif (type == 'botany_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).botany_test_issues
+    elsif (type == 'botany_video')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).botany_video_issues
+    elsif (type == 'chemistry_video')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).chemistry_video_issues
+    elsif (type == 'physics_video')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).physics_video_issues
+    elsif (type == 'zoology_video')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).zoology_video_issues
+    elsif (type == 'masterclass_question')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).masterclass
+    elsif (type == 'masterclass_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).masterclass_tests
+    elsif (type == 'full_test')
+      where(createdAt: 2.days.ago..DateTime::Infinity.new).full_tests
+    end
+  }
+
   def self.ransackable_scopes(_auth_object = nil)
     [:subject_name]
   end
