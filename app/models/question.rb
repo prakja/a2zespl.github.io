@@ -98,6 +98,7 @@ class Question < ApplicationRecord
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
+  has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
   has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
   has_many :topics, through: :questionTopics

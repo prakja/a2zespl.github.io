@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
@@ -87,6 +87,9 @@ ActiveAdmin.register Question do
       end
       row :explanation do |question|
         raw(question.explanation)
+      end
+      row :explanations do |question|
+        raw(question.explanations.pluck(:explanation).join(""))
       end
       row :options do |question|
         raw(question.options)
