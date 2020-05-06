@@ -35,7 +35,7 @@ class AdminUser < ApplicationRecord
   end
 
   def self.distinct_user_id
-    AdminUser.pluck("email", "userId")
+    AdminUser.pluck("email", "job_desc", "userId").map{|au| [[au[0], au[1]].join(" ").strip, au[2]]}
   end
 
   def before_create_admin_user
