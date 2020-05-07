@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   post "tests/remove_test_question", to: "tests#remove_test_question"
   post "tests/update_and_sort", to: "tests#update_and_sort"
   get "tests/add_sequence/:testId", to: "tests#add_sequence"
+  get "tests/questions/:id", to: "tests#questions"
   post "tests/getSubjectsList"
   post "/tests/getTestQuestionsList"
   post "tests/getChaptersList"

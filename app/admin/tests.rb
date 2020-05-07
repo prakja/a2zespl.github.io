@@ -105,7 +105,7 @@ action_item :add_sequence_of_test_questions, only: :show do
 end
 
 action_item :two_columns_test_pdf, only: :show do
-  link_to 'PDF (Two Columns)', 'https://www.neetprep.com/tests/questions/' + resource.id.to_s, target: :_blank
+  link_to 'PDF (Two Columns)', '/tests/questions/' + resource.id.to_s, target: :_blank
 end
 
 form do |f|
