@@ -13,6 +13,10 @@ ActiveAdmin.register TestLeaderBoard do
     end
   end
 
+  action_item :refresh_leaderboard, only: :index do
+    link_to 'Refresh LeaderBoard', Rails.configuration.node_site_url + 'api/v1/job/refreshMatViews?matview=TestLeaderBoard', method: :post
+  end
+
   csv do
     column :rank
     column (:user) { |tlb|
