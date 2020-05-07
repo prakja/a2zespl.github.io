@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_03_101324) do
+ActiveRecord::Schema.define(version: 2020_05_06_111147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -178,7 +178,8 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.datetime "updatedAt", null: false
   end
 
-  create_table "CopyAnswer", id: :serial, force: :cascade do |t|
+  create_table "CopyAnswer", id: false, force: :cascade do |t|
+    t.serial "id", null: false
     t.integer "userAnswer"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
@@ -209,6 +210,15 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
 
 # Could not dump table "CopyQuestion29092018" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
+
+  create_table "CopySubjectChapter", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "subjectId"
+    t.integer "chapterId"
+    t.boolean "deleted"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
 
   create_table "CopyTestAttempt", id: :serial, force: :cascade do |t|
     t.integer "testId"
@@ -249,16 +259,16 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.integer "admin_user_id"
     t.boolean "hidden", default: false, null: false
     t.integer "position"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["courseId"], name: "course_offer_course_id"
   end
 
   create_table "CourseTest", id: :serial, force: :cascade do |t|
     t.integer "courseId"
     t.integer "testId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["courseId"], name: "course_test_course_id"
     t.index ["testId"], name: "course_test_test_id"
   end
@@ -269,12 +279,15 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.integer "questionId"
     t.integer "videoId"
     t.integer "noteId"
-    t.integer "topicId", null: false
+    t.integer "topicId"
     t.boolean "deleted", default: false
     t.boolean "resolved", default: false
     t.integer "userId", null: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.integer "testId"
+    t.index ["questionId"], name: "CustomerIssue_questionId_idx"
+    t.index ["videoId"], name: "CustomerIssue_videoId_idx"
   end
 
   create_table "CustomerIssueType", id: :serial, force: :cascade do |t|
@@ -502,6 +515,19 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.index ["questionId"], name: "QuestionDetail_questionId"
   end
 
+  create_table "QuestionExplanation", id: :serial, force: :cascade do |t|
+    t.integer "questionId"
+    t.text "explanation"
+    t.string "language", limit: 255
+    t.integer "courseId"
+    t.boolean "deleted"
+    t.integer "position"
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["courseId"], name: "QuestionExplanation_courseId_idx"
+    t.index ["questionId"], name: "QuestionExplanation_questionId_idx"
+  end
+
   create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
     t.integer "questionId"
     t.integer "subTopicId"
@@ -527,8 +553,9 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.text "description"
     t.text "keywords"
     t.text "paragraph"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "ogImage", limit: 255
     t.index ["ownerId", "ownerType"], name: "s_e_o_data_owner_id_owner_type", unique: true
   end
 
@@ -541,8 +568,8 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
   end
 
   create_table "ScheduleItem", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.text "name"
     t.text "description"
     t.integer "scheduleId", null: false
@@ -1020,8 +1047,8 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
   create_table "VideoTest", id: :serial, force: :cascade do |t|
     t.integer "videoId", null: false
     t.integer "testId", null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["testId", "videoId"], name: "video_test_test_id_video_id"
   end
 
@@ -1068,9 +1095,33 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
     t.string "role", default: "support", null: false
     t.string "name"
     t.integer "userId"
+    t.text "job_desc"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_admin_users_on_role"
+  end
+
+  create_table "copychaptervideo", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "chapterId"
+    t.integer "videoId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
+  create_table "copyvideo", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "description"
+    t.text "url"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "creatorId"
+    t.text "thumbnail"
+    t.float "duration"
+    t.integer "seqId"
+    t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
   end
 
   create_table "doubt_admins", force: :cascade do |t|
@@ -1132,6 +1183,7 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
   add_foreign_key "CustomerIssue", "\"CustomerIssueType\"", column: "typeId", name: "CustomerIssue_typeId_fkey"
   add_foreign_key "CustomerIssue", "\"Note\"", column: "noteId", name: "customer_issue_note_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"Question\"", column: "questionId", name: "customer_issue_question_id_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "CustomerIssue", "\"Test\"", column: "testId", name: "customer_issue_test_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"Topic\"", column: "topicId", name: "customer_issue_topic_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"User\"", column: "userId", name: "CustomerIssue_userId_fkey"
   add_foreign_key "CustomerIssue", "\"Video\"", column: "videoId", name: "customer_issue_video_id_fkey", on_update: :cascade, on_delete: :cascade
@@ -1147,6 +1199,7 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
   add_foreign_key "Notification", "\"User\"", column: "userId", name: "notification_user_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Payment", "\"CourseOffer\"", column: "courseOfferId", name: "Payment_courseOfferId_fkey"
   add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "Question", "\"Subject\"", column: "subjectId", name: "Question_subjectId_fkey"
   add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
   add_foreign_key "QuestionSubTopic", "\"SubTopic\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
@@ -1179,6 +1232,8 @@ ActiveRecord::Schema.define(version: 2020_04_03_101324) do
   add_foreign_key "VideoQuestion", "\"Video\"", column: "videoId", name: "fk_video_question_videoid"
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
+  add_foreign_key "VideoTest", "\"Test\"", column: "testId", name: "VideoTest_testId_fkey"
+  add_foreign_key "VideoTest", "\"Video\"", column: "videoId", name: "VideoTest_videoId_fkey"
   add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
   add_foreign_key "student_coaches", "\"User\"", column: "studentId"
   add_foreign_key "student_coaches", "admin_users", column: "coachId"

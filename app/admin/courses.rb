@@ -1,5 +1,5 @@
 ActiveAdmin.register Course do
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest, :shortDescription
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
   sidebar :related_data, only: :show do
@@ -29,6 +29,7 @@ ActiveAdmin.register Course do
       render partial: 'tinymce'
       f.input :name
       f.input :description
+      f.input :shortDescription
       f.input :image
       f.input :package
       f.input :fee
