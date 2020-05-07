@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Test Questions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+    <style>
+      @page { size: A4 }
+      @media print {
+        .footer {page-break-after: always;}
+        .footer:last-child {page-break-after: avoid;}
+        .noprint {
+          display:none !important;
+        }
+      }
+      .loader {
+        border-top: 16px solid blue;
+        border-right: 16px solid green;
+        border-bottom: 16px solid red;
+        border-left: 16px solid pink;
+        border-radius: 50%;
+        margin: auto;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      #printDiv{
+        display: flex;
+        justify-content: center;
+        display: none;
+      }
+      #printBtn{
+        width: 800px;
+        padding: 10px;
+        margin: 20px;
+        background: green;
+        color: white;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .sheet .content .column{ text-align:justify; font-size: 11pt;  }
+      .sheet .content .column blockquote{ background: #DEDEDE; padding: 10px; margin: 4px 20px; clear: both;  }
+      .sheet .content .column p{ padding: 0 10px; margin: 10px 0;  }
+      .sheet .content .column h1{ padding: 0 10px;  }
+      .sheet .header{ text-align: center; font-size: 18pt; font-family: helvetica, arial; padding: 20px 0 0;  }
+      .sheet .header .contact{ float: right; font-size: 14pt; font-family: helvetica, arial;}
+      .sheet .header .logo{ float: left; vertical-align: middle;}
+      .sheet .header hr, .sheet .footer hr{ width: 800px;  }
+      .sheet .footer span{ position: absolute; bottom: 10px; right: 10px;  }
+      .page_template{ display: none;  }
+      table
+      {
+        table-layout:fixed;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script>
+    $(function(){
+      var content_height = 980;  // the height of the content, discluding the header/footer
+      var page = 1;        // the beginning page number to show in the footer
+      function buildNewsletter(){
+        var image = $('.question img');
+        image.each(function () {
+          var that = $(this);
+          // hardcoding width check as A4 page width is fixed at 210mm and leaving out padding then 50% width should be close to 359px
+          if (that.width() >= 359) {
+            that.width('100%');
+          }
+        });
+        if($('#newsletterContent').contents().length > 0){
+          // when we need to add a new page, use a jq object for a template
+          // or use a long HTML string, whatever your preference
+          $page = $(".page_template:first").clone().addClass("sheet padding-10mm").css("display", "block").css("margin", "auto");
+
+          // fun stuff, like adding page numbers to the footer
+          $page.find(".footer span").append(page);
+          $("body").append($page);
+          page++;
+
+          // here is the columnizer magic
+          $('#newsletterContent').columnize({
+            columns: 2,
+            target: ".sheet:last .content",
+            overflow: {
+              height: content_height,
+              id: "#newsletterContent",
+              doneFunc: function(){
+                console.log("done with page");
+                buildNewsletter();
+              }
+            }
+          });
+        }
+        else {
+          $('.loader').hide();
+          $('#printDiv').css('display', 'flex');
+
+          $('#printBtn').click(function () {
+            window.print();
+          });
+        }
+      }
+      setTimeout(buildNewsletter, 3000);
+    });
+  </script>
+  </head>
+  <body class="A4">
+    <div class="page_template">
+      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><%=@test.name%><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
+      <div class='content'></div>
+      <div class='footer'><span>Page: </span></div>
+    </div>
+    <div class="loader"></div>
+    <div id="printDiv" class="noprint"><button id='printBtn'>Print</button></div>
+    <div id="newsletterContent" style="display:none;">
+      <% @test_questions.each_with_index do |question, index| %>
+        <div class="question"><span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %></div>
+        <% if index + 1 == @test_questions.length %>
+          <div>
+            <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet</h2>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </body>
+</html>

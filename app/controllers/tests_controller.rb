@@ -20,6 +20,19 @@ class TestsController < ApplicationController
     end
   end
 
+  # TODO: copied from neetpreprails and need to similar to that except security checks. so better way to do this?
+  def questions
+    id = params.require(:id)
+    begin
+      @test = Test.find(id)
+      questions_count = @test.question_ids.count
+      @test_questions = @test.questions.first(questions_count)
+      render layout: false
+    rescue => exception
+      p exception
+    end
+  end
+
   def add_question
     if not current_admin_user
       redirect_to "/admin/login"
