@@ -18,6 +18,7 @@ ActiveAdmin.register DoubtAnswer do
     id_column
     column (:content) {|doubt_answer| raw(doubt_answer.content)}
     column :doubt
+    column ("Link") {|doubt_answer| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt_answer.doubt.id.to_s, target: ":_blank" }
     column :user
     column :deleted
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
