@@ -63,7 +63,7 @@ controller do
       obj.put(acl: "public-read", body: file)
     end
     # replace s3 url with cdn url
-    return obj.public_url.gsub('neetprep-from-ruby.s3.us-west-2.amazonaws.com', 'neetprepr.b-cdn.net')
+    return obj.public_url.gsub('neetprep-from-ruby.s3.us-west-2.amazonaws.com', 'bcdnr.neetprep.com')
   end    
 
   def create()

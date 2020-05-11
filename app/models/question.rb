@@ -9,8 +9,8 @@ class Question < ApplicationRecord
     end
     # replace s3 urls with cdn urls
     if (not self.explanation.blank?) and (self.explanation.include? 'https://questionexplanation.s3-us-west-2.amazonaws.com/' or self.explanation.include? 'https://learner-users.s3.ap-south-1.amazonaws.com/')
-      self.explanation.gsub!("https://questionexplanation.s3-us-west-2.amazonaws.com/", "https://neetprepa.b-cdn.net/")
-      self.explanation.gsub!("https://learner-users.s3.ap-south-1.amazonaws.com/", "https://neetprepa1.b-cdn.net/")
+      self.explanation.gsub!("https://questionexplanation.s3-us-west-2.amazonaws.com/", "https://bcdna.neetprep.com/")
+      self.explanation.gsub!("https://learner-users.s3.ap-south-1.amazonaws.com/", "https://bcdna1.neetprep.com/")
     end
   end
   has_paper_trail
