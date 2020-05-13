@@ -5,6 +5,19 @@ ActiveAdmin.register Course do
   sidebar :related_data, only: :show do
     ul do
       li link_to "Tests", admin_tests_path(q: {testCourseTests_courseId_eq: course.id}, order: 'startedAt_asc')
+      li link_to "Subjects", admin_subjects_path(q: {courseId_eq: course.id}, order: 'id_asc')
+    end
+  end
+
+  show do
+    attributes_table do
+      columns_to_exclude = ["description"]
+      (Course.column_names - columns_to_exclude).each do |c|
+        row c.to_sym
+      end
+      row :description do |course|
+        raw(course.description)
+      end
     end
   end
 

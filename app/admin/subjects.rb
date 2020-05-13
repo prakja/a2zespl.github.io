@@ -18,6 +18,12 @@ ActiveAdmin.register Subject do
         hint: "File will be imported with such header format: name', 'description', 'courseId', 'id' (optional) in any order."
     )
 
+  sidebar :related_data, only: :show do
+    ul do
+      li link_to "Chapters", admin_topics_path(q: {topicSubjects_subjectId_eq: subject.id}, order: 'id_asc')
+    end
+  end
+
   controller do
     def scoped_collection
       super.includes(:course)
