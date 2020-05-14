@@ -145,13 +145,13 @@ class QuestionsController < ApplicationController
       @test = Test.find(@testId)
       @testQuestions = nil
       if @limit.to_i > 0
-        @testQuestions = @test.questions.includes(:question_analytic).limit(@limit.to_i).offset(@offset.to_i).order(seqNum: :asc, id: :asc)
+        @testQuestions = @test.questions.includes(:question_analytic, :explanations).limit(@limit.to_i).offset(@offset.to_i).order(seqNum: :asc, id: :asc)
       else
-        @testQuestions = @test.questions.includes(:question_analytic).order(seqNum: :asc, id: :asc)
+        @testQuestions = @test.questions.includes(:question_analytic, :explanations).order(seqNum: :asc, id: :asc)
       end
 
       @testQuestions.each_with_index do |question, index|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? question.explanation : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
+        @questions_data[question.id] = [question.question, @showExplanation == true ? (question.explanations.map(&:explanation).join('<br />') + question.explanation) : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
       end
     rescue => exception
 
