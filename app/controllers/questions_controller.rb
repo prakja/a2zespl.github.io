@@ -151,7 +151,7 @@ class QuestionsController < ApplicationController
       end
 
       @testQuestions.each_with_index do |question, index|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? (question.explanations.map(&:explanation).join('<br />') + question.explanations.length > 0 ? '<p>Only for checking. Not part of test question solution</p><hr />' : '' + question.explanation) : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
+        @questions_data[question.id] = [question.question, @showExplanation == true ? (question.explanations.map(&:explanation).join('<br />') + (question.explanations.length > 0 ? '<p>Only for checking. Not part of test question solution</p><hr />' : '') + question.explanation) : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
       end
     rescue => exception
 
