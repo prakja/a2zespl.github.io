@@ -27,8 +27,10 @@ ActiveAdmin.register CustomerIssue do
   scope :physics_test_issues, show_count: false
   scope :zoology_test_issues, show_count: false
   scope :full_tests, show_count: false
-  scope :masterclass, show_count: false
-  scope :masterclass_tests, show_count: false
+  scope :biology_masterclass, show_count: false
+  scope :physics_masterclass, show_count: false
+  scope :chemistry_masterclass, show_count: false
+  scope :biology_masterclass_tests, show_count: false
   scope :botany_question_issues, show_count: false
   scope :chemistry_question_issues, show_count: false
   scope :physics_question_issues, show_count: false
