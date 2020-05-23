@@ -2,7 +2,7 @@ ActiveAdmin.register User do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :blockedUser
+permit_params :blockedUser, :password_text
 #
 # or
 #
@@ -19,6 +19,8 @@ filter :student_phone, as: :string
 form do |f|
   f.inputs "User" do
     f.input :blockedUser
+    f.input :password_text
+    # f.input :password_confirmation
   end
   f.actions
 end
@@ -54,6 +56,22 @@ preserve_default_filters!
 controller do
   def scoped_collection
     super.includes(:user_profile)
+  end
+
+  def update
+    user_params = permitted_params[:user]
+    id = permitted_params[:id]
+
+    blockedUser = user_params[:blockedUser]
+    password_text = user_params[:password_text]
+
+    p blockedUser
+
+    user = User.find(id)
+    password = BCrypt::Password.create(password_text)
+    user.password = password
+    user.save
+    redirect_to admin_user_path user
   end
 end
 
