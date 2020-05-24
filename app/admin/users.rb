@@ -129,6 +129,7 @@ sidebar :user_activity, only: :show do
     li link_to "Videos Watched ", admin_user_video_stats_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Todos ", admin_user_todos_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Payments", admin_payments_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "Bookmarked Questions", admin_bookmark_questions_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
   end
 end
 
