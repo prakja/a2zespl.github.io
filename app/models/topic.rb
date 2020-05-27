@@ -35,6 +35,9 @@ class Topic < ApplicationRecord
   has_many :topicChapterTests, foreign_key: :chapterId, class_name: 'ChapterTest'
   has_many :tests, through: :topicChapterTests
 
+  has_many :topicFlashCards, foreign_key: :chapterId, class_name: 'ChapterFlashCard'
+  has_many :flash_cards, through: :topicFlashCards
+
   has_many :sections, class_name: "Section", foreign_key: "chapterId"
 
   def hinglish_videos

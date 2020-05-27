@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_131123) do
+ActiveRecord::Schema.define(version: 2020_05_25_094704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.text "incorrectAnswerOther"
     t.index ["incorrectAnswerReason"], name: "answer_incorrect_answer_reason"
     t.index ["testAttemptId"], name: "answer_test_attempt_id"
-    t.index ["userId", "questionId"], name: "answer_user_id_question_id", unique: true
+    t.index ["userId", "questionId", "testAttemptId"], name: "answer_user_id_question_id_test_attempt_id", unique: true
   end
 
   create_table "AppVersion", id: :serial, force: :cascade do |t|
@@ -91,6 +91,13 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.bigint "impressions"
     t.float "interactionRate"
     t.bigint "interactions"
+  end
+
+  create_table "ChapterFlashCard", force: :cascade do |t|
+    t.integer "chapterId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "flashCardId", null: false
   end
 
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
@@ -206,6 +213,9 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
 #   Unknown type '"enum_Question_type"' for column 'type'
 
 # Could not dump table "CopyQuestion010120191" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
+
+# Could not dump table "CopyQuestion20200504" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
 # Could not dump table "CopyQuestion29092018" because of following StandardError
@@ -387,6 +397,13 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "FlashCard", force: :cascade do |t|
+    t.string "content"
+    t.string "title"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "Group", id: :serial, force: :cascade do |t|
     t.string "title", limit: 255
     t.string "description", limit: 255
@@ -496,8 +513,8 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.text "section_2"
     t.text "section_3"
     t.text "section_4"
-    t.datetime "createdAt"
-    t.datetime "updatedAt"
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }
     t.boolean "highIntent", default: false
     t.index ["url"], name: "Post_url_key", unique: true
   end
@@ -510,8 +527,8 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.string "exam", limit: 255
     t.text "examName"
     t.integer "questionId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["questionId"], name: "QuestionDetail_questionId"
   end
 
@@ -902,8 +919,8 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.string "city", limit: 100
     t.string "country", limit: 100
     t.string "intro", limit: 1000
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "userId"
     t.integer "defaultCourseId"
     t.string "email", limit: 255
@@ -1002,6 +1019,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
     t.integer "seqId", default: 0, null: false
     t.string "youtubeUrl", limit: 255
     t.string "language", limit: 255
+    t.string "url2", limit: 255
   end
 
   create_table "VideoAnnotation", id: :serial, force: :cascade do |t|
@@ -1162,6 +1180,8 @@ ActiveRecord::Schema.define(version: 2020_05_07_131123) do
 
   add_foreign_key "Answer", "\"Question\"", column: "questionId", name: "Answer_questionId_fkey", on_update: :cascade, on_delete: :nullify
   add_foreign_key "Answer", "\"User\"", column: "userId", name: "Answer_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "ChapterFlashCard", "\"FlashCard\"", column: "flashCardId"
+  add_foreign_key "ChapterFlashCard", "\"Topic\"", column: "chapterId"
   add_foreign_key "ChapterNote", "\"Note\"", column: "noteId", name: "fk_chapter_note_noteid"
   add_foreign_key "ChapterNote", "\"Topic\"", column: "chapterId", name: "fk_chapter_note_chapterid"
   add_foreign_key "ChapterQuestion", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
