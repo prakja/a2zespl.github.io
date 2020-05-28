@@ -23,6 +23,7 @@ ActiveAdmin.register FlashCard do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Flash Card" do
+      render partial: 'tinymce'
       f.input :title, as: :string
       f.input :content
 
