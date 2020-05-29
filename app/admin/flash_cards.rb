@@ -1,19 +1,48 @@
 ActiveAdmin.register FlashCard do
 
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # Uncomment all parameters which should be permitted for assignment
-  #
+  active_admin_import validate: true,
+                      batch_size: 1,
+                      timestamps: false,
+                      headers_rewrites: { 'title': :title, 'content': :content, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+                      before_batch_import: lambda { |importer|
+                                             # add created at and upated at
+                                             time = Time.zone.now
+                                             importer.csv_lines.each do |line|
+                                               importer.options['chapter'] = line[2]
+                                               importer.options['time'] = time
+                                               line.delete_at(2) # remove chapter name
+                                               line.insert(-1, time)
+                                               line.insert(-1, time)
+                                               p line
+                                             end
+                                           },
+                      after_batch_import: lambda { |importer|
+                                            p "after_import"
+                                            time = importer.options['time']
+                                            chapter_ids = importer.options['chapter'].split("|")
+
+                                            # chapter = Chapter.where(name: chapter_name, subject_id: subject).first
+
+                                            flash_card = FlashCard.where(createdAt: time).first
+                                            flash_card_id = flash_card[:id]
+
+                                            chapter_ids.each do |chapter_id|
+                                              ChapterFlashCard.create!({
+                                                chapterId: chapter_id,
+                                                flashCardId: flash_card_id,
+                                                createdAt: Time.zone.now,
+                                                updatedAt: Time.zone.now,
+                                              })
+                                            end
+                                          },
+                      template_object: ActiveAdminImport::Model.new(
+                        hint: "File will be imported with such header format: title content topic_id.
+        Remove the header from the CSV before uploading.",
+                        csv_headers: %w[title content createdAt updatedAt]
+                      )
+
+
   permit_params :content, :title, :createdAt, :updatedAt, topic_ids: []
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:content, :title, :createdAt, :updatedAt]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
-  # end
   remove_filter :topicFlashCards, :topics
 
   filter :id_eq, as: :number, label: "Flash Card ID"
