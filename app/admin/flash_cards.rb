@@ -53,13 +53,21 @@ ActiveAdmin.register FlashCard do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Flash Card" do
       render partial: 'tinymce'
-      f.input :title, as: :string
+      f.input :title
       f.input :content
 
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
     end
     f.actions
+  end
+
+  index do
+    render partial: 'img_css'
+    id_column
+    column (:title) {|flash_card| raw(flash_card.title)}
+    column (:answer) {|flash_card| raw(flash_card.content)}
+    actions
   end
   
 end
