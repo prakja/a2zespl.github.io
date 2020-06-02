@@ -62,7 +62,7 @@ ActiveAdmin.register DoubtAnswer do
     actions
   end
   
-  action_item :see_botany_difficult_questions, only: :index do
+  action_item :doubt_answer_count, only: :index do
     link_to 'Answer Count', '/admin/answer_count'
   end
 

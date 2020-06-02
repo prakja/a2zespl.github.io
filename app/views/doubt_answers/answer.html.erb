@@ -132,13 +132,15 @@ var imgSolution = document.getElementsByClassName("solution-image");
 for (var i = 0; i < imgSolution.length; ++i) {
   var imgElement = imgSolution[i];
   var imgInstance = new fabric.Image(imgElement, {
-    left: 300 * i,
-    top: 0,
+    left: (1000 / (imgSolution.length)) * i,  // so that images don't come on top of each other and use available width
+    top: 50, //so that rotation line and box is visible
     angle: 0
   });
+  imgInstance.scaleToHeight(500); // take full container height
+  imgInstance.scaleToWidth(1000/(imgSolution.length)); // divide full container width for all images
   canvas.add(imgInstance);
 }
-canvas.setZoom(0.1);
+//canvas.setZoom(0.1); // no zooming from our side as we don't know what is optimal..just show images and expect users to zoom in and out
 canvas.on("mouse:wheel", function(opt) {
   var minZoom = 0.1;
   var delta = opt.e.deltaY;
