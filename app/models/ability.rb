@@ -15,10 +15,10 @@ class Ability
       can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message]
+      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
       can :read, [UserCourse, User, UserProfile]
-      can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter]
-      can :import, Video
+      can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard]
+      can :import, [Video, FlashCard]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat]
