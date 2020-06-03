@@ -8,6 +8,7 @@ class TestAttempt < ApplicationRecord
   }
 
   scope :test_series, -> {course_id(8)}
+  scope :aryan_raj_test_series, -> {course_id(270)}
 
   scope :score_gte, -> (score){
     TestAttempt.where("(\"result\"->>'totalMarks')::INTEGER >= ?", score)
