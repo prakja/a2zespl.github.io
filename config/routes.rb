@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   post "tests/addTestQuestionSequence"
   post "tests/createChapterTest"
   get "course_details/booster"
+  get "test_attempts/aryan_raj_toppers"
   get "payments/generate_url", to: "payments#generate_url"
   get "matviews/forced_update"
   get "google_ads/report"

@@ -1,0 +1,29 @@
+<head>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    tbody tr th {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<h2 style="margin-left: 16px; margin-top: 30px">Aryan Raj Test Series Toppers</h2>
+<table style="margin-left: 16px; width:50%; margin-top: 30px">
+  <tr class="header" style="text-align: center;">
+    <th>User Name</th>
+    <th>User Phone</th>
+    <% @tests.each do |test|%>
+      <th><%= raw('<a target="_blank" href="/admin/tests/' + test[0].to_s + '">' + test[1].to_s + '</a>') %></th>
+    <% end %>
+  </tr>
+  <% @report_data.each do |key, value| %>
+    <tr style="text-align: center;">
+      <td><%= raw('<a target="_blank" href="/admin/users/' + key.to_s + '">' + value["name"].to_s + '</a>') %></td>
+      <td><%= value["phone"].to_s %></td>
+      <% @tests.each do |test|%>
+        <th><%=value[test[0].to_s]%></th>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
