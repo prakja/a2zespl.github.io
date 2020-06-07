@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_25_094704) do
+ActiveRecord::Schema.define(version: 2020_06_05_124449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -367,6 +367,14 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
     t.boolean "deleted", default: false
     t.index ["doubtId"], name: "Doubt_answer_doubt_id"
     t.index ["userId"], name: "Doubt_answer_user_id"
+  end
+
+  create_table "DuplicateChapter", id: :serial, force: :cascade do |t|
+    t.integer "origId", null: false
+    t.integer "dupId", null: false
+    t.index ["dupId"], name: "DuplicateChapter_dupId_idx"
+    t.index ["origId", "dupId"], name: "unique_origId_dupId", unique: true
+    t.index ["origId"], name: "DuplicateChapter_origId_idx"
   end
 
   create_table "DuplicatePost", id: :serial, force: :cascade do |t|
@@ -828,8 +836,8 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
     t.string "role", limit: 20, default: "student"
     t.string "salt", limit: 32
     t.text "resetPasswordToken"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "referrerId"
     t.string "fcmToken", limit: 255
     t.text "source"
@@ -862,6 +870,13 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
 
 # Could not dump table "UserCourse" because of following StandardError
 #   Unknown type '"enum_UserCourse_role"' for column 'role'
+
+  create_table "UserFlashCard", force: :cascade do |t|
+    t.integer "userId", null: false
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "flashCardId", null: false
+  end
 
   create_table "UserHighlightedNote", id: :serial, force: :cascade do |t|
     t.integer "userId", null: false
@@ -939,6 +954,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
     t.text "utmCampaignContent"
     t.text "utmCampaignName"
     t.json "campaignInfo"
+    t.boolean "allowVideoDownload", default: false, null: false
     t.index ["userId"], name: "user_profile_user_id", unique: true
   end
 
@@ -1078,6 +1094,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.index ["ownerId", "ownerType"], name: "vote_owner_id_owner_type"
+    t.index ["userId", "ownerId", "ownerType"], name: "unique_vote", unique: true
     t.index ["userId"], name: "vote_user_id"
   end
 
@@ -1241,6 +1258,8 @@ ActiveRecord::Schema.define(version: 2020_05_25_094704) do
   add_foreign_key "UserClaim", "\"User\"", column: "userId", name: "UserClaim_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserCourse", "\"Course\"", column: "courseId", name: "UserCourse_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserCourse", "\"User\"", column: "userId", name: "UserCourse_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "UserFlashCard", "\"FlashCard\"", column: "flashCardId"
+  add_foreign_key "UserFlashCard", "\"User\"", column: "userId"
   add_foreign_key "UserLogin", "\"User\"", column: "userId", name: "fk_user_login_user"
   add_foreign_key "UserProfile", "\"User\"", column: "userId", name: "UserProfile_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserTodo", "\"Subject\"", column: "subjectId"

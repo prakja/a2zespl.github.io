@@ -43,7 +43,7 @@ ActiveAdmin.register FlashCard do
 
 
   permit_params :content, :title, :createdAt, :updatedAt, topic_ids: []
-  remove_filter :topicFlashCards, :topics
+  remove_filter :topicFlashCards, :topics, :userFlashCards, :users
 
   filter :id_eq, as: :number, label: "Flash Card ID"
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
