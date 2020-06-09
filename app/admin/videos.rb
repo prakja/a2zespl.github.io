@@ -60,7 +60,7 @@ ActiveAdmin.register Video do
   # filter :subTopics_id_not_cont_any, label: "Has Sub-topics", as: :boolean
   preserve_default_filters!
 
-  permit_params :name, :description, :url, :thumbnail, :language, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
+  permit_params :name, :description, :url, :url2, :thumbnail, :language, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
   scope :neetprep_course
   scope :maths_course
 
@@ -101,6 +101,7 @@ ActiveAdmin.register Video do
       row :name
       row :description
       row :url
+      row :url2
       row :duration do |video|
         seconds = video.duration.to_i
         hours = seconds / (60 * 60)
@@ -174,7 +175,8 @@ ActiveAdmin.register Video do
     f.inputs "Video" do
       f.input :name
       f.input :description
-      f.input :url, as: :string
+      f.input :url, as: :string, hint: "Please add Digital Ocean Spaces URL"
+      f.input :url2, as: :string, hint: "Please add Bunny CDN URL"
       f.input :duration, as: :number, label: "Duration in seconds"
       f.input :seqId, as: :number
       f.input :youtubeUrl
