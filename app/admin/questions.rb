@@ -110,6 +110,9 @@ ActiveAdmin.register Question do
       row :type
       row :level
       row :sequenceId
+      row :orignalQuestionId do |question|
+        question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
+      end
     end
   end
 
