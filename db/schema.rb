@@ -10,12 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_05_124449) do
+ActiveRecord::Schema.define(version: 2020_06_09_072958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "ActiveFlashCardChapter", force: :cascade do |t|
+    t.integer "chapterId"
+  end
 
 # Could not dump table "Advertisement" because of following StandardError
 #   Unknown type '"enum_Advertisement_platform"' for column 'platform'
@@ -35,8 +39,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
     t.integer "userAnswer"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
-    t.integer "questionId"
-    t.integer "userId"
+    t.integer "questionId", null: false
+    t.integer "userId", null: false
     t.integer "testAttemptId"
     t.integer "durationInSec"
     t.string "incorrectAnswerReason", limit: 255
@@ -56,8 +60,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
   end
 
   create_table "BookmarkQuestion", id: :serial, force: :cascade do |t|
-    t.integer "questionId"
-    t.integer "userId"
+    t.integer "questionId", null: false
+    t.integer "userId", null: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.index ["questionId"], name: "bookmark_question_question_id"
@@ -98,6 +102,10 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.integer "flashCardId", null: false
+    t.integer "seqId"
+    t.index ["chapterId", "flashCardId"], name: "ChapterFlashCard_chapterId_flashCardId_idx", unique: true
+    t.index ["chapterId"], name: "ChapterFlashCard_chapterId_idx"
+    t.index ["flashCardId"], name: "ChapterFlashCard_flashCardId_idx"
   end
 
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
@@ -111,13 +119,29 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
   end
 
   create_table "ChapterQuestion", id: :serial, force: :cascade do |t|
-    t.integer "chapterId"
-    t.integer "questionId"
+    t.integer "chapterId", null: false
+    t.integer "questionId", null: false
     t.datetime "createdAt", default: -> { "now()" }, null: false
     t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["chapterId", "questionId"], name: "chapterquestion1_chapter_id_question_id", unique: true
     t.index ["chapterId"], name: "chapter_question_chapter_id"
     t.index ["questionId"], name: "chapter_question_question_id"
+  end
+
+  create_table "ChapterQuestion20200516", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
+  create_table "ChapterQuestion20200528", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
   end
 
   create_table "ChapterQuestionCopy", id: false, force: :cascade do |t|
@@ -139,8 +163,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
   end
 
   create_table "ChapterTest", id: :serial, force: :cascade do |t|
-    t.integer "chapterId"
-    t.integer "testId"
+    t.integer "chapterId", null: false
+    t.integer "testId", null: false
     t.datetime "createdAt", default: -> { "now()" }, null: false
     t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["chapterId", "testId"], name: "chaptertest_chapter_id_test_id", unique: true
@@ -149,8 +173,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
   end
 
   create_table "ChapterVideo", id: :serial, force: :cascade do |t|
-    t.integer "chapterId"
-    t.integer "videoId"
+    t.integer "chapterId", null: false
+    t.integer "videoId", null: false
     t.datetime "createdAt", default: -> { "now()" }, null: false
     t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["chapterId", "videoId"], name: "chaptervideo_chapter_id_video_id", unique: true
@@ -275,8 +299,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
   end
 
   create_table "CourseTest", id: :serial, force: :cascade do |t|
-    t.integer "courseId"
-    t.integer "testId"
+    t.integer "courseId", null: false
+    t.integer "testId", null: false
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["courseId"], name: "course_test_course_id"
@@ -530,6 +554,12 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
 # Could not dump table "Question" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
+# Could not dump table "Question20200516" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
+
+# Could not dump table "Question20201305" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
+
   create_table "QuestionDetail", id: :serial, force: :cascade do |t|
     t.integer "year"
     t.string "exam", limit: 255
@@ -551,6 +581,18 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["courseId"], name: "QuestionExplanation_courseId_idx"
     t.index ["questionId"], name: "QuestionExplanation_questionId_idx"
+  end
+
+  create_table "QuestionExplanation20200516", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "questionId"
+    t.text "explanation"
+    t.string "language", limit: 255
+    t.integer "courseId"
+    t.boolean "deleted"
+    t.integer "position"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
   end
 
   create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
@@ -653,628 +695,3 @@ ActiveRecord::Schema.define(version: 2020_06_05_124449) do
     t.datetime "updatedAt", null: false
   end
 
-  create_table "SectionContent", force: :cascade do |t|
-    t.string "title"
-    t.integer "contentId", null: false
-    t.string "contentType", null: false
-    t.integer "position", default: 0
-    t.integer "sectionId", null: false
-    t.datetime "createdAt", default: -> { "now()" }, null: false
-    t.datetime "updatedAt", default: -> { "now()" }, null: false
-    t.index ["sectionId", "contentId", "contentType"], name: "unique_section_content_entry", unique: true
-  end
-
-  create_table "SequelizeMeta", primary_key: "name", id: :string, limit: 255, force: :cascade do |t|
-  end
-
-  create_table "StudentOnboardingEvents", force: :cascade do |t|
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "userId"
-    t.string "description"
-  end
-
-  create_table "SubTopic", id: :serial, force: :cascade do |t|
-    t.integer "topicId"
-    t.string "name", limit: 255
-    t.boolean "deleted"
-    t.integer "position"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["topicId"], name: "SubTopic_topicId"
-  end
-
-  create_table "Subject", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.text "image"
-    t.text "description"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "courseId"
-    t.index ["courseId"], name: "Subject_courseId"
-  end
-
-  create_table "SubjectChapter", id: :serial, force: :cascade do |t|
-    t.integer "subjectId"
-    t.integer "chapterId"
-    t.boolean "deleted", default: false
-    t.datetime "createdAt", default: -> { "now()" }, null: false
-    t.datetime "updatedAt", default: -> { "now()" }, null: false
-    t.index ["chapterId", "subjectId"], name: "subject_chapter_subject_id_chapter_id", unique: true
-    t.index ["chapterId"], name: "subject_chapter_chapter_id"
-    t.index ["deleted"], name: "subject_chapter_deleted"
-    t.index ["subjectId"], name: "subject_chapter_subject_id"
-  end
-
-  create_table "Target", force: :cascade do |t|
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "userId", null: false
-    t.integer "score", null: false
-    t.integer "testId"
-    t.datetime "targetDate"
-    t.string "status", default: "active"
-    t.integer "maxMarks", default: 720
-  end
-
-  create_table "TargetChapter", force: :cascade do |t|
-    t.integer "chapterId", null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "targetId", null: false
-    t.integer "hours", null: false
-    t.boolean "revision", default: false
-  end
-
-  create_table "Task", id: :serial, force: :cascade do |t|
-    t.integer "parentId"
-    t.integer "courseId"
-    t.integer "seqId"
-    t.text "title"
-    t.text "link"
-    t.text "desc"
-    t.decimal "duration", precision: 5, scale: 2
-    t.integer "year"
-    t.datetime "scheduledAt"
-    t.datetime "expiredAt"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "liveSeqId2019"
-    t.integer "liveSeqId2020"
-    t.integer "level"
-    t.index ["courseId"], name: "task_course_id"
-    t.index ["expiredAt"], name: "task_expired_at"
-    t.index ["parentId"], name: "task_parent_id"
-    t.index ["scheduledAt"], name: "task_scheduled_at"
-    t.index ["year"], name: "task_year"
-  end
-
-# Could not dump table "Test" because of following StandardError
-#   Unknown type '"enum_Test_exam"' for column 'exam'
-
-  create_table "TestAttempt", id: :serial, force: :cascade do |t|
-    t.integer "testId"
-    t.integer "userId"
-    t.integer "elapsedDurationInSec", default: 0
-    t.integer "currentQuestionOffset", default: 0
-    t.boolean "completed", default: false
-    t.json "userAnswers"
-    t.json "userQuestionWiseDurationInSec"
-    t.json "result"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.json "visitedQuestions"
-    t.json "markedQuestions"
-    t.integer "nextTargetScore"
-    t.datetime "nextTargetDate"
-    t.index ["testId"], name: "test_attempt_test_id"
-    t.index ["userId"], name: "test_attempt_user_id"
-  end
-
-  create_table "TestAttemptPostmartem", id: :serial, force: :cascade do |t|
-    t.integer "questionId", null: false
-    t.integer "userId", null: false
-    t.integer "testAttemptId", null: false
-    t.string "mistake", limit: 255
-    t.string "action", limit: 255
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["testAttemptId", "userId", "questionId"], name: "testAttempt_postmartem_testAttempt_id_user_id_question_id", unique: true
-  end
-
-  create_table "TestQuestion", id: :serial, force: :cascade do |t|
-    t.integer "testId"
-    t.integer "questionId"
-    t.datetime "createdAt", default: -> { "now()" }, null: false
-    t.datetime "updatedAt", default: -> { "now()" }, null: false
-    t.integer "seqNum", default: 0, null: false
-    t.index ["questionId"], name: "test_question_question_id"
-    t.index ["testId", "questionId"], name: "index_TestQuestion_on_testId_and_questionId", unique: true
-    t.index ["testId"], name: "test_question_test_id"
-  end
-
-  create_table "Topic", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.text "image"
-    t.text "description"
-    t.integer "position"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "subjectId"
-    t.boolean "free", default: false, null: false
-    t.boolean "published", default: false, null: false
-    t.integer "seqId", default: 0, null: false
-    t.string "importUrl", limit: 255
-    t.boolean "isComingSoon", default: false
-    t.boolean "sectionReady", default: false
-    t.index ["subjectId"], name: "Topic_subjectId"
-  end
-
-  create_table "TopicAssetOld", id: :integer, default: -> { "nextval('\"TopicAsset_id_seq\"'::regclass)" }, force: :cascade do |t|
-    t.string "assetType", limit: 255
-    t.integer "assetId"
-    t.integer "topicId"
-    t.integer "position"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.boolean "deleted", default: false
-    t.integer "ownerId", null: false
-    t.string "ownerType", limit: 255, null: false
-    t.index ["assetId", "assetType"], name: "topic_asset_asset_id_asset_type"
-    t.index ["deleted"], name: "topic_asset_deleted"
-    t.index ["ownerId", "ownerType"], name: "topic_asset_owner_id_owner_type"
-    t.index ["topicId"], name: "topic_asset_topic_id"
-  end
-
-  create_table "User", id: :serial, force: :cascade do |t|
-    t.string "email", limit: 255
-    t.boolean "emailConfirmed", default: false
-    t.text "hashedPassword"
-    t.text "phone"
-    t.boolean "phoneConfirmed", default: false
-    t.text "provider"
-    t.string "role", limit: 20, default: "student"
-    t.string "salt", limit: 32
-    t.text "resetPasswordToken"
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.integer "referrerId"
-    t.string "fcmToken", limit: 255
-    t.text "source"
-    t.text "referrer"
-    t.boolean "isFcmTokenActive", default: true
-    t.boolean "blockedUser", default: false
-    t.text "password"
-    t.index ["email"], name: "User_email_key", unique: true
-    t.index ["email"], name: "user_email"
-    t.index ["phone"], name: "User_phone_key", unique: true
-    t.index ["phone"], name: "user_phone"
-  end
-
-  create_table "UserChapterStat", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "chapterId"
-    t.boolean "completed", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["userId", "chapterId"], name: "userchapterstat_user_id_chapter_id", unique: true
-  end
-
-  create_table "UserClaim", id: :serial, force: :cascade do |t|
-    t.string "type", limit: 255
-    t.string "value", limit: 255
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "userId"
-  end
-
-# Could not dump table "UserCourse" because of following StandardError
-#   Unknown type '"enum_UserCourse_role"' for column 'role'
-
-  create_table "UserFlashCard", force: :cascade do |t|
-    t.integer "userId", null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "flashCardId", null: false
-  end
-
-  create_table "UserHighlightedNote", id: :serial, force: :cascade do |t|
-    t.integer "userId", null: false
-    t.integer "noteId", null: false
-    t.string "content", limit: 1000
-    t.string "color", limit: 255
-    t.string "rangy", limit: 255
-    t.string "cfiRange", limit: 255
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.string "userNote", limit: 255
-    t.integer "pageNumber"
-    t.string "pageId", limit: 255
-    t.string "uuid", limit: 255
-    t.boolean "deleted", default: false
-    t.index ["noteId"], name: "user_highlighted_note_note_id"
-    t.index ["userId"], name: "user_highlighted_note_user_id"
-  end
-
-  create_table "UserLogin", id: :serial, force: :cascade do |t|
-    t.integer "userId", null: false
-    t.integer "expiry", null: false
-    t.string "platform", limit: 255, null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["userId", "platform"], name: "u_user_id_platform", unique: true
-  end
-
-  create_table "UserNoteStat", id: :serial, force: :cascade do |t|
-    t.integer "userId", null: false
-    t.integer "noteId", null: false
-    t.integer "lastReadPage"
-    t.boolean "completed", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.string "bookId", limit: 255
-    t.string "chapterHref", limit: 255
-    t.boolean "usingId"
-    t.string "value", limit: 255
-    t.string "cfi", limit: 255
-    t.index ["noteId"], name: "user_note_stat_note_id"
-    t.index ["userId", "noteId"], name: "usernotestat_user_id_note_id", unique: true
-    t.index ["userId"], name: "user_note_stat_user_id"
-  end
-
-  create_table "UserProfile", id: :serial, force: :cascade do |t|
-    t.string "displayName", limit: 100
-    t.text "picture"
-    t.string "gender", limit: 50
-    t.string "location", limit: 100
-    t.string "website", limit: 255
-    t.string "firstName", limit: 100
-    t.string "lastName", limit: 100
-    t.string "address", limit: 100
-    t.string "city", limit: 100
-    t.string "country", limit: 100
-    t.string "intro", limit: 1000
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.integer "userId"
-    t.integer "defaultCourseId"
-    t.string "email", limit: 255
-    t.string "phone", limit: 20
-    t.integer "neetExamYear"
-    t.json "weeklySchedule"
-    t.decimal "dailyStudyHours", precision: 4, scale: 2
-    t.string "registrationNumber", limit: 255
-    t.date "dob"
-    t.string "neetAdmitCard", limit: 255
-    t.text "utmCampaignMedium"
-    t.text "utmCampaignSource"
-    t.text "utmCampaignLink"
-    t.text "utmAdNetwork"
-    t.text "utmCampaignTerm"
-    t.text "utmCampaignContent"
-    t.text "utmCampaignName"
-    t.json "campaignInfo"
-    t.boolean "allowVideoDownload", default: false, null: false
-    t.index ["userId"], name: "user_profile_user_id", unique: true
-  end
-
-  create_table "UserScheduledTask", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "scheduledTaskId"
-    t.decimal "duration", precision: 5, scale: 2
-    t.boolean "completed", default: false
-    t.boolean "started", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["scheduledTaskId"], name: "user_scheduled_task_scheduled_task_id"
-    t.index ["userId", "scheduledTaskId"], name: "user_scheduled_task_user_id_scheduled_task_id", unique: true
-    t.index ["userId"], name: "user_scheduled_task_user_id"
-  end
-
-  create_table "UserSectionStat", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "sectionId"
-    t.boolean "completed", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["userId", "sectionId"], name: "usersectionstat_user_id_section_id", unique: true
-  end
-
-  create_table "UserTask", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "taskId"
-    t.decimal "duration", precision: 5, scale: 2
-    t.decimal "userDuration", precision: 5, scale: 2
-    t.boolean "completed", default: false
-    t.boolean "started", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["taskId"], name: "user_task_task_id"
-    t.index ["userId", "taskId"], name: "user_task_user_id_task_id", unique: true
-    t.index ["userId"], name: "user_task_user_id"
-  end
-
-  create_table "UserTodo", force: :cascade do |t|
-    t.integer "userId", null: false
-    t.integer "task_type", null: false
-    t.integer "subjectId"
-    t.integer "chapterId"
-    t.float "hours", null: false
-    t.integer "num_questions"
-    t.float "hours_taken"
-    t.integer "num_questions_practiced"
-    t.boolean "completed", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.string "student_response"
-    t.string "todo"
-  end
-
-  create_table "UserVideoStat", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "videoId"
-    t.float "lastPosition"
-    t.boolean "completed", default: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.boolean "isPaid", default: true
-    t.index ["userId", "videoId"], name: "uservideostat_user_id_video_id", unique: true
-    t.index ["userId"], name: "user_video_stat_user_id"
-    t.index ["videoId"], name: "user_video_stat_video_id"
-  end
-
-  create_table "Video", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.text "description"
-    t.text "url"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "creatorId"
-    t.text "thumbnail"
-    t.float "duration"
-    t.integer "seqId", default: 0, null: false
-    t.string "youtubeUrl", limit: 255
-    t.string "language", limit: 255
-    t.string "url2", limit: 255
-  end
-
-  create_table "VideoAnnotation", id: :serial, force: :cascade do |t|
-    t.string "annotationType", limit: 255
-    t.integer "annotationId"
-    t.integer "videoId"
-    t.integer "videoTimeStampInSeconds"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "videoTimeMS", null: false
-  end
-
-  create_table "VideoLink", id: :serial, force: :cascade do |t|
-    t.integer "videoId", null: false
-    t.string "name", limit: 255
-    t.string "url", limit: 255
-    t.integer "time", null: false
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.text "description"
-    t.index ["videoId"], name: "video_link_video_id"
-  end
-
-  create_table "VideoQuestion", id: :serial, force: :cascade do |t|
-    t.integer "videoId"
-    t.integer "questionId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "timestamp"
-    t.index ["questionId"], name: "video_question_question_id"
-    t.index ["videoId"], name: "video_question_video_id"
-  end
-
-  create_table "VideoSubTopic", id: :serial, force: :cascade do |t|
-    t.integer "videoId"
-    t.integer "subTopicId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["subTopicId"], name: "video_subTopic_subTopic_id"
-    t.index ["videoId"], name: "video_subTopic_video_id"
-  end
-
-  create_table "VideoTest", id: :serial, force: :cascade do |t|
-    t.integer "videoId", null: false
-    t.integer "testId", null: false
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["testId", "videoId"], name: "video_test_test_id_video_id"
-  end
-
-  create_table "Vote", id: :serial, force: :cascade do |t|
-    t.integer "userId"
-    t.integer "ownerId"
-    t.string "ownerType", limit: 255
-    t.boolean "vote"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["ownerId", "ownerType"], name: "vote_owner_id_owner_type"
-    t.index ["userId", "ownerId", "ownerType"], name: "unique_vote", unique: true
-    t.index ["userId"], name: "vote_user_id"
-  end
-
-  create_table "_sdc_rejected", id: false, force: :cascade do |t|
-    t.text "record"
-    t.text "reason"
-    t.text "table_name"
-    t.datetime "_sdc_rejected_at"
-  end
-
-  create_table "active_admin_comments", force: :cascade do |t|
-    t.string "namespace"
-    t.text "body"
-    t.string "resource_type"
-    t.bigint "resource_id"
-    t.string "author_type"
-    t.bigint "author_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
-    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
-    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
-  end
-
-  create_table "admin_users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "role", default: "support", null: false
-    t.string "name"
-    t.integer "userId"
-    t.text "job_desc"
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
-    t.index ["role"], name: "index_admin_users_on_role"
-  end
-
-  create_table "copychaptervideo", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.integer "chapterId"
-    t.integer "videoId"
-    t.datetime "createdAt"
-    t.datetime "updatedAt"
-  end
-
-  create_table "copyvideo", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.string "name", limit: 255
-    t.text "description"
-    t.text "url"
-    t.datetime "createdAt"
-    t.datetime "updatedAt"
-    t.integer "creatorId"
-    t.text "thumbnail"
-    t.float "duration"
-    t.integer "seqId"
-    t.string "youtubeUrl", limit: 255
-    t.string "language", limit: 255
-  end
-
-  create_table "doubt_admins", force: :cascade do |t|
-    t.integer "doubtId"
-    t.bigint "admin_user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admin_user_id"], name: "index_doubt_admins_on_admin_user_id"
-    t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
-  end
-
-  create_table "student_coaches", force: :cascade do |t|
-    t.integer "studentId", null: false
-    t.integer "coachId", null: false
-    t.string "role", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["studentId", "coachId"], name: "index_student_coaches_on_studentId_and_coachId", unique: true
-  end
-
-  create_table "user_actions", force: :cascade do |t|
-    t.integer "userId"
-    t.integer "count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["userId"], name: "index_user_actions_on_userId", unique: true
-  end
-
-  create_table "versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.bigint "item_id", null: false
-    t.string "event", null: false
-    t.string "whodunnit"
-    t.text "object"
-    t.datetime "created_at"
-    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
-  end
-
-  add_foreign_key "Answer", "\"Question\"", column: "questionId", name: "Answer_questionId_fkey", on_update: :cascade, on_delete: :nullify
-  add_foreign_key "Answer", "\"User\"", column: "userId", name: "Answer_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "ChapterFlashCard", "\"FlashCard\"", column: "flashCardId"
-  add_foreign_key "ChapterFlashCard", "\"Topic\"", column: "chapterId"
-  add_foreign_key "ChapterNote", "\"Note\"", column: "noteId", name: "fk_chapter_note_noteid"
-  add_foreign_key "ChapterNote", "\"Topic\"", column: "chapterId", name: "fk_chapter_note_chapterid"
-  add_foreign_key "ChapterQuestion", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
-  add_foreign_key "ChapterQuestion", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
-  add_foreign_key "ChapterQuestionCopy", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
-  add_foreign_key "ChapterQuestionCopy", "\"Topic\"", column: "chapterId", name: "fk_chapter_question_chapterid"
-  add_foreign_key "ChapterTask", "\"Task\"", column: "taskId", name: "fk_chapter_task_taskid"
-  add_foreign_key "ChapterTask", "\"Topic\"", column: "chapterId", name: "fk_chapter_task_chapterid"
-  add_foreign_key "ChapterTest", "\"Test\"", column: "testId", name: "fk_chapter_test_testid"
-  add_foreign_key "ChapterTest", "\"Topic\"", column: "chapterId", name: "fk_chapter_test_chapterid"
-  add_foreign_key "ChapterVideo", "\"Topic\"", column: "chapterId", name: "fk_chapter_video_chapterid"
-  add_foreign_key "ChapterVideo", "\"Video\"", column: "videoId", name: "fk_chapter_video_videoid"
-  add_foreign_key "Comment", "\"User\"", column: "userId", name: "Comment_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CourseInvitation", "admin_users"
-  add_foreign_key "CourseOffer", "\"Course\"", column: "courseId", name: "CourseOffer_courseId_fkey"
-  add_foreign_key "CourseOffer", "admin_users", name: "CourseOffer_admin_user_id_fkey"
-  add_foreign_key "CourseTest", "\"Course\"", column: "courseId", name: "fk_course_test_courseid"
-  add_foreign_key "CourseTest", "\"Test\"", column: "testId", name: "fk_course_test_testid"
-  add_foreign_key "CustomerIssue", "\"CustomerIssueType\"", column: "typeId", name: "CustomerIssue_typeId_fkey"
-  add_foreign_key "CustomerIssue", "\"Note\"", column: "noteId", name: "customer_issue_note_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CustomerIssue", "\"Question\"", column: "questionId", name: "customer_issue_question_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CustomerIssue", "\"Test\"", column: "testId", name: "customer_issue_test_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CustomerIssue", "\"Topic\"", column: "topicId", name: "customer_issue_topic_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CustomerIssue", "\"User\"", column: "userId", name: "CustomerIssue_userId_fkey"
-  add_foreign_key "CustomerIssue", "\"Video\"", column: "videoId", name: "customer_issue_video_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "CustomerSupport", "admin_users", column: "adminUserId"
-  add_foreign_key "Doubt", "\"Note\"", column: "noteId", name: "doubt_note_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Doubt", "\"Question\"", column: "questionId", name: "doubt_question_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Doubt", "\"Test\"", column: "testId", name: "doubt_test_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Doubt", "\"Topic\"", column: "topicId", name: "Doubt_topicId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Doubt", "\"User\"", column: "userId", name: "Doubt_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "DoubtAnswer", "\"Doubt\"", column: "doubtId", name: "DoubtAnswer_doubtId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "DoubtAnswer", "\"User\"", column: "userId", name: "DoubtAnswer_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "FcmToken", "\"User\"", column: "userId", name: "fcm_token_user_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Notification", "\"User\"", column: "userId", name: "notification_user_id_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Payment", "\"CourseOffer\"", column: "courseOfferId", name: "Payment_courseOfferId_fkey"
-  add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Question", "\"Subject\"", column: "subjectId", name: "Question_subjectId_fkey"
-  add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
-  add_foreign_key "QuestionSubTopic", "\"SubTopic\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
-  add_foreign_key "ScheduleItem", "\"Schedule\"", column: "scheduleId", name: "fk_schedule_item_schedule"
-  add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
-  add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
-  add_foreign_key "ScheduleItemUser", "\"User\"", column: "userId", name: "fk_schedule_item_user_user"
-  add_foreign_key "Section", "\"Topic\"", column: "chapterId"
-  add_foreign_key "SectionContent", "\"Section\"", column: "sectionId"
-  add_foreign_key "StudentOnboardingEvents", "\"User\"", column: "userId"
-  add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "Target", "\"User\"", column: "userId"
-  add_foreign_key "TargetChapter", "\"Target\"", column: "targetId"
-  add_foreign_key "TargetChapter", "\"Topic\"", column: "chapterId"
-  add_foreign_key "Test", "\"User\"", column: "userId"
-  add_foreign_key "TestQuestion", "\"Question\"", column: "questionId", name: "fk_test_question_questionid"
-  add_foreign_key "TestQuestion", "\"Test\"", column: "testId", name: "fk_test_question_testid"
-  add_foreign_key "Topic", "\"Subject\"", column: "subjectId", name: "Topic_subjectId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserClaim", "\"User\"", column: "userId", name: "UserClaim_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserCourse", "\"Course\"", column: "courseId", name: "UserCourse_courseId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserCourse", "\"User\"", column: "userId", name: "UserCourse_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserFlashCard", "\"FlashCard\"", column: "flashCardId"
-  add_foreign_key "UserFlashCard", "\"User\"", column: "userId"
-  add_foreign_key "UserLogin", "\"User\"", column: "userId", name: "fk_user_login_user"
-  add_foreign_key "UserProfile", "\"User\"", column: "userId", name: "UserProfile_userId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "UserTodo", "\"Subject\"", column: "subjectId"
-  add_foreign_key "UserTodo", "\"Topic\"", column: "chapterId"
-  add_foreign_key "UserTodo", "\"User\"", column: "userId"
-  add_foreign_key "Video", "\"User\"", column: "creatorId", name: "Video_creatorId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "VideoAnnotation", "\"Video\"", column: "videoId", name: "VideoAnnotation_videoId_fkey", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "VideoQuestion", "\"Question\"", column: "questionId", name: "fk_video_question_questionid"
-  add_foreign_key "VideoQuestion", "\"Video\"", column: "videoId", name: "fk_video_question_videoid"
-  add_foreign_key "VideoSubTopic", "\"Video\"", column: "subTopicId", name: "fk_video_subtopic_subtopicid"
-  add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
-  add_foreign_key "VideoTest", "\"Test\"", column: "testId", name: "VideoTest_testId_fkey"
-  add_foreign_key "VideoTest", "\"Video\"", column: "videoId", name: "VideoTest_videoId_fkey"
-  add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
-  add_foreign_key "student_coaches", "\"User\"", column: "studentId"
-  add_foreign_key "student_coaches", "admin_users", column: "coachId"
-  add_foreign_key "user_actions", "\"User\"", column: "userId"
-end
