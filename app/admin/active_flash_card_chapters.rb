@@ -14,5 +14,13 @@ ActiveAdmin.register ActiveFlashCardChapter do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
+  remove_filter :topic
+
+  form do |f|
+    f.inputs "Active Chapter" do
+      f.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject
+    end
+    f.actions
+  end
   
 end
