@@ -120,10 +120,10 @@ ActiveAdmin.register TestAttempt do
         raw("<pre>#{JSON.pretty_generate(testAttempt.userAnswers)}</pre>")
       }
       row (:correctAnswerCount) { |test_attempt|
-        raw('<a target="_blank" href=answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=correct_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + "Correct Answers" + '</a>')
+        raw('<a target="_blank" href=/admin/answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=correct_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + "Correct Answers" + '</a>')
       }
       row (:incorrectAnswerCount) { |test_attempt|
-        raw('<a target="_blank" href=answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=incorrect_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + "Incorrect Answers" + '</a>')
+        raw('<a target="_blank" href=/admin/answers?q[userId_eq]='+test_attempt.userId.to_s+'&scope=incorrect_answers&q[testAttemptId_eq]=' + test_attempt.id.to_s + '>' + "Incorrect Answers" + '</a>')
       }
       row ("Question Duration") { |testAttempt|
         raw("<pre>#{JSON.pretty_generate(testAttempt.userQuestionWiseDurationInSec)}</pre>")
