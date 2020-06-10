@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_072958) do
+ActiveRecord::Schema.define(version: 2020_06_09_072959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -320,6 +320,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072958) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.integer "testId"
+    t.integer "flashCardId"
     t.index ["questionId"], name: "CustomerIssue_questionId_idx"
     t.index ["videoId"], name: "CustomerIssue_videoId_idx"
   end
@@ -556,142 +557,4 @@ ActiveRecord::Schema.define(version: 2020_06_09_072958) do
 
 # Could not dump table "Question20200516" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
-
-# Could not dump table "Question20201305" because of following StandardError
-#   Unknown type '"enum_Question_type"' for column 'type'
-
-  create_table "QuestionDetail", id: :serial, force: :cascade do |t|
-    t.integer "year"
-    t.string "exam", limit: 255
-    t.text "examName"
-    t.integer "questionId"
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["questionId"], name: "QuestionDetail_questionId"
-  end
-
-  create_table "QuestionExplanation", id: :serial, force: :cascade do |t|
-    t.integer "questionId"
-    t.text "explanation"
-    t.string "language", limit: 255
-    t.integer "courseId"
-    t.boolean "deleted"
-    t.integer "position"
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["courseId"], name: "QuestionExplanation_courseId_idx"
-    t.index ["questionId"], name: "QuestionExplanation_questionId_idx"
-  end
-
-  create_table "QuestionExplanation20200516", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.integer "questionId"
-    t.text "explanation"
-    t.string "language", limit: 255
-    t.integer "courseId"
-    t.boolean "deleted"
-    t.integer "position"
-    t.datetime "createdAt"
-    t.datetime "updatedAt"
-  end
-
-  create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
-    t.integer "questionId"
-    t.integer "subTopicId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["questionId"], name: "question_subTopic_question_id"
-    t.index ["subTopicId"], name: "question_subTopic_subTopic_id"
-  end
-
-  create_table "Quiz", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.text "description"
-    t.integer "timeRequiredInSeconds"
-    t.integer "creatorId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-  end
-
-  create_table "SEOData", id: :serial, force: :cascade do |t|
-    t.integer "ownerId"
-    t.string "ownerType", limit: 255
-    t.text "title"
-    t.text "description"
-    t.text "keywords"
-    t.text "paragraph"
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.string "ogImage", limit: 255
-    t.index ["ownerId", "ownerType"], name: "s_e_o_data_owner_id_owner_type", unique: true
-  end
-
-  create_table "Schedule", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.text "name"
-    t.text "description"
-    t.boolean "isActive"
-  end
-
-  create_table "ScheduleItem", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.text "name"
-    t.text "description"
-    t.integer "scheduleId", null: false
-    t.integer "topicId"
-    t.integer "hours"
-    t.text "link"
-    t.datetime "scheduledAt"
-  end
-
-  create_table "ScheduleItemAsset", force: :cascade do |t|
-    t.bigint "ScheduleItem_id"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.text "assetLink"
-    t.string "assetName"
-    t.index ["ScheduleItem_id"], name: "index_ScheduleItemAsset_on_ScheduleItem_id"
-  end
-
-  create_table "ScheduleItemUser", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.integer "scheduleItemId", null: false
-    t.integer "userId", null: false
-    t.boolean "completed"
-    t.index ["scheduleItemId", "userId"], name: "u_schedule_item_user_user", unique: true
-  end
-
-  create_table "ScheduledTask", id: :serial, force: :cascade do |t|
-    t.integer "parentId"
-    t.integer "courseId"
-    t.text "title"
-    t.text "link"
-    t.text "desc"
-    t.decimal "duration", precision: 5, scale: 2
-    t.integer "year"
-    t.datetime "scheduledAt"
-    t.datetime "expiredAt"
-    t.integer "taskId"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-    t.index ["courseId"], name: "scheduled_task_course_id"
-    t.index ["expiredAt"], name: "scheduled_task_expired_at"
-    t.index ["scheduledAt"], name: "scheduled_task_scheduled_at"
-    t.index ["taskId"], name: "scheduled_task_task_id"
-    t.index ["year"], name: "scheduled_task_year"
-  end
-
-  create_table "Section", force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "chapterId", null: false
-    t.integer "position", default: 0
-    t.string "ncertName"
-    t.string "ncertURL"
-    t.string "ncertSectionLink"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
-  end
 
