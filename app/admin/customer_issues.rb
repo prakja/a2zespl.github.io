@@ -21,6 +21,8 @@ ActiveAdmin.register CustomerIssue do
   preserve_default_filters!
 
   scope "Open", :non_resolved, default: true
+  scope :botany_flashcard_issues, show_count: false
+  scope :zoology_flashcard_issues, show_count: false
   scope :biology_test_issues, show_count: false
   scope :botany_test_issues, show_count: false
   scope :chemistry_test_issues, show_count: false
@@ -58,6 +60,7 @@ ActiveAdmin.register CustomerIssue do
     column :note
     column :topic
     column :test
+    column :flash_card
     toggle_bool_column :resolved
     column :user
     actions

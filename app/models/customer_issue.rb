@@ -5,6 +5,7 @@ class CustomerIssue < ApplicationRecord
   belongs_to :question, foreign_key: :questionId, optional: true
   belongs_to :video, foreign_key: :videoId, optional: true
   belongs_to :test, foreign_key: :testId, optional: true
+  belongs_to :flash_card, foreign_key: :flashCardId, optional: true
   belongs_to :customer_issue_type, foreign_key: :typeId
   belongs_to :user, foreign_key: :userId
 
@@ -28,6 +29,10 @@ class CustomerIssue < ApplicationRecord
     where.not(questionId: nil)
   }
 
+  scope :flash_card_issue, -> () {
+    where.not(flashCardId: nil)
+  }
+
   scope :video_issue, -> () {
     where.not(videoId: nil)
   }
@@ -44,6 +49,9 @@ class CustomerIssue < ApplicationRecord
   scope :chemistry_question_issues, -> {subject_name([54, 477, 129, 494, 391, 229, 169]).non_resolved().question_issue.distinct}
   scope :physics_question_issues, -> {subject_name([55, 476, 126, 493, 392, 232, 170]).non_resolved().question_issue.distinct}
   scope :zoology_question_issues, -> {subject_name([56, 479, 135, 496, 393, 234]).non_resolved().question_issue.distinct}
+
+  scope :botany_flashcard_issues, -> {subject_name([53]).non_resolved().flash_card_issue.distinct}
+  scope :zoology_flashcard_issues, -> {subject_name([56]).non_resolved().flash_card_issue.distinct}
 
   scope :physics_test_issues, -> {test_subject(55).non_resolved().question_issue.test_issue.distinct}
   scope :chemistry_test_issues, -> {test_subject(54).non_resolved().question_issue.test_issue.distinct}
