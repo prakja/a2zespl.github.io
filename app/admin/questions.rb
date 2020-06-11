@@ -179,7 +179,7 @@ ActiveAdmin.register Question do
       render partial: 'hidden_test_ids', locals: {tests: f.object.tests}
       f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
-      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : [])
+      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : []))
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
