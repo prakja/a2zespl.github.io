@@ -29,7 +29,7 @@
     <h4>This doubt is assigned to: <%= name %></h4>
     <% end %>
     <div style="margin-left: 20px;">
-      <h2><%= raw(@doubt.content) %></h2>
+      <h2><%= raw(@doubt.content.gsub! "pre", "div") %></h2>
       <div id="solutionImgs" style="display: none;"></div>
       <% if not @doubt.audioLink.nil? %>
         <%= raw('<audio controls style="margin-top: -10px"><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
@@ -119,6 +119,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/plugins/code/plugin.min.js'></script>
 <script>
 
+$("#content").attr('style', "");
 var imgSolutionElements = document.getElementsByClassName("solutionImg");
 if(imgSolutionElements.length > 0) {
   document.getElementById("solutionImgs").style.display = "block";
