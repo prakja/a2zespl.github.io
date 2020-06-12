@@ -35,7 +35,9 @@
         <%= raw('<audio controls style="margin-top: -10px"><source src="' + @doubt.audioLink + '" type="audio/ogg">Your browser does not support the audio tag.</audio>') %>
       <% end %>
       <h5 style="margin-top: -5px"><%= Time.parse(@doubt.createdAt.to_s).to_date.to_formatted_s(:long) %></h5>
-      <h5 style="margin-top: -10px"><%= @doubt.topic.name + ' / ' + @doubt.topic.subject.name %></h5>
+      <% if not @doubt.topicId.nil? %>
+        <h5 style="margin-top: -10px"><%= @doubt.topic.name + ' / ' + @doubt.topic.subject.name %></h5>
+      <% end %>
       <div style="margin-top: -10px"><%= raw(@doubt_data) %></div>
     </div>
   </div>
