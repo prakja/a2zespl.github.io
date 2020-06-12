@@ -61,14 +61,13 @@
         <p>Add video to answer</p>
         <select id="videos">
           <option value=''>Select Video</option>
-          <% if not @doubt.topicId.nil? %>
-            <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
-              <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
-            <% end %>
+          <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
+            <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
           <% end %>
         </select>
         <button onclick="addVideo()">Add selected video</button>
       </div>
+    <% end %>
 
     <style>
       .loader {
