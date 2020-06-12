@@ -26,7 +26,7 @@ class DoubtAnswersController < ApplicationController
     @doubt_answers_data = {}
 
     @doubt_tag = @doubt.tagType
-    @doubt_data = '<p><a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + @doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + @doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + @doubt.id.to_s) + '">Answer on NEETprep</a></p>'
+    # @doubt_data = '<p><a target="_blank" href="https://www.neetprep.com/subject/' + Base64.encode64("Doubt:" + @doubt.topic.subjectId.to_s) + '/topic/' + Base64.encode64("Doubt:" + @doubt.topic.id.to_s) + '/doubt/' + Base64.encode64("Doubt:" + @doubt.id.to_s) + '">Answer on NEETprep</a></p>'
 
     # @doubt_data += '<img src="' + @doubt.imgUrl + '" style="max-width:640px; max-height:360px;"></img>' if not @doubt.imgUrl.blank?
 
@@ -78,8 +78,11 @@ class DoubtAnswersController < ApplicationController
       @minutes = (timeElapsed / 60) % 60
       @hours = (timeElapsed/3600)
 
-      topic = Topic.find(@doubt.topicId)
-      subject = Subject.find(topic.subjectId)
+      topic = nil
+      if not @doubt.topicId.nil?
+        topic = Topic.find(@doubt.topicId)
+        subject = Subject.find(topic.subjectId)
+      end
 
       if @video.url.include? ".m3u8"
         @ism3u8 = "yes"
@@ -102,12 +105,14 @@ class DoubtAnswersController < ApplicationController
         @doubt_data += '<div><iframe src="https://player.vimeo.com/video/'+@vimeoId+'" width="640" height="320" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
       end
 
-      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
-       @video.id.to_s + '-abc?subjectId=' +
-       subject.id.to_s + '&chapterId=' +
-       topic.id.to_s + '&currentTimeStamp=' +
-       timeElapsed.to_s +
-       '">Go to Video</a>'
+      if not topic.nil?
+        @doubt_data += '<a target="_blank" href="https://www.neetprep.com/video-class/' +
+        @video.id.to_s + '-abc?subjectId=' +
+        subject.id.to_s + '&chapterId=' +
+        topic.id.to_s + '&currentTimeStamp=' +
+        timeElapsed.to_s +
+        '">Go to Video</a>'
+      end
 
       @doubt_data += '<h5>Time: ' + @hours.to_s.rjust(2, '0') + ':' + @minutes.to_s.rjust(2, '0') + ':' + @seconds.to_s.rjust(2, '0') + '</h5>'
     end
