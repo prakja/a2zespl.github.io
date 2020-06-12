@@ -56,16 +56,18 @@
   <div style="margin: 32px; margin-top: 4px;">
     <h4>Add your Answer:</h4>
 
-    <div style="margin: 8px">
-      <p>Add video to answer</p>
-      <select id="videos">
-        <option value=''>Select Video</option>
-        <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
-          <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
-        <% end %>
-      </select>
-      <button onclick="addVideo()">Add selected video</button>
-    </div>
+    <% if not @doubt.topicId.nil? %>
+      <div style="margin: 8px">
+        <p>Add video to answer</p>
+        <select id="videos">
+          <option value=''>Select Video</option>
+          <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
+            <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
+          <% end %>
+        </select>
+        <button onclick="addVideo()">Add selected video</button>
+      </div>
+    <% end %>
 
     <style>
       .loader {
