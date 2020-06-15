@@ -1,0 +1,22 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    reset();
+  };
+</script>
+<h1>Chapter FlashCard Issues from <%=@topic.name%></h1>
+<style>
+table {border-collapse:collapse; table-layout:fixed; width:100%;}
+table td {border:solid 1px #fab; width:100px; word-wrap:break-word;}
+</style>
+<div>
+  <table>
+    <tr><th><h4>FlashCards</h4></th></tr>
+    <% @flash_card_ids.each do |id, count| %>
+      <tr>
+        <td style="vertical-align: top;"><a target="_blank" href="/admin/flashcards/<%=id%>/edit"><b>FlashCard ID: <%=id%></b></a><br /><br /><a target="_blank" href="/admin/customer_issues?q[flashCardId_eq]=<%=id%>"><b>Issue Count: <%=count%></b></a><br /><br /><b>FlashCard:</b> <%=raw(@flash_cards[id].title)%><div><b>Answer: <%=raw(@flash_cards[id].content)%></b><br /><br /></div></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

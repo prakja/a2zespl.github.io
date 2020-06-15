@@ -70,6 +70,7 @@ ActiveAdmin.register Topic do
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Duplicate Questions", duplicate_questions_admin_topic_path(topic)
       li link_to "Question Issues", question_issues_admin_topic_path(topic)
+      li link_to "FlashCard Issues", flash_card_issues_admin_topic_path(topic)
       li link_to "Question Bookmarks", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'bookmarks_count_desc')
       li link_to "Question Doubts", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'doubts_count_desc')
       li link_to "Question w/o Explanation", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'empty_explanation')
@@ -102,6 +103,12 @@ ActiveAdmin.register Topic do
     @topic = Topic.find(resource.id)
     @question_ids = ActiveRecord::Base.connection.query('Select "Question"."id", count(*) as "issue_count" from "Question" INNER JOIN "CustomerIssue" on "CustomerIssue"."questionId" = "Question"."id" and "CustomerIssue"."resolved" = false INNER JOIN "ChapterQuestion" ON "Question"."id" = "ChapterQuestion"."questionId" and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' and "Question"."deleted" = false group by "Question"."id" order by count(*) DESC');
     @questions = Question.where(id: @question_ids.map{ |id, count| id}).index_by(&:id)
+  end
+
+  member_action :flash_card_issues do
+    @topic = Topic.find(resource.id)
+    @flash_card_ids = ActiveRecord::Base.connection.query('Select "FlashCard"."id", count(*) as "issue_count" from "FlashCard" INNER JOIN "CustomerIssue" on "CustomerIssue"."flashCardId" = "FlashCard"."id" and "CustomerIssue"."resolved" = false INNER JOIN "ChapterFlashCard" ON "FlashCard"."id" = "ChapterFlashCard"."flashCardId" and "ChapterFlashCard"."chapterId" = ' + resource.id.to_s + ' group by "FlashCard"."id" order by count(*) DESC');
+    @flash_cards = FlashCard.where(id: @flash_card_ids.map{ |id, count| id}).index_by(&:id)
   end
 
   # remove one of the duplicate question
