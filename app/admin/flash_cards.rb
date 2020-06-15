@@ -49,6 +49,15 @@ ActiveAdmin.register FlashCard do
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
   preserve_default_filters!
 
+  show do |f|
+    attributes_table do
+      row :id
+      row (:title) {|flash_card| raw(flash_card.title)}
+      row (:answer) {|flash_card| raw(flash_card.content)}
+      row (:seqId) {|flash_card| flash_card.topicFlashCards.first.seqId}
+    end
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Flash Card" do
@@ -70,5 +79,5 @@ ActiveAdmin.register FlashCard do
     column (:seqId) {|flash_card| flash_card.topicFlashCards.first.seqId}
     actions
   end
-  
+
 end
