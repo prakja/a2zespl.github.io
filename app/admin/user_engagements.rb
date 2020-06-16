@@ -1,7 +1,7 @@
 ActiveAdmin.register_page "User Engagements" do
 
   page_action :new_users_json, method: :get do
-    render json: User.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: User.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   #page_action :paid_users_answers_month_json, method: :get do
@@ -13,39 +13,39 @@ ActiveAdmin.register_page "User Engagements" do
   #end
 
   page_action :solved_questions_unique_paid_users_json, method: :get do
-    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).distinct.count("userId")
+    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).distinct.count("userId")
   end
 
   page_action :solved_questions_unique_users_json, method: :get do
-    render json: Answer.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).distinct.count("userId")
+    render json: Answer.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).distinct.count("userId")
   end
 
   page_action :solved_questions_json, method: :get do
-    render json: Answer.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: Answer.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :solved_questions_customers_json, method: :get do
-    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: Answer.paid_users_answers.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :user_courses_json, method: :get do
-    render json: UserCourse.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: UserCourse.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :paid_users_video_stats_json, method: :get do
-    render json: UserVideoStat.paid_users_video_stats.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: UserVideoStat.paid_users_video_stats.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :unpaid_users_video_stats_json, method: :get do
-    render json: UserVideoStat.unpaid_users_video_stats.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: UserVideoStat.unpaid_users_video_stats.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :paid_student_doubts_json, method: :get do
-    render json: Doubt.paid_student_doubts.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).count
+    render json: Doubt.paid_student_doubts.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).count
   end
 
   page_action :schedule_items_users_json, method: :get do
-    render json: ScheduleItemUser.group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).distinct.count("userId")
+    render json: ScheduleItemUser.group_by_day(:createdAt, range: 1.weeks.ago.midnight..1.day.ago.midnight).distinct.count("userId")
   end
 
   content do
