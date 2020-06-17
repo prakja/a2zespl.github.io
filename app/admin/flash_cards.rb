@@ -76,7 +76,7 @@ ActiveAdmin.register FlashCard do
     id_column
     column (:title) {|flash_card| raw(flash_card.title)}
     column (:answer) {|flash_card| raw(flash_card.content)}
-    column (:seqId) {|flash_card| flash_card.topicFlashCards.first.seqId}
+    column (:seqId) {|flash_card| flash_card&.topicFlashCards&.first&.seqId}
     actions
   end
 
