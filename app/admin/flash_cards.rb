@@ -65,7 +65,7 @@ ActiveAdmin.register FlashCard do
       f.input :title
       f.input :content
 
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
     end
     f.actions
