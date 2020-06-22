@@ -12,7 +12,7 @@ ActiveAdmin.register CustomerIssue do
   #   permitted
   # end
 
-  remove_filter :topic, :question, :video, :user, :test, :customer_issue_type
+  remove_filter :topic, :flash_card, :question, :video, :user, :test, :customer_issue_type
 
   permit_params :resolved
 
@@ -33,6 +33,10 @@ ActiveAdmin.register CustomerIssue do
   scope :physics_masterclass, show_count: false
   scope :chemistry_masterclass, show_count: false
   scope :biology_masterclass_tests, show_count: false
+  scope :botany_mini_qbank_issues, show_count: false
+  scope :chemistry_mini_qbank_issues, show_count: false
+  scope :physics_mini_qbank_issues, show_count: false
+  scope :zoology_mini_qbank_issues, show_count: false
   scope :botany_question_issues, show_count: false
   scope :chemistry_question_issues, show_count: false
   scope :physics_question_issues, show_count: false
