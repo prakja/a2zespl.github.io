@@ -117,6 +117,34 @@ class QuestionsController < ApplicationController
     question.update(explanation: new_explanation + current_explanation)
   end
 
+  def add_hint
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @question_hints_data = {}
+      @questionId = params.require(:id)
+      @question = Question.find(@questionId)
+      @questionBody = @question.question
+      @questionHints = @question.hints.order(position: :asc, id: :asc)
+
+      @questionHints.each_with_index do |hint, index|
+        @question_hints_data[hint.id] = [index+1, hint.hint]
+      end
+
+    rescue => exception
+
+    end
+  end
+
+  def create_hint_row
+    id = params.require(:id)
+    new_hint = params.require(:hint)
+    question = Question.find(id)
+    QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint)
+  end
+
   def add_explanation
     if not current_admin_user
       redirect_to "/admin/login"
