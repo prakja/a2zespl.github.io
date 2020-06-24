@@ -47,6 +47,12 @@ ActiveAdmin.register Question do
     end
   end
 
+  member_action :history do
+    @question = Question.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Question', item_id: @question.id)
+    render "layouts/history"
+  end
+
   # https://www.neetprep.com/api/v1/questions/id/edit
   index do
 
