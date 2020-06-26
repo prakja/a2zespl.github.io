@@ -3,6 +3,13 @@ class QuestionsController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  def sync_course_questions
+    id = params.require(:id)
+    ActiveRecord::Base.connection.execute('SELECT "SyncCourseQuestions" (' + id.to_s + ')')
+    flash[:notice] = "Sync Completed!"
+    redirect_to "/admin/courses/" + id.to_s
+  end
+
   def pdf_questions
     if not current_admin_user
       redirect_to "/admin/login"
