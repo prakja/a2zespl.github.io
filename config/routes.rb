@@ -25,7 +25,10 @@ Rails.application.routes.draw do
   post "course_invitations/createCourseInvitation"
   get "questions/add_explanation/:id", to: "questions#add_explanation"
   post "questions/update_explanation", to: "questions#update_explanation"
+  get "questions/add_hint/:id", to: "questions#add_hint"
+  post "questions/create_hint_row", to: "questions#create_hint_row"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'
+  post "questions/sync_course_questions/:id", to: "questions#sync_course_questions"
   get "videos/add_chapter_video/:videoId", to: "videos#add_chapter_video"
   post "videos/getSubjectsList"
   post "videos/getChaptersList"

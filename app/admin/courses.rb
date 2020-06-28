@@ -68,4 +68,9 @@ ActiveAdmin.register Course do
     end
     f.actions
   end
+
+  action_item :sync_course_questions, only: :show do
+    link_to 'Sync Course Questions', '/questions/sync_course_questions/' + resource.id.to_s, method: :post
+  end
+
 end

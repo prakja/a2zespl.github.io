@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
@@ -47,6 +47,12 @@ ActiveAdmin.register Question do
     end
   end
 
+  member_action :history do
+    @question = Question.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Question', item_id: @question.id)
+    render "layouts/history"
+  end
+
   # https://www.neetprep.com/api/v1/questions/id/edit
   index do
 
@@ -73,6 +79,9 @@ ActiveAdmin.register Question do
       column :bookmarks_count, sortable: true
       column ("Add explanation") { |question|
         raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
+      }
+      column ("Add Hint") { |question|
+        raw('<a target="_blank" href="/questions/add_hint/' + question.id.to_s + '">' + "Add Hint" + '</a>')
       }
     end
     actions

@@ -67,6 +67,10 @@ class CustomerIssue < ApplicationRecord
   scope :biology_masterclass, -> {subject_name([627..630]).non_resolved().question_issue.distinct}
   scope :physics_masterclass, -> {subject_name([665]).non_resolved().question_issue.distinct}
   scope :chemistry_masterclass, -> {subject_name([669]).non_resolved().question_issue.distinct}
+  scope :physics_mini_qbank_issues, -> {subject_name([684]).non_resolved().question_issue.distinct}
+  scope :chemistry_mini_qbank_issues, -> {subject_name([685]).non_resolved().question_issue.distinct}
+  scope :botany_mini_qbank_issues, -> {subject_name([727]).non_resolved().question_issue.distinct}
+  scope :zoology_mini_qbank_issues, -> {subject_name([686]).non_resolved().question_issue.distinct}
   scope :biology_masterclass_tests, -> {subject_name([627..630]).non_resolved().question_issue.test_issue.distinct}
 
   scope :seven_days_pending, ->(type) {

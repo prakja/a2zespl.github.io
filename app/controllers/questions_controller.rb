@@ -3,6 +3,13 @@ class QuestionsController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  def sync_course_questions
+    id = params.require(:id)
+    ActiveRecord::Base.connection.execute('SELECT "SyncCourseQuestions" (' + id.to_s + ')')
+    flash[:notice] = "Sync Completed!"
+    redirect_to "/admin/courses/" + id.to_s
+  end
+
   def pdf_questions
     if not current_admin_user
       redirect_to "/admin/login"
@@ -115,6 +122,34 @@ class QuestionsController < ApplicationController
     question = Question.find(id)
     current_explanation = question.explanation
     question.update(explanation: new_explanation + current_explanation)
+  end
+
+  def add_hint
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @question_hints_data = {}
+      @questionId = params.require(:id)
+      @question = Question.find(@questionId)
+      @questionBody = @question.question
+      @questionHints = @question.hints.order(position: :asc, id: :asc)
+
+      @questionHints.each_with_index do |hint, index|
+        @question_hints_data[hint.id] = [index+1, hint.hint]
+      end
+
+    rescue => exception
+
+    end
+  end
+
+  def create_hint_row
+    id = params.require(:id)
+    new_hint = params.require(:hint)
+    question = Question.find(id)
+    QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint)
   end
 
   def add_explanation
