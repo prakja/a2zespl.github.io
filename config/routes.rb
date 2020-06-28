@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   get "google_ads/report"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get "generics/flashcardstats", to: "generics#get_flashcard_stats"
+  get "generics/bookmark_during", to: "generics#bookmark_during"
 
   get "/admin/answer_count", to: "user_doubt_counts#answer_count"
   post "/admin/get_count", to: "user_doubt_counts#get_count"
