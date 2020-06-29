@@ -21,7 +21,7 @@ class Ability
       can :import, [Video, FlashCard]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat]
+      can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]
       can [:create, :read, :update], [CourseInvitation, Delivery, CourseOffer]
     elsif user.role == 'accounts'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
