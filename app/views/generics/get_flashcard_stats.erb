@@ -1,4 +1,51 @@
 <div style="padding: 8px">
+  <p>
+    Start Date: <input name="start" id="start" type="date" value="Date.now()">
+    End Date: <input name="end" id="end" type="date">
+
+    <button class="get" type="button" onclick="getCount()">Get</button>
+  </p>
+  <p>In range</p>
+  <p class="bookmark_in_range"></p>
+  <p class="user_in_range"></p>
+
+  <p>Overall</p>
   <p>Bookmark count <%= @total_count %></p>
   <p>Users <%= @tatal_users %></p>
 </div>
+<script>
+  function getCount(params) {
+    if ($(".get").html() == 'Getting') {
+      return;
+    } 
+    if (!$("#start").val()){
+      alert("Start Date missing");
+      return;
+    }
+    if (!$("#end").val()){
+      alert("End Date missing");
+      return;
+    }
+
+    var start_date = $("#start").val();
+    var end_date = $("#end").val();
+
+    $(".get").html("Getting");
+
+    $.ajax({
+        type: "GET",
+        url: "/generics/bookmark_during",
+        dataType: "json",
+        data: {
+          "start_date": start_date,
+          "end_date": end_date
+        }
+      }).done (function (data) {
+        $(".get").html("Get");
+        $(".bookmark_in_range").html(data.total_bookmark);
+        $(".user_in_range").html(data.total_users);
+      }).fail(function (data) {
+        $(".get").html("Get");
+      });
+  }
+</script>
