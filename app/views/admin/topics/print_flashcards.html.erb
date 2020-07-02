@@ -1,0 +1,9 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<div style="padding: 8px">
+  <% @flashcards.each do |flashcard| %>
+    <p><%= flashcard[3] %></p>
+    <p><%= raw(flashcard[2]) %></p>
+    <p><%= raw(flashcard[1]) %></p>
+    <hr>
+  <% end %>
+</div>

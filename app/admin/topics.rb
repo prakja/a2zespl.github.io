@@ -117,9 +117,26 @@ ActiveAdmin.register Topic do
     redirect_to duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
   end
 
+  action_item :print_flashcards, only: :show do
+    link_to "Print Flash Cards", resource.id.to_s + "/print_flashcards"
+  end
+
   controller do
     def scoped_collection
       super.includes(:subject)
+    end
+    
+    def print_flashcards
+      if not current_admin_user
+        redirect_to "/admin/login"
+        return
+      end
+      @topic_id = params[:id]
+      @flashcards = FlashCard.joins(:topics).where(Topic: {id: @topic_id}).order('"ChapterFlashCard"."seqId" ASC').pluck(:id, :content, :title, "\"ChapterFlashCard\".\"seqId\"", "\"Topic\".\"name\"")
+      # render json: {
+      #   status: "ok",
+      #   flashcards: @flashcards
+      # }, status: 200
     end
   end
 end
