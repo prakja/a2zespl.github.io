@@ -117,7 +117,7 @@ class QuestionsController < ApplicationController
     question.update(explanation: new_explanation + current_explanation)
   end
 
-  def add_hint
+  def add_hint 
     if not current_admin_user
       redirect_to "/admin/login"
       return
@@ -140,9 +140,12 @@ class QuestionsController < ApplicationController
 
   def create_hint_row
     id = params.require(:id)
-    new_hint = params.require(:hint)
+    new_hints = JSON.parse(params.require(:hints)[0])
+    
     question = Question.find(id)
-    QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint)
+    new_hints.each do |new_hint|
+      QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint["url"])
+    end
   end
 
   def add_explanation

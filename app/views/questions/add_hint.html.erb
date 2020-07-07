@@ -52,7 +52,7 @@
     <div id="input_div" style="display: none">
       <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
       -- or --
-      <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
+      <input id="audioFile" accept="audio/*" type="file" name="myFile" onchange="fileSelected()">
     </div>
     <div class="table-responsive">
        <table class="table table-bordered" id="dynamic_field">
@@ -85,14 +85,12 @@
   var uploadDiv = document.getElementById("upload_div");
   
   var totalRecording = 0
-  var uploadFromFile = false;
   var audioChunks = [];
   var audioUrl = null;
   var audioBlob = [];
   var mediaRecorder = null;
 
   function fileSelected(e) {
-    uploadFromFile = true;
     inputDiv.style.display = 'none';
     stopRecordingButton.innerHTML = "Reset";
     stopRecordingButton.onclick = reset;
@@ -105,18 +103,26 @@
     if (file) {
       var reader = new FileReader();
       reader.onload = function (e) {
+        //  const url = URL.createObjectURL(e.target.result);
+        var audioChun = new Blob([e.target.result], { 'type' : 'audio/mpeg; codecs=opus' });
+         audioUrl = URL.createObjectURL(audioChun);
+        console.log(audioUrl);
+        addBlobToList(audioChun);
       }
       reader.readAsDataURL(file);
     }
   }
 
   function addNewAudio(){
+    uploadDiv.style.display = 'none';
+    addMoreAudioDiv.style.display = 'none';
     startRecording();
     stopRecordingButton.innerHTML = "Stop Recording";
     stopRecordingButton.onclick = stopRecording;
   }
 
   function startRecording () {
+    audioChunks = [];
     loader.style.display = 'block';
     inputDiv.style.display = 'none';
     inputStopDiv.style.display = 'block';
@@ -146,14 +152,8 @@
     }
   }
 
-  function stopRecording () {
-    loader.style.display = 'none';
-    stopRecordingButton.innerHTML = "Reset";
-    stopRecordingButton.onclick = reset;
-
-    mediaRecorder.addEventListener("stop", () => {
-      console.log ("Preparing audio");
-      var audioChun = new Blob(audioChunks);
+  function addBlobToList(audioChun){
+    // var audioChun = new Blob(audioChunks, { 'type' : 'audio/mp3; codecs=opus' });
       audioUrl = URL.createObjectURL(audioChun);
       totalRecording +=1
       data={
@@ -161,86 +161,130 @@
         id : totalRecording
       }
       audioBlob.push(data);
-     
-      dynamicAudioView.innerHTML += ('<tr id="audio_row'+totalRecording+'"><td> <audio controls id="audio" src="'+audioUrl+'"></audio></td><td><button type="button" name="remove_button" id="'+totalRecording+'" class="btn btn-danger btn_remove" onClick="removeRecording(this)">X</button></td></tr>');      
+      dynamicAudioView.innerHTML += ('<tr id="audio_row'+totalRecording+'"><td> <audio controls id="audio" src="'+audioUrl+'"></audio></td><td><button type="button" name="remove_button" id="'+totalRecording+'" class="btn btn-danger btn_remove" onClick="removeRecording(this)">Remove Audio ('+totalRecording+')</button></td></tr>');      
       addMoreAudioDiv.style.display = 'block';
       dynamicAudioView.style.display = 'block';
       uploadDiv.style.display = 'block';
+  }
+
+
+const anAsyncUploadFunction = async (item,s3) => {
+	return await uploadAudio(item,s3)
+}
+
+const uploadAudio = (data, s3) => { //a function that returns a promise
+ var bucketName = 'question_hints';
+ var currentTime = Date.now();
+ var fileName= "question_hints_" + "<%= @questionId%>" + "_" + currentTime+ ".mp3" ;
+ var file = new File([data.audioChunk],fileName );
+ var params = { 
+         Bucket: bucketName,
+         Key: fileName,
+         ContentType: file.type,
+         Body: file,
+         ACL: 'public-read'
+  };
+
+
+
+	return new Promise(resolve => {
+
+    s3.putObject(params, function(err, data) {
+      if(err){
+        reject("error");
+      }else{
+          var fileUrl = 'https://spaces.neetprep.com/question_hints/' + file.name + file.type; 
+          var audioTag = '<audio controls style="display: block" id="audio_player"><source src="' + fileUrl +'" type="audio/mp3">Your browser does not support the audio element.</audio>'
+          data1 ={
+            url : audioTag
+          }
+          resolve(data1);
+      }
+   });
+	});
+}
+
+function stopRecording () {
+    loader.style.display = 'none';
+    stopRecordingButton.innerHTML = "Reset";
+    stopRecordingButton.onclick = reset;
+
+    mediaRecorder.addEventListener("stop", () => {
+      console.log ("Preparing audio");
+      var audioChun = new Blob(audioChunks, { 'type' : 'audio/mp3; codecs=opus' });
+      addBlobToList(audioChun);
     });
     console.log ("Stopping recording");
     mediaRecorder.stop();
   }
 
-  function uploadAndAttachRecording () {
-    # loader.style.display = 'block'
-    # var bucketName = 'question-hints';
-    # var bucketRegion = 'ap-south-1';
-    # var currentTime = Date.now();
+  async function  uploadAndAttachRecording () {
+  hideUploadingView();
+    loader.style.display = 'block'
+    var bucketRegion = 'ap-south-1';
+   
+   const spacesEndpoint = new AWS.Endpoint('https://neetprep.sgp1.digitaloceanspaces.com');
+    const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: "TTCH2ARR4BHDJUB2RVJF",
+    secretAccessKey: "ibpuDBypoyTHCoSb89eMKRmAYysgtOKdbWlddv69lB8"
+  });
 
-    # var config = new AWS.Config({
-    #   accessKeyId: 'AKIAYEPQTPG6K7CEFU6D', secretAccessKey: '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', region: 'ap-south-1'
-    # });
+  const getData = async () => {
+		return await Promise.all(audioBlob.map(item => anAsyncUploadFunction(item,s3)))
+	}
 
-    # var credentials = new AWS.Credentials('AKIAYEPQTPG6K7CEFU6D', 'XtUqnXWkwvPvlK+t8gwuShuESJA1fjnBV1q6AwTX');
-    # AWS.config.region = bucketRegion;
-    # AWS.config.credentials = credentials;
+  await getData()
+  .then(function (response) {
+    console.log("data"+JSON.stringify(response));
+		  insertIntoHint('<%= @questionId %>', JSON.stringify(response));  
+		}).catch(function (error) {
+	  	 loader.style.display = 'none';
+       console.log(" Error while  UPLOADING Audio :" + err);
+       alert ('Error uploading audio');
+		});
+  
+}
 
-    # var bucket = new AWS.S3({
-    #   params: {
-    #       Bucket: bucketName
-    #   }
-    # });
-    # if (!uploadFromFile)
-    #   var file = new File([audioBlob], "question_hints_" + "<%= @questionId%>" + "_" + currentTime + ".ogg");
-    # else
-    #   var file = fileInput.files[0];
+  function insertIntoHint(id, audioTags) {
+    console.log("2"+audioTags);
 
-    # if (!file) {
-    #   alert ("File error");
-    #   loader.style.display = 'none';
-    #   return;
-    # } else {
-    #   var params = {
-    #     Key: (!uploadFromFile ? file.name : (<%=@questionId%> + "_" + currentTime + "_" + file.name)),
-    #     ContentType: file.type,
-    #     Body: file,
-    #     ACL: 'public-read'
-    #   };
-    #   bucket.putObject(params, function(err, data) {
-    #     if (err) {
-    #       console.log(" Error while  UPLOADING Audio :" + err);
-    #       alert ('Error uploading audio');
+    $.ajax({
+      method: "POST",
+      url: window.location.origin + '/questions/create_hint_row',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: {
+        id: id,
+        hints: [audioTags]
+      }
+    }).done(function(response){
+      reset();
+      console.log(response);
+      console.log("Done");
+      window.location.href = window.location.href;
+    }).fail(function(error) {
+      console.log(error);
+      loader.style.display = 'none';
+       console.log(" Error while  UPLOADING Audio :" + error);
+       alert ('Error uploading audio');
+    });
 
-    #       loader.style.display = 'none';
-    #     } else {
-    #       if (!uploadFromFile)
-    #         var fileUrl = 'https://question-hints.s3-us-west-2.amazonaws.com/' + file.name + file.type;
-    #       else
-    #         var fileUrl = 'https://question-hints.s3-us-west-2.amazonaws.com/' + <%=@questionId%> + "_" + currentTime + "_" + file.name;
-    #       insertIntoHint('<%= @questionId %>', fileUrl);
-    #       reset ();
-    #     }
-    #   });
-    # }
   }
 
-  function insertIntoHint(id, fileUrl) {
-    audioTag = '<audio controls style="display: block" id="audio_player"><source src="' + fileUrl +'" type="audio/ogg">Your browser does not support the audio element.</audio>'
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", window.location.origin + '/questions/create_hint_row', true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      var params = "id=" + id + "&hint=" + audioTag
-      xhr.send(params);
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-          console.log("Done");
-          window.location.href = window.location.href;
-        }
-      }
+  function hideUploadingView(){
+    inputDiv.style.display = 'none';
+    inputStopDiv.style.display = 'none';
+    addMoreAudioDiv.style.display = 'none';
+    dynamicAudioView.style.display = 'none';
+    uploadDiv.style.display = 'none';
+    inputDiv.style.display = 'none';
+   
   }
 
   function reset() {
+    totalRecording = 0;
     audioBlob = [];
     audioChunks = [];
     dynamicAudioView.innerHTML = null;
