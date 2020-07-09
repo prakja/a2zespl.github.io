@@ -13,6 +13,10 @@ class CustomerIssue < ApplicationRecord
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
   }
 
+  scope :subject_chapter_test, ->(subject_id) {
+    joins(test: {topics: :subjects}).where(test: {Subject: {id: subject_id}})
+  }
+
   scope :test_subject, ->(subject_id) {
     joins(:question).where(Question: {subjectId: subject_id})
   }
@@ -52,6 +56,11 @@ class CustomerIssue < ApplicationRecord
 
   scope :botany_flashcard_issues, -> {subject_name([53]).non_resolved().flash_card_issue.distinct}
   scope :zoology_flashcard_issues, -> {subject_name([56]).non_resolved().flash_card_issue.distinct}
+
+  scope :botany_boostup_issues, -> {subject_chapter_test(495).non_resolved.question_issue.distinct}
+  scope :zoology_boostup_issues, -> {subject_chapter_test(496).non_resolved.question_issue.distinct}
+  scope :chemistry_boostup_issues, -> {subject_chapter_test(494).non_resolved.question_issue.distinct}
+  scope :physics_boostup_issues, -> {subject_chapter_test(493).non_resolved.question_issue.distinct}
 
   scope :physics_test_issues, -> {test_subject(55).non_resolved().question_issue.test_issue.distinct}
   scope :chemistry_test_issues, -> {test_subject(54).non_resolved().question_issue.test_issue.distinct}

@@ -45,6 +45,11 @@ ActiveAdmin.register CustomerIssue do
   scope :chemistry_video_issues, show_count: false
   scope :physics_video_issues, show_count: false
   scope :zoology_video_issues, show_count: false
+  scope :botany_boostup_issues, show_count: false
+  scope :zoology_boostup_issues, show_count: false
+  scope :chemistry_boostup_issues, show_count: false
+  scope :physics_boostup_issues, show_count: false
+
   scope :all, :show_count => false
 
   form do |f|
