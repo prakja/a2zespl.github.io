@@ -117,6 +117,22 @@ class QuestionsController < ApplicationController
     question.update(explanation: new_explanation + current_explanation)
   end
 
+  def video_link_hint
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @videoId = params.require(:videoId)
+      @hintId = params.require(:hintId)
+      QuestionHint.where(id: @hintId).update(videoLinkId: @videoId)
+     
+    rescue => exception
+      exception
+    p "error"
+    end
+  end
+
   def add_hint 
     if not current_admin_user
       redirect_to "/admin/login"
@@ -124,13 +140,17 @@ class QuestionsController < ApplicationController
     end
     begin
       @question_hints_data = {}
+      @videoList_data = {}
       @questionId = params.require(:id)
       @question = Question.find(@questionId)
       @questionBody = @question.question
       @questionHints = @question.hints.order(position: :asc, id: :asc)
-
+      @videoLinks = VideoLink.all().pluck("id","videoId","name")
+      @videoLinks.each do |data|
+        @videoList_data[data[1]] = [data[2]]
+      end
       @questionHints.each_with_index do |hint, index|
-        @question_hints_data[hint.id] = [index+1, hint.hint]
+        @question_hints_data[hint.id] = [index+1, hint.hint,hint.videoLinkId]
       end
 
     rescue => exception

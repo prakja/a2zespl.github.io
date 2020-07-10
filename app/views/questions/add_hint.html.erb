@@ -1,13 +1,16 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
-<script>
-  window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    reset();
-  };
-</script>
+<!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 <style>
+   .select2-container {
+      min-width: 100% !important;
+    }
   .loader {
     border: 8px solid #f3f3f3;
     border-radius: 50%;
@@ -40,11 +43,38 @@
   <div style="border: 1px solid black">
     <% @question_hints_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %></p>
+        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %><button type="button" class="btn btn-link text-secondary" onClick="onVideoLink(<%=key.to_s%>, <%=value[2]%>)" ><%= if value[2] != nil 
+        "Edit Video Link"
+        else
+        "Add Video Link" 
+        end %></button></p>
         <h5 style="margin-top: -10px"><%=raw(value[1]) %></h5>
       </div>
     <% end %>
   </div>
+
+  <div id="videoLinkModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Video Link</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <select class="container" name="video" id="videoList" onchange="onChapterChange()">
+           <option value=''>Link video</option>
+           <% @videoList_data.each do |key, value| %>
+             <%= raw("<option value='" + key.to_s + "' >" + value.to_s + "</option>") %>
+           <% end %>
+         </select>
+         <input id="hint_id" name="hint_id" type="hidden"/>
+      </div>
+    </div>
+  </div>
+</div>
+   
 
   <div style="margin: 8px">
     <p>Record audio hint</p>
@@ -72,6 +102,13 @@
 </div>
 
 <script>
+ window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    reset();
+  };
+    $(function () {
+      $("select").select2();
+    });
   var loader = document.getElementById("loader");
   var audioButton = document.getElementById("audio_button");
   var uploadAudioButton = document.getElementById("upload_attach_button");
@@ -89,6 +126,42 @@
   var audioUrl = null;
   var audioBlob = [];
   var mediaRecorder = null;
+
+  function onVideoLink(hintId, selectedVideo){
+    
+    if(selectedVideo){
+      
+        $('#videoList option[value='+selectedVideo+']').attr("selected", "selected");
+        $("#videoList option:selected").prependTo("#videoList");
+    }
+    
+    $('#videoLinkModal').modal({backdrop: 'static', keyboard: true, show: true});
+    document.getElementById("hint_id").value = hintId;
+  }
+
+  function onChapterChange() {
+      let videoId = document.getElementById("videoList").value;
+      let hintId = document.getElementById("hint_id").value;
+      $.ajax({
+      method: "POST",
+      url: window.location.origin + '/questions/video_link_hint',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: {
+        videoId: videoId,
+        hintId: hintId
+      }
+    }).done(function(response){
+    
+      console.log("Done");
+      window.location.href = window.location.href;
+    }).fail(function(error) {
+      loader.style.display = 'none';
+       console.log(" Error while Linking Audio :" + error);
+       alert ('Error uploading audio');
+    });
+  }
 
   function fileSelected(e) {
     inputDiv.style.display = 'none';
@@ -236,7 +309,6 @@ function stopRecording () {
 
   await getData()
   .then(function (response) {
-    console.log("data"+JSON.stringify(response));
 		  insertIntoHint('<%= @questionId %>', JSON.stringify(response));  
 		}).catch(function (error) {
 	  	 loader.style.display = 'none';
@@ -247,8 +319,6 @@ function stopRecording () {
 }
 
   function insertIntoHint(id, audioTags) {
-    console.log("2"+audioTags);
-
     $.ajax({
       method: "POST",
       url: window.location.origin + '/questions/create_hint_row',
@@ -261,11 +331,9 @@ function stopRecording () {
       }
     }).done(function(response){
       reset();
-      console.log(response);
       console.log("Done");
       window.location.href = window.location.href;
     }).fail(function(error) {
-      console.log(error);
       loader.style.display = 'none';
        console.log(" Error while  UPLOADING Audio :" + error);
        alert ('Error uploading audio');
