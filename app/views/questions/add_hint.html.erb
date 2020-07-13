@@ -43,10 +43,10 @@
   <div style="border: 1px solid black">
     <% @question_hints_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %><button type="button" class="btn btn-link text-secondary" onClick="onVideoLink(<%=key.to_s%>, <%=value[2]%>)" ><%= if value[2] != nil 
+        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %><button type="button" class="btn btn-link text-secondary" onClick="onVideoLink(<%=key.to_s%>, <%=value[2]%>)" ><%= if value[2] != nil
         "Edit Video Link"
         else
-        "Add Video Link" 
+        "Add Video Link"
         end %></button></p>
         <h5 style="margin-top: -10px"><%=raw(value[1]) %></h5>
       </div>
@@ -74,7 +74,7 @@
     </div>
   </div>
 </div>
-   
+
 
   <div style="margin: 8px">
     <p>Record audio hint</p>
@@ -86,7 +86,7 @@
     </div>
     <div class="table-responsive">
        <table class="table table-bordered" id="dynamic_field">
-      
+
       </table>
    </div>
     <div id="input_stop_div" style="display: none">
@@ -120,7 +120,7 @@
   var inputStopDiv = document.getElementById("input_stop_div");
   var addMoreAudioDiv = document.getElementById("add_more_audio_div");
   var uploadDiv = document.getElementById("upload_div");
-  
+
   var totalRecording = 0
   var audioChunks = [];
   var audioUrl = null;
@@ -128,13 +128,13 @@
   var mediaRecorder = null;
 
   function onVideoLink(hintId, selectedVideo){
-    
+
     if(selectedVideo){
-      
+
         $('#videoList option[value='+selectedVideo+']').attr("selected", "selected");
         $("#videoList option:selected").prependTo("#videoList");
     }
-    
+
     $('#videoLinkModal').modal({backdrop: 'static', keyboard: true, show: true});
     document.getElementById("hint_id").value = hintId;
   }
@@ -153,7 +153,7 @@
         hintId: hintId
       }
     }).done(function(response){
-    
+
       console.log("Done");
       window.location.href = window.location.href;
     }).fail(function(error) {
@@ -176,11 +176,7 @@
     if (file) {
       var reader = new FileReader();
       reader.onload = function (e) {
-        //  const url = URL.createObjectURL(e.target.result);
-        var audioChun = new Blob([e.target.result], { 'type' : 'audio/mpeg; codecs=opus' });
-         audioUrl = URL.createObjectURL(audioChun);
-        console.log(audioUrl);
-        addBlobToList(audioChun);
+        addBlobToList(e.target.result, 'file-select');
       }
       reader.readAsDataURL(file);
     }
@@ -210,12 +206,12 @@
     });
   }
 
-  function arrayRemove(arr, id) { 
-   return arr.filter(function(data){ 
-       return data.id != id; 
-   }); 
-  
-} 
+  function arrayRemove(arr, id) {
+   return arr.filter(function(data){
+       return data.id != id;
+   });
+
+}
   function removeRecording(div){
     const id = div.id;
     audioBlob = arrayRemove(audioBlob,id);
@@ -225,16 +221,16 @@
     }
   }
 
-  function addBlobToList(audioChun){
+  function addBlobToList(audioChun, type){
     // var audioChun = new Blob(audioChunks, { 'type' : 'audio/mp3; codecs=opus' });
-      audioUrl = URL.createObjectURL(audioChun);
+      audioUrl = type == 'file-select' ? audioChun : URL.createObjectURL(audioChun);
       totalRecording +=1
       data={
         audioChunk : audioChun,
         id : totalRecording
       }
       audioBlob.push(data);
-      dynamicAudioView.innerHTML += ('<tr id="audio_row'+totalRecording+'"><td> <audio controls id="audio" src="'+audioUrl+'"></audio></td><td><button type="button" name="remove_button" id="'+totalRecording+'" class="btn btn-danger btn_remove" onClick="removeRecording(this)">Remove Audio ('+totalRecording+')</button></td></tr>');      
+      dynamicAudioView.innerHTML += ('<tr id="audio_row'+totalRecording+'"><td> <audio controls id="audio" src="'+audioUrl+'"></audio></td><td><button type="button" name="remove_button" id="'+totalRecording+'" class="btn btn-danger btn_remove" onClick="removeRecording(this)">Remove Audio ('+totalRecording+')</button></td></tr>');
       addMoreAudioDiv.style.display = 'block';
       dynamicAudioView.style.display = 'block';
       uploadDiv.style.display = 'block';
@@ -250,7 +246,7 @@ const uploadAudio = (data, s3) => { //a function that returns a promise
  var currentTime = Date.now();
  var fileName= "question_hints_" + "<%= @questionId%>" + "_" + currentTime+ ".mp3" ;
  var file = new File([data.audioChunk],fileName );
- var params = { 
+ var params = {
          Bucket: bucketName,
          Key: fileName,
          ContentType: file.type,
@@ -266,7 +262,7 @@ const uploadAudio = (data, s3) => { //a function that returns a promise
       if(err){
         reject("error");
       }else{
-          var fileUrl = 'https://spaces.neetprep.com/question_hints/' + file.name + file.type; 
+          var fileUrl = 'https://spaces.neetprep.com/question_hints/' + file.name + file.type;
           var audioTag = '<audio controls style="display: block" id="audio_player"><source src="' + fileUrl +'" type="audio/mp3">Your browser does not support the audio element.</audio>'
           data1 ={
             url : audioTag
@@ -295,7 +291,7 @@ function stopRecording () {
   hideUploadingView();
     loader.style.display = 'block'
     var bucketRegion = 'ap-south-1';
-   
+
    const spacesEndpoint = new AWS.Endpoint('https://neetprep.sgp1.digitaloceanspaces.com');
     const s3 = new AWS.S3({
     endpoint: spacesEndpoint,
@@ -309,13 +305,13 @@ function stopRecording () {
 
   await getData()
   .then(function (response) {
-		  insertIntoHint('<%= @questionId %>', JSON.stringify(response));  
+		  insertIntoHint('<%= @questionId %>', JSON.stringify(response));
 		}).catch(function (error) {
 	  	 loader.style.display = 'none';
        console.log(" Error while  UPLOADING Audio :" + err);
        alert ('Error uploading audio');
 		});
-  
+
 }
 
   function insertIntoHint(id, audioTags) {
@@ -348,7 +344,7 @@ function stopRecording () {
     dynamicAudioView.style.display = 'none';
     uploadDiv.style.display = 'none';
     inputDiv.style.display = 'none';
-   
+
   }
 
   function reset() {
