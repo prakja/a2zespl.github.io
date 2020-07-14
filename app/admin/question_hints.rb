@@ -49,6 +49,9 @@ ActiveAdmin.register QuestionHint do
     f.inputs "QuestionHint" do
       render partial: 'tinymce'
       f.input :questionId
+      para "Hint preview"
+      li raw(f.object.hint)
+      para
       f.input :hint
       f.input :language
       f.input :deleted

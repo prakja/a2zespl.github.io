@@ -96,7 +96,7 @@
         <button style="margin-top: 8px" onclick="addNewAudio()" id="add_more_audio_button">Add More Audio</button>
     </div>
     <div id="upload_div" style="display: none">
-        <button style="margin-top: 8px" onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
+        <button class="btn-primary" style="margin-top: 8px" onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
     </div>
   </div>
 </div>
@@ -163,6 +163,16 @@
     });
   }
 
+function dataURItoBlob(dataURI) {
+    var binary = atob(dataURI.split(',')[1]);
+    var array = [];
+    for(var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+}
+
+
   function fileSelected(e) {
     inputDiv.style.display = 'none';
     stopRecordingButton.innerHTML = "Reset";
@@ -176,7 +186,8 @@
     if (file) {
       var reader = new FileReader();
       reader.onload = function (e) {
-        addBlobToList(e.target.result, 'file-select');
+       var binary= dataURItoBlob(e.target.result);
+        addBlobToList(binary, 'file-select');
       }
       reader.readAsDataURL(file);
     }
@@ -222,7 +233,7 @@
   }
 
   function addBlobToList(audioChun, type){
-    // var audioChun = new Blob(audioChunks, { 'type' : 'audio/mp3; codecs=opus' });
+    
       audioUrl = type == 'file-select' ? audioChun : URL.createObjectURL(audioChun);
       totalRecording +=1
       data={
@@ -242,6 +253,7 @@ const anAsyncUploadFunction = async (item,s3) => {
 }
 
 const uploadAudio = (data, s3) => { //a function that returns a promise
+console.log(data)
  var bucketName = 'question_hints';
  var currentTime = Date.now();
  var fileName= "question_hints_" + "<%= @questionId%>" + "_" + currentTime+ ".mp3" ;
@@ -308,13 +320,14 @@ function stopRecording () {
 		  insertIntoHint('<%= @questionId %>', JSON.stringify(response));
 		}).catch(function (error) {
 	  	 loader.style.display = 'none';
-       console.log(" Error while  UPLOADING Audio :" + err);
+       console.log(" Error while  UPLOADING Audio :" + error);
        alert ('Error uploading audio');
 		});
 
 }
 
   function insertIntoHint(id, audioTags) {
+    console.log(audioTags);
     $.ajax({
       method: "POST",
       url: window.location.origin + '/questions/create_hint_row',
