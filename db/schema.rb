@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_072959) do
+ActiveRecord::Schema.define(version: 2020_07_14_101455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.integer "userId", null: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.string "note"
     t.index ["questionId"], name: "bookmark_question_question_id"
     t.index ["userId", "questionId"], name: "bookmarkquestion_user_id_question_id", unique: true
     t.index ["userId"], name: "bookmark_question_user_id"
@@ -106,6 +107,15 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.index ["chapterId", "flashCardId"], name: "ChapterFlashCard_chapterId_flashCardId_idx", unique: true
     t.index ["chapterId"], name: "ChapterFlashCard_chapterId_idx"
     t.index ["flashCardId"], name: "ChapterFlashCard_flashCardId_idx"
+  end
+
+  create_table "ChapterFlashCard20200609", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.integer "chapterId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "flashCardId"
+    t.integer "seqId"
   end
 
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
@@ -295,6 +305,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.integer "position"
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "actualCourseId"
     t.index ["courseId"], name: "course_offer_course_id"
   end
 
@@ -303,6 +314,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.integer "testId", null: false
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["courseId", "testId"], name: "CourseTest_courseId_testId_idx", unique: true
     t.index ["courseId"], name: "course_test_course_id"
     t.index ["testId"], name: "course_test_test_id"
   end
@@ -398,6 +410,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.integer "origId", null: false
     t.integer "dupId", null: false
     t.index ["dupId"], name: "DuplicateChapter_dupId_idx"
+    t.index ["dupId"], name: "DuplicateChapter_dupId_idx1", unique: true
     t.index ["origId", "dupId"], name: "unique_origId_dupId", unique: true
     t.index ["origId"], name: "DuplicateChapter_origId_idx"
   end
@@ -435,6 +448,14 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.string "title"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+  end
+
+  create_table "FlashCard20200609", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.string "content"
+    t.string "title"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
   end
 
   create_table "Group", id: :serial, force: :cascade do |t|
@@ -596,6 +617,21 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.datetime "updatedAt"
   end
 
+  create_table "QuestionHint", id: :serial, force: :cascade do |t|
+    t.integer "questionId"
+    t.text "hint"
+    t.string "language", limit: 255
+    t.integer "courseId", default: 8
+    t.boolean "deleted"
+    t.integer "position"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "videoLinkId"
+    t.index ["courseId"], name: "QuestionHint_courseId_idx"
+    t.index ["id", "videoLinkId"], name: "questionhint_id_videolink_id", unique: true
+    t.index ["questionId"], name: "QuestionHint_questionId_idx"
+  end
+
   create_table "QuestionSubTopic", id: :serial, force: :cascade do |t|
     t.integer "questionId"
     t.integer "subTopicId"
@@ -645,6 +681,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.integer "hours"
     t.text "link"
     t.datetime "scheduledAt"
+    t.bigint "oldid"
   end
 
   create_table "ScheduleItemAsset", force: :cascade do |t|
@@ -654,6 +691,41 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.text "assetLink"
     t.string "assetName"
     t.index ["ScheduleItem_id"], name: "index_ScheduleItemAsset_on_ScheduleItem_id"
+  end
+
+  create_table "ScheduleItemAssetBak", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.bigint "ScheduleItem_id"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.text "assetLink"
+    t.string "assetName"
+  end
+
+  create_table "ScheduleItemBak", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.text "name"
+    t.text "description"
+    t.integer "scheduleId"
+    t.integer "topicId"
+    t.integer "hours"
+    t.text "link"
+    t.datetime "scheduledAt"
+  end
+
+  create_table "ScheduleItemBakTwo", id: :serial, force: :cascade do |t|
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.text "name"
+    t.text "description"
+    t.integer "scheduleId", null: false
+    t.integer "topicId"
+    t.integer "hours"
+    t.text "link"
+    t.datetime "scheduledAt"
+    t.bigint "oldid"
   end
 
   create_table "ScheduleItemUser", id: :serial, force: :cascade do |t|
@@ -937,6 +1009,18 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.integer "flashCardId", null: false
+    t.string "note"
+    t.index ["flashCardId"], name: "UserFlashCard_flashCardId_idx"
+    t.index ["userId", "flashCardId"], name: "UserFlashCard_userId_flashCardId_idx", unique: true
+    t.index ["userId"], name: "UserFlashCard_userId_idx"
+  end
+
+  create_table "UserFlashCard20200611", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.integer "userId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "flashCardId"
   end
 
   create_table "UserHighlightedNote", id: :serial, force: :cascade do |t|
@@ -1094,6 +1178,38 @@ ActiveRecord::Schema.define(version: 2020_06_09_072959) do
     t.text "thumbnail"
     t.float "duration"
     t.integer "seqId", default: 0, null: false
+    t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
+    t.string "url2", limit: 255
+  end
+
+  create_table "Video20200528", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "description"
+    t.text "url"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "creatorId"
+    t.text "thumbnail"
+    t.float "duration"
+    t.integer "seqId"
+    t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
+    t.string "url2", limit: 255
+  end
+
+  create_table "Video20200620", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "description"
+    t.text "url"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "creatorId"
+    t.text "thumbnail"
+    t.float "duration"
+    t.integer "seqId"
     t.string "youtubeUrl", limit: 255
     t.string "language", limit: 255
     t.string "url2", limit: 255
