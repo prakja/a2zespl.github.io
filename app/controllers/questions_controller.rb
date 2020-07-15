@@ -124,20 +124,52 @@ class QuestionsController < ApplicationController
     question.update(explanation: new_explanation + current_explanation)
   end
 
-  def add_hint
+  def remove_video_link_hint
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @hintId = params.require(:hintId)
+      QuestionHint.where(id: @hintId).update(videoLinkId: nil)
+    rescue => exception
+      exception
+    end
+  end
+
+  def video_link_hint
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    begin
+      @videoHintId = params.require(:videoId)
+      @hintId = params.require(:hintId)
+      QuestionHint.where(id: @hintId).update(videoLinkId: @videoHintId)
+     
+    rescue => exception
+      exception
+    end
+  end
+
+  def add_hint 
     if not current_admin_user
       redirect_to "/admin/login"
       return
     end
     begin
       @question_hints_data = {}
+      @videoList_data = {}
       @questionId = params.require(:id)
       @question = Question.find(@questionId)
       @questionBody = @question.question
-      @questionHints = @question.hints.order(position: :asc, id: :asc)
-
+      @questionHints = @question.hints.order(position: :asc, id: :asc).includes(videoLink: :video)
+      @videoLinks =  VideoLink.joins(:video).all().pluck('"Video"."name"', :id,:name)
+      @videoLinks.each do |data|
+        @videoList_data[data[1]] = [data[0] +" - "+data[2]] 
+      end
       @questionHints.each_with_index do |hint, index|
-        @question_hints_data[hint.id] = [index+1, hint.hint]
+        @question_hints_data[hint.id] = [index+1, hint.hint,hint.videoLinkId,hint.videoLink != nil && hint.videoLink.name != nil && hint.videoLink.video != nil && hint.videoLink.video.name != nil ? hint.videoLink.video.name + ' ----> '+ hint.videoLink.name : "" ]
       end
 
     rescue => exception
@@ -147,9 +179,12 @@ class QuestionsController < ApplicationController
 
   def create_hint_row
     id = params.require(:id)
-    new_hint = params.require(:hint)
+    new_hints = JSON.parse(params.require(:hints)[0])
+    
     question = Question.find(id)
-    QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint)
+    new_hints.each do |new_hint|
+      QuestionHint.create(questionId: question.id, deleted: false, hint: new_hint["url"])
+    end
   end
 
   def add_explanation

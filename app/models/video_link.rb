@@ -1,5 +1,6 @@
 class VideoLink < ApplicationRecord
   self.table_name = "VideoLink"
+  has_many :questionHints, foreign_key: 'videoLinkId', class_name: 'QuestionHint'
   belongs_to :video, foreign_key: 'videoId', class_name: 'Video'
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
@@ -12,3 +13,4 @@ class VideoLink < ApplicationRecord
     end
   end
 end
+
