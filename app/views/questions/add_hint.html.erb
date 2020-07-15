@@ -49,7 +49,7 @@
           (Add Video Hint)
         <% end %></button>
         <% if value[2] != nil %>
-        <a href='/admin/video_links/<%=value[2].to_s %>/edit' target="_blank">(Show Video Hint)</a>
+        <a href='/admin/video_links/<%=value[2].to_s %>/edit' target="_blank">(<%=value[3].to_s %>)</a>
         <button type="button" class="btn btn-link text-danger" onClick="onRemoveVideoLink(<%=key.to_s%>)">(Remove Video Hint)</button>
 
         <% end %>

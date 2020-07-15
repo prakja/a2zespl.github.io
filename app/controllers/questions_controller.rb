@@ -156,13 +156,13 @@ class QuestionsController < ApplicationController
       @questionId = params.require(:id)
       @question = Question.find(@questionId)
       @questionBody = @question.question
-      @questionHints = @question.hints.order(position: :asc, id: :asc).includes(:video_link)
+      @questionHints = @question.hints.order(position: :asc, id: :asc).includes(videoLink: :video)
       @videoLinks =  VideoLink.joins(:video).all().pluck('"Video"."name"', :id,:name)
       @videoLinks.each do |data|
         @videoList_data[data[1]] = [data[0] +" - "+data[2]] 
       end
       @questionHints.each_with_index do |hint, index|
-        @question_hints_data[hint.id] = [index+1, hint.hint,hint.videoLinkId,hint.video_link.name]
+        @question_hints_data[hint.id] = [index+1, hint.hint,hint.videoLinkId,hint.videoLink != nil && hint.videoLink.name != nil && hint.videoLink.video != nil && hint.videoLink.video.name != nil ? hint.videoLink.video.name + ' ----> '+ hint.videoLink.name : "" ]
       end
 
     rescue => exception
