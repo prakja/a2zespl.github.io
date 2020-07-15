@@ -43,11 +43,18 @@
   <div style="border: 1px solid black">
     <% @question_hints_data.each do |key, value| %>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
-        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %><button type="button" class="btn btn-link text-secondary" onClick="onVideoLink(<%=key.to_s%>, <%=value[2]%>)" ><%= if value[2] != nil
-        "Edit Video Link"
-        else
-        "Add Video Link"
-        end %></button></p>
+        <p><%= raw('<a href="/admin/question_hints/'+ key.to_s + '/edit" target="_blank">(Edit Hint)</a>') %><button type="button" class="btn btn-link text-secondary" onClick="onVideoLink(<%=key.to_s%>, <%=value[2]%>)" ><% if value[2] != nil%>
+          (Update Video Hint)
+         <% else %>
+          (Add Video Hint)
+        <% end %></button>
+        <% if value[2] != nil %>
+        <a href='/admin/video_links/<%=value[2].to_s %>/edit' target="_blank">(Show Video Hint)</a>
+        <button type="button" class="btn btn-link text-danger" onClick="onRemoveVideoLink(<%=key.to_s%>)">(Remove Video Hint)</button>
+
+        <% end %>
+        </p>
+        
         <h5 style="margin-top: -10px"><%=raw(value[1]) %></h5>
       </div>
     <% end %>
@@ -57,19 +64,23 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Video Link</h5>
+        <h5 class="modal-title">Video Hint</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-         <select class="container" name="video" id="videoList" onchange="onChapterChange()">
-           <option value=''>Link video</option>
+         <select class="container" name="video" id="videoList" >
+           <option value=''>Hint video</option>
            <% @videoList_data.each do |key, value| %>
              <%= raw("<option value='" + key.to_s + "' >" + value.to_s + "</option>") %>
            <% end %>
          </select>
          <input id="hint_id" name="hint_id" type="hidden"/>
+      </div>
+       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="onChapterChange()">Save changes</button>
       </div>
     </div>
   </div>
@@ -127,10 +138,31 @@
   var audioBlob = [];
   var mediaRecorder = null;
 
+  function onRemoveVideoLink(hintId){
+      $.ajax({
+      method: "POST",
+      url: window.location.origin + '/questions/remove_video_link_hint',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: {
+        hintId: hintId
+      }
+    }).done(function(response){
+
+      console.log("Done");
+      window.location.href = window.location.href;
+    }).fail(function(error) {
+      loader.style.display = 'none';
+       console.log(" Error while Removing Hint Video Audio :" + error);
+       alert ('Error uploading audio');
+    });
+
+  }
+  
   function onVideoLink(hintId, selectedVideo){
 
     if(selectedVideo){
-
         $('#videoList option[value='+selectedVideo+']').attr("selected", "selected");
         $("#videoList option:selected").prependTo("#videoList");
     }

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get "questions/add_hint/:id", to: "questions#add_hint"
   post "questions/create_hint_row", to: "questions#create_hint_row"
   post "questions/video_link_hint", to: "questions#video_link_hint"
+  post "questions/remove_video_link_hint", to: "questions#remove_video_link_hint"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'
   get "videos/add_chapter_video/:videoId", to: "videos#add_chapter_video"
   post "videos/getSubjectsList"
