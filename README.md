@@ -26,3 +26,13 @@ rails s -b 5000
 
 ### create view 
 create view "topic_questions" as select "topicId" as "topic_id", "assetId" as "question_id" from "TopicAsset" where "deleted" = false and "assetType" = 'Question'
+
+### Deploy
+
+docker build -t registry.gitlab.com/learner.in/neetprepadmin .
+
+docker push registry.gitlab.com/learner.in/neetprepadmin
+
+kubectl apply -f dev-admin-service.yaml (optional)
+
+kubectl apply -f dev-admin-deployment.yaml
