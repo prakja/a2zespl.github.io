@@ -219,6 +219,7 @@ function dataURItoBlob(dataURI) {
       var reader = new FileReader();
       reader.onload = function (e) {
        var binary= dataURItoBlob(e.target.result);
+       
         addBlobToList(binary, 'file-select');
       }
       reader.readAsDataURL(file);
@@ -266,7 +267,7 @@ function dataURItoBlob(dataURI) {
 
   function addBlobToList(audioChun, type){
     
-      audioUrl = type == 'file-select' ? audioChun : URL.createObjectURL(audioChun);
+      audioUrl =  URL.createObjectURL(audioChun);
       totalRecording +=1
       data={
         audioChunk : audioChun,
@@ -285,7 +286,7 @@ const anAsyncUploadFunction = async (item,s3) => {
 }
 
 const uploadAudio = (data, s3) => { //a function that returns a promise
-console.log(data)
+
  var bucketName = 'question_hints';
  var currentTime = Date.now();
  var fileName= "question_hints_" + "<%= @questionId%>" + "_" + currentTime+ ".mp3" ;
@@ -359,7 +360,7 @@ function stopRecording () {
 }
 
   function insertIntoHint(id, audioTags) {
-    console.log(audioTags);
+   
     $.ajax({
       method: "POST",
       url: window.location.origin + '/questions/create_hint_row',
