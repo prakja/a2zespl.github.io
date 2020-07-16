@@ -25,7 +25,7 @@ spec:
         io.kompose.service: dev-admin
     spec:
       containers:
-      - image: registry.gitlab.com/learner.in/neetprepadmin:latest
+      - image: registry.gitlab.com/learner.in/neetprepadmin:1.0.0
         imagePullPolicy: Always
         name: neetprepadmin
         ports:
