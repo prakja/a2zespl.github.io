@@ -50,6 +50,7 @@ ActiveAdmin.register FlashCard do
   preserve_default_filters!
 
   show do |f|
+    render partial: 'mathjax'
     attributes_table do
       row :id
       row (:title) {|flash_card| raw(flash_card.title)}
