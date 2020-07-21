@@ -786,6 +786,7 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.integer "userId", null: false
     t.integer "questionId"
     t.integer "flashcardId"
+    t.string "note"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
   end
