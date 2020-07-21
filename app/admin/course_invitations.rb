@@ -4,19 +4,22 @@ ActiveAdmin.register CourseInvitation do
   end
   permit_params :course, :displayName, :email, :phone, :role, :admin_user_id, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
-  active_admin_import validate: true,
+  active_admin_import validate: false,
     timestamps: true,
-    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,	'role': :role,	'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    batch_size: 1,
+    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,		'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
       time = Time.now
       importer.csv_lines.each do |line|
-        line.insert(-1, time)
+        line.insert(-1, nil) 
+        line.insert(-1, DateTime.parse("2020-09-15").midnight) 
+        line.insert(-1, time) 
         line.insert(-1, time)
       end
     },
     template_object: ActiveAdminImport::Model.new(
-        hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',	'role',	'expiryAt'",
-        csv_headers: ['name',	'courseId',	'email',	'phone',	'role',	'expiryAt', 'createdAt', 'updatedAt']
+        hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',  'expiryAt'",
+        csv_headers: ['name',	'courseId',	'email',	'phone',  'expiryAt', 'createdAt', 'updatedAt']
     )
 
   member_action :resendinvite, :method=>:get do
