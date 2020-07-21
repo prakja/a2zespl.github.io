@@ -29,7 +29,7 @@ ActiveAdmin.register UserCourse do
       end
     }
     column ("user phone") { |userCourse|
-      if userCourse.user
+      if userCourse.user and userCourse.user.phone
         userCourse.user.phone
       end
     }
@@ -101,7 +101,7 @@ ActiveAdmin.register UserCourse do
       end
     }
     column ("user phone") { |userCourse|
-      if userCourse.user
+      if userCourse.user and userCourse.user.phone
         userCourse.user.phone
       end
     }
