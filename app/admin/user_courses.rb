@@ -73,7 +73,7 @@ ActiveAdmin.register UserCourse do
           phone = userCourse.invitation.phone
         end
 
-        link_to "Invite", "/admin/course_invitations/new?course_invitation[displayName]=" + (userCourse.user.name || "NEET Student") + "&course_invitation[email]=" + email  + "&course_invitation[phone]=" + phone + "&course_invitation[expiryAt]=30/06/2020"
+        link_to "Invite", "/admin/course_invitations/new?course_invitation[displayName]=" + (userCourse.user.name || "NEET Student") + "&course_invitation[email]=" + email.to_s  + "&course_invitation[phone]=" + phone.to_s + "&course_invitation[expiryAt]=30/06/2020"
       #end
     }
     actions
