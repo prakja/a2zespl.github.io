@@ -96,6 +96,7 @@ ActiveAdmin.register TestAttempt do
       row :id
       row :user
       row :test
+      row :testId
       row :elapsedDurationInSec
       row :completed
       row :result
