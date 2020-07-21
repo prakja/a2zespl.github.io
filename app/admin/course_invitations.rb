@@ -15,6 +15,17 @@ ActiveAdmin.register CourseInvitation do
         line.insert(-1, DateTime.parse("2020-09-15").midnight) 
         line.insert(-1, time) 
         line.insert(-1, time)
+     
+      hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + line[2] + '/?hapikey=' + Rails.application.config.hubspot_key
+      p "Hey there"
+      hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
+        'properties' => [
+          {
+            'property' => 'hubspot_owner_id',
+            'value' => 42184047
+          }
+        ]}.to_json)
+        p hubspot_req.parsed_response
       end
     },
     template_object: ActiveAdminImport::Model.new(

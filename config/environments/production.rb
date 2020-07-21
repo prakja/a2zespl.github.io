@@ -24,6 +24,7 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
@@ -93,6 +94,7 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.hubspot_key = '8fc36471-d142-4887-88b8-32fc8d885827'
   config.middleware.use ExceptionNotification::Rack,  
   slack: {
     webhook_url: "https://hooks.slack.com/services/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",
