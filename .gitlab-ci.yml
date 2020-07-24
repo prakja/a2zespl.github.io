@@ -50,6 +50,7 @@ deploy-develop:
     - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
     - apt update -y
     - apt install -y kubectl
+    - mkdir ~/.kube
     - echo $KUBECONF | base64 --decode > ~/.kube/config
     - kubectl get pods
  
