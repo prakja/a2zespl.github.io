@@ -24,7 +24,7 @@ stages:
 
 build-develop:
   only:
-    - tags
+    # - tags
     - develop
   stage: build
   image: docker:latest
@@ -36,41 +36,51 @@ build-develop:
     # - docker build -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG .
     - docker push $CI_REGISTRY/learner.in/neetprepadmin
 
-# deploy-develop:
-#   only:
-#     - tags
-#     - develop
-#   stage: deploy
-#   cache: {}
-#   image: ubuntu:20.04
-#   script:
-#     - apt update -y
-#     # - snap install doctl
-#     # - mkdir ~/.config
-#     - mkdir ~/.kube
-#     # - export DIGITALOCEAN_ACCESS_TOKEN=$DO_ACCESS
-#     # - doctl kubernetes cluster kubeconfig save np-proxy-cluster
-#     - apt install -y apt-transport-https gnupg2 curl
-#     - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-#     - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
-#     - apt update -y
-#     - apt install -y kubectl
-#     - echo $KUBECONFIG | base64 --decode > ~/.kube/config.yaml
-#     - cat ~/.kube/config.yaml
-#     - kubectl --kubeconfig="~/.kube/config.yaml" get pods
-
 deploy-develop:
   only:
     - tags
     - develop
   stage: deploy
   cache: {}
-  image: 
-    name: bitnami/kubectl
-    entrypoint: [""]
-  before_script:
-    - mkdir -p .kube
-    - echo $KUBECONFIG | base64 --decode > .kube/config.yaml
-    - export KUBECONFIG=.kube/config.yaml
+  image: alpine:3.12
   script:
+    - echo $KUBECONFIG
+    - apk add --update ca-certificates
+    - apk add --update -t deps curl
+    - curl -L https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+    - chmod +x /usr/local/bin/kubectl
+    - apk del --purge deps
+    - rm /var/cache/apk/*
+    - mkdir /root/.kube
+    - echo $KUBECONFIG | base64 -d > ~/.kube/config.yaml
     - kubectl get pods
+    # - apt update -y
+    # - snap install doctl
+    # - mkdir ~/.config
+    # - mkdir ~/.kube
+    # - export DIGITALOCEAN_ACCESS_TOKEN=$DO_ACCESS
+    # - doctl kubernetes cluster kubeconfig save np-proxy-cluster
+    # - apt install -y apt-transport-https gnupg2 curl
+    # - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    # - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+    # - apt update -y
+    # - apt install -y kubectl
+    # - echo $KUBECONFIG | base64 --decode > ~/.kube/config.yaml
+    # - cat ~/.kube/config.yaml
+    # - kubectl --kubeconfig="~/.kube/config.yaml" get pods
+
+# deploy-develop:
+#   only:
+#     - tags
+#     - develop
+#   stage: deploy
+#   cache: {}
+#   image: 
+#     name: bitnami/kubectl
+#     entrypoint: [""]
+#   before_script:
+#     - mkdir -p /root/.kube
+#     - echo $KUBECONFIG | base64 --decode > /root/.kube/config.yaml
+#     - export KUBECONFIG=/root/.kube/config.yaml
+#   script:
+#     - kubectl get pods
