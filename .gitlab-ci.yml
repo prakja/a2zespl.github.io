@@ -45,7 +45,11 @@ deploy-develop:
   image: ubuntu:20.04
   script:
     - apt update -y
-    - apt install kubectl -y
+    - apt install -y apt-transport-https gnupg2
+    - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+    - apt update -y
+    - apt install -y kubectl
     - echo $KUBECONF | base64 --decode > ~/.kube/config
     - kubectl get pods
  
