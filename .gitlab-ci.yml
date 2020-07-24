@@ -38,6 +38,7 @@ build-develop:
 
 deploy-develop:
   only:
+    - tags
     - develop
   stage: deploy
   cache: {}
