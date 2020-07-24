@@ -34,23 +34,30 @@ ActiveAdmin.register Doubt do
   preserve_default_filters!
 
   batch_action :assign_doubts, form: -> do {
-    assignTo: AdminUser.where(role: "faculty").distinct_faculty_name
+    assignTo: AdminUser.where(role: "faculty").distinct_faculty_name(current_admin_user.email)
   } end do |ids, inputs|
     assign_to = inputs['assignTo']
     p ids
     p assign_to
     admin_user_id = AdminUser.where(email: assign_to).first.id
     ids.each do |id|
+      current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').count
+      p "Current count: " + current_unsoved_unassigned_count.to_s
+      if current_unsoved_unassigned_count.to_i >= 5
+        p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
+        next
+      end
       doubt = Doubt.find(id)
       if not doubt.doubt_admin.blank?
         next
+      else
+        doubt_admin = DoubtAdmin.new()
+        doubt_admin[:doubtId] = id
+        doubt_admin[:admin_user_id] = admin_user_id
+        doubt_admin[:created_at] = Time.now
+        doubt_admin[:created_at] = Time.now
+        doubt_admin.save
       end
-      doubt_admin = DoubtAdmin.new()
-      doubt_admin[:doubtId] = id
-      doubt_admin[:admin_user_id] = admin_user_id
-      doubt_admin[:created_at] = Time.now
-      doubt_admin[:created_at] = Time.now
-      doubt_admin.save
     end
   end
 
@@ -59,8 +66,15 @@ ActiveAdmin.register Doubt do
       doubt = Doubt.find(id)
       if doubt.doubt_admin.blank?
         next
+      else
+        if current_admin_user.role == 'faculty' and current_admin_user.id != doubt.doubt_admin.admin_user_id
+          p "Cannot unassign someone else doubt!"
+          flash.now[:error] = "Cannot unassign someone else doubt!"
+        else
+          p "Unassigning doubts"
+          doubt.doubt_admin.delete
+        end
       end
-      doubt.doubt_admin.delete
     end
   end
 
