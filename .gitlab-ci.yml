@@ -34,7 +34,6 @@ build-develop:
     - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
     - docker push $CI_REGISTRY/learner.in/neetprepadmin
 
-
 deploy-develop:
   only:
     - develop
