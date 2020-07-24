@@ -65,9 +65,12 @@ deploy-develop:
     - develop
   stage: deploy
   cache: {}
-  image: aliartiza75/kubectl
+  image: 
+    name: bitnami/kubectl
+    entrypoint: [""]
   before_script:
-    - mkdir ~/.kube/
-    - echo $KUBECONFIG | base64 --decode > ~/.kube/config.yaml
+    - mkdir -p .kube
+    - echo $KUBECONFIG | base64 --decode > .kube/config.yaml
+    - export KUBECONFIG=.kube/config.yaml
   script:
     - kubectl get pods
