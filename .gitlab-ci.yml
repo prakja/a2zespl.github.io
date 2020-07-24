@@ -42,16 +42,20 @@ deploy-develop:
     - develop
   stage: deploy
   cache: {}
-  image: ubuntu:20.04
+  image: bitnami/kubectl
   script:
     - apt update -y
-    - apt install -y apt-transport-https gnupg2 curl
-    - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
-    - apt update -y
-    - apt install -y kubectl
+    # - snap install doctl
+    # - mkdir ~/.config
     - mkdir ~/.kube
-    - echo $KUBECONF | base64 --decode > ~/.kube/config.yaml
+    # - export DIGITALOCEAN_ACCESS_TOKEN=$DO_ACCESS
+    # - doctl kubernetes cluster kubeconfig save np-proxy-cluster
+    # - apt install -y apt-transport-https gnupg2 curl
+    # - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    # - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+    # - apt update -y
+    # - apt install -y kubectl
+    - echo $KUBECONFIG | base64 --decode > ~/.kube/config.yaml
     - cat ~/.kube/config.yaml
-    - kubectl --kubeconfig="~/.kube/config.yaml" get pods
+    - kubectl get pods
  
