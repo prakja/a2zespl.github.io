@@ -55,5 +55,5 @@ deploy-develop:
     - apk del --purge deps
     - rm /var/cache/apk/*
     - kubectl get pods
-    - kubectl set image deployments/dev-admin dev-admin=$CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG
+    - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG
     # - kubectl apply -f dev-admin-deployment.yaml
