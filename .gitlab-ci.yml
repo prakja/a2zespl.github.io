@@ -24,7 +24,7 @@ stages:
 
 build-develop:
   only:
-    # - tags
+    - tags
     - develop
   stage: build
   image: docker:latest
