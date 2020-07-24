@@ -40,9 +40,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_admin_import (4.1.1)
+    active_admin_import (4.2.0)
       activeadmin (>= 1.0.0.pre2)
-      activerecord-import (~> 0.27)
+      activerecord-import (>= 0.27)
       rchardet (~> 1.6)
       rubyzip (~> 1.2)
     active_admin_theme (1.1.1)
@@ -82,7 +82,7 @@ GEM
       activemodel (= 5.2.3)
       activesupport (= 5.2.3)
       arel (>= 9.0)
-    activerecord-import (0.28.2)
+    activerecord-import (1.0.5)
       activerecord (>= 3.2)
     activestorage (5.2.3)
       actionpack (= 5.2.3)
@@ -368,7 +368,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_admin_import
+  active_admin_import (= 4.2.0)
   active_admin_theme
   activeadmin
   activeadmin-searchable_select
@@ -414,4 +414,4 @@ RUBY VERSION
    ruby 2.6.5p114
 
 BUNDLED WITH
-   2.0.2
+   2.1.4

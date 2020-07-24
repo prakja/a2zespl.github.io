@@ -80,7 +80,7 @@ gem 'paper_trail'
 gem 'active_admin_theme'
 gem 'httparty'
 gem 'formtastic-fake_input'
-gem "active_admin_import"
+gem "active_admin_import", '4.2.0'
 gem 'chartkick'
 gem 'groupdate'
 gem 'slim'

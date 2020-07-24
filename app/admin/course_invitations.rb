@@ -4,27 +4,24 @@ ActiveAdmin.register CourseInvitation do
   end
   permit_params :course, :displayName, :email, :phone, :role, :admin_user_id, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
-  active_admin_import validate: false,
+  active_admin_import validate: true,
     timestamps: true,
     batch_size: 1,
     headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,		'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
       time = Time.now
       importer.csv_lines.each do |line|
-        line.insert(-1, nil) 
-        line.insert(-1, DateTime.parse("2020-09-15").midnight) 
         line.insert(-1, time) 
         line.insert(-1, time)
-     
-      hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + line[2] + '/?hapikey=' + Rails.application.config.hubspot_key
-      p "Hey there"
-      hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
-        'properties' => [
-          {
-            'property' => 'hubspot_owner_id',
-            'value' => 42184047
-          }
-        ]}.to_json)
+
+        hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + line[2] + '/?hapikey=' + Rails.application.config.hubspot_key
+        hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
+          'properties' => [
+            {
+              'property' => 'hubspot_owner_id',
+              'value' => 42184047
+            }
+          ]}.to_json)
         p hubspot_req.parsed_response
       end
     },
