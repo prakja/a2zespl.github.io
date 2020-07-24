@@ -24,6 +24,7 @@ stages:
 
 build-develop:
   only:
+    - tags
     - develop
   stage: build
   image: docker:latest
@@ -32,6 +33,7 @@ build-develop:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker build -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG .
     - docker push $CI_REGISTRY/learner.in/neetprepadmin
 
 deploy-develop:
