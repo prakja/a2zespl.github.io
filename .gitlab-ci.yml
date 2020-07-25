@@ -70,4 +70,3 @@ deploy-develop:
     - rm /var/cache/apk/*
     - kubectl get pods
     - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG
-    # - kubectl apply -f dev-admin-deployment.yaml

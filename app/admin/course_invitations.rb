@@ -4,20 +4,25 @@ ActiveAdmin.register CourseInvitation do
   end
   permit_params :course, :displayName, :email, :phone, :role, :admin_user_id, :payments, :expiryAt, :courseId, :accepted, payment_ids: []
   remove_filter :payments, :versions, :courseInvitationPayments
-  active_admin_import validate: false,
+  active_admin_import validate: true,
     timestamps: true,
     batch_size: 1,
-    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,		'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone, 'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
       time = Time.now
       importer.csv_lines.each do |line|
-        line.insert(-1, nil) 
-        line.insert(-1, DateTime.parse("2020-09-15").midnight) 
+        importer.options['time'] = time
+        expire_at = line[4]
+        line.delete_at(4)
+        line.insert(-1, DateTime.parse(expire_at).midnight)
         line.insert(-1, time) 
         line.insert(-1, time)
-     
-      hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + line[2] + '/?hapikey=' + Rails.application.config.hubspot_key
-      p "Hey there"
+      end
+    },
+    after_batch_import: lambda { |importer|
+      time = importer.options['time']
+      course_invitation = CourseInvitation.where(createdAt: time).first
+      hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + course_invitation.email + '/?hapikey=' + Rails.application.config.hubspot_key
       hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
         'properties' => [
           {
@@ -26,7 +31,6 @@ ActiveAdmin.register CourseInvitation do
           }
         ]}.to_json)
         p hubspot_req.parsed_response
-      end
     },
     template_object: ActiveAdminImport::Model.new(
         hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',  'expiryAt'",
