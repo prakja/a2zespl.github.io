@@ -1,0 +1,48 @@
+stages:
+  - build
+  - deploy
+
+# build:
+#   only:
+#     - master
+#   stage: build
+#   image: docker:latest
+#   services:
+#     - docker:dind
+#   script:
+#     - ls public/assets public/packs || true # for debugging
+
+
+# deploy:
+#   only:
+#     - master
+#   stage: deploy
+#   cache: {}
+#   image: atherenergy/awsebcli
+#   script:
+#     - mkdir -p removable
+
+build-develop:
+  only:
+    - develop
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker push $CI_REGISTRY/learner.in/neetprepadmin
+
+deploy-develop:
+  only:
+    - develop
+  stage: deploy
+  cache: {}
+  image: ubuntu:20.04
+  script:
+    - apt update -y
+    - apt install kubectl -y
+    - echo $KUBECONF | base64 --decode > ~/.kube/config
+    - kubectl get pods
+ 

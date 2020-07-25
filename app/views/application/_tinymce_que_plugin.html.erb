@@ -14,7 +14,7 @@ tinymce.PluginManager.add('questionIframe', function(editor) {
         onsubmit: function(e) {
           var questionId = e.data.QuestionId;
           // Insert content when the window form is submitted
-          editor.insertContent('<h4>Question:</h4><p><iframe src="https://neetprep.com/epubQuestion/' + questionId + '" width="560" height="315"></iframe></p>');
+          editor.insertContent(`<div><a style="cursor: pointer; font-weight: bold;" onclick="document.getElementById('embedded-question` + questionId + `').style.display = 'block';">Show Question</a><div style="display:none;" id="embedded-question` + questionId +`"><h4>Question:</h4><p><iframe src="https://neetprep.com/epubQuestion/` + questionId + `" width="560" height="315"></iframe></p></div></div>`);
         }
       });
     }
