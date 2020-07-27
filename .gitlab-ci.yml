@@ -11,7 +11,7 @@ build:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/master --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
     - docker push $CI_REGISTRY/learner.in/neetprepadmin/master
 
 deploy:
@@ -43,7 +43,7 @@ build-develop:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin:$CI_COMMIT_TAG --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
     - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop
 
 deploy-develop:
