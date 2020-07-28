@@ -7,23 +7,30 @@ ActiveAdmin.register CourseInvitation do
   active_admin_import validate: true,
     timestamps: true,
     batch_size: 1,
-    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone,		'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    headers_rewrites: { 'name': :displayName,	'courseId': :courseId,	'email': :email,	'phone': :phone, 'expiryAt': :expiryAt, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
       time = Time.now
       importer.csv_lines.each do |line|
+        importer.options['time'] = time
+        expire_at = line[4]
+        line.delete_at(4)
+        line.insert(-1, DateTime.parse(expire_at).midnight)
         line.insert(-1, time) 
         line.insert(-1, time)
-
-        hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + line[2] + '/?hapikey=' + Rails.application.config.hubspot_key
-        hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
-          'properties' => [
-            {
-              'property' => 'hubspot_owner_id',
-              'value' => 42184047
-            }
-          ]}.to_json)
-        p hubspot_req.parsed_response
       end
+    },
+    after_batch_import: lambda { |importer|
+      time = importer.options['time']
+      course_invitation = CourseInvitation.where(createdAt: time).first
+      hubspot_url = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + course_invitation.email + '/?hapikey=' + Rails.application.config.hubspot_key
+      hubspot_req = HTTParty.post(hubspot_url, :headers => { 'Content-Type' => 'application/json' }, body: {
+        'properties' => [
+          {
+            'property' => 'hubspot_owner_id',
+            'value' => 42184047
+          }
+        ]}.to_json)
+        p hubspot_req.parsed_response
     },
     template_object: ActiveAdminImport::Model.new(
         hint: "File will be imported with such header format: 'name',	'courseId',	'email',	'phone',  'expiryAt'",
