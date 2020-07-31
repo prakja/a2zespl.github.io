@@ -3,7 +3,7 @@ ActiveAdmin.register DoubtAnswer do
   remove_filter :doubt, :user
 
   # filter :userId_eq, as: :number, label: "User ID"
-  filter :userId_eq, as: :searchable_select, label: "Faculty", :collection => AdminUser.where('"role" = \'faculty\' and "userId" > 0').distinct_user_id
+  filter :userId_eq, as: :searchable_select, label: "Faculty", :collection => AdminUser.where('"userId" > 0').where(role: ['faculty', 'superfaculty']).distinct_user_id
   filter :doubtId_eq, as: :number, label: "Doubt ID"
   filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
@@ -21,7 +21,7 @@ ActiveAdmin.register DoubtAnswer do
     column ("Link") {|doubt_answer| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt_answer.doubt.id.to_s, target: ":_blank" }
     column :user
     column :deleted
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty'
       @index = 15 * (((params[:page] || 1).to_i) - 1)
       column (:goodFlag) { |doubt_answer|
         if doubt_answer.doubt.goodFlag
