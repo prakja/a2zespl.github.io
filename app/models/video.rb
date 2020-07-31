@@ -1,6 +1,8 @@
 class Video < ApplicationRecord
   has_paper_trail
 
+  nilify_blanks
+
   self.table_name = "Video"
   after_commit :after_create_update_video, if: Proc.new { |model| model.previous_changes[:url] or self.duration.blank?}, on: [:create, :update]
 
