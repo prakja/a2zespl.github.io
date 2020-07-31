@@ -15,7 +15,7 @@ class AdminUser < ApplicationRecord
   before_create :before_create_admin_user
 
   def self.distinct_faculty_name(current_email)
-    AdminUser.where(role: 'faculty').where.not(email: current_email).pluck("email").unshift(current_email)    
+    AdminUser.where(role: ['faculty', 'superfaculty']).where.not(email: current_email).pluck("email").unshift(current_email)    
   end
 
   def self.distinct_name
@@ -27,7 +27,7 @@ class AdminUser < ApplicationRecord
   end
 
   def self.distinct_faculty_name_id
-    AdminUser.where(role: 'faculty').pluck("email", "id")
+    AdminUser.where(role: ['faculty', 'superfaculty']).pluck("email", "id")
   end
 
   def self.distinct_email_id
