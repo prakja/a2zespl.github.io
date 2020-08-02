@@ -20,22 +20,24 @@ class GenericsController < ApplicationController
 
   def set_seq_id_back
     flashcard_id = params[:flashcard_id]
-    # chapter_id = params[:chapter_id].to_i
     flashcard = FlashCard.find(flashcard_id)
     chapter_id = flashcard.topics.first.id
     last_seqId = FlashCard.joins(:topicFlashCards).where(ChapterFlashCard: {chapterId: chapter_id}).order(seqId: :asc).pluck('"ChapterFlashCard"."seqId"').last
     chapterFlashCard = flashcard.topicFlashCards.first
     new_seq_id = 0
-    # chapterFlashCard.update(seqId: last_seqId + 1);
     cards_after_seqIds = FlashCard.joins(:topicFlashCards).where(ChapterFlashCard: {chapterId: chapter_id}).where('"ChapterFlashCard"."seqId" > ?', chapterFlashCard.seqId).order(seqId: :asc)
+    p cards_after_seqIds
     cards_after_seqIds.each do |next_flashcard|
       if next_flashcard.id != flashcard_id
         current_seq = next_flashcard.topicFlashCards.first.seqId
+        p "will update " + next_flashcard.id.to_s
         new_seq_id = current_seq
-        next_flashcard.topicFlashCards.update(seqId: current_seq - 1)
+        next_flashcard.topicFlashCards.first.update(seqId: current_seq - 1)
       end
     end
-    chapterFlashCard.update(seqId: new_seq_id)
+    if new_seq_id != 0
+      chapterFlashCard.update(seqId: new_seq_id)
+    end
     response = {
       error: "Ok",
     }
