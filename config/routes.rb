@@ -61,6 +61,8 @@ Rails.application.routes.draw do
   get "generics/flashcardstats", to: "generics#get_flashcard_stats"
   get "generics/bookmark_during", to: "generics#bookmark_during"
 
+  post "generics/move_flashcard_to_back", to: "generics#set_seq_id_back"
+
   get "/admin/answer_count", to: "user_doubt_counts#answer_count"
   post "/admin/get_count", to: "user_doubt_counts#get_count"
 
