@@ -23,6 +23,8 @@ ActiveAdmin.register CustomerIssue do
   scope "Open", :non_resolved, default: true
   scope :botany_flashcard_issues, show_count: false
   scope :zoology_flashcard_issues, show_count: false
+  scope :physics_flashcard_issues, show_count: false
+  scope :chemistry_flashcard_issues, show_count: false
   scope :biology_test_issues, show_count: false
   scope :botany_test_issues, show_count: false
   scope :chemistry_test_issues, show_count: false

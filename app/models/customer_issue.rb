@@ -56,6 +56,8 @@ class CustomerIssue < ApplicationRecord
 
   scope :botany_flashcard_issues, -> {subject_name([53]).non_resolved().flash_card_issue.distinct}
   scope :zoology_flashcard_issues, -> {subject_name([56]).non_resolved().flash_card_issue.distinct}
+  scope :physics_flashcard_issues, -> {subject_name([55]).non_resolved().flash_card_issue.distinct}
+  scope :chemistry_flashcard_issues, -> {subject_name([54]).non_resolved().flash_card_issue.distinct}
 
   scope :botany_boostup_issues, -> {subject_chapter_test(495).non_resolved.question_issue.distinct}
   scope :zoology_boostup_issues, -> {subject_chapter_test(496).non_resolved.question_issue.distinct}
