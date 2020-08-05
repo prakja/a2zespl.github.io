@@ -42,7 +42,8 @@ ActiveAdmin.register FlashCard do
                       )
 
 
-  permit_params :content, :title, :createdAt, :updatedAt, topicFlashCards_attributes: [:seqId, :chapterId], topic_ids: []
+  permit_params :content, :title, :createdAt, :updatedAt, topicFlashCards_attributes: [:id, :seqId, :chapterId, :_destroy]
+  # , topic_ids: []
   remove_filter :topicFlashCards, :userFlashCards, :users
 
   filter :id_eq, as: :number, label: "Flash Card ID"
@@ -68,8 +69,9 @@ ActiveAdmin.register FlashCard do
 
       # render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
     end
-    f.inputs do
-      f.has_many :topicFlashCards, new_record: true, allow_destroy: true do |t|
+
+    f.has_many :topicFlashCards, heading: false, allow_destroy: true do |t|
+      t.inputs "Chapter" do
         t.input :seqId
         t.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
       end
