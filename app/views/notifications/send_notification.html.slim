@@ -21,10 +21,11 @@ script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4I
         option AllPaid
         option AllNonPaid
         option Selected
+        option AryanRaj
     .form-group.imgUrlGroup
       lable for="imgUrl" Image URL
       input#imgUrl.form-control type="text" placeholder="https://www.youtube.com/image" name="imageUrl"
-    .form-group
+    .form-group.targetType
       label for="notify-type" Target
       select#notify-type.form-control name="contextType" onchange="targetChanged()"
         option BuyCourse
@@ -34,7 +35,7 @@ script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4I
       input#actionUrl.form-control type="text" placeholder="https://www.youtube.com/ydo4Fskedc" name="actionUrl"
     .form-group.courseSelectGroup
       lable for="courses-input" Course 
-      input#courses-input.form-control list="courses" onchange="courseChanged()" required="true" /
+      input#courses-input.form-control list="courses" onchange="courseChanged()"  /
       datalist#courses
         = @courses.each do |course|
           option value="#{course.id}" #{course.name}
@@ -69,11 +70,27 @@ javascript:
   }
 
   function studentTypeChanged() {
+     $(".targetType").show();
+     $("#notify-type").val("BuyCourse");
+     $(".courseSelectGroup").show();
+   
     if ($("#studentType").val().includes("Selected")) {
       $(".userIdGroup").show();
       var elements = document.getElementById("studentType").options;
       for(var i = 0; i < elements.length; i++) {
         if (elements[i].selected && elements[i].innerHTML != "Selected")
+          elements[i].selected = false;
+      }
+    } else if ($("#studentType").val().includes("AryanRaj")) {
+      $(".userIdGroup").hide();
+      $(".userIdGroup").val("");
+      $(".targetType").hide();
+      $("#notify-type").val("");
+      $(".courseSelectGroup").hide();
+      $("#courses-input").val("");
+      var elements = document.getElementById("studentType").options;
+      for(var i = 0; i < elements.length; i++) {
+        if (elements[i].selected && elements[i].innerHTML != "AryanRaj")
           elements[i].selected = false;
       }
     } else if (!$("#studentType").val().includes("Selected")) {
@@ -92,8 +109,14 @@ javascript:
 
   $( "#notify-form" ).submit(function( event ) {
     event.preventDefault();
-    const url = $( "#notify-form" ).attr("action");
+    const courseId = $("#courses-input").val();
     const sentTo = $("#studentType").val();
+    if(courseId === '' && sentTo != "AryanRaj"){
+      alert("Please select course id");
+      return;
+    }
+
+    const url = $( "#notify-form" ).attr("action");
     $.each(sentTo, function (index, value) {
       $.ajax({
         type: "POST",
