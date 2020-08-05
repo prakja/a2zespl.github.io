@@ -9,4 +9,6 @@ class FlashCard < ApplicationRecord
 
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
+
+  accepts_nested_attributes_for :topicFlashCards, allow_destroy: true
 end
