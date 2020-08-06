@@ -21,6 +21,38 @@ class GenericsController < ApplicationController
   def give_course_access_aryan_raj_view
   end
 
+  def bulk_notify
+  end
+
+  def send_bulk_notification
+    myfile = params[:file]
+    title = params[:title]
+    message = params[:message]
+    context = params[:context]
+    action = params[:action]
+    course = params[:course].to_i
+
+    CSV.foreach(myfile.path) do |row|
+      user_id = row[0]
+      p "Giving course access to: " + user_id
+      HTTParty.post(
+        Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
+        body: {
+          title: title,
+          message: message,
+          actionUrl: action,
+          contextType: context,
+          imageUrl: "",
+          courseId: course,
+          studentType: "Selected",
+          userId: user_id.to_i
+        }
+      )
+
+      sleep(1.second)
+    end
+  end
+
   def give_course_access_aryan_raj
     # mod = params[:mod]
     myfile = params[:file]

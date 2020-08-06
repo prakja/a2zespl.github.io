@@ -64,6 +64,8 @@ Rails.application.routes.draw do
   post "generics/move_flashcard_to_back", to: "generics#set_seq_id_back"
   get "generics/course_access_ar", to: "generics#give_course_access_aryan_raj_view"
   post "generics/course_access_ar", to: "generics#give_course_access_aryan_raj"
+  get "generics/bulk_notfiy", to: "generics#bulk_notify"
+  post "generics/bulk_notfiy", to: "generics#send_bulk_notification"
 
   get "/admin/answer_count", to: "user_doubt_counts#answer_count"
   post "/admin/get_count", to: "user_doubt_counts#get_count"

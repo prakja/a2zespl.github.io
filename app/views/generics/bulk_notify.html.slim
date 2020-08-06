@@ -1,0 +1,21 @@
+div
+  = form_tag({:action => :send_bulk_notification}, multipart: true) do
+    br
+    p Title
+    = text_field_tag :title
+    br
+    p Message
+    = text_field_tag :message
+    br
+    p Type
+    = select_tag :context, options_for_select([ "BuyCourse", "MorningSchedule", "FreeTrial" ], "MorningSchedule")
+    p Action URL
+    = text_field_tag :action
+    br
+    p Course
+    = text_field_tag :course
+    br
+    p Input CSV
+    = file_field_tag :file
+    br
+    = submit_tag( "Send" )
