@@ -31,7 +31,7 @@ class GenericsController < ApplicationController
     p access_date
     CSV.foreach(myfile.path) do |row|
       user_id = row[0]
-      p "Giving course access to: " + user_id.to_s
+      p "Giving course access to: " + user_id
       UserCourse.create(
         expiryAt: access_date,
         createdAt: Time.now,
@@ -45,12 +45,12 @@ class GenericsController < ApplicationController
         body: {
           title: title,
           message: message,
-          actionUrl: "",
+          actionUrl: "https://www.neetprep.com/neet-course/255",
           contextType: "BuyCourse",
           imageUrl: "",
           courseId: 255,
-          studentType: ['Selected'],
-          userId: user_id
+          studentType: "Selected",
+          userId: user_id.to_i
         }
       )
 
