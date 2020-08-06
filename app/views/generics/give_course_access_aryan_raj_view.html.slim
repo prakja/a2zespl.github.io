@@ -1,0 +1,14 @@
+div
+  = form_tag({:action => :give_course_access_aryan_raj}, multipart: true) do
+    br
+    p Title
+    = text_field_tag :title
+    br
+    p Message
+    = text_field_tag :message
+    p Input CSV
+    = file_field_tag :file
+    p Course Access Till
+    = date_field_tag :access_date
+    br
+    = submit_tag( "Import" )

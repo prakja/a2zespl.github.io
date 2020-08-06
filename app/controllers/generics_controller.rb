@@ -18,6 +18,46 @@ class GenericsController < ApplicationController
     render json: response, :status => 200
   end
 
+  def give_course_access_aryan_raj_view
+  end
+
+  def give_course_access_aryan_raj
+    # mod = params[:mod]
+    myfile = params[:file]
+    access_date = params[:access_date].to_datetime
+    title = params[:title]
+    message = params[:message]
+
+    p access_date
+    CSV.foreach(myfile.path) do |row|
+      user_id = row[0]
+      p "Giving course access to: " + user_id.to_s
+      UserCourse.create(
+        expiryAt: access_date,
+        createdAt: Time.now,
+        updatedAt: Time.now,
+        courseId: 255,
+        userId: user_id.to_i,
+      )
+
+      HTTParty.post(
+        Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
+        body: {
+          title: title,
+          message: message,
+          actionUrl: "",
+          contextType: "BuyCourse",
+          imageUrl: "",
+          courseId: 255,
+          studentType: ['Selected'],
+          userId: user_id
+        }
+      )
+
+      sleep(1.second)
+    end 
+  end
+
   def set_seq_id_back
     flashcard_id = params[:flashcard_id]
     flashcard = FlashCard.find(flashcard_id)
