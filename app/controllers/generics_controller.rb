@@ -70,6 +70,7 @@ class GenericsController < ApplicationController
         updatedAt: Time.now,
         courseId: 255,
         userId: user_id.to_i,
+        trial: true
       )
 
       HTTParty.post(
