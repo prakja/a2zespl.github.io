@@ -41,11 +41,11 @@ ActiveAdmin.register Question do
   scope :neetprep_course, show_count: false
   scope :image_question, show_count: false
 
-  controller do
-    def scoped_collection
-      super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
-    end
-  end
+  #controller do
+  #  def scoped_collection
+  #    super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
+  #  end
+  #end
 
   member_action :history do
     @question = Question.find(params[:id])
@@ -75,8 +75,8 @@ ActiveAdmin.register Question do
     end
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
-      column :doubts_count, sortable: true
-      column :bookmarks_count, sortable: true
+      #column :doubts_count, sortable: true
+      #column :bookmarks_count, sortable: true
       column ("Add explanation") { |question|
         raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
       }
