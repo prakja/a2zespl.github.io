@@ -6,18 +6,18 @@ class Ability
       can :manage, :all
     elsif user.role == 'faculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can :manage, [SubTopic, QuestionHint]
-      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterFlashCard]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, FlashCard]
+      can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
+      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
-      can :manage, [SubTopic, QuestionHint]
-      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterFlashCard]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, FlashCard]
+      can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
+      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
