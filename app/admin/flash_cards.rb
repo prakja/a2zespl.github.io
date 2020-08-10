@@ -56,7 +56,8 @@ ActiveAdmin.register FlashCard do
       row :id
       row (:title) {|flash_card| raw(flash_card.title)}
       row (:answer) {|flash_card| raw(flash_card.content)}
-      row (:seqId) {|flash_card| flash_card.topicFlashCards.first.seqId}
+      row (:seqId) {|flash_card| flash_card&.topicFlashCards&.first&.seqId}
+      row (:chapter) {|flash_card| flash_card&.topicFlashCards&.first&.topic}
     end
   end
 
