@@ -61,18 +61,30 @@ class GenericsController < ApplicationController
     message = params[:message]
 
     p access_date
-    CSV.foreach(myfile.path) do |row|
-      user_id = row[0]
-      p "Giving course access to: " + user_id
-      UserCourse.create(
+    @user_ids = []
+    CSV.foreach(myfile.path) {|row| @user_ids << row[0]}
+    @user_ids = @user_ids.reject(&:empty?).map(&:to_i)
+
+    @user_ids -= [0]
+
+    p @user_ids
+
+    @user_courses = []
+    @user_ids.each do |user_id|
+      @user_courses << {
         expiryAt: access_date,
         createdAt: Time.now,
         updatedAt: Time.now,
         courseId: 255,
-        userId: user_id.to_i,
+        userId: user_id,
         trial: true
-      )
+      }
+    end
 
+    UserCourse.create!(@user_courses)
+
+    @user_ids.each do |user_id|
+      p "Sending Notificaiton to: " + user_id.to_s
       HTTParty.post(
         Rails.configuration.node_site_url + "api/v1/job/importantNewsNotification",
         body: {
@@ -83,12 +95,18 @@ class GenericsController < ApplicationController
           imageUrl: "",
           courseId: 255,
           studentType: "Selected",
-          userId: user_id.to_i
+          userId: user_id
         }
       )
 
       sleep(1.second)
     end 
+  rescue => exception
+    p exception
+    response = {
+      error: "Error",
+    }
+    render json: response, :status => 500
   end
 
   def set_seq_id_back
@@ -133,7 +151,7 @@ class GenericsController < ApplicationController
     end
     file = params[:file]
 
-    @course_id = params[:course_id]
+    @course_id = params[:course_id].to_i
     @course = Course.includes(subjects: :topics).find(@course_id)
 
     @course_subjects = @course.subjects
@@ -167,13 +185,14 @@ class GenericsController < ApplicationController
 
     # @user_activity[user_id] = 
     # temp = Answer.where(questionId: Question.joins(:topics).where(Topic: {id: @course_topics}), userId: @user_ids).group('"Answer"."id", "Answer"."userId"')
-    @user_course_ids = UserCourse.where(userId: @user_ids, courseId: @course_id).where('"expiryAt" > ?', Time.now).pluck(:userId)
+    
     @course_offers = CourseOffer.where(email: User.where(id: @user_ids).pluck(:email), phone: User.where(id: @user_ids).pluck(:phone), courseId: @course_id, accepted: true).pluck(:email)
     # @course_offer = CourseOffer.where(userId: @user_ids, courseId: @course_id).group("userId")
     @course_offer_ids = User.where(email: @course_offers).pluck(:id)
 
-    # p @user_course_ids
-    # p @course_offer_ids
+    @user_course_ids = User.joins(:user_courses).where(User: {id: @user_ids}, UserCourse: {courseId: @course_id}).where('"UserCourse"."expiryAt" > ?', Time.now).pluck('"User"."id"') 
+    # UserCourse.where(userId: @user_ids, courseId: @course_id).where('"UserCourse"."expiryAt" > ?', Time.now).pluck(:userId)
+    p @user_course_ids
 
     @user_course_ids.each do |user_course_id|
       @user_activity[user_course_id] = [false, false] if @user_activity[user_course_id].nil?
