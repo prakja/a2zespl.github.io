@@ -91,7 +91,7 @@ class GenericsController < ApplicationController
           title: title,
           message: message,
           actionUrl: "https://www.neetprep.com/neet-course/255",
-          contextType: "BuyCourse",
+          contextType: "FreeTrial",
           imageUrl: "",
           courseId: 255,
           studentType: "Selected",
