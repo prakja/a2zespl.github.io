@@ -113,6 +113,8 @@ class Question < ApplicationRecord
   has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion', dependent: :destroy
   has_many :tests, through: :questionTests, dependent: :destroy
 
+  has_many :answers, class_name: "Answer", foreign_key: :questionId
+
   belongs_to :topic, foreign_key: "topicId", class_name: "Topic", optional: true
 
   def self.distinct_type

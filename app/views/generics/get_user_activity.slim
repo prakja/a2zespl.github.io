@@ -1,0 +1,22 @@
+div
+  = form_tag({:action => :user_activity}, multipart: true, enctype: "multipart/form-data", :class => "getActivity") do
+    br
+    p Input CSV
+    = file_field_tag :file
+    br
+    input name="course_id" type="hidden" value="255" /
+    = submit_tag( "Get" )
+
+javascript:
+  // $( ".getActivity" ).submit(function( event ) {
+  //   event.preventDefault();
+  //   console.log($('.getActivity').serialize());
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "/generics/user_activity",
+  //     data: $('.getActivity').serialize()
+  //   }).done (function (data) {
+  //     console.log("sent");
+  //     console.log(data);
+  //   });
+  // });

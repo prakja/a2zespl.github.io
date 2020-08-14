@@ -1,0 +1,18 @@
+.user-activity
+  table
+    tr
+      th User ID
+      th Course Active
+      th Course Offer Taken
+    - @user_activity.keys.each do |activity|
+      tr
+        td = link_to  activity, '/admin/users/' + activity.to_s
+        - if @user_activity[activity][0]
+          td style="background: green" = @user_activity[activity][0]
+        - else 
+          td style="background: red" = @user_activity[activity][0]
+        - if @user_activity[activity][1]
+          td style="background: green" = @user_activity[activity][1]
+        - else 
+          td style="background: red" = @user_activity[activity][1]
+

@@ -122,4 +122,67 @@ class GenericsController < ApplicationController
     }
     render json: response, :status => 500
   end
+
+  def get_user_activity
+  end
+
+  def user_activity
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    file = params[:file]
+
+    @course_id = params[:course_id]
+    @course = Course.includes(subjects: :topics).find(@course_id)
+
+    @course_subjects = @course.subjects
+
+    @course_topics = []
+    @subject_topics = {}
+    @course_subjects.each do |subject|
+      @course_topics += subject.topics
+      if @subject_topics[subject.id].nil?
+        @subject_topics[subject.id] = []
+      end
+      subject.topics.each do |topic|
+        @subject_topics[subject.id] << topic.id
+      end 
+    end
+
+    p @course_topics
+    p @subject_topics
+
+    @user_ids = []
+
+    @user_activity = {}
+
+    CSV.foreach(file.path) do |row|
+      @user_ids << row[0]
+      @user_activity[row[0]] = [false, false]
+      # @course_topics.each do |course_topic|
+      #   @user_activity[user_id] << Answer.where(questionId: Q course_topic.questions, userId: user_id).count
+      # end
+    end
+
+    # @user_activity[user_id] = 
+    # temp = Answer.where(questionId: Question.joins(:topics).where(Topic: {id: @course_topics}), userId: @user_ids).group('"Answer"."id", "Answer"."userId"')
+    @user_course_ids = UserCourse.where(userId: @user_ids, courseId: @course_id).where('"expiryAt" > ?', Time.now).pluck(:userId)
+    @course_offers = CourseOffer.where(email: User.where(id: @user_ids).pluck(:email), phone: User.where(id: @user_ids).pluck(:phone), courseId: @course_id, accepted: true).pluck(:email)
+    # @course_offer = CourseOffer.where(userId: @user_ids, courseId: @course_id).group("userId")
+    @course_offer_ids = User.where(email: @course_offers).pluck(:id)
+
+    p @user_course_ids
+    p @course_offer_ids
+
+    @user_course_ids.each do |user_course_id|
+      @user_activity[user_course_id][0] = true
+    end
+
+    @course_offer_ids.each do |course_offer_id|
+      @user_activity[course_offer_id][1] = true
+    end
+
+    # render json: @user_activity, status: 200
+  end
 end
