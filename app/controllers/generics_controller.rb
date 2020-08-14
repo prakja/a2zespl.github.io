@@ -176,7 +176,6 @@ class GenericsController < ApplicationController
     # p @course_offer_ids
 
     @user_course_ids.each do |user_course_id|
-      p user_course_id
       @user_activity[user_course_id] = [false, false] if @user_activity[user_course_id].nil?
       @user_activity[user_course_id][0] = true
     end
