@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_16_115340) do
+ActiveRecord::Schema.define(version: 2020_08_18_085233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_repack"
@@ -64,7 +64,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.integer "userId", null: false
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
-    t.string "note"
     t.index ["questionId"], name: "bookmark_question_question_id"
     t.index ["userId", "questionId"], name: "bookmarkquestion_user_id_question_id", unique: true
     t.index ["userId"], name: "bookmark_question_user_id"
@@ -306,7 +305,11 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "actualCourseId"
+    t.boolean "accepted", default: false
     t.index ["courseId"], name: "course_offer_course_id"
+    t.index ["email", "phone"], name: "CourseOffer_email_phone_idx"
+    t.index ["email"], name: "CourseOffer_email_idx"
+    t.index ["phone"], name: "CourseOffer_phone_idx"
   end
 
   create_table "CourseTest", id: :serial, force: :cascade do |t|
@@ -317,6 +320,14 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.index ["courseId", "testId"], name: "CourseTest_courseId_testId_idx", unique: true
     t.index ["courseId"], name: "course_test_course_id"
     t.index ["testId"], name: "course_test_test_id"
+  end
+
+  create_table "CourseTestimonial", id: :serial, force: :cascade do |t|
+    t.integer "courseId", null: false
+    t.text "content", null: false
+    t.string "author", limit: 255, null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "CustomerIssue", id: :serial, force: :cascade do |t|
@@ -334,6 +345,7 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.integer "testId"
     t.integer "flashCardId"
     t.index ["questionId"], name: "CustomerIssue_questionId_idx"
+    t.index ["userId", "flashCardId"], name: "customerissueunresolvedflashcard", unique: true, where: "(resolved = false)"
     t.index ["videoId"], name: "CustomerIssue_videoId_idx"
   end
 
@@ -360,6 +372,17 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.string "email"
     t.string "userData"
     t.integer "adminUserId"
+  end
+
+  create_table "DailyUserEvent", id: :serial, force: :cascade do |t|
+    t.integer "userId", null: false
+    t.date "eventDate", null: false
+    t.string "event", limit: 25, null: false
+    t.integer "eventCount", null: false
+    t.integer "courseId"
+    t.index ["eventDate"], name: "DailyUserEvent_eventDate_idx"
+    t.index ["userId", "eventDate", "event"], name: "DailyUserEvent_userId_eventDate_event_key", unique: true
+    t.index ["userId"], name: "DailyUserEvent_userId_idx"
   end
 
   create_table "Delivery", id: :serial, force: :cascade do |t|
@@ -421,6 +444,9 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
   end
+
+# Could not dump table "DuplicateQuestion20200710" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
 
   create_table "FcmToken", id: :serial, force: :cascade do |t|
     t.string "fcmToken", limit: 255, null: false
@@ -582,6 +608,10 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
 # Could not dump table "Question20201305" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
+  create_table "QuestionCourse", primary_key: "questionId", id: :integer, default: nil, force: :cascade do |t|
+    t.integer "courseId", null: false
+  end
+
   create_table "QuestionDetail", id: :serial, force: :cascade do |t|
     t.integer "year"
     t.string "exam", limit: 255
@@ -628,7 +658,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.datetime "updatedAt", null: false
     t.integer "videoLinkId"
     t.index ["courseId"], name: "QuestionHint_courseId_idx"
-    t.index ["id", "videoLinkId"], name: "questionhint_id_videolink_id", unique: true
     t.index ["questionId"], name: "QuestionHint_questionId_idx"
   end
 
@@ -681,7 +710,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.integer "hours"
     t.text "link"
     t.datetime "scheduledAt"
-    t.bigint "oldid"
   end
 
   create_table "ScheduleItemAsset", force: :cascade do |t|
@@ -713,19 +741,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.integer "hours"
     t.text "link"
     t.datetime "scheduledAt"
-  end
-
-  create_table "ScheduleItemBakTwo", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.text "name"
-    t.text "description"
-    t.integer "scheduleId", null: false
-    t.integer "topicId"
-    t.integer "hours"
-    t.text "link"
-    t.datetime "scheduledAt"
-    t.bigint "oldid"
   end
 
   create_table "ScheduleItemUser", id: :serial, force: :cascade do |t|
@@ -789,6 +804,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.string "note"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.integer "chapterId"
+    t.string "url"
   end
 
   create_table "StudentOnboardingEvents", force: :cascade do |t|
@@ -1018,7 +1035,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
     t.integer "flashCardId", null: false
-    t.string "note"
     t.index ["flashCardId"], name: "UserFlashCard_flashCardId_idx"
     t.index ["userId", "flashCardId"], name: "UserFlashCard_userId_flashCardId_idx", unique: true
     t.index ["userId"], name: "UserFlashCard_userId_idx"
@@ -1403,6 +1419,7 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
   add_foreign_key "CourseOffer", "admin_users", name: "CourseOffer_admin_user_id_fkey"
   add_foreign_key "CourseTest", "\"Course\"", column: "courseId", name: "fk_course_test_courseid"
   add_foreign_key "CourseTest", "\"Test\"", column: "testId", name: "fk_course_test_testid"
+  add_foreign_key "CourseTestimonial", "\"Course\"", column: "courseId", name: "CourseTestimonial_courseId_fkey"
   add_foreign_key "CustomerIssue", "\"CustomerIssueType\"", column: "typeId", name: "CustomerIssue_typeId_fkey"
   add_foreign_key "CustomerIssue", "\"Note\"", column: "noteId", name: "customer_issue_note_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerIssue", "\"Question\"", column: "questionId", name: "customer_issue_question_id_fkey", on_update: :cascade, on_delete: :cascade
@@ -1411,6 +1428,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
   add_foreign_key "CustomerIssue", "\"User\"", column: "userId", name: "CustomerIssue_userId_fkey"
   add_foreign_key "CustomerIssue", "\"Video\"", column: "videoId", name: "customer_issue_video_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "CustomerSupport", "admin_users", column: "adminUserId"
+  add_foreign_key "DailyUserEvent", "\"Course\"", column: "courseId", name: "DailyUserEvent_courseId_fkey"
+  add_foreign_key "DailyUserEvent", "\"User\"", column: "userId", name: "DailyUserEvent_userId_fkey"
   add_foreign_key "Doubt", "\"Note\"", column: "noteId", name: "doubt_note_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Doubt", "\"Question\"", column: "questionId", name: "doubt_question_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Doubt", "\"Test\"", column: "testId", name: "doubt_test_id_fkey", on_update: :cascade, on_delete: :cascade
@@ -1424,6 +1443,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
   add_foreign_key "Payment", "\"User\"", column: "userId", name: "Payment_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Question", "\"Subject\"", column: "subjectId", name: "Question_subjectId_fkey"
   add_foreign_key "Question", "\"User\"", column: "creatorId", name: "Question_creatorId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "QuestionCourse", "\"Course\"", column: "courseId", name: "QuestionCourse_courseId_fkey"
+  add_foreign_key "QuestionCourse", "\"Question\"", column: "questionId", name: "QuestionCourse_questionId_fkey"
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
   add_foreign_key "QuestionSubTopic", "\"SubTopic\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
   add_foreign_key "ScheduleItem", "\"Schedule\"", column: "scheduleId", name: "fk_schedule_item_schedule"
@@ -1442,6 +1463,7 @@ ActiveRecord::Schema.define(version: 2020_07_16_115340) do
   add_foreign_key "TestQuestion", "\"Test\"", column: "testId", name: "fk_test_question_testid"
   add_foreign_key "Topic", "\"Subject\"", column: "subjectId", name: "Topic_subjectId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserClaim", "\"User\"", column: "userId", name: "UserClaim_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "UserCourse", "\"CourseInvitation\"", column: "invitationId", name: "invitationId_fk", on_delete: :cascade
   add_foreign_key "UserCourse", "\"Course\"", column: "courseId", name: "UserCourse_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserCourse", "\"User\"", column: "userId", name: "UserCourse_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "UserFlashCard", "\"FlashCard\"", column: "flashCardId"
