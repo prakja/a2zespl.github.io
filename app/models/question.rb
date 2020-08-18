@@ -63,6 +63,10 @@ class Question < ApplicationRecord
     neetprep_course.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
   }
 
+  scope :test_image_question, -> {
+    neetprep_tests.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
+  }
+
   scope :topic, ->(topic_id) {
     joins(:topics).where("\"Topic\".\"id\"="+topic_id)
   }
@@ -76,6 +80,8 @@ class Question < ApplicationRecord
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
+  scope :neetprep_tests, -> {joins(:tests => :topics).where(tests: {Topic: {subjectId: [53,54,55,56]}})}
+
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
   scope :physics_mcqs_difficult, ->(topic_id) {
     subject_name(55).topic(topic_id).difficult
