@@ -1,4 +1,10 @@
 .user-activity
+  .count
+    p IDs with active course
+    p Count: #{@user_course_ids.count.to_s}
+    .ids
+      - @user_course_ids.each  do |user_course_id|
+        p = link_to  user_course_id, '/admin/users/' + user_course_id.to_s
   table
     tr
       th User ID
