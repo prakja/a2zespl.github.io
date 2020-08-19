@@ -29,7 +29,7 @@ form do |f|
     f.input :link
     f.input :platform, as: :select, collection: ["both", "website", "mobile"]
     f.input :backgroundColor
-    f.input :context, as: :string
+    f.input :context, as: :string, :input_html => {:value => f.object.context.to_json}
   end
   f.actions
 end
