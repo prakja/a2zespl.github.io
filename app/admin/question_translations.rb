@@ -1,5 +1,5 @@
 ActiveAdmin.register QuestionTranslation do
-  remove_filter :ques 
+  remove_filter :ques
 
   index do
     selectable_column
@@ -14,6 +14,35 @@ ActiveAdmin.register QuestionTranslation do
       raw(qe.explanation)
     }
     actions
+  end
+
+  show do
+    render partial: 'mathjax'
+    attributes_table do
+      row :id
+      row :question do |object|
+        raw(object.question)
+      end
+      row :explanation do |object|
+        raw(object.explanation)
+      end
+      row :questionId do |object|
+        raw('<a target="_blank" href="/admin/questions/' + object.questionId.to_s + '">' + "Question Link" + '</a>')
+      end
+    end
+  end
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+    f.inputs "Question Translation" do
+      render partial: 'tinymce'
+      render partial: 'mathjax'
+      f.input "Question (English)", as: :fake, value: f.object.ques.nil? ? 'No question linked' : raw('<br />' + f.object.ques.question)
+      f.input :question, input_html: { id: "question_question" }
+      f.input "Explanation (English)", as: :fake, value: f.object.explanation.nil? ? 'No question linked' : raw('<br />' + f.object.ques.explanation)
+      f.input :explanation, input_html: { id: "question_explanation" }
+    end
+    f.actions
   end
 
   controller do
