@@ -125,7 +125,8 @@ ActiveAdmin.register CourseInvitation do
       f.input :course, include_hidden: false, input_html: { class: "select2", readonly: true, disabled: true }, :collection => Course.public_courses, hint: "Can not change Course from here, set *Expire Course At* to a *past date* from below to expire course invitation and create a new invitation to give course access on different course" unless f.object.new_record?
       f.input :displayName, label: "Name"
       f.input :email, label: "Email"
-      f.input :phone, label: "Phone"
+      f.input :phone, label: "Phone" if f.object.new_record?
+      f.input :phone, label: "Phone", hint: "If course invitation is not getting accepted, then this phone number might already be linked to another email already. Please add a different student's number if possible." unless f.object.new_record?
       f.input :role, as: :hidden, :input_html => { :value => "courseStudent"}
       # f.input :payments, include_hidden: false, multiple: true, input_html: { class: "select2" }, :collection => Payment.all_payments_3_months
       f.input :expiryAt, as: :date_picker, label: "Expire Course At"
