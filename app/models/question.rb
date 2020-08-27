@@ -113,6 +113,7 @@ class Question < ApplicationRecord
   has_many :questionSubTopics, foreign_key: :questionId, class_name: 'QuestionSubTopic'
   has_many :subTopics, through: :questionSubTopics
   has_many :issues, class_name: "CustomerIssue", foreign_key: "questionId"
+  has_many :notes, class_name: "StudentNote", foreign_key: "questionId"
   # belongs_to :test, foreign_key: :testId, optional: true
   has_many :doubts, class_name: "Doubt", foreign_key: "questionId"
   has_many :bookmarks, class_name: "BookmarkQuestion", foreign_key: "questionId"

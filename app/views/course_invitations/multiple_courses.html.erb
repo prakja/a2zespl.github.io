@@ -6,7 +6,7 @@
   <select name="course" id="courseList" class='js-example-basic-multiple' multiple="multiple">
     <option value=''>Select Course</option>
     <% @courses_data.each do |key, value| %>
-      <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+      <%= raw("<option #{[255,149,320,353,281,277].include?(key) ? 'selected="selected"' : ""} value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
     <% end %>
   </select>
   </br>
