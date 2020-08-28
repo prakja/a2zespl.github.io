@@ -46,12 +46,12 @@ class CourseInvitationsController < ApplicationController
 
       respond_to do |format|
         format.html { render :new }
-        format.json { render json: "Done", status: 200 }
+        format.json { render json: {response: "Done"}, status: 200 }
       end
 
     rescue => exception
       p exception
-      render json: exception.to_s, status: 500
+      render json: {error: exception.to_s}, status: 500
     end
   end
 

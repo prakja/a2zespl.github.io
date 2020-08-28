@@ -54,7 +54,7 @@
     //   alert('can not send access for more than 2 days');
     // }
 
-    let url = window.location.origin + "/course_invitations/createCourseInvitation";
+    let url = window.location.origin + "/course_invitations/createCourseInvitation.json";
     $.ajax({
       type: "POST",
       url: url,
@@ -68,7 +68,7 @@
     }).done (function (data) {
       alert("done");
     }).fail (function (error){
-      alert("failed: " + error);
+      alert("failed: " + JSON.stringify(error));
     });
   }
 
