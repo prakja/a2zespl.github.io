@@ -67,6 +67,8 @@
       }
     }).done (function (data) {
       alert("done");
+    }).fail (function (error){
+      alert("failed: " + error);
     });
   }
 
