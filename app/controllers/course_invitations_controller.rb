@@ -50,6 +50,7 @@ class CourseInvitationsController < ApplicationController
       end
 
     rescue => exception
+      p exception
       render json: exception.to_s, status: 500
     end
   end
