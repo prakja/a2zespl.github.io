@@ -41,7 +41,7 @@ class CourseInvitationsController < ApplicationController
       p @rowsArray
 
       if(@courseIds.length() > 0)
-        CourseInvitation.create(@rowsArray)
+        CourseInvitation.create!(@rowsArray)
       end
 
       respond_to do |format|
@@ -50,7 +50,7 @@ class CourseInvitationsController < ApplicationController
       end
 
     rescue => exception
-
+      render json: exception.to_s, status: 500
     end
   end
 
