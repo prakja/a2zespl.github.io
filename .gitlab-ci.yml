@@ -43,7 +43,7 @@ build-develop:
     - docker:dind
   script:
     - VER_CODE=`date '+%d.%m.%y.%H.%M'`
-    - echo "TAG=$VERCODE" >> build.env
+    - echo "TAG=$VER_CODE" >> build.env
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop:$VER_CODE --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
     - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop
