@@ -91,7 +91,7 @@ class GenericsController < ApplicationController
           title: title,
           message: message,
           actionUrl: "https://www.neetprep.com/neet-course/255",
-          contextType: "BuyCourse",
+          contextType: "FreeTrial",
           imageUrl: "",
           courseId: 255,
           studentType: "Selected",
@@ -152,32 +152,32 @@ class GenericsController < ApplicationController
     file = params[:file]
 
     @course_id = params[:course_id].to_i
-    @course = Course.includes(subjects: :topics).find(@course_id)
+    # @course = Course.includes(subjects: :topics).find(@course_id)
 
-    @course_subjects = @course.subjects
+    # @course_subjects = @course.subjects
 
-    @course_topics = []
-    @subject_topics = {}
-    @course_subjects.each do |subject|
-      @course_topics += subject.topics
-      if @subject_topics[subject.id].nil?
-        @subject_topics[subject.id] = []
-      end
-      subject.topics.each do |topic|
-        @subject_topics[subject.id] << topic.id
-      end 
-    end
+    # @course_topics = []
+    # @subject_topics = {}
+    # @course_subjects.each do |subject|
+    #   @course_topics += subject.topics
+    #   if @subject_topics[subject.id].nil?
+    #     @subject_topics[subject.id] = []
+    #   end
+    #   subject.topics.each do |topic|
+    #     @subject_topics[subject.id] << topic.id
+    #   end 
+    # end
 
-    p @course_topics
-    p @subject_topics
+    # p @course_topics
+    # p @subject_topics
 
     @user_ids = []
 
     @user_activity = {}
 
     CSV.foreach(file.path) do |row|
-      @user_ids << row[0]
-      @user_activity[row[0]] = [false, false]
+      @user_ids << row[0].to_i
+      @user_activity[row[0].to_i] = [false, false]
       # @course_topics.each do |course_topic|
       #   @user_activity[user_id] << Answer.where(questionId: Q course_topic.questions, userId: user_id).count
       # end
@@ -186,11 +186,12 @@ class GenericsController < ApplicationController
     # @user_activity[user_id] = 
     # temp = Answer.where(questionId: Question.joins(:topics).where(Topic: {id: @course_topics}), userId: @user_ids).group('"Answer"."id", "Answer"."userId"')
     
-    @course_offers = CourseOffer.where(email: User.where(id: @user_ids).pluck(:email), phone: User.where(id: @user_ids).pluck(:phone), courseId: @course_id, accepted: true).pluck(:email)
+    @course_offers = CourseOffer.where(email: User.where(id: @user_ids).pluck(:email), phone: User.where(id: @user_ids).pluck(:phone), courseId: @course_id, accepted: true).limit(5000).distinct.pluck(:email).uniq
     # @course_offer = CourseOffer.where(userId: @user_ids, courseId: @course_id).group("userId")
     @course_offer_ids = User.where(email: @course_offers).pluck(:id)
 
-    @user_course_ids = User.joins(:user_courses).where(User: {id: @user_ids}, UserCourse: {courseId: @course_id}).where('"UserCourse"."expiryAt" > ?', Time.now).pluck('"User"."id"') 
+    @user_course_ids = UserCourse.where(userId: @user_ids, courseId: @course_id).where('"UserCourse"."expiryAt" > ?', Time.now).distinct.pluck(:userId).uniq
+    # User.joins(:user_courses).where(User: {id: @user_ids}, UserCourse: {courseId: @course_id}).where('"UserCourse"."expiryAt" > ?', Time.now).limit(5000).distinct.pluck('"User"."id"').uniq
     # UserCourse.where(userId: @user_ids, courseId: @course_id).where('"UserCourse"."expiryAt" > ?', Time.now).pluck(:userId)
     p @user_course_ids
 

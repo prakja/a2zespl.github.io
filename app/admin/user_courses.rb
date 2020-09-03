@@ -8,6 +8,9 @@ ActiveAdmin.register UserCourse do
   filter :user_email, as: :string, label: "User Email"
   filter :user_phone, as: :string, label: "User Phone"
 
+  scope "Active Courses", :active, default: true
+  scope :all, :show_count => false
+
   index do
     id_column
     column :course

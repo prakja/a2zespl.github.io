@@ -13,7 +13,7 @@ ActiveAdmin.register Advertisement do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-permit_params :mobile_URL_Image, :web_URL_Image, :webUrl, :mobileUrl, :startedAt, :expiryAt, :link, :id, :backgroundColor
+permit_params :mobile_URL_Image, :web_URL_Image, :webUrl, :mobileUrl, :startedAt, :expiryAt, :link, :id, :backgroundColor, :platform, :context
 form do |f|
   f.inputs "Details" do
     f.input :web_URL_Image, :as => :file, input_html: { accept: ".jpeg, .png" }
@@ -27,7 +27,9 @@ form do |f|
     f.input :startedAt, as: :datepicker
     f.input :expiryAt, as: :datepicker
     f.input :link
+    f.input :platform, as: :select, collection: ["both", "website", "mobile"]
     f.input :backgroundColor
+    f.input :context, as: :string, :input_html => {:value => f.object.context.to_json}
   end
   f.actions
 end
@@ -44,7 +46,9 @@ show do |f|
     row :startedAt
     row :expiryAt
     row :link
+    row :platform
     row :backgroundColor
+    row :context
   end
 end
 
@@ -64,7 +68,7 @@ controller do
     end
     # replace s3 url with cdn url
     return obj.public_url.gsub('neetprep-from-ruby.s3.us-west-2.amazonaws.com', 'bcdnr.neetprep.com')
-  end    
+  end
 
   def create()
     advertisement = permitted_params[:advertisement]
@@ -73,7 +77,9 @@ controller do
     startedAt = advertisement[:startedAt]
     expiryAt = advertisement[:expiryAt]
     link = advertisement[:link]
+    platform = advertisement[:platform]
     backgroundColor = advertisement[:backgroundColor]
+    context = advertisement[:context]
 
     @advertisement = Advertisement.new()
     @advertisement[:webUrl] = save_to_s3(web_URL_Image)
@@ -83,7 +89,9 @@ controller do
     @advertisement[:link] = link
     @advertisement[:createdAt] = Time.now
     @advertisement[:updatedAt] = Time.now
+    @advertisement[:platform] = platform
     @advertisement[:backgroundColor] = backgroundColor
+    @advertisement[:context] = context.blank? ? nil : JSON.parse(context)
 
     if not backgroundColor.start_with?('#')
       flash.now[:error] = "Color should start with '#'"
@@ -106,7 +114,9 @@ controller do
     startedAt = advertisement_params[:startedAt]
     expiryAt = advertisement_params[:expiryAt]
     link = advertisement_params[:link]
+    platform = advertisement_params[:platform]
     backgroundColor = advertisement_params[:backgroundColor]
+    context = advertisement_params[:context]
 
     @advertisement = Advertisement.find_by(id: id)
 
@@ -122,13 +132,15 @@ controller do
     @advertisement[:expiryAt] = Date.parse(expiryAt).to_time
     @advertisement[:link] = link
     @advertisement[:updatedAt] = Time.now
+    @advertisement[:platform] = platform
     @advertisement[:backgroundColor] = backgroundColor
+    @advertisement[:context] = context.blank? ? nil : JSON.parse(context)
     if not backgroundColor.start_with?('#')
       flash.now[:error] = "Color should start with '#'"
       render :new
       return
     end
-    
+
     if @advertisement.save
       redirect_to admin_advertisement_path(@advertisement)
     else
