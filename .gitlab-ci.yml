@@ -71,6 +71,5 @@ deploy-develop:
     - rm /var/cache/apk/*
     - kubectl get pods
     - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/develop:$TAG
-  needs:
-    - job: build
-      artifacts: true
+  dependencies:
+    - build-develop
