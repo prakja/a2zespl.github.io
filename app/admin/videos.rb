@@ -61,13 +61,14 @@ ActiveAdmin.register Video do
   preserve_default_filters!
 
   permit_params :name, :description, :url, :url2, :thumbnail, :language, :duration, :seqId, :youtubeUrl, topic_ids: [], subTopic_ids: []
-  scope :neetprep_course
-  scope :maths_course
+  scope :neetprep_course, show_count: false
+  scope :maths_course, show_count: false
+  scope :boost_up_course, show_count: false
 
-  scope :botany
-  scope :chemistry
-  scope :physics
-  scope :zoology
+  scope :botany, show_count: false
+  scope :chemistry, show_count: false
+  scope :physics, show_count: false
+  scope :zoology, show_count: false
 
   action_item :add_annotation, only: :show do
     # video_annotation[videoId]=450&video_annotation[annotationType]=Note

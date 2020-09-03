@@ -41,16 +41,17 @@ class CourseInvitationsController < ApplicationController
       p @rowsArray
 
       if(@courseIds.length() > 0)
-        CourseInvitation.create(@rowsArray)
+        CourseInvitation.create!(@rowsArray)
       end
 
       respond_to do |format|
         format.html { render :new }
-        format.json { render json: "Done", status: 200 }
+        format.json { render json: {response: "Done"}, status: 200 }
       end
 
     rescue => exception
-
+      p exception
+      render json: {error: exception.to_s}, status: 500
     end
   end
 

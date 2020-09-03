@@ -1,12 +1,13 @@
 class SubTopic < ApplicationRecord
+  default_scope {where(deleted: false)}
   has_paper_trail
 
   self.table_name = "SubTopic"
   scope :topic_sub_topics, lambda {|topicIds| where(topicId: topicIds)}
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId"
   has_many :subTopicQuestions, -> {where(assetType: 'SubTopic', deleted: false, ownerType: "Question")}, foreign_key: :assetId, class_name: 'TopicAsset'
-  has_many :questions, through: :subTopicQuestions
   has_many :subTopicQuestions, foreign_key: :subTopicId, class_name: 'QuestionSubTopic'
+  has_many :questions, through: :subTopicQuestions
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
   attribute :deleted, :boolean, default: false
