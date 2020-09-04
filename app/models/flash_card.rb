@@ -1,5 +1,6 @@
 class FlashCard < ApplicationRecord
   self.table_name = "FlashCard"
+  has_paper_trail
 
   has_many :topicFlashCards, class_name: "ChapterFlashCard", foreign_key: "flashCardId", dependent: :destroy
   has_many :topics, through: :topicFlashCards

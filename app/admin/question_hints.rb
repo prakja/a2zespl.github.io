@@ -1,5 +1,5 @@
 ActiveAdmin.register QuestionHint do
-  remove_filter :question, :course
+  remove_filter :question, :course, :versions
     permit_params :questionId, :hint, :position, :language, :courseId, :deleted
 
   active_admin_import validate: true,

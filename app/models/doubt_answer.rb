@@ -1,5 +1,6 @@
 class DoubtAnswer < ApplicationRecord
   self.table_name = "DoubtAnswer"
+  has_paper_trail
   belongs_to :user, class_name: "User", foreign_key: "userId"
   belongs_to :doubt, class_name: "Doubt", foreign_key: "doubtId"
   

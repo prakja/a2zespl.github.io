@@ -2,7 +2,7 @@ require 'base64'
 
 ActiveAdmin.register Doubt do
   config.sort_order = 'createdAt_desc'
-  remove_filter :topic, :answers, :user, :question, :doubt_admin
+  remove_filter :topic, :answers, :user, :question, :doubt_admin, :versions
   permit_params :content, :deleted, :teacherReply, :imgUrl, :goodFlag
 
   filter :topic_id_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"

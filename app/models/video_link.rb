@@ -1,5 +1,6 @@
 class VideoLink < ApplicationRecord
   self.table_name = "VideoLink"
+  has_paper_trail
   has_many :questionHints, foreign_key: 'videoLinkId', class_name: 'QuestionHint'
   belongs_to :video, foreign_key: 'videoId', class_name: 'Video'
   attribute :createdAt, :datetime, default: Time.now

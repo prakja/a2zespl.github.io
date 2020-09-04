@@ -1,6 +1,6 @@
 ActiveAdmin.register DoubtAnswer do
   permit_params :content, :deleted, :imgUrl
-  remove_filter :doubt, :user
+  remove_filter :doubt, :user, :versions
 
   # filter :userId_eq, as: :number, label: "User ID"
   filter :userId_eq, as: :searchable_select, label: "Faculty", :collection => AdminUser.where('"userId" > 0').where(role: ['faculty', 'superfaculty']).distinct_user_id

@@ -2,7 +2,7 @@ ActiveAdmin.register VideoLink do
   permit_params :name, :url, :time, :videoId, :description
 
   filter :videoId_eq, as: :number, label: "Video ID"
-  remove_filter :video
+  remove_filter :video, :versions
   preserve_default_filters!
 
   index do

@@ -44,7 +44,7 @@ ActiveAdmin.register FlashCard do
 
   permit_params :content, :title, :createdAt, :updatedAt, topicFlashCards_attributes: [:id, :seqId, :chapterId, :_destroy]
   # , topic_ids: []
-  remove_filter :topicFlashCards, :userFlashCards, :users
+  remove_filter :topicFlashCards, :userFlashCards, :users, :versions
 
   filter :id_eq, as: :number, label: "Flash Card ID"
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
@@ -80,12 +80,19 @@ ActiveAdmin.register FlashCard do
     f.actions
   end
 
+  member_action :history do
+    @flashCard = FlashCard.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'FlashCard', item_id: @flashCard.id)
+    render "layouts/history"
+  end
+
   index do
     render partial: 'img_css'
     id_column
     column (:title) {|flash_card| raw(flash_card.title)}
     column (:answer) {|flash_card| raw(flash_card.content)}
     column (:seqId) {|flash_card| flash_card&.topicFlashCards&.first&.seqId}
+    column ("History") {|flash_card| raw('<a target="_blank" href="/admin/flash_cards/' + (flash_card.id).to_s + '/history">View History</a>')}
     actions
   end
 

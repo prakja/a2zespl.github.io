@@ -1,5 +1,6 @@
 class QuestionHint < ApplicationRecord
   self.table_name = "QuestionHint"
+  has_paper_trail
   belongs_to :videoLink, class_name: "VideoLink", foreign_key: "videoLinkId" , optional: true
   belongs_to :question, class_name: "Question", foreign_key: "questionId"
   belongs_to :course, class_name: "Course", foreign_key: "courseId"

@@ -14,7 +14,7 @@ ActiveAdmin.register VideoAnnotation do
 
 permit_params :annotationType, :videoId, :annotationId, :videoTimeStampInSeconds, note_attributes: [:content]
 
-remove_filter :note, :video
+remove_filter :note, :video, :versions
 
 form do |f|
   f.inputs "Annotation" do
