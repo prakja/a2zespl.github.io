@@ -42,9 +42,14 @@ build-develop:
   services:
     - docker:dind
   script:
+    - VER_CODE=`date '+%d.%m.%y.%H.%M'`
+    - echo "TAG=$VER_CODE" >> build.env
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop:$VER_CODE --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
     - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop
+  artifacts:
+    reports:
+      dotenv: build.env
 
 deploy-develop:
   only:
@@ -53,6 +58,7 @@ deploy-develop:
   cache: {}
   image: alpine:3.12
   script:
+    - echo $TAG
     - apk add --update ca-certificates
     - apk add --update -t deps curl
     - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.46.0/doctl-1.46.0-linux-amd64.tar.gz | tar -xzv
@@ -64,4 +70,6 @@ deploy-develop:
     - apk del --purge deps
     - rm /var/cache/apk/*
     - kubectl get pods
-    - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/develop
+    - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/develop:$TAG
+  dependencies:
+    - build-develop

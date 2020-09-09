@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
@@ -44,11 +44,9 @@ ActiveAdmin.register Question do
 
   controller do
     def scoped_collection
-      if params["q"] && params["q"]["questionTopics_chapterId_in"]
-        p "here"
+      if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
       else
-        p "there"
         super 
       end
     end
@@ -85,7 +83,7 @@ ActiveAdmin.register Question do
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
       # p params["q"]["questionTopics_chapterId_in"]
-      if params["q"] && params["q"]["questionTopics_chapterId_in"]
+      if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         column :doubts_count, sortable: true
         column :bookmarks_count, sortable: true
       end
@@ -109,8 +107,15 @@ ActiveAdmin.register Question do
       row :explanation do |question|
         raw(question.explanation)
       end
-      row :explanations do |question|
-        raw(question.explanations.pluck(:explanation).join(""))
+      if question.explanations and question.explanations.length > 0
+        row :explanations do |question|
+          raw(question.explanations.pluck(:explanation).join(""))
+        end
+      end
+      if question.translations and question.translations.length > 0
+        row :translations do |question|
+          raw('<a href="/admin/question_translations?q[questionId_eq]=' + question.id.to_s + '">View in Hindi</a>')
+        end
       end
       row :options do |question|
         raw(question.options)

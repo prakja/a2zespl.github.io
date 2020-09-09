@@ -109,6 +109,7 @@ class Question < ApplicationRecord
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
+  has_many :translations, class_name: "QuestionTranslation", foreign_key: "questionId"
   has_many :hints, class_name: "QuestionHint", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
   has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
@@ -116,6 +117,7 @@ class Question < ApplicationRecord
   has_many :questionSubTopics, foreign_key: :questionId, class_name: 'QuestionSubTopic'
   has_many :subTopics, through: :questionSubTopics
   has_many :issues, class_name: "CustomerIssue", foreign_key: "questionId"
+  has_many :notes, class_name: "StudentNote", foreign_key: "questionId"
   # belongs_to :test, foreign_key: :testId, optional: true
   has_many :doubts, class_name: "Doubt", foreign_key: "questionId"
   has_many :bookmarks, class_name: "BookmarkQuestion", foreign_key: "questionId"

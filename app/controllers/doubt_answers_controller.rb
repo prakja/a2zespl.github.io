@@ -99,7 +99,7 @@ class DoubtAnswersController < ApplicationController
       elsif @video.url.include? "youtube"
         uri = URI.parse(@video.url)
         params = CGI.parse(uri.query)
-        @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '"> </iframe></div>'
+        @doubt_data += '<div><iframe width="640" height="268" src="https://www.youtube.com/embed/' + params['v'].first + '" allowfullscreen> </iframe></div>'
       else
         @urlArray = @video.url.to_s.split('/')
         @vimeoId = @urlArray[-1]

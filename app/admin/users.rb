@@ -1,3 +1,4 @@
+require 'bcrypt'
 ActiveAdmin.register User do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -68,9 +69,12 @@ controller do
     p blockedUser
 
     user = User.find(id)
-    password = BCrypt::Password.create(password_text)
-    user.password = password
-    user.save
+    if not password_text.blank?
+      password = BCrypt::Password.create(password_text)
+      user.password = password
+    end
+    user.blockedUser = blockedUser
+    user.save!
     redirect_to admin_user_path user
   end
 end
