@@ -63,6 +63,10 @@ class Question < ApplicationRecord
     neetprep_course.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
   }
 
+  scope :missing_subTopics, -> {
+    left_outer_joins(:questionSubTopics).where('"QuestionSubTopic"."questionId" is null')
+  }
+
   scope :test_image_question, -> {
     neetprep_tests.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
   }
