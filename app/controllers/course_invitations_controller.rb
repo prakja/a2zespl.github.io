@@ -17,6 +17,10 @@ class CourseInvitationsController < ApplicationController
   end
 
   def createCourseInvitation
+    if not current_admin_user
+      raise "you are not logged in"
+    end
+
     begin
       @name = params[:name]
       @email = params[:email]
