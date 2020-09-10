@@ -35,6 +35,7 @@ class CourseInvitationsController < ApplicationController
         @row["courseId"] = courseId.to_i
         @row["expiryAt"] = @expiry
         @row["skip_callback"] = true
+        @row["admin_user_id"] = current_admin_user.id
         @rowsArray.push(@row)
       end
 
