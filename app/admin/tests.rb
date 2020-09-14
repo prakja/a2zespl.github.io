@@ -116,6 +116,10 @@ action_item :two_columns_test_pdf, only: :show do
   link_to 'PDF (Two Columns)', '/tests/questions/' + resource.id.to_s, target: :_blank
 end
 
+action_item :questions_list, only: :show do
+  link_to 'Questions List', '/admin/questions?order=id_asc&q[tests_id_eq]=' + resource.id.to_s, target: :_blank
+end
+
 form do |f|
   f.object.positiveMarks = 4
   f.object.negativeMarks = 1
