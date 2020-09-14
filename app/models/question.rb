@@ -56,7 +56,7 @@ class Question < ApplicationRecord
   }
 
   scope :similar_questions, ->(question_id) {
-    neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.6 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" in (SELECT "chapterId" from "ChapterQuestion" cq2 where cq2."questionId" = ?))', question_id, question_id);
+    neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.4 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" = (SELECT "topicId" from "Question" cq2 where cq2."id" = ?))', question_id, question_id);
   }
 
   scope :image_question, -> {
