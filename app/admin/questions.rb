@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes
-  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :paidAccess, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
@@ -209,6 +209,7 @@ ActiveAdmin.register Question do
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : []))
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
+      f.input :paidAccess
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
