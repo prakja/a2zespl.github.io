@@ -31,6 +31,7 @@ ActiveAdmin.register CustomerSupport do
   scope :all, :show_count => false
   scope :open_paid_students, :show_count => true
   scope :open_other_students, :show_count => true
+  scope :pendrive_issue, :show_count => true
 
   batch_action :assign_issues, form: -> do {
     assignTo: AdminUser.distinct_name

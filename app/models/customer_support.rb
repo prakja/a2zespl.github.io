@@ -51,6 +51,10 @@ class CustomerSupport < ApplicationRecord
     where(createdAt: 2.days.ago..DateTime::Infinity.new,resolved: false,issueType: type).paid([8, 141, 20, 149, 100, 51], 'yes')
   }
 
+  scope :pendrive_issue, -> { 
+    open_paid_students.where(:issueType => 'Pendrive_Not_Working')
+  }
+
   def self.ransackable_scopes(_auth_object = nil)
     [ :resolved, :not_resolved_paid, :not_resolved_not_paid ]
   end
