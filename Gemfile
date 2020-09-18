@@ -90,3 +90,4 @@ gem 'exception_notification'
 gem 'slack-notifier'
 gem 'acts_as_list'
 gem "nilify_blanks"
+gem 'activeadmin_json_editor', '~> 0.0.7'

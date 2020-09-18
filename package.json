@@ -1,5 +1,7 @@
 {
   "name": "RubyActiveAdmin",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "jsoneditor": "^9.1.0"
+  }
 }
