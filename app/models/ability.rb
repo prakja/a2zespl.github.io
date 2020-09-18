@@ -27,7 +27,7 @@ class Ability
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
       can :read, [UserCourse, User, UserProfile, CustomerIssueType]
       can [:read, :update], [CustomerIssue]
-      can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard]
+      can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note]
       can :import, [Video, FlashCard]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
