@@ -101,7 +101,9 @@
     <% end %>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+  <% if @current_admin_user.role != 'support' %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
+  <% end %>
   <script type="text/javascript">
 
     $(function () {

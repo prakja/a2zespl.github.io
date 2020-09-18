@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_18_085233) do
+ActiveRecord::Schema.define(version: 2020_09_18_024216) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_repack"
+  enable_extension "btree_gist"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
@@ -117,6 +117,13 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.integer "seqId"
   end
 
+  create_table "ChapterMindmap", id: :serial, force: :cascade do |t|
+    t.integer "chapterId", null: false
+    t.integer "noteId", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
+
   create_table "ChapterNote", id: :serial, force: :cascade do |t|
     t.integer "chapterId"
     t.integer "noteId"
@@ -218,6 +225,12 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "Constant", id: :serial, force: :cascade do |t|
+    t.text "key", null: false
+    t.jsonb "value", null: false
+    t.index ["key"], name: "Constant_key_key", unique: true
+  end
+
   create_table "CopyAnswer", id: false, force: :cascade do |t|
     t.serial "id", null: false
     t.integer "userAnswer"
@@ -228,6 +241,9 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.integer "testAttemptId"
     t.integer "durationInSec"
   end
+
+# Could not dump table "CopyCourse" because of following StandardError
+#   Unknown type '"enum_Course_package"' for column 'package'
 
   create_table "CopyNote", id: false, force: :cascade do |t|
     t.integer "id"
@@ -284,6 +300,23 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
 # Could not dump table "Course" because of following StandardError
 #   Unknown type '"enum_Course_package"' for column 'package'
 
+  create_table "CourseDetail", force: :cascade do |t|
+    t.integer "courseId", null: false
+    t.string "description"
+    t.string "shortDescription"
+    t.float "rating"
+    t.integer "ratingCount"
+    t.integer "enrolled"
+    t.string "language", default: "hinglish"
+    t.string "videoUrl"
+    t.boolean "bestseller", default: false
+    t.jsonb "curriculum", default: {}
+    t.jsonb "features", default: {}
+    t.jsonb "requirements", default: {}
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
 # Could not dump table "CourseInvitation" because of following StandardError
 #   Unknown type '"enum_CourseInvitation_role"' for column 'role'
 
@@ -328,6 +361,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.string "author", limit: 255, null: false
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["courseId"], name: "CourseTestimonial_courseId_idx"
   end
 
   create_table "CustomerIssue", id: :serial, force: :cascade do |t|
@@ -380,9 +414,9 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.string "event", limit: 25, null: false
     t.integer "eventCount", null: false
     t.integer "courseId"
-    t.index ["eventDate"], name: "DailyUserEvent_eventDate_idx"
-    t.index ["userId", "eventDate", "event"], name: "DailyUserEvent_userId_eventDate_event_key", unique: true
-    t.index ["userId"], name: "DailyUserEvent_userId_idx"
+    t.index ["courseId"], name: "DailyUserEvent_courseId_idx"
+    t.index ["eventCount"], name: "DailyUserEvent_eventCount_idx"
+    t.index ["userId", "eventDate", "event", "courseId"], name: "DailyUserEvent_userId_eventDate_event_courseId_key", unique: true
   end
 
   create_table "Delivery", id: :serial, force: :cascade do |t|
@@ -504,6 +538,11 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.datetime "updatedAt", null: false
   end
 
+  create_table "MasterClassFreeUser", id: false, force: :cascade do |t|
+    t.integer "userId"
+    t.bigint "total_count"
+  end
+
 # Could not dump table "Message" because of following StandardError
 #   Unknown type '"enum_Message_type"' for column 'type'
 
@@ -610,6 +649,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
 
   create_table "QuestionCourse", primary_key: "questionId", id: :integer, default: nil, force: :cascade do |t|
     t.integer "courseId", null: false
+    t.index ["questionId"], name: "QuestionCourse_questionId_idx"
   end
 
   create_table "QuestionDetail", id: :serial, force: :cascade do |t|
@@ -668,6 +708,17 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.datetime "updatedAt", null: false
     t.index ["questionId"], name: "question_subTopic_question_id"
     t.index ["subTopicId"], name: "question_subTopic_subTopic_id"
+  end
+
+  create_table "QuestionTranslation", id: :serial, force: :cascade do |t|
+    t.integer "questionId", null: false
+    t.text "question"
+    t.text "explanation"
+    t.string "language", limit: 255, null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_idx", unique: true
+    t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_key", unique: true
   end
 
   create_table "Quiz", id: :serial, force: :cascade do |t|
@@ -806,6 +857,16 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
     t.datetime "updatedAt", null: false
     t.integer "chapterId"
     t.string "url"
+    t.integer "noteId"
+    t.jsonb "details"
+    t.int4range "noteRange"
+    t.integer "videoId"
+    t.index ["flashcardId"], name: "StudentNote_flashcardId_idx"
+    t.index ["questionId"], name: "StudentNote_questionId_idx"
+    t.index ["userId", "flashcardId"], name: "StudentNote_userId_flashcardId_idx"
+    t.index ["userId", "noteId", "noteRange"], name: "StudentNoteNCERTHighlightNoOverlap", using: :gist
+    t.index ["userId", "questionId"], name: "StudentNote_userId_questionId_idx"
+    t.index ["userId"], name: "StudentNote_userId_idx"
   end
 
   create_table "StudentOnboardingEvents", force: :cascade do |t|
@@ -818,7 +879,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
   create_table "SubTopic", id: :serial, force: :cascade do |t|
     t.integer "topicId"
     t.string "name", limit: 255
-    t.boolean "deleted"
+    t.boolean "deleted", default: false
     t.integer "position"
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
@@ -1401,6 +1462,8 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
   add_foreign_key "Answer", "\"User\"", column: "userId", name: "Answer_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "ChapterFlashCard", "\"FlashCard\"", column: "flashCardId"
   add_foreign_key "ChapterFlashCard", "\"Topic\"", column: "chapterId"
+  add_foreign_key "ChapterMindmap", "\"Note\"", column: "noteId", name: "ChapterMindmap_noteId_fkey"
+  add_foreign_key "ChapterMindmap", "\"Topic\"", column: "chapterId", name: "ChapterMindmap_chapterId_fkey"
   add_foreign_key "ChapterNote", "\"Note\"", column: "noteId", name: "fk_chapter_note_noteid"
   add_foreign_key "ChapterNote", "\"Topic\"", column: "chapterId", name: "fk_chapter_note_chapterid"
   add_foreign_key "ChapterQuestion", "\"Question\"", column: "questionId", name: "fk_chapter_question_questionid"
@@ -1414,6 +1477,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
   add_foreign_key "ChapterVideo", "\"Topic\"", column: "chapterId", name: "fk_chapter_video_chapterid"
   add_foreign_key "ChapterVideo", "\"Video\"", column: "videoId", name: "fk_chapter_video_videoid"
   add_foreign_key "Comment", "\"User\"", column: "userId", name: "Comment_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "CourseDetail", "\"Course\"", column: "courseId"
   add_foreign_key "CourseInvitation", "admin_users"
   add_foreign_key "CourseOffer", "\"Course\"", column: "courseId", name: "CourseOffer_courseId_fkey"
   add_foreign_key "CourseOffer", "admin_users", name: "CourseOffer_admin_user_id_fkey"
@@ -1447,12 +1511,15 @@ ActiveRecord::Schema.define(version: 2020_08_18_085233) do
   add_foreign_key "QuestionCourse", "\"Question\"", column: "questionId", name: "QuestionCourse_questionId_fkey"
   add_foreign_key "QuestionSubTopic", "\"Question\"", column: "questionId", name: "fk_question_subtopic_questionid"
   add_foreign_key "QuestionSubTopic", "\"SubTopic\"", column: "subTopicId", name: "fk_question_subtopic_subtopicid"
+  add_foreign_key "QuestionTranslation", "\"Question\"", column: "questionId", name: "QuestionTranslation_questionId_fkey"
   add_foreign_key "ScheduleItem", "\"Schedule\"", column: "scheduleId", name: "fk_schedule_item_schedule"
   add_foreign_key "ScheduleItem", "\"Topic\"", column: "topicId", name: "fk_schedule_item_topic"
   add_foreign_key "ScheduleItemUser", "\"ScheduleItem\"", column: "scheduleItemId", name: "fk_schedule_item_user_schedule_item"
   add_foreign_key "ScheduleItemUser", "\"User\"", column: "userId", name: "fk_schedule_item_user_user"
   add_foreign_key "Section", "\"Topic\"", column: "chapterId"
   add_foreign_key "SectionContent", "\"Section\"", column: "sectionId"
+  add_foreign_key "StudentNote", "\"Note\"", column: "noteId", name: "StudentNote_noteId_fkey"
+  add_foreign_key "StudentNote", "\"Video\"", column: "videoId", name: "StudentNote_videoId_fkey"
   add_foreign_key "StudentOnboardingEvents", "\"User\"", column: "userId"
   add_foreign_key "Subject", "\"Course\"", column: "courseId", name: "Subject_courseId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "Target", "\"User\"", column: "userId"
