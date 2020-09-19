@@ -24,7 +24,7 @@ let css = cssLink.includes("<link href=") ? cssLink + 'rel="stylesheet" type="te
 tinymce.init({
   selector: '#note_content',
   height: 600,
-  plugins: "link image code paste media questionIframe youtubeIframeAsync",
+  plugins: "link image code paste media textcolor colorpicker questionIframe youtubeIframeAsync",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   language: 'en',
   toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync',

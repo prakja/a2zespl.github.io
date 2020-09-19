@@ -19,7 +19,7 @@ tinymce.init({
   },
   setup: function (editor) {
     editor.on('blur', function (e) {
-      document.getElementById('question_question').value = editor.getContent();
+      document.getElementById('course_detail_description').value = editor.getContent();
     });
     // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
     editor.settings.images_dataimg_filter = function () {return undefined;};
@@ -45,7 +45,7 @@ tinymce.init({
   },
   setup: function (editor) {
     editor.on('blur', function (e) {
-      document.getElementById('question_question').value = editor.getContent();
+      document.getElementById('course_detail_description').value = editor.getContent();
     });
     // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
     editor.settings.images_dataimg_filter = function () {return undefined;};
@@ -70,6 +70,7 @@ $( document ).ready(function() {
         return JSON.parse(target.val().replaceAll("=>", ":"));
       } catch (_error) {}
     })());
+    target.val(JSON.stringify(editor.get()));
     return target.hide();
   });
 });
