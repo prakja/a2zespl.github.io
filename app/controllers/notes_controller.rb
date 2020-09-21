@@ -6,16 +6,21 @@ class NotesController < ApplicationController
     begin
       noteId = params[:noteId]
       content = params[:content]
+      lock_version = params[:lock_version].to_i
 
-      Note.where(id: noteId).update_all(content: content.to_s)
+      @note = Note.find(noteId)
+      @note.content = content
+      @note.lock_version = lock_version
+      @note.save!
 
       respond_to do |format|
         format.html { render :new }
-        format.json { render json: "Done", status: 200 }
+        format.json { render json: {response: "Done"}, status: 200 }
       end
 
     rescue => exception
-
+      p exception
+      format.json { render json: {error: exception.to_s}, status: 500 }
     end
   end
 
@@ -28,6 +33,7 @@ class NotesController < ApplicationController
       @noteId = params.require(:id)
       @note = Note.find(@noteId)
       @content = @note.content != nil ? @note.content : ""
+      @lock_version = @note.lock_version
 
     rescue => exception
 
