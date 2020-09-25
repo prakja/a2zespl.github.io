@@ -22,6 +22,20 @@ class Ability
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
+    elsif user.role == 'supportAndFaculty'
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+      can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
+      can :read, [UserCourse, User, UserProfile, CustomerIssueType]
+      can [:read, :update], [CustomerIssue]
+      can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note]
+      can :import, [Video, FlashCard]
+      can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
+      can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
+      can [:read, :create, :update], [VideoAnnotation, VideoLink]
+      can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
+      can [:batch_action], [CustomerIssue]
+      can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
