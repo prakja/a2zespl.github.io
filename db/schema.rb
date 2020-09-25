@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_18_024216) do
+ActiveRecord::Schema.define(version: 2020_09_19_055744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -315,6 +315,8 @@ ActiveRecord::Schema.define(version: 2020_09_18_024216) do
     t.jsonb "requirements", default: {}
     t.datetime "createdAt", null: false
     t.datetime "updatedAt", null: false
+    t.string "bannerImage"
+    t.boolean "showTrial", default: false
   end
 
 # Could not dump table "CourseInvitation" because of following StandardError
