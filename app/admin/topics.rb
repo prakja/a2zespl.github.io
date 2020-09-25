@@ -66,7 +66,8 @@ ActiveAdmin.register Topic do
   scope :zoology
   sidebar :related_data, only: :show do
     ul do
-      li link_to "Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
+      li link_to "Practice Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
+      li link_to "Remaining Questions", admin_questions_path(q: { topicId_eq: topic.id, questionTopics_chapterId_not_eq: topic.id}, order: 'id_asc')
       li link_to "Videos", admin_videos_path(q: { videoTopics_chapterId_eq: topic.id}, order: 'id_asc')
       li link_to "Duplicate Questions", duplicate_questions_admin_topic_path(topic)
       li link_to "Question Issues", question_issues_admin_topic_path(topic)

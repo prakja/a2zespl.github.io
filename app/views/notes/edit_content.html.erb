@@ -24,14 +24,45 @@ let css = cssLink.includes("<link href=") ? cssLink + 'rel="stylesheet" type="te
 tinymce.init({
   selector: '#note_content',
   height: 600,
-  plugins: "link image code paste media textcolor colorpicker questionIframe youtubeIframeAsync",
+  plugins: "link image code paste media textcolor colorpicker template questionIframe youtubeIframeAsync",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,template,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync',
   paste_data_images: true,
   extended_valid_elements : 'a[id|class|style|width|height|onclick|href],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset]',
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   editorObject: {'id': 'note_content'},
+  templates: [
+    {title: 'NCERT Audio Note', description: 'NCERT Audio Note', content: '<div style="background-color: lightyellow;"><strong>NEETprep Audio Note:</strong></div>'}
+  ],
+  video_template_callback: (data) => {
+    return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
+  },
+  file_picker_callback: function(cb, value, meta) {
+    if (meta.filetype != "media") {
+      return;
+    }
+    var input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', '*/*');
+
+    input.onchange = function() {
+      const data = new FormData();
+      data.append('file', this.files[0]);
+      data.append('filename', this.files[0].name);
+
+      fetch('https://www.neetprep.com/api/v1/fileUpload/fileUpload', {
+        method: 'POST',
+        body: data,
+      }).then((response) => {
+        response.json().then((body) => {
+          cb(body.location);
+        });
+      });
+    };
+    input.click();
+  },
+  file_picker_type: 'media',
   setup: function (editor) {
     editor.on('blur', function (e) {
       document.getElementById('note_content').value = css + editor.getContent();
@@ -46,16 +77,20 @@ $('#update_button').on('click', function(e){
     return;
 
   var noteId = "<%= @note.id %>";
-  let url = window.location.origin + "/notes/update_content";
+  var lock_version = "<%=@lock_version%>";
+  let url = window.location.origin + "/notes/update_content.json";
   $.ajax({
     type: "POST",
     url: url,
     data: {
       "noteId": noteId,
-      "content": content
+      "content": content,
+      "lock_version": lock_version
     }
   }).done (function (data) {
     window.location.reload();
+  }).fail (function (error) {
+    alert("failed: " + JSON.stringify(error));
   });
 });
 </script>
