@@ -1,0 +1,75 @@
+stages:
+  - build
+  - deploy
+
+build:
+  only:
+    - master
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/master --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker push $CI_REGISTRY/learner.in/neetprepadmin/master
+
+deploy:
+  only:
+    - master
+  stage: deploy
+  cache: {}
+  image: alpine:3.12
+  script:
+    - apk add --update ca-certificates
+    - apk add --update -t deps curl
+    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.46.0/doctl-1.46.0-linux-amd64.tar.gz | tar -xzv
+    - mv doctl /usr/local/bin
+    - export DIGITALOCEAN_ACCESS_TOKEN=4a240bab15de2821ec413c852d58512a5c94ac130b2911b9883a23e2a7275329
+    - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster
+    - curl -L https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+    - chmod +x /usr/local/bin/kubectl
+    - apk del --purge deps
+    - rm /var/cache/apk/*
+    - kubectl get pods
+    - kubectl set image deployments/prod-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/master
+
+build-develop:
+  only:
+    - develop
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - VER_CODE=`date '+%d.%m.%y.%H.%M'`
+    - echo "TAG=$VER_CODE" >> build.env
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop:$VER_CODE --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
+    - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop
+  artifacts:
+    reports:
+      dotenv: build.env
+
+deploy-develop:
+  only:
+    - develop
+  stage: deploy
+  cache: {}
+  image: alpine:3.12
+  script:
+    - echo $TAG
+    - apk add --update ca-certificates
+    - apk add --update -t deps curl
+    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.46.0/doctl-1.46.0-linux-amd64.tar.gz | tar -xzv
+    - mv doctl /usr/local/bin
+    - export DIGITALOCEAN_ACCESS_TOKEN=4a240bab15de2821ec413c852d58512a5c94ac130b2911b9883a23e2a7275329
+    - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster
+    - curl -L https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+    - chmod +x /usr/local/bin/kubectl
+    - apk del --purge deps
+    - rm /var/cache/apk/*
+    - kubectl get pods
+    - kubectl set image deployments/dev-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/develop:$TAG
+  dependencies:
+    - build-develop
