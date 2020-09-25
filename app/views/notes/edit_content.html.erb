@@ -33,7 +33,8 @@ tinymce.init({
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   editorObject: {'id': 'note_content'},
   templates: [
-    {title: 'NCERT Audio Note', description: 'NCERT Audio Note', content: '<div style="background-color: lightyellow;"><strong>NEETprep Audio Note:</strong></div>'}
+    {title: 'NCERT Audio Note', description: 'NCERT Audio Note', content: '<div style="background-color: lightyellow;"><strong>NEETprep Audio Note:</strong></div>'},
+    {title: 'NCERT Exercise Answer', description: 'NCERT Exercise Answer', content: '<div class="ncert-exercise-answer" style="background-color: lightyellow;"><strong>NEETprep Answer:</strong><br/><button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse">Show/Hide Answer</button><div class="collapse multi-collapse"></div></div>'}
   ],
   video_template_callback: (data) => {
     return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
