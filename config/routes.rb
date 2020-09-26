@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "chapters/section_content"
   get "notes/edit_content/:id", to: "notes#edit_content"
   post "notes/update_content", to: "notes#update_content"
+  post "notes/duplicate_content", to: "notes#duplicate_content"
   post "chapters/remove_section_content", to: "chapters#remove_section_content"
   post "chapters/update_and_sort", to: "chapters#update_and_sort"
   get "doubts/pending_stats"

@@ -24,6 +24,31 @@ class NotesController < ApplicationController
     end
   end
 
+  def duplicate_content
+    begin
+      noteId = params[:noteId]
+
+      @note = Note.find(noteId)
+      duplicateNote = @note.dup
+      duplicateNote.save!
+      @chapterNote = ChapterNote.where(noteId: noteId).first
+      if @chapterNote.present?
+        duplicateChapterNote = @chapterNote.dup
+        duplicateChapterNote.noteId = duplicateNote.id
+        duplicateChapterNote.save!
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: {response: "Done", newNoteId: duplicateNote.id}, status: 200 }
+      end
+
+    rescue => exception
+      p exception
+      format.json { render json: {error: exception.to_s}, status: 500 }
+    end
+  end
+
   def edit_content
     if not current_admin_user
       redirect_to "/admin/login"

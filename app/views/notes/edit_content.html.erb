@@ -2,7 +2,8 @@
   <div id="view_note">
     <div style="background: white;"><%=raw(@content)%></div>
     <div style="text-align: center">
-      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>
+      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>&nbsp;
+      <button name="duplicate_button" id="duplicate_button" type="button">DUPLICATE NOTE</button>
     </div>
   </div>
   <div id="edit_note" style="display: none;">
@@ -70,6 +71,22 @@ tinymce.init({
     });
     editor.settings.images_dataimg_filter = function () {return undefined;};
   }
+});
+
+$('#duplicate_button').on('click', function(e){
+  var noteId = "<%= @note.id %>";
+  let url = window.location.origin + "/notes/duplicate_content.json";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      "noteId": noteId
+    }
+  }).done (function (data) {
+    window.open('/notes/edit_content/' + data.newNoteId, '_blank')
+  }).fail (function (error) {
+    alert("failed: " + JSON.stringify(error));
+  });
 });
 
 $('#update_button').on('click', function(e){
