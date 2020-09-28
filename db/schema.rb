@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_19_055744) do
+ActiveRecord::Schema.define(version: 2020_09_28_131142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -317,6 +317,7 @@ ActiveRecord::Schema.define(version: 2020_09_19_055744) do
     t.datetime "updatedAt", null: false
     t.string "bannerImage"
     t.boolean "showTrial", default: false
+    t.boolean "live", default: false
   end
 
 # Could not dump table "CourseInvitation" because of following StandardError
@@ -588,6 +589,7 @@ ActiveRecord::Schema.define(version: 2020_09_19_055744) do
     t.text "externalURL"
     t.text "epubURL"
     t.text "epubContent"
+    t.integer "lock_version", default: 0, null: false
   end
 
   create_table "Notification", id: :serial, force: :cascade do |t|

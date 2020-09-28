@@ -5,7 +5,7 @@ ActiveAdmin.register CourseDetail do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  permit_params :courseId, :description, :shortDescription, :rating, :ratingCount, :enrolled, :language, :videoUrl, :bestseller, :curriculum, :features, :requirements, :showTrial, :bannerImage, :createdAt, :updatedAt
+  permit_params :courseId, :description, :shortDescription, :rating, :ratingCount, :enrolled, :language, :videoUrl, :bestseller, :curriculum, :features, :requirements, :showTrial, :live, :bannerImage, :createdAt, :updatedAt
   #
   # or
   #
@@ -30,6 +30,7 @@ ActiveAdmin.register CourseDetail do
       f.input :videoUrl
       f.input :bestseller
       f.input :showTrial
+      f.input :live
       f.input :bannerImage
       f.input :curriculum, as: :text, input_html: { class: 'jsoneditor-target' }
       f.input :features, as: :text, input_html: { class: 'jsoneditor-target' }
