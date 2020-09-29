@@ -1,0 +1,57 @@
+<head>
+  <style>
+    .questionData {
+      display: inline-block;
+      border: 1px solid;
+      padding: 15px;
+      width: 50%;
+      height: 300px;
+      overflow: auto;
+    }
+    .questionBox {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw(@chapter.name) %> - <%= raw(@chapter.id)%>
+  </div>
+  <div style="margin: 32px">
+    <div>
+      Question Ids:
+      <textarea placeholder="Paste question ids (Required format : 1,2,3,4,5) ..." id="selectedIds"></textarea>
+    </div>
+    <br/></br>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="addChapterQuestions()">Add Questions</button>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+  <script type="text/javascript">
+
+    function addChapterQuestions() {
+      let questionIds = $("#selectedIds").val();
+      var questionIdsArray = questionIds.split(",");
+      let chapterId = '<%= @chapter.id %>';
+      if (questionIds == ""){
+        alert('Questions not added');
+        return
+      }
+      let url = window.location.origin + "/chapters/createChapterQuestion.json";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "questionIds": questionIdsArray,
+          "chapterId": '<%= @chapter.id %>'
+        }
+      }).done (function (data) {
+        alert("Done. Current Question Count - " + data.count + ". Duplicates are not added and that's why question count might be unexpected sometimes");
+      }).fail (function (error){
+        alert("failed: " + JSON.stringify(error));
+      });
+    }
+
+  </script>
+</body>
