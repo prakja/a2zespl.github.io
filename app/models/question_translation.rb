@@ -6,6 +6,9 @@ class QuestionTranslation < ApplicationRecord
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
 
+  has_many :questionTopics, primary_key: :questionId, foreign_key: :questionId, class_name: 'ChapterQuestion'
+  has_many :topics, through: :questionTopics
+
   def setCreatedTime
     self.createdAt = Time.now
   end

@@ -4,6 +4,9 @@ class Ability
   def initialize(user)
     if user.role == 'admin'
       can :manage, :all
+    elsif user.role == 'hindi_editor'
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+      can [:read, :update], [QuestionTranslation]
     elsif user.role == 'faculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
