@@ -18,6 +18,55 @@ class ChaptersController < ApplicationController
 
   end
 
+
+  def add_question
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    @chapterId = params[:chapterId]
+    @chapter = Topic.where(id: @chapterId).first
+  end
+
+  def createChapterQuestion
+    begin
+      @chapterId = params[:chapterId]
+      @questionIds = params[:questionIds]
+      @chapter = Topic.where(id: @chapterId).first
+      @rowsArray = []
+      question_ids = []
+
+      @chapterQuestions = @chapter.questions.select("id")
+      @chapterQuestions.each do |question|
+        question_ids.push(question.id.to_s)
+      end
+
+      @questionIds = @questionIds.uniq
+
+      @questionIds = @questionIds - question_ids
+
+      @questionIds.each do |questionId|
+        @row = {}
+        @row["chapterId"] = @chapter.id
+        @row["questionId"] = questionId
+        @rowsArray.push(@row)
+      end
+
+      if(@questionIds.length() > 0)
+        ChapterQuestion.create(@rowsArray)
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: {response: "Done", count: @chapterQuestions.length + @questionIds.length}, status: 200 }
+      end
+
+    rescue => exception
+      p exception
+      render json: {error: exception.to_s}, status: 500
+    end
+  end
+
   def createChapterVideo
     begin
       @chapterId = params[:chapterId]
