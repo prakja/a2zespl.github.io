@@ -77,7 +77,7 @@
       </tr>
       <% @course_topics.each do |topic| %>
         <tr style="text-align: center;">
-          <td><%= topic.name + " (" + topic.subject.name + ")" %></td>
+          <td><%= raw('<a target="_blank" href="/admin/topics/' + topic.id.to_s + '">' + topic.name + " (" + topic.subject.name + ")" + '</a>') %></td>
           <td><%= link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) %></td>
           <!-- link_to @course_topics_subTopics[topic.id], admin_sub_topics_path(q: {topicId_eq: topic.id}) -->
           <td><%= link_to @course_topics_questions[topic.id], admin_questions_path(q: {topics_id_eq: topic.id}) %></td>
