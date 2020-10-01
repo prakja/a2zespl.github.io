@@ -143,6 +143,7 @@ ActiveAdmin.register Question do
   end
 
   csv do
+    column (:id)
     column (:chapter) {|question| question&.topics&.first&.name}
     column (:subject) {|question| question&.topics&.first&.subject&.name}
     column (:question) {|question| question.question && question.question.squish}
