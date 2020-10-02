@@ -16,7 +16,7 @@ $primary-color: #1b5e20;
 @import "arctic_admin/base";
 @import 'activeadmin/quill_editor_input';
 @import "active_admin/searchable_select";
-@import "./jsoneditor.css";
+// @import "./jsoneditor.css";
 
 // Overriding any non-variable SASS must be done after the fact.
 // For example, to change the default status-tag color:
