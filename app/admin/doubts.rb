@@ -132,7 +132,7 @@ ActiveAdmin.register Doubt do
   controller do
     def scoped_collection
       if params[:scope]
-        params[:order] = 'week_doubt_count_asc'
+        params[:order] = 'week_doubt_count_asc_and_createdAt_asc' if params[:order].blank?
         super.left_outer_joins(:user_doubt_stat).select('"Doubt".*, "UserDoubtStat"."doubt7DaysCount" as "week_doubt_count"').group('"Doubt"."id", "UserDoubtStat"."doubt7DaysCount"').preload(:admin_user, :topic, user: [:common_rank, :user_profile, subject_rank: :subject])
       else
         super.preload(:topic, :admin_user, user: [:common_rank, :user_profile, subject_rank: :subject])
