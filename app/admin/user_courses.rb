@@ -119,10 +119,6 @@ ActiveAdmin.register UserCourse do
 
   controller do
     def scoped_collection
-      # TODO: why is profile not included in include below?
-      #  " PG::UndefinedFunction: ERROR:  could not identify an equality operator for type json
-      #  LINE 1: ...S t4_r17, "UserProfile"."neetExamYear" AS t4_r18, "UserProfi...
-      #   " weeklySchedule is JSON type and on distinct operation, it throws the above error
       super.includes(:course, user: [:user_profile])
     end
   end

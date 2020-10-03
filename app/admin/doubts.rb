@@ -2,7 +2,7 @@ require 'base64'
 
 ActiveAdmin.register Doubt do
   config.sort_order = 'createdAt_desc'
-  remove_filter :topic, :answers, :user, :question, :doubt_admin, :versions
+  remove_filter :topic, :answers, :user, :question, :doubt_admin, :versions, :user_doubt_stat
   permit_params :content, :deleted, :teacherReply, :imgUrl, :goodFlag
 
   filter :topic_id_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"
@@ -102,6 +102,7 @@ ActiveAdmin.register Doubt do
     column :tagType
     column :doubtType
     column :user
+    column :week_doubt_count, :sortable => true
     column ("Link") {|doubt| link_to "Answer this doubt", '/doubt_answers/answer?doubt_id=' + doubt.id.to_s, target: ":_blank" }
       if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
       toggle_bool_column :goodFlag
@@ -130,11 +131,12 @@ ActiveAdmin.register Doubt do
 
   controller do
     def scoped_collection
-      # TODO: why is profile not included in include below?
-      #  " PG::UndefinedFunction: ERROR:  could not identify an equality operator for type json
-      #  LINE 1: ...S t4_r17, "UserProfile"."neetExamYear" AS t4_r18, "UserProfi...
-      #   " weeklySchedule is JSON type and on distinct operation, it throws the above error
-      super.includes(:topic, :admin_user, user: [:common_rank, :subject_rank])
+      if params[:scope]
+        params[:order] = 'week_doubt_count_asc'
+        super.left_outer_joins(:user_doubt_stat).select('"Doubt".*, "UserDoubtStat"."doubt7DaysCount" as "week_doubt_count"').group('"Doubt"."id", "UserDoubtStat"."doubt7DaysCount"').preload(:admin_user, :topic, user: [:common_rank, :user_profile, subject_rank: :subject])
+      else
+        super.preload(:topic, :admin_user, user: [:common_rank, :user_profile, subject_rank: :subject])
+      end
     end
   end
 
