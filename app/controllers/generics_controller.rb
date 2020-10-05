@@ -21,6 +21,20 @@ class GenericsController < ApplicationController
   def give_course_access_aryan_raj_view
   end
 
+  def create_user_token
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    if current_admin_user.role == 'admin'
+      userId = params[:id].to_i
+      user = User.find(userId)
+      @token = create_token({id: user.id, phone: user.phone, email: user.email})
+    end
+
+  end
+
   def bulk_notify
   end
 

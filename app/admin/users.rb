@@ -134,6 +134,8 @@ sidebar :user_activity, only: :show do
     li link_to "User Todos ", admin_user_todos_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "User Payments", admin_payments_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Bookmarked Questions", admin_bookmark_questions_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "Targets", admin_targets_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
+    li link_to "Create Login Token", "/generics/create_user_token/" + user.id.to_s
   end
 end
 
