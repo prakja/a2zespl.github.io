@@ -7,6 +7,7 @@ class Doubt < ApplicationRecord
   belongs_to :question, class_name: "Question", foreign_key: "questionId", counter_cache: true, optional: true
   has_one :doubt_admin, class_name: "DoubtAdmin", foreign_key: "doubtId"
   has_one :admin_user, through: :doubt_admin
+  belongs_to :user_doubt_stat, class_name: "UserDoubtStat", foreign_key: "userId"
 
   scope :my_doubts, -> (admin_id) {
     joins(:doubt_admin => :admin_user).where(doubt_admin: {admin_users: {id: admin_id}})
