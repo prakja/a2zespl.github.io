@@ -41,9 +41,9 @@ class UserDoubtCountsController < ApplicationController
   end
 
   def answer_count
-    @admin_users = AdminUser.where(role: "faculty")
+    @admin_users = AdminUser.where(role: ["faculty", "superfaculty"])
     @faculty_id_list = @admin_users.pluck(:userId)
-    @table = UniqueDoubtAnswer.joins(:user).where(['"userId" in (?)', AdminUser.where(role: "faculty").pluck(:userId)]).group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).group('userId').count("id")
+    @table = UniqueDoubtAnswer.joins(:user).where(['"userId" in (?)', AdminUser.where(role: ["faculty", "superfaculty"]).pluck(:userId)]).group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).group('userId').count("id")
     @final_data = {}
   
     @faculty_id_list.each do |userId|

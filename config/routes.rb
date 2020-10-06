@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get "google_ads/report"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get "generics/flashcardstats", to: "generics#get_flashcard_stats"
+  get "generics/create_user_token/:id", to: "generics#create_user_token"
   get "generics/bookmark_during", to: "generics#bookmark_during"
 
   post "generics/move_flashcard_to_back", to: "generics#set_seq_id_back"

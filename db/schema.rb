@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_28_131142) do
+ActiveRecord::Schema.define(version: 2020_10_05_072637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
+  enable_extension "pg_repack"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
@@ -117,6 +118,24 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.integer "seqId"
   end
 
+  create_table "ChapterFlashCard20200924", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.integer "chapterId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "flashCardId"
+    t.integer "seqId"
+  end
+
+  create_table "ChapterFlashCardCopy", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.integer "chapterId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "flashCardId"
+    t.integer "seqId"
+  end
+
   create_table "ChapterMindmap", id: :serial, force: :cascade do |t|
     t.integer "chapterId", null: false
     t.integer "noteId", null: false
@@ -153,6 +172,14 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
   end
 
   create_table "ChapterQuestion20200528", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
+  create_table "ChapterQuestion20200929", id: false, force: :cascade do |t|
     t.integer "id"
     t.integer "chapterId"
     t.integer "questionId"
@@ -245,6 +272,14 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
 # Could not dump table "CopyCourse" because of following StandardError
 #   Unknown type '"enum_Course_package"' for column 'package'
 
+  create_table "CopyCourseTest20200916", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "courseId"
+    t.integer "testId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
   create_table "CopyNote", id: false, force: :cascade do |t|
     t.integer "id"
     t.string "name", limit: 255
@@ -267,8 +302,31 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
 # Could not dump table "CopyQuestion20200504" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
+# Could not dump table "CopyQuestion23092020" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
+
 # Could not dump table "CopyQuestion29092018" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
+
+  create_table "CopyQuestionTranslation", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "questionId"
+    t.text "question"
+    t.text "explanation"
+    t.string "language", limit: 255
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
+  create_table "CopyQuestionTranslation1", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "questionId"
+    t.text "question"
+    t.text "explanation"
+    t.string "language", limit: 255
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
 
   create_table "CopySubjectChapter", id: false, force: :cascade do |t|
     t.integer "id"
@@ -292,6 +350,23 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.datetime "updatedAt", null: false
     t.json "visitedQuestions"
     t.json "markedQuestions"
+  end
+
+  create_table "CopyTopic20200917", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "image"
+    t.text "description"
+    t.integer "position"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "subjectId"
+    t.boolean "free"
+    t.boolean "published"
+    t.integer "seqId"
+    t.string "importUrl", limit: 255
+    t.boolean "isComingSoon"
+    t.boolean "sectionReady"
   end
 
 # Could not dump table "Coupon" because of following StandardError
@@ -345,6 +420,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.index ["courseId"], name: "course_offer_course_id"
     t.index ["email", "phone"], name: "CourseOffer_email_phone_idx"
     t.index ["email"], name: "CourseOffer_email_idx"
+    t.index ["hidden"], name: "CourseOffer_hidden_idx"
+    t.index ["offerExpiryAt"], name: "CourseOffer_offerExpiryAt_idx"
     t.index ["phone"], name: "CourseOffer_phone_idx"
   end
 
@@ -494,6 +571,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.integer "userId"
     t.string "platform", limit: 255
     t.string "deviceAdsId", limit: 255
+    t.index ["platform"], name: "FcmToken_platform_idx"
+    t.index ["userId"], name: "FcmToken_userId_idx"
   end
 
   create_table "FestivalDiscount", id: :serial, force: :cascade do |t|
@@ -721,6 +800,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.string "language", limit: 255, null: false
     t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.boolean "reviewed", default: false
+    t.boolean "completed", default: false
     t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_idx", unique: true
     t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_key", unique: true
   end
@@ -765,6 +846,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.integer "hours"
     t.text "link"
     t.datetime "scheduledAt"
+    t.index ["scheduleId"], name: "ScheduleItem_scheduleId_idx"
+    t.index ["scheduledAt"], name: "ScheduleItem_scheduledAt_idx"
   end
 
   create_table "ScheduleItemAsset", force: :cascade do |t|
@@ -834,8 +917,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.string "ncertName"
     t.string "ncertURL"
     t.string "ncertSectionLink"
-    t.datetime "createdAt", null: false
-    t.datetime "updatedAt", null: false
+    t.datetime "createdAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "SectionContent", force: :cascade do |t|
@@ -866,9 +949,12 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.int4range "noteRange"
     t.integer "videoId"
     t.index ["flashcardId"], name: "StudentNote_flashcardId_idx"
+    t.index ["noteId"], name: "StudentNote_noteId_idx"
     t.index ["questionId"], name: "StudentNote_questionId_idx"
     t.index ["userId", "flashcardId"], name: "StudentNote_userId_flashcardId_idx"
+    t.index ["userId", "noteId", "details"], name: "studentnoteuniquencerthighlight", unique: true
     t.index ["userId", "noteId", "noteRange"], name: "StudentNoteNCERTHighlightNoOverlap", using: :gist
+    t.index ["userId", "noteId"], name: "StudentNote_userId_noteId_idx"
     t.index ["userId", "questionId"], name: "StudentNote_userId_questionId_idx"
     t.index ["userId"], name: "StudentNote_userId_idx"
   end
@@ -921,6 +1007,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.datetime "targetDate"
     t.string "status", default: "active"
     t.integer "maxMarks", default: 720
+    t.index ["userId", "status"], name: "Target_userId_status_idx"
+    t.index ["userId"], name: "Target_userId_idx"
   end
 
   create_table "TargetChapter", force: :cascade do |t|
@@ -930,6 +1018,8 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.integer "targetId", null: false
     t.integer "hours", null: false
     t.boolean "revision", default: false
+    t.index ["chapterId"], name: "TargetChapter_chapterId_idx"
+    t.index ["targetId"], name: "TargetChapter_targetId_idx"
   end
 
   create_table "Task", id: :serial, force: :cascade do |t|
@@ -1031,6 +1121,7 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.string "importUrl", limit: 255
     t.boolean "isComingSoon", default: false
     t.boolean "sectionReady", default: false
+    t.index ["free"], name: "Topic_free_idx"
     t.index ["subjectId"], name: "Topic_subjectId"
   end
 
@@ -1093,6 +1184,9 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
   end
 
 # Could not dump table "UserCourse" because of following StandardError
+#   Unknown type '"enum_UserCourse_role"' for column 'role'
+
+# Could not dump table "UserCourse177174" because of following StandardError
 #   Unknown type '"enum_UserCourse_role"' for column 'role'
 
   create_table "UserFlashCard", force: :cascade do |t|
@@ -1432,6 +1526,7 @@ ActiveRecord::Schema.define(version: 2020_09_28_131142) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["admin_user_id"], name: "index_doubt_admins_on_admin_user_id"
+    t.index ["doubtId"], name: "doubt_admins_doubtId_idx"
     t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
   end
 
