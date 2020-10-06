@@ -28,10 +28,40 @@ class ChaptersController < ApplicationController
     @chapter = Topic.where(id: @chapterId).first
   end
 
+  def del_question
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    @chapterId = params[:chapterId]
+    @chapter = Topic.where(id: @chapterId).first
+  end
+
+  def deleteChapterQuestion
+    begin
+      @chapterId = params[:chapterId]
+      @questionIds = params[:questionIds].map(&:strip).reject(&:blank?)
+      @chapter = Topic.where(id: @chapterId).first
+
+      if(@questionIds.length() > 0)
+        ChapterQuestion.where(chapterId: @chapterId.to_i).where(questionId: @questionIds).delete_all
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: {response: "Done", count: @chapter.questions.length}, status: 200 }
+      end
+
+    rescue => exception
+      p exception
+      render json: {error: exception.to_s}, status: 500
+    end
+  end
+
   def createChapterQuestion
     begin
       @chapterId = params[:chapterId]
-      @questionIds = params[:questionIds]
+      @questionIds = params[:questionIds].map(&:strip).reject(&:blank?)
       @chapter = Topic.where(id: @chapterId).first
       @rowsArray = []
       question_ids = []

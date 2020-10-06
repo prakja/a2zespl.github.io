@@ -77,6 +77,7 @@ ActiveAdmin.register Topic do
       li link_to "Question w/o Explanation", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'empty_explanation')
       li link_to "Question w/o SubTopic", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'missing_subtopics')
       li link_to "Add Practice Questions", '/chapters/add_question/' + topic.id.to_s
+      li link_to "Delete Practice Questions", '/chapters/del_question/' + topic.id.to_s
     end
   end
 
