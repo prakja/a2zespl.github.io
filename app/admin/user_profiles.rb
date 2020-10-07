@@ -12,6 +12,7 @@ ActiveAdmin.register UserProfile do
     f.inputs "UserProfile" do
       f.input :displayName
       f.input :allowVideoDownload
+      f.input :allowDeprecatedNcert
       f.input :picture
     end
     f.actions
