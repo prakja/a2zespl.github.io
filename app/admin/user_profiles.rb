@@ -1,7 +1,7 @@
 ActiveAdmin.register UserProfile do
 
   remove_filter :user
-  permit_params :displayName, :allowVideoDownload, :picture
+  permit_params :displayName, :allowVideoDownload, :allowDeprecatedNcert, :picture
   controller do
     def scoped_collection
       super.includes(user: :user_profile)
