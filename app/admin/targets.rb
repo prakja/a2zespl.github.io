@@ -3,7 +3,7 @@ ActiveAdmin.register Target do
   remove_filter :target_chapters, :user, :test
   preserve_default_filters!
 
-  permit_params :createdAt, :updatedAt, :userId, :score, :testId, :targetDate, :status, :maxMarks
+  permit_params :createdAt, :updatedAt, :userId, :score, :testId, :targetDate, :status, :maxMarks, :testType
 
   filter :userId_eq, as: :number, label: "User ID"
 
@@ -16,6 +16,7 @@ ActiveAdmin.register Target do
       f.input :targetDate, as: :date_picker
       f.input :status, as: :select, :collection => ["active", "complete", "abandoned"]
       f.input :maxMarks
+      f.input :testType
     end
     f.actions
   end
@@ -38,6 +39,7 @@ ActiveAdmin.register Target do
     }
     column :test
     column :maxMarks
+    column :testType
     column ("Target Chapters") { |target|
      target_id = target.id
      target_chapters = target.target_chapters.includes(:chapter).limit(5)
