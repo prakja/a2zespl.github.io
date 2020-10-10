@@ -1,5 +1,6 @@
 class QuestionTranslation < ApplicationRecord
   self.table_name = "QuestionTranslation"
+  has_paper_trail
 
   belongs_to :ques, class_name: "Question", foreign_key: "questionId"
 
