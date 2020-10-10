@@ -1,5 +1,5 @@
 ActiveAdmin.register QuestionTranslation do
-  remove_filter :ques, :questionTopics
+  remove_filter :ques, :questionTopics, :versions
 
   permit_params :question, :explanation, :completed, :reviewed
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
