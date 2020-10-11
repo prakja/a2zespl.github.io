@@ -84,7 +84,9 @@ ActiveAdmin.register Question do
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
       # p params["q"]["questionTopics_chapterId_in"]
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
-        column :doubts_count, sortable: true
+        column ("Doubts Count"), sortable: true do |question|
+          link_to question.doubts_count, admin_doubts_path(q: {questionId_eq: question.id})
+        end
         column :bookmarks_count, sortable: true
       end
       column ("Add explanation") { |question|
