@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_05_072637) do
+ActiveRecord::Schema.define(version: 2020_10_08_171001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -1007,6 +1007,7 @@ ActiveRecord::Schema.define(version: 2020_10_05_072637) do
     t.datetime "targetDate"
     t.string "status", default: "active"
     t.integer "maxMarks", default: 720
+    t.string "testType"
     t.index ["userId", "status"], name: "Target_userId_status_idx"
     t.index ["userId"], name: "Target_userId_idx"
   end
@@ -1284,6 +1285,7 @@ ActiveRecord::Schema.define(version: 2020_10_05_072637) do
     t.text "utmCampaignName"
     t.json "campaignInfo"
     t.boolean "allowVideoDownload", default: false, null: false
+    t.boolean "allowDeprecatedNcert", default: false, null: false
     t.index ["userId"], name: "user_profile_user_id", unique: true
   end
 

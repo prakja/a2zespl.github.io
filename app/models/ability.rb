@@ -11,7 +11,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
@@ -20,7 +20,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
@@ -34,7 +34,7 @@ class Ability
       can :import, [Video, FlashCard]
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, User, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:batch_action], [CustomerIssue]
