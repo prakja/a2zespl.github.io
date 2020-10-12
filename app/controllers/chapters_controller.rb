@@ -195,7 +195,7 @@ class ChaptersController < ApplicationController
       end
 
     rescue => exception
-
+      p exception
     end
   end
 
