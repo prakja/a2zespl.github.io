@@ -26,6 +26,8 @@ let css = cssLink.includes("<link href=") ? cssLink + 'rel="stylesheet" type="te
 tinymce.init({
   selector: '#note_content',
   height: 600,
+  content_css: (cssLink.match(/https:\/\/.*\.css/) || [""])[0],
+  content_css_cors: true,
   plugins: "link image code paste media textcolor colorpicker template questionIframe youtubeIframeAsync",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   language: 'en',
