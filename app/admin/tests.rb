@@ -11,6 +11,7 @@ preserve_default_filters!
 scope :neet_course
 scope :test_series_2018
 scope :test_series_2019
+scope :test_series_2020
 
 scope :botany
 scope :chemistry
