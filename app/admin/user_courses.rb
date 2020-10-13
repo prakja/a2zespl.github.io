@@ -9,6 +9,7 @@ ActiveAdmin.register UserCourse do
   filter :user_phone, as: :string, label: "User Phone"
 
   scope "Active Courses", :active, default: true
+  scope "Duration > 10 days", :duration_10_days, :show_count => false
   scope :all, :show_count => false
 
   index do

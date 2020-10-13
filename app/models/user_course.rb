@@ -11,4 +11,8 @@ class UserCourse < ApplicationRecord
   scope :active, ->() {
     where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" > current_timestamp')
   }
+
+  scope :duration_10_days, -> (){
+    where('"UserCourse"."expiryAt" - "UserCourse"."startedAt" >  interval  \'10 days\'')
+  }
 end
