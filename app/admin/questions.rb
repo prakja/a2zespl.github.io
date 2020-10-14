@@ -159,6 +159,8 @@ ActiveAdmin.register Question do
   scope :AIIMS_Questions, show_count: false
   scope :empty_explanation, show_count: false
   scope :missing_subTopics, show_count: false
+  scope :missing_audio_explanation, show_count: false
+  scope :missing_ncert_reference, show_count: false
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
 

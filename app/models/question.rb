@@ -67,6 +67,14 @@ class Question < ApplicationRecord
     left_outer_joins(:questionSubTopics).where('"QuestionSubTopic"."questionId" is null')
   }
 
+  scope :missing_audio_explanation, -> {
+    where('"explanation" not like \'%<audio%>%\'')
+  }
+
+  scope :missing_ncert_reference, -> {
+    where('"explanation" not ilike \'%NCERT%\'')
+  }
+
   scope :test_image_question, -> {
     neetprep_tests.where('"question" like \'%img%amazonaws%\' and length(regexp_replace("question", \'<img.*?/>\', \'\')) <= 15')
   }
