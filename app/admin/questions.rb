@@ -15,6 +15,8 @@ ActiveAdmin.register Question do
   remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], test_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
+  before_action :create_token, only: [:show]
+
   # before_filter only: :index do
   #   if params['commit'].blank? && params['q'].blank? && params[:scope].blank?
   #     params['q'] = {:explanation_cont => '<video'}
@@ -51,7 +53,13 @@ ActiveAdmin.register Question do
       end
     end
 
-
+    def create_token
+      payload = {
+        "type": "Question",
+        "id": params[:id]
+      }
+      @token_lambda = JsonWebToken.encode_for_lambda(payload)
+    end
   end
 
   member_action :history do
@@ -166,6 +174,10 @@ ActiveAdmin.register Question do
 
   action_item :similar_question, only: :show do
     link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
+  end
+
+  action_item :set_image_link, only: :show do
+    link_to 'Set Image Link', '#'
   end
 
   action_item :see_physics_difficult_questions, only: :index do

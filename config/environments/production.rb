@@ -106,6 +106,8 @@ Rails.application.configure do
     } 
   }
 
+  config.create_image_url = "https://6wekci1z6f.execute-api.ap-south-1.amazonaws.com/Prod/convert-to-image"
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
