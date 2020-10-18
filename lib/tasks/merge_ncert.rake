@@ -17,6 +17,7 @@ namespace :merge do
           if section_content.contentType == 'Note' and length_sum < 5000
             if index == (section_contents.count - 1)
               htmlContent = Note.find(section_content.contentId).content.gsub!(/<link.*?>|<\/>/, '')
+              #if htmlContent.length > 500 / had to use this value for 627 topic id..what is the logic here?
               if htmlContent.length > 1000
                 global_array.push(temp) if not temp.empty?
                 temp = []
