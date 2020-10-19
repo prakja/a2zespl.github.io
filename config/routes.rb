@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   get "user_analytics/show"
   get "user_analytics/accuracy"
   post "user_analytics/showAccuracy"
+  post "user_analytics/userData"
+  get "user_analytics/userData"
   post "user_analytics/populate_user_activites"
   get "questions/pdf_questions"
   get "questions/easy_questions"

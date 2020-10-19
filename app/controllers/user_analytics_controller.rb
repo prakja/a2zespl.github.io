@@ -1,5 +1,18 @@
 class UserAnalyticsController < ApplicationController
   protect_from_forgery with: :null_session
+
+  def userData
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    if request.post?
+      emails = params[:emails].split(/\r?\n/)
+      @users = User.where(email: emails).select('"User".*, COUNT("Answer"."id") as "answerCount"').joins('LEFT OUTER JOIN "Answer" ON ("Answer"."userId" = "User"."id")').group('"User"."id"');
+    end
+  end
+
   def show
     if not current_admin_user
       redirect_to "/admin/login"

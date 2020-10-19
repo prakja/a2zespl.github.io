@@ -1,0 +1,24 @@
+<div style="margin: 20px;">
+  <form action="/user_analytics/userData" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <textarea name="emails"><%=params[:emails]%></textarea>
+    <button style="margin-top: 20px;" type="submit">Find</button>
+  </form>
+  <h3>Users List</h3>
+  <table>
+    <tr>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Questions</th>
+    </tr>
+    <% if @users && @users.length > 0 %>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.id%></td>
+          <td><%= user.email %></td>
+          <td><%= user.answerCount %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+</div>

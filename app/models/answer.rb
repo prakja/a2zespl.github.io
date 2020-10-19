@@ -19,6 +19,10 @@ class Answer < ApplicationRecord
     joins(:question).where('"Question"."correctOptionIndex" != "userAnswer"')
   }
 
+  scope :bio_masterclass_course, -> {
+    joins(:question).merge(Question.bio_masterclass_course)
+  }
+
   scope :incorrect_physics_answers, -> {
     Answer.incorrect_answers.merge(Question.physics_mcqs)
   }
@@ -49,6 +53,10 @@ class Answer < ApplicationRecord
 
   scope :correct_zoology_answers, -> {
     Answer.correct_answers.merge(Question.zoology_mcqs)
+  }
+
+  scope :correct_test_answers, -> {
+    Answer.correct_answers.merge(Question.test_questions)
   }
 
   scope :incorrect_test_answers, -> {

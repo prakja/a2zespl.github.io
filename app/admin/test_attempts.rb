@@ -7,6 +7,7 @@ ActiveAdmin.register TestAttempt do
   filter :score_lt, as: :number, label: "Score <"
 
   scope :test_series, show_count: false
+  scope :aryan_raj_test_series, show_count: false
   controller do
     def scoped_collection
       super.includes(:test, user: :user_profile)

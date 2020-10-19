@@ -11,6 +11,7 @@ ActiveAdmin.register Answer do
 
   scope :correct_answers, show_count: false
   scope :incorrect_answers, show_count: false
+  scope :bio_masterclass_course, show_count: false
   scope :incorrect_physics_answers, show_count: false
   scope :correct_physics_answers, show_count: false
   scope :incorrect_chemistry_answers, show_count: false
@@ -19,6 +20,7 @@ ActiveAdmin.register Answer do
   scope :correct_botany_answers, show_count: false
   scope :incorrect_zoology_answers, show_count: false
   scope :correct_zoology_answers, show_count: false
+  scope :correct_test_answers, show_count: false
   scope :incorrect_test_answers, show_count: false
 
   controller do
