@@ -70,6 +70,9 @@ ActiveAdmin.register TestAttempt do
     column (:profile_phone) do |testAttempt|
       testAttempt.user.user_profile.nil? ? "" : testAttempt.user.user_profile.phone || ""
     end
+    column (:test_name) do |testAttempt|
+      testAttempt&.test.name
+    end
     column "Total" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
         testAttempt.result['totalMarks']

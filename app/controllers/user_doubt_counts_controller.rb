@@ -43,12 +43,12 @@ class UserDoubtCountsController < ApplicationController
   def answer_count
     @admin_users = AdminUser.where(role: ["faculty", "superfaculty"])
     @faculty_id_list = @admin_users.pluck(:userId)
-    @table = UniqueDoubtAnswer.joins(:user).where(['"userId" in (?)', AdminUser.where(role: ["faculty", "superfaculty"]).pluck(:userId)]).group_by_day(:createdAt, range: 1.months.ago.midnight..1.day.ago.midnight).group('userId').count("id")
+    @table = UniqueDoubtAnswer.joins(:user).where(['"userId" in (?)', AdminUser.where(role: ["faculty", "superfaculty"]).pluck(:userId)]).group_by_day(:createdAt, range: 1.months.ago.midnight..Time.now).group('userId').count("id")
     @final_data = {}
   
     @faculty_id_list.each do |userId|
       temp_val = []
-      (1.months.ago.midnight.to_date ... 1.day.ago.midnight.to_date).each_with_index do |date, index|
+      (1.months.ago.midnight.to_date ... Date.today).each_with_index do |date, index|
         @table.each do |table_row|
           row_date = table_row[0][0]
           row_id = table_row[0][1]

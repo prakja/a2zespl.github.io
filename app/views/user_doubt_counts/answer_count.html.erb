@@ -20,7 +20,7 @@
   <table style="border: 1px dotted #999999;text-align: center;" cellpadding="2" cellspacing="2">
     <tr>
       <td style="border: 1px dotted #999999;text-align: center;">Faculty</td>
-      <% (1.months.ago.midnight.to_date ... 1.day.ago.midnight.to_date).each do |date| %>
+      <% (1.months.ago.midnight.to_date ... Date.today).each do |date| %>
         <td style="border: 1px dotted #999999;text-align: center;"><%= date.strftime("%-d %b") %></td>
       <% end %>
     </tr>
