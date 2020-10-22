@@ -22,6 +22,9 @@
 </script>
 <div style="padding: 8px">
   <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
+    <% if(@doubt.admin_user.nil?) %>
+      <button style="margin-bottom: 16px;" onclick="assignToMe()">Assign to me</button>
+    <% end %>
     <h4 style="margin-top: -4px">Doubt by <%= link_to @doubt_user.name, admin_user_path(@doubt_user), target: :_blank %>, <%= link_to "Past Doubts", "/admin/doubts?q[userId_eq]=" + @doubt_user.id.to_s, target: :_blank %> </h4>
     <label><input type="checkbox" id="good_doubt" onchange="onDoubtFlagChange()"> This is a good doubt</label>
     <% if(@doubt.admin_user != nil) %>
@@ -213,6 +216,8 @@ var audioUrl = null;
 var audioBlob = null;
 var mediaRecorder = null;
 
+var doubtId = <%= @doubt_id %>;
+
 function putAnswer() {
   var content = document.getElementById("doubtAnswer_content").value
   if (!content)
@@ -236,6 +241,21 @@ function putAnswer() {
   }
   http.open("POST", url);
   http.send(data);
+}
+
+function assignToMe() {
+  $.ajax({
+    type: "POST",
+    url: "/assign_to_me",
+    data: {
+      "doubtId": doubtId
+    }
+  }).done (function (data) {
+    location.reload();
+  }).fail(function (data) {
+    console.log(data);
+    alert("Failed to assign");
+  });
 }
 
 function onDoubtFlagChange() {

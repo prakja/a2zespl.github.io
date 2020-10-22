@@ -8,6 +8,27 @@ class DoubtAnswersController < ApplicationController
   def create
   end
 
+  def assign_to_me
+    p current_admin_user
+    admin_user_id = current_admin_user[:id]
+    doubt_admin = DoubtAdmin.new()
+    doubt_admin[:doubtId] = params[:doubtId]
+    doubt_admin[:admin_user_id] = admin_user_id
+    doubt_admin[:created_at] = Time.now
+    doubt_admin[:created_at] = Time.now
+    doubt_admin.save!
+    response = {
+      :status => 'ok'
+    }
+    render json: response, :status => 200
+  rescue => exception
+    response = {
+      :status => 'error',
+      :message => exception
+    }
+    render json: response, :status => 500
+  end
+
   def answer
     if not current_admin_user
       redirect_to "/admin/login"
