@@ -23,6 +23,10 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_doubts, show_count: false
   scope :masterclass_paid_student_doubts, show_count: false
 
+  action_item :answer_this_doubt, only: :show do
+    link_to 'Answer this doubt', "/doubt_answers/answer?doubt_id=" + resource.id.to_s, target: "_blank"
+  end
+
   form do |f|
     f.inputs "Doubt" do
       f.input :deleted
