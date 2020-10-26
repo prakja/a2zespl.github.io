@@ -9,13 +9,15 @@
     <tr>
       <th>Id</th>
       <th>Email</th>
+      <th>Course Ids</th>
       <th>Questions</th>
     </tr>
     <% if @users && @users.length > 0 %>
       <% @users.each do |user| %>
         <tr>
-          <td><%= user.id%></td>
+          <td><%= user.id %></td>
           <td><%= user.email %></td>
+          <td><%= user.courseIds %></td>
           <td><%= user.answerCount %></td>
         </tr>
       <% end %>

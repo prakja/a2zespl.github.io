@@ -9,7 +9,7 @@ class UserAnalyticsController < ApplicationController
 
     if request.post?
       emails = params[:emails].split(/\r?\n/)
-      @users = User.where(email: emails).select('"User".*, COUNT("Answer"."id") as "answerCount"').joins('LEFT OUTER JOIN "Answer" ON ("Answer"."userId" = "User"."id")').group('"User"."id"');
+      @users = User.where(email: emails).select('"User".*, COUNT("Answer"."id") as "answerCount", array_agg(distinct("UserCourse"."courseId")) as "courseIds"').joins('LEFT OUTER JOIN "Answer" ON ("Answer"."userId" = "User"."id")').joins('LEFT OUTER JOIN "UserCourse" ON ("UserCourse"."userId" = "User"."id") and "expiryAt" - "startedAt" > INTERVAL \'10 days\' and "trial" = false').group('"User"."id"');
     end
   end
 
