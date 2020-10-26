@@ -1,7 +1,8 @@
 <div style="margin: 20px;">
   <form action="/user_analytics/userData" method="post">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-    <textarea name="emails"><%=params[:emails]%></textarea>
+    <label for="emails">Emails:</label><textarea name="emails"><%=params[:emails]%></textarea>
+    <label for="Phone Numbers">Phone Numbers:</label><textarea name="phone_numbers"><%=params[:phone_numbers]%></textarea>
     <button style="margin-top: 20px;" type="submit">Find</button>
   </form>
   <h3>Users List</h3>
@@ -9,6 +10,9 @@
     <tr>
       <th>Id</th>
       <th>Email</th>
+      <th>Email2</th>
+      <th>Phone</th>
+      <th>Phone2</th>
       <th>Course Ids</th>
       <th>Questions</th>
     </tr>
@@ -17,6 +21,9 @@
         <tr>
           <td><%= user.id %></td>
           <td><%= user.email %></td>
+          <td><%=user.userProfileEmail[0]%></td>
+          <td><%= user.phone %></td>
+          <td><%=user.userProfilePhone[0]%></td>
           <td><%= user.courseIds %></td>
           <td><%= user.answerCount %></td>
         </tr>
