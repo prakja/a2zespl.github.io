@@ -71,10 +71,14 @@ ActiveAdmin.register FlashCard do
       # render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
     end
 
-    f.has_many :topicFlashCards, heading: false, allow_destroy: true do |t|
-      t.inputs "Chapter" do
-        t.input :seqId
-        t.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
+    p current_admin_user.role
+
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
+      f.has_many :topicFlashCards, heading: false, allow_destroy: true do |t|
+        t.inputs "Chapter" do
+          t.input :seqId
+          t.input :topic, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
+        end
       end
     end
     f.actions
