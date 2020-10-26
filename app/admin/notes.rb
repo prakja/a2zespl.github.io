@@ -16,6 +16,7 @@ ActiveAdmin.register Note do
     end
     column :createdAt
     column :updatedAt
+    column ("History") {|note| raw('<a target="_blank" href="/admin/notes/' + (note.id).to_s + '/history">View History</a>')}
     actions
   end
 
@@ -57,6 +58,12 @@ ActiveAdmin.register Note do
       # f.input :epubContent, hint: link_to('Epub Html', note.githubEpubContent)
     end
     f.actions
+  end
+
+  member_action :history do
+    @note = Note.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Note', item_id: @note.id)
+    render "layouts/history"
   end
 
 end

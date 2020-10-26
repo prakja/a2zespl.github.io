@@ -1,0 +1,25 @@
+<script>
+tinymce.PluginManager.add('ncertBlueBox', function(editor) {
+  // Add a button that opens a window
+  editor.addButton('ncertBlueBox', {
+    text: 'NCERT Blue Box',
+    icon: false,
+    onclick: function() {
+      editor.focus();
+      var text = editor.selection.getContent({'format': 'html'});
+      if(text && text.length > 0) {
+        editor.execCommand('mceReplaceContent', false, '<div class="box">'+text+'</div>');
+      }
+    }
+  });
+
+  return {
+    getMetadata: function () {
+      return  {
+        name: "NCERT Blue Box Plugin",
+        url: "https://admin1.neetprep.com/admin"
+      };
+    }
+  };
+});
+</script>

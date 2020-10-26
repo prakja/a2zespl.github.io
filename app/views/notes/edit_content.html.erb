@@ -18,6 +18,7 @@
 <%= render partial: "tinymce_yt_async_plugin" %>
 <%= render partial: "tinymce_que_plugin" %>
 <%= render partial: "mathjax" %>
+<%= render partial: "tinymce_ncert_div_box" %>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
 <script>
 let cssLink = document.getElementById('note_content').value.split('rel="stylesheet" type="text/css"/>')[0];
@@ -28,10 +29,10 @@ tinymce.init({
   height: 600,
   content_css: (cssLink.match(/https:\/\/.*\.css/) || [""])[0],
   content_css_cors: true,
-  plugins: "link image code paste media textcolor colorpicker template questionIframe youtubeIframeAsync",
+  plugins: "link image code paste media textcolor colorpicker template questionIframe youtubeIframeAsync ncertBlueBox",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,template,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,template,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync,|,ncertBlueBox',
   paste_data_images: true,
   extended_valid_elements : 'a[id|class|style|width|height|onclick|href],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset]',
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
