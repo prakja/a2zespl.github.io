@@ -8,16 +8,18 @@ filter :topics, as: :searchable_select, multiple: true, collection: -> {Topic.na
 
 preserve_default_filters!
 
-scope :neet_course
-scope :test_series_2018
-scope :test_series_2019
-scope :test_series_2020
+scope :system_tests, default: true, show_count: false
+scope :neet_course, show_count: false
+scope :test_series_2018, show_count: false
+scope :test_series_2019, show_count: false
+scope :test_series_2020, show_count: false
 
-scope :botany
-scope :chemistry
-scope :physics
-scope :zoology
-scope :dynamic_tests
+scope :botany, show_count: false
+scope :chemistry, show_count: false
+scope :physics, show_count: false
+scope :zoology, show_count: false
+scope :dynamic_tests, show_count: false
+scope :all, show_count: false
 
 index do
   id_column
