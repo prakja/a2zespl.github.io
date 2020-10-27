@@ -10,6 +10,44 @@ class QuestionsController < ApplicationController
     redirect_to "/admin/courses/" + id.to_s
   end
 
+  def translation_pdf
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @subject = params[:subject]
+    @topicId = params[:topic]
+
+    @subjectListIds = {
+      'physics' => 55,
+      'chemistry' => 54,
+      'botany' => 53,
+      'zoology' => 56
+    }
+    @chapters_data = {}
+    @chapters = Topic.where(subject: @subjectListIds[@subject])
+    @chapters.each do |chapter|
+      @chapters_data[chapter.id] = [chapter.name]
+    end
+
+    if @subject == 'physics' && @topicId
+      @questions = Question.subject_name(55).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+    elsif @subject == 'chemistry'  && @topicId
+      @questions = Question.subject_name(54).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+    elsif @subject == 'botany' && @topicId
+      @questions = Question.subject_name(53).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+    elsif @subject == 'zoology' && @topicId
+      @questions = Question.subject_name(56).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+    end
+
+    p @questions
+
+    # @questions.each do |question|
+    #   @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage, question.correctOptionIndex]
+    # end
+  end
+
   def pdf_questions
     if not current_admin_user
       redirect_to "/admin/login"

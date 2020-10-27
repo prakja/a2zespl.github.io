@@ -1,0 +1,67 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  };
+</script>
+
+<div style="margin: 32px">
+  <label>Topics :</label>
+  <select name="topic" id="topicList">
+    <option value=''>Select Chapter</option>
+    <% @chapters_data.each do |key, value| %>
+      <%= raw("<option value='" + key.to_s + "'>" + value[0].to_s + "</option>") %>
+    <% end %>
+  </select>
+  <button onclick="getChapterQuestions()">Get Questions</button>
+  <input type="checkbox" id="hide_audio" name="hide_audio" value="Hide">
+  <label for="hide_audio"> Hide Audio Tags</label><br>
+</div>
+
+<div style="margin: 32px">
+  <% @questions.each do |question| %>
+    <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
+
+      <a href="<%= "https://admin1.neetprep.com/admin/questions/" + question.id.to_s %>"><%= "https://admin1.neetprep.com/admin/questions/" + question.id.to_s %></a>
+      <h3 style="margin-top: -2px"><%= raw(question.question) %></h3>
+      <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
+        <h4><b><%= raw('Explanation:') %></b></h4>
+        <h3 style="margin-top: -2px"><%= raw(question.explanation) %></h3>
+      </div>
+      <p>Translation</p>
+      <a href="<%= "https://admin1.neetprep.com/admin/question_translations/" + question.translated_id.to_s %>"><%= "https://admin1.neetprep.com/admin/question_translations/" + question.translated_id.to_s %></a>
+      <h3 style="margin-top: -2px"><%= raw(question.translated_question) %></h3>
+      <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
+        <h4><b><%= raw('Explanation:') %></b></h4>
+        <h3 style="margin-top: -2px"><%= raw(question.translated_explanation) %></h3>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+
+  $(function () {
+    $("select").select2();
+  });
+
+  $("#hide_audio").change(function() {
+    if(this.checked) {
+      $("audio").hide();
+    } else {
+      $("audio").show();
+    }
+  });
+
+  function getChapterQuestions() {
+    let chapterId = $("#topicList option:selected").val();
+    let subject = '<%= @subject %>';
+    if (chapterId == null){
+      alert('Chapter is not selected');
+      return
+    }
+    window.location = window.location.origin + "/questions/translation_pdf?subject=" + subject + "&topic=" + chapterId;
+  }
+
+</script>
