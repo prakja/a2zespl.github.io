@@ -9,7 +9,20 @@ class UserAnalyticsController < ApplicationController
 
     if request.post?
       emails = params[:emails].split(/\r?\n/)
-      @users = User.where(email: emails).select('"User".*, COUNT("Answer"."id") as "answerCount"').joins('LEFT OUTER JOIN "Answer" ON ("Answer"."userId" = "User"."id")').group('"User"."id"');
+      ids = User.where(email: emails).select("id").all
+      ids = (ids + UserProfile.where(email: emails).select("userId").all).uniq
+      phone_numbers = params[:phone_numbers].split(/\r?\n/)
+      related_phone_numbers = []
+      phone_numbers.each do |number|
+        related_phone_numbers << '+91' + number.split(//).last(10).join
+        related_phone_numbers << '0' + number.split(//).last(10).join
+        related_phone_numbers << number.split(//).last(10).join
+      end
+      related_phone_numbers.uniq!
+      ids = (ids + User.where(phone: related_phone_numbers).select("id").all).uniq
+      ids = (ids + UserProfile.where(phone: related_phone_numbers).select("userId").all).uniq
+      # get ids on above emails & phone numbers
+      @users = User.where(id: ids).select('"User".*, COUNT("Answer"."id") / case COUNT(distinct("UserCourse"."courseId")) when 0 then 1 else COUNT(distinct("UserCourse"."courseId")) end as "answerCount", array_agg(distinct("UserCourse"."courseId")) as "courseIds", array_agg(distinct("UserProfile"."phone")) as "userProfilePhone", array_agg(distinct("UserProfile"."email")) as "userProfileEmail"').joins('LEFT OUTER JOIN "Answer" ON ("Answer"."userId" = "User"."id")').joins('LEFT OUTER JOIN "UserCourse" ON ("UserCourse"."userId" = "User"."id") and "expiryAt" - "startedAt" > INTERVAL \'10 days\' and "trial" = false and "expiryAt" > \'2020-08-12\'').joins('LEFT OUTER JOIN "UserProfile" ON ("UserProfile"."userId" = "User"."id")').group('"User"."id"');
     end
   end
 
