@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get "user_analytics/userData"
   post "user_analytics/populate_user_activites"
   get "questions/pdf_questions"
+  get "questions/translation_pdf"
   get "questions/easy_questions"
   get "course_invitations/multiple_courses"
   post "course_invitations/createCourseInvitation"
