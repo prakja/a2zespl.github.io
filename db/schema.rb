@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_08_171001) do
+ActiveRecord::Schema.define(version: 2020_10_29_082755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -180,6 +180,14 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
   end
 
   create_table "ChapterQuestion20200929", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "chapterId"
+    t.integer "questionId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+  end
+
+  create_table "ChapterQuestion20201005", id: false, force: :cascade do |t|
     t.integer "id"
     t.integer "chapterId"
     t.integer "questionId"
@@ -993,8 +1001,13 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
     t.datetime "createdAt", default: -> { "now()" }, null: false
     t.datetime "updatedAt", default: -> { "now()" }, null: false
     t.index ["chapterId", "subjectId"], name: "subject_chapter_subject_id_chapter_id", unique: true
+    t.index ["chapterId"], name: "SubjectChapter_chapterId_idx"
     t.index ["chapterId"], name: "subject_chapter_chapter_id"
+    t.index ["deleted"], name: "SubjectChapter_deleted_idx"
     t.index ["deleted"], name: "subject_chapter_deleted"
+    t.index ["subjectId", "chapterId", "deleted"], name: "SubjectChapter_subjectId_chapterId_deleted_idx"
+    t.index ["subjectId", "chapterId"], name: "SubjectChapter_subjectId_chapterId_idx"
+    t.index ["subjectId"], name: "SubjectChapter_subjectId_idx"
     t.index ["subjectId"], name: "subject_chapter_subject_id"
   end
 
@@ -1008,6 +1021,9 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
     t.string "status", default: "active"
     t.integer "maxMarks", default: 720
     t.string "testType"
+    t.index ["status"], name: "Target_status_idx"
+    t.index ["testId"], name: "Target_testId_idx"
+    t.index ["updatedAt"], name: "Target_updatedAt_idx"
     t.index ["userId", "status"], name: "Target_userId_status_idx"
     t.index ["userId"], name: "Target_userId_idx"
   end
@@ -1549,6 +1565,15 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
     t.index ["userId"], name: "index_user_actions_on_userId", unique: true
   end
 
+  create_table "version_associations", force: :cascade do |t|
+    t.integer "version_id"
+    t.string "foreign_key_name", null: false
+    t.integer "foreign_key_id"
+    t.string "foreign_type"
+    t.index ["foreign_key_name", "foreign_key_id", "foreign_type"], name: "index_version_associations_on_foreign_key"
+    t.index ["version_id"], name: "index_version_associations_on_version_id"
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.bigint "item_id", null: false
@@ -1556,7 +1581,10 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
+    t.string "whodunnit_type", default: "admin"
+    t.integer "transaction_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["transaction_id"], name: "index_versions_on_transaction_id"
   end
 
   add_foreign_key "Answer", "\"Question\"", column: "questionId", name: "Answer_questionId_fkey", on_update: :cascade, on_delete: :nullify
@@ -1653,4 +1681,5 @@ ActiveRecord::Schema.define(version: 2020_10_08_171001) do
   add_foreign_key "student_coaches", "\"User\"", column: "studentId"
   add_foreign_key "student_coaches", "admin_users", column: "coachId"
   add_foreign_key "user_actions", "\"User\"", column: "userId"
+  add_foreign_key "version_associations", "versions"
 end

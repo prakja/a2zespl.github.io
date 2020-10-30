@@ -1,0 +1,41 @@
+panel "History" do
+  render partial: "chapters", locals: {target: target}
+  table_for assigns[:actions] do
+    column ("Item") do |v|
+      # if v.item
+      #   link_to v.item.id, [:admin, v.item]
+      # end
+      v[:item_id]
+    end
+    column ("Type") { |v| v[:item_type].underscore.humanize }
+    column ("Modified at") { |v| v[:created_at].to_s :long }
+    column ("Event") { |v| v[:event].underscore.humanize }
+    column ("Change") { |v| simple_format(v[:object]) || ''}
+    # list_column ("Address") do |v|
+    #   if v.item_type == 'Delivery' and v.object
+    #     v.object[/#{'address:'}(.*?)#{'counselorName:'}/m, 1].split('\r\n')
+    #   end
+    # end
+    column ("Chapter Change") { |v|
+      action = v[:actions]
+      to_render = ""
+      # sorry i ran out of veriable names and i just wanted to get done with this
+      action.each do |temp|
+        to_render = to_render + "<p>" + temp[:action] + " - " + temp[:chapter] + "</p>"
+      end
+
+      raw("<div>" + to_render + "</div>")
+    }
+    column ("Type") { |v| v[:whodunnit_type]}
+    column ("Whodunnit") { |v| 
+      if v[:whodunnit].blank? then '' 
+      elsif v[:whodunnit_type] == 'admin'
+        link_to AdminUser.find(v[whodunnit]).email, [:admin, AdminUser.find(v[:whodunnit])]
+      else
+        raw('<a href="/admin/users/' + v[:whodunnit].to_s + '">' + User.find(v[:whodunnit]).email + '</a>')
+      end
+    }
+    
+  end
+end
+

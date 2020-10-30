@@ -40,6 +40,9 @@ class Topic < ApplicationRecord
 
   has_many :sections, class_name: "Section", foreign_key: "chapterId"
 
+  has_many :target_chapters, class_name: "TargetChapter", foreign_key: "chapterId"
+  has_many :targets, through: :target_chapters
+
   def hinglish_videos
     self.videos.where(language: 'hinglish')
   end

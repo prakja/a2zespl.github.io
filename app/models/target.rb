@@ -2,7 +2,8 @@ class Target < ApplicationRecord
   self.table_name = "Target"
   validate :check_current_active, :on => :create
 
-  has_many :target_chapters, class_name: "TargetChapter", foreign_key: "targetId"
+  has_many :target_chapters, class_name: "TargetChapter", foreign_key: "targetId", dependent: :destroy
+  has_many :chapters, through: :target_chapters
   belongs_to :user, class_name: "User", foreign_key: "userId"
   belongs_to :test, class_name: "Test", foreign_key: "testId", optional: true
 
