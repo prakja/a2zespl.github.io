@@ -16,7 +16,7 @@ class TestsController < ApplicationController
       end
 
     rescue => exception
-
+      p exception
     end
   end
 
@@ -42,7 +42,7 @@ class TestsController < ApplicationController
     @testId = params[:testId]
     @test = Test.where(id: @testId).first
     @tests_data = {}
-    @tests = Test.where.not(id: @test.id)
+    @tests = Test.where(userId: nil).where('"createdAt" > current_timestamp - interval \'3 months\'').where.not(id: @test.id)
     @tests.each do |test|
       @tests_data[test.id] = [test.name]
     end
@@ -90,7 +90,7 @@ class TestsController < ApplicationController
       end
 
     rescue => exception
-
+      p exception
     end
   end
 

@@ -1,6 +1,6 @@
 class Test < ApplicationRecord
   before_save :default_values
-  default_scope {where(userId: nil)}
+  #default_scope {where(userId: nil)}
   scope :dynamic_tests, -> {unscope(:where).where.not(userId: nil)}
   def default_values
     self.ownerType = nil if self.ownerId.blank?
@@ -102,6 +102,7 @@ class Test < ApplicationRecord
   }
 
   scope :neet_course, -> {course_name(8)}
+  scope :system_tests, -> {where(userId: nil)}
   scope :test_series_2018, -> {course_name(128)}
   scope :test_series_2019, -> {course_name(148)}
   scope :test_series_2020, -> {course_name(452)}
