@@ -116,6 +116,7 @@ class Question < ApplicationRecord
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
+  scope :unused_in_high_yield_bio, -> {where('"id" in (select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" = 270) and "seqNum" = 0 except select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" in (148,452)))')}
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
   has_many :translations, class_name: "QuestionTranslation", foreign_key: "questionId"
