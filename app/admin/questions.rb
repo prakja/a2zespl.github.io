@@ -155,10 +155,11 @@ ActiveAdmin.register Question do
 
   csv do
     column (:id)
+    column (:chapter_id) {|question| question&.topicId}
     column (:chapter) {|question| question&.topic&.name}
     # column (:chapter) {|question| question&.topics&.first&.id}
-    column (:chapter_id) {|question| question&.topicId}
-    column (:subtopic) {|question| question&.subTopics&.first&.id}
+    column (:subtopic_id) {|question| question&.subTopics&.first&.id}
+    column (:subtopic) {|question| question&.subTopics&.first&.name}
     # column (:subject) {|question| question&.topics&.first&.subject&.name}
     column (:question) {|question| question.question && question.question.squish}
     column (:explanation) {|question| question.explanation && question.explanation.squish}
