@@ -43,7 +43,7 @@ tinymce.init({
     {title: 'NCERT Audio Note (inline)', description: 'NCERT Audio Note', content: '&nbsp;<span style="background-color: lightyellow;"><strong>NEETprep Audio Note:</strong><span style="height: 18px; vertical-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span>'}
   ],
   video_template_callback: (data) => {
-    return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
+    return '<audio controls preload="none" controlslist="nodownload">' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
   },
   file_picker_callback: function(cb, value, meta) {
     if (meta.filetype != "media") {
