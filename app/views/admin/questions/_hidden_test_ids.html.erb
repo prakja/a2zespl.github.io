@@ -1,10 +1,11 @@
 <% added_hidden_test_field = false %>
+<% recent_test_ids = Test.where(userId: nil).order(createdAt: :desc).limit(100).pluck("id") %>
 <% tests.each do |test| %>
-  <% if not Test.order(createdAt: :desc).limit(100).pluck("id").include?(test.id) %>
-    <input type="hidden" name="question[test_ids][]" value="<%=test.id%>"/>
+  <% if not recent_test_ids.include?(test.id) %>
+    <input type="hidden" name="question[systemTest_ids][]" value="<%=test.id%>"/>
     <% added_hidden_test_field = true %>
   <% end %>
 <% end %>
 <% if added_hidden_test_field == false %>
-  <input type="hidden" name="question[test_ids][]" value=""/>
+  <input type="hidden" name="question[systemTest_ids][]" value=""/>
 <% end %>

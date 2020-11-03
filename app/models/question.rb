@@ -134,6 +134,7 @@ class Question < ApplicationRecord
 
   has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion', dependent: :destroy
   has_many :tests, through: :questionTests, dependent: :destroy
+  has_many :systemTests, -> {where userId: nil}, through: :questionTests, dependent: :destroy, source: "test"
 
   has_many :answers, class_name: "Answer", foreign_key: :questionId
 
