@@ -43,6 +43,9 @@ class Topic < ApplicationRecord
   has_many :target_chapters, class_name: "TargetChapter", foreign_key: "chapterId"
   has_many :targets, through: :target_chapters
 
+  has_many :chapter_glossaries, foreign_key: "chapterId", class_name: 'ChapterGlossary'
+  has_many :glossaries, through: :chapter_glossaries
+
   def hinglish_videos
     self.videos.where(language: 'hinglish')
   end
