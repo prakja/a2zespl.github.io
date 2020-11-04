@@ -212,15 +212,15 @@ class DoubtAnswersController < ApplicationController
   def create_answer_row (userId, doubtId, content)
     p "Posting Answer, for user " + userId.to_s
 
-    urls = [] 
-    content.scan(/(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/) do |match|
-      urls << match if not match.nil?
-    end
+    # urls = [] 
+    # content.scan(/(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/) do |match|
+    #   urls << match if not match.nil?
+    # end
 
-    urls.each do |url|
-      to_replace = url[0]
-      content = content.gsub(to_replace, '<a target="_blank" href="' + to_replace + '">' + to_replace + '</a>')
-    end
+    # urls.each do |url|
+    #   to_replace = url[0]
+    #   content = content.gsub(to_replace, '<a target="_blank" href="' + to_replace + '">' + to_replace + '</a>')
+    # end
 
     @new_answer = DoubtAnswer.new()
     @new_answer[:content] = content
