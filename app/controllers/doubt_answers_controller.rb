@@ -29,6 +29,34 @@ class DoubtAnswersController < ApplicationController
     render json: response, :status => 500
   end
 
+  def mark_as_solved
+    if not current_admin_user
+      raise "User not logged in"
+    end
+
+    doubt_id = params[:doubtId]
+    doubt = Doubt.find(doubt_id)
+    doubt_admin = DoubtAdmin.where(admin_user_id: current_admin_user.id, doubtId: doubt.id)
+    if current_admin_user.role != 'admin'
+      raise "Not your doubt" if doubt_admin.empty?
+    else
+      p "Admin user, bypass assign check"
+    end
+    doubt.doubtSolved = true
+    doubt.save
+
+    response = {
+      :status => 'ok'
+    }
+    render json: response, :status => 200
+  rescue => exception
+    response = {
+      :status => 'error',
+      :message => exception
+    }
+    render json: response, :status => 500
+  end
+
   def answer
     if not current_admin_user
       redirect_to "/admin/login"

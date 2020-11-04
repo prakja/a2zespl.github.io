@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "customer_supports/pending_stats"
   get "customer_issues/pending_stats"
   get "doubt_answers/answer"
+  post "doubt_answers/mark_as_solved"
   get "doubt_answers/connect_user"
   post "doubt_answers/post_answer"
   post "doubt_answers/toggle_good_flag"

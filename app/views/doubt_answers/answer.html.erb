@@ -56,6 +56,14 @@
       </div>
     <% end %>
   </div>
+  <div class="mark-as-solved" style="margin: 32px">
+    <% if not @doubt.doubtSolved %>
+      <h4>Mark solved:</h4>
+      <button onclick="markAsSolved()">Mark as Solved</button>
+    <% else %>
+      <h4>Doubt is marked solved</h4>
+    <% end %>
+  </div>
   <div style="margin: 32px; margin-top: 4px;">
     <h4>Add your Answer:</h4>
 
@@ -270,6 +278,19 @@ function onDoubtFlagChange() {
     }
   }).done (function (data) {
     data = null;
+  });
+}
+
+function markAsSolved() {
+  const url = window.location.origin + "/doubt_answers/mark_as_solved/";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      "doubtId": "<%= @doubt_id %>"
+    }
+  }).done (function (data) {
+    $(".mark-as-solved").hide();
   });
 }
 
