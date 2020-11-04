@@ -39,9 +39,11 @@ class Doubt < ApplicationRecord
     if solved == "yes"
       # where(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).or(where.not(teacherReply: nil))
       where.not('"doubtSolved" is false and ((NOT EXISTS (SELECT "id" from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id")) OR ((SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id") = (SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id" and "Doubt"."userId" = "DoubtAnswer"."userId")))')
+      .where(createdAt: 3.days.ago..DateTime::Infinity.new)
     else
       # possible arel deprecation fix https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd (Tip #3)
       where('"doubtSolved" is false and ((NOT EXISTS (SELECT "id" from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id")) OR ((SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id") = (SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id" and "Doubt"."userId" = "DoubtAnswer"."userId")))')
+      .where(createdAt: 3.days.ago..DateTime::Infinity.new)
     end
   }
   scope :paid, ->(course_ids, paid) {
