@@ -39,11 +39,9 @@ class Doubt < ApplicationRecord
     if solved == "yes"
       # where(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" and "DoubtAnswer"."userId" != "Doubt"."userId"').exists).or(where.not(teacherReply: nil))
       where.not('"doubtSolved" is false and ((NOT EXISTS (SELECT "id" from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id")) OR ((SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id") = (SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id" and "Doubt"."userId" = "DoubtAnswer"."userId")))')
-      .where(createdAt: 3.days.ago..DateTime::Infinity.new)
     else
       # possible arel deprecation fix https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd (Tip #3)
       where('"doubtSolved" is false and ((NOT EXISTS (SELECT "id" from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id")) OR ((SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id") = (SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id" and "Doubt"."userId" = "DoubtAnswer"."userId")))')
-      .where(createdAt: 3.days.ago..DateTime::Infinity.new)
     end
   }
   scope :paid, ->(course_ids, paid) {
@@ -68,6 +66,10 @@ class Doubt < ApplicationRecord
     end
   }
 
+  scope :three_days_pending, ->() {
+      where(createdAt: 3.days.ago..DateTime::Infinity.new)
+  }
+
   scope :five_days_pending, ->(five_days_pending) {
     if five_days_pending == "yes"
       where(createdAt: 5.days.ago..DateTime::Infinity.new)
@@ -80,11 +82,11 @@ class Doubt < ApplicationRecord
     end
   }
 
-  scope :botany_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 20, 100, 51, 120], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447]).distinct}
-  scope :chemistry_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 19, 100, 51], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169]).distinct}
-  scope :physics_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 18, 100, 51], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170]).distinct}
-  scope :zoology_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 20, 100, 51, 120], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448]).distinct}
-  scope :masterclass_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([253, 254, 255], 'yes').deleted('no').subject_name([627, 628, 629, 630]).distinct}
+  scope :botany_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').three_days_pending().paid([8, 141, 20, 100, 51, 120], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447]).distinct}
+  scope :chemistry_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').three_days_pending().paid([8, 141, 19, 100, 51], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169]).distinct}
+  scope :physics_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').three_days_pending().paid([8, 141, 18, 100, 51], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170]).distinct}
+  scope :zoology_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').three_days_pending().paid([8, 141, 20, 100, 51, 120], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448]).distinct}
+  scope :masterclass_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').three_days_pending().paid([253, 254, 255], 'yes').deleted('no').subject_name([627, 628, 629, 630]).distinct}
 
   scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135]).distinct}
 
