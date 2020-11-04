@@ -30,7 +30,7 @@ panel "History" do
     column ("Whodunnit") { |v| 
       if v[:whodunnit].blank? then '' 
       elsif v[:whodunnit_type] == 'admin'
-        link_to AdminUser.find(v[whodunnit]).email, [:admin, AdminUser.find(v[:whodunnit])]
+        link_to AdminUser.find(v[:whodunnit]).email, [:admin, AdminUser.find(v[:whodunnit])]
       else
         raw('<a href="/admin/users/' + v[:whodunnit].to_s + '">' + User.find(v[:whodunnit]).email + '</a>')
       end
