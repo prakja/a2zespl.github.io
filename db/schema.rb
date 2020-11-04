@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_29_082755) do
+ActiveRecord::Schema.define(version: 2020_11_03_054100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -134,6 +134,13 @@ ActiveRecord::Schema.define(version: 2020_10_29_082755) do
     t.datetime "updatedAt"
     t.integer "flashCardId"
     t.integer "seqId"
+  end
+
+  create_table "ChapterGlossary", force: :cascade do |t|
+    t.integer "chapterId"
+    t.integer "glossaryId"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
   end
 
   create_table "ChapterMindmap", id: :serial, force: :cascade do |t|
@@ -606,6 +613,15 @@ ActiveRecord::Schema.define(version: 2020_10_29_082755) do
     t.string "title"
     t.datetime "createdAt"
     t.datetime "updatedAt"
+  end
+
+  create_table "Glossary", force: :cascade do |t|
+    t.string "word"
+    t.string "translation"
+    t.string "language"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.index ["word"], name: "index_Glossary_on_word", unique: true
   end
 
   create_table "Group", id: :serial, force: :cascade do |t|
@@ -1591,6 +1607,8 @@ ActiveRecord::Schema.define(version: 2020_10_29_082755) do
   add_foreign_key "Answer", "\"User\"", column: "userId", name: "Answer_userId_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "ChapterFlashCard", "\"FlashCard\"", column: "flashCardId"
   add_foreign_key "ChapterFlashCard", "\"Topic\"", column: "chapterId"
+  add_foreign_key "ChapterGlossary", "\"Glossary\"", column: "glossaryId"
+  add_foreign_key "ChapterGlossary", "\"Topic\"", column: "chapterId"
   add_foreign_key "ChapterMindmap", "\"Note\"", column: "noteId", name: "ChapterMindmap_noteId_fkey"
   add_foreign_key "ChapterMindmap", "\"Topic\"", column: "chapterId", name: "ChapterMindmap_chapterId_fkey"
   add_foreign_key "ChapterNote", "\"Note\"", column: "noteId", name: "fk_chapter_note_noteid"
