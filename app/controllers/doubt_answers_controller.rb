@@ -212,15 +212,18 @@ class DoubtAnswersController < ApplicationController
   def create_answer_row (userId, doubtId, content)
     p "Posting Answer, for user " + userId.to_s
 
-    # urls = [] 
-    # content.scan(/(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/) do |match|
-    #   urls << match if not match.nil?
-    # end
+    parsed_data = Nokogiri::HTML.parse(content)
+    parsed_data.xpath("//p").each do |para|
+      if not para.text.strip.empty?
+        text = para.text
+        re = /(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/
+        if re.match?(text)
+          para.inner_html = '<a target="_blank" href="' + text + '">' + text + '</a>'
+        end
+      end
+    end
 
-    # urls.each do |url|
-    #   to_replace = url[0]
-    #   content = content.gsub(to_replace, '<a target="_blank" href="' + to_replace + '">' + to_replace + '</a>')
-    # end
+    content = parsed_data.at('body').inner_html
 
     @new_answer = DoubtAnswer.new()
     @new_answer[:content] = content
