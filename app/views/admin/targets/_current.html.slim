@@ -1,0 +1,15 @@
+div style="margin-bottom: 16px"
+  p
+    strong User: 
+    strong = link_to  target.user.name, "/admin/users/" + target.user.id.to_s 
+  p
+    strong Current Target Chapters
+    ui
+      - target.chapters.each do |chapter|
+        li #{chapter[:name]}
+  p
+    strong #{"Test ID: " + target.testId.to_s}
+  p
+    strong #{"Target Score/Max marks: " + target.score.to_s + "/" + target.maxMarks.to_s}
+  p
+    strong #{"Target Date: " + target.targetDate.strftime("%B %d, %Y")}

@@ -1,5 +1,5 @@
 panel "History" do
-  render partial: "chapters", locals: {target: target}
+  render partial: "current", locals: {target: target}
   table_for assigns[:actions] do
     column ("Item") do |v|
       # if v.item
