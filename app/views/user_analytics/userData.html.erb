@@ -15,6 +15,7 @@
       <th>Phone2</th>
       <th>Course Ids</th>
       <th>Questions</th>
+      <th>Successful Payments</th>
     </tr>
     <% if @users && @users.length > 0 %>
       <% @users.each do |user| %>
@@ -26,6 +27,7 @@
           <td><%=user.userProfilePhone[0]%></td>
           <td><%= user.courseIds %></td>
           <td><%= user.answerCount %></td>
+          <td><%= link_to "User Payments", admin_payments_path(q: {userId_eq: user.id}, order: 'createdAt_desc', scope: 'successful_payments') %></td>
         </tr>
       <% end %>
     <% end %>

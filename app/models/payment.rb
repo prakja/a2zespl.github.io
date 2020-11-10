@@ -1,16 +1,14 @@
 class Payment < ApplicationRecord
-  default_scope {where(paymentMode: ['kotak','cash','paytm','paytm wallet']).or(where(status: 'responseReceivedSuccess'))}
+  #default_scope {where(paymentMode: ['kotak','cash','paytm','paytm wallet']).or(where(status: 'responseReceivedSuccess'))}
   before_create :before_create_update_set_default_values, :setCreatedTime, :setUpdatedTime
   before_update :before_create_update_set_default_values, :setUpdatedTime
-  scope :failed_payments, -> {unscope(:where).where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
-  scope :kotak_payments, -> {unscope(:where).where(paymentMode: 'kotak')}
-  scope :paytm_payments, -> {unscope(:where).where(paymentMode: 'paytm')}
-  scope :cash_payments, -> {unscope(:where).where(paymentMode: 'cash')}
-  scope :direct_payments, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil)}
-  scope :direct_payments_test_series, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 31)}
-  scope :direct_payments_master_class, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 253)}
-  scope :direct_payments_master_class2, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 254)}
-    scope :direct_payments_master_class3, -> {unscope(:where).where(status: 'responseReceivedSuccess').where(paymentMode: nil).where(paymentForId: 255)}
+  scope :failed_payments, -> {where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
+  scope :kotak_payments, -> {where(paymentMode: 'kotak')}
+  scope :paytm_payments, -> {where(paymentMode: 'paytm')}
+  scope :cash_payments, -> {where(paymentMode: 'cash')}
+  scope :successful_payments, -> {where(status: 'responseReceivedSuccess')}
+  scope :direct_payments_test_series, -> {where(status: 'responseReceivedSuccess').where(paymentForId: 31)}
+  scope :direct_payments_master_class, -> {where(status: 'responseReceivedSuccess').where(paymentForId: 255)}
   validates_presence_of  :amount, :paymentMode
 
   has_paper_trail
