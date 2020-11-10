@@ -21,6 +21,8 @@ class User < ApplicationRecord
  has_many :userFlashCards, class_name: "UserFlashCard", foreign_key: "userId", dependent: :destroy
  has_many :flash_cards, through: :userFlashCards
 
+ has_many :results, class_name: "UserResult", foreign_key: "userId"
+
  scope :student_name, ->(name) {
    joins(:user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
  }
