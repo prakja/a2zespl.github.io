@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_03_105101) do
+ActiveRecord::Schema.define(version: 2020_11_10_113505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -1321,6 +1321,19 @@ ActiveRecord::Schema.define(version: 2020_11_03_105101) do
     t.index ["userId"], name: "user_profile_user_id", unique: true
   end
 
+  create_table "UserResult", force: :cascade do |t|
+    t.integer "userId", null: false
+    t.string "name"
+    t.integer "marks"
+    t.integer "air"
+    t.string "state"
+    t.string "city"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+    t.integer "year"
+    t.string "userImage"
+  end
+
   create_table "UserScheduledTask", id: :serial, force: :cascade do |t|
     t.integer "userId"
     t.integer "scheduledTaskId"
@@ -1684,6 +1697,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_105101) do
   add_foreign_key "UserFlashCard", "\"User\"", column: "userId"
   add_foreign_key "UserLogin", "\"User\"", column: "userId", name: "fk_user_login_user"
   add_foreign_key "UserProfile", "\"User\"", column: "userId", name: "UserProfile_userId_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "UserResult", "\"User\"", column: "userId"
   add_foreign_key "UserTodo", "\"Subject\"", column: "subjectId"
   add_foreign_key "UserTodo", "\"Topic\"", column: "chapterId"
   add_foreign_key "UserTodo", "\"User\"", column: "userId"
