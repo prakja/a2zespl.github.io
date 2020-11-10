@@ -6,15 +6,14 @@ ActiveAdmin.register Payment do
   preserve_default_filters!
   filter :userId_eq, as: :number, label: "User ID"
 
-  scope :failed_payments
-  scope :kotak_payments
-  scope :paytm_payments
-  scope :cash_payments
-  scope :direct_payments
-  scope :direct_payments_test_series
-  scope :direct_payments_master_class
-  scope :direct_payments_master_class2
-  scope :direct_payments_master_class3
+  #scope :kotak_payments, show_count: false
+  scope :successful_payments, show_count: false, default: true
+  scope :direct_payments_master_class, show_count: false
+  scope :direct_payments_test_series, show_count: false
+  scope :failed_payments, show_count: false
+  scope :paytm_payments, show_count: false
+  scope :all, show_count: false
+  #scope :cash_payments, show_count: false
 
   action_item :fetch_quickbook_payments, only: :index do
     link_to 'Fetch Payments (Quick Book)', Rails.configuration.node_site_url + 'getPaymentsFromQuickBook'
@@ -70,8 +69,10 @@ ActiveAdmin.register Payment do
 
   index do
     id_column
+    column :createdAt
     column :course
     column (:amount) { |payment| raw(payment.amount)  }
+    column (:status) { |payment| raw(payment.status)  }
     column (:userName) { |payment| raw(payment.userName)  }
     column (:userEmail) { |payment| raw(payment.userEmail)  }
     column (:userPhone) { |payment| raw(payment.userPhone)  }
@@ -96,7 +97,6 @@ ActiveAdmin.register Payment do
         end
       }
     end
-    column :createdAt
     column ("History") {|payment| raw('<a target="_blank" href="/admin/payments/' + (payment.id).to_s + '/history">View History</a>')}
     actions
   end
