@@ -7,6 +7,19 @@ class Target < ApplicationRecord
   belongs_to :user, class_name: "User", foreign_key: "userId"
   belongs_to :test, class_name: "Test", foreign_key: "testId", optional: true
 
+  before_create :setCreatedTime, :setUpdatedTime
+  before_update :setUpdatedTime
+
+  def setCreatedTime
+    self.createdAt = Time.now
+  end
+
+  def setUpdatedTime
+    self.updatedAt = Time.now
+  end
+
+  has_paper_trail
+
   def check_current_active
     p "Checking for past targets"
     current_active = Target.where(userId: self.userId, status: "active").first
