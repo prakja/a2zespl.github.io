@@ -64,6 +64,7 @@ ActiveAdmin.register Course do
       f.input :hasDoubt
       f.input :hasLeaderBoard
       f.input :allowCallback
+      f.input :feeDesc
       f.input :seqId
     end
     f.actions
