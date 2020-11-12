@@ -13,7 +13,7 @@ permit_params :blockedUser, :password_text
 #   permitted
 # end
 
-remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone, :payments, :userFlashCards, :flash_cards
+remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone, :payments, :userFlashCards, :flash_cards, :results
 filter :student_name, as: :string
 filter :student_email, as: :string
 filter :student_phone, as: :string
