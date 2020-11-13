@@ -1,5 +1,5 @@
 ActiveAdmin.register Course do
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest, :shortDescription, :seqId
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest, :shortDescription, :seqId, :feeDesc
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
   sidebar :related_data, only: :show do
