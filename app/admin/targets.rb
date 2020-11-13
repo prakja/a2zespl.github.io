@@ -1,6 +1,6 @@
 ActiveAdmin.register Target do
   
-  remove_filter :target_chapters, :user, :test
+  remove_filter :target_chapters, :user, :test, :versions
   preserve_default_filters!
 
   permit_params :createdAt, :updatedAt, :userId, :score, :testId, :targetDate, :status, :maxMarks, :testType, target_chapters_attributes: [:_destroy]
