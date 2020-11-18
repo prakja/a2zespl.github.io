@@ -30,4 +30,10 @@ class Subject < ApplicationRecord
       .where(courseId: [Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id, Rails.configuration.boostup_course_id])
       .pluck(:name, :'Course.name', :'Subject.id', :'Course.id').map{|subject_name, course_name, subject_id| [subject_name + " - " + course_name, subject_id]}
   end
+
+  def self.full_course_subject_names
+    Subject.joins(:course)
+      .where(courseId: [Rails.configuration.hinglish_full_course_id])
+      .pluck(:name, :'Course.name', :'Subject.id', :'Course.id').map{|subject_name, course_name, subject_id| [subject_name + " - " + course_name, subject_id]}
+  end
 end

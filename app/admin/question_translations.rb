@@ -3,6 +3,7 @@ ActiveAdmin.register QuestionTranslation do
 
   permit_params :question, :explanation, :completed, :reviewed
   filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :test_questions, as: :number, label: "Test Id"
   preserve_default_filters!
 
   index do
