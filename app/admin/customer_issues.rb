@@ -12,7 +12,7 @@ ActiveAdmin.register CustomerIssue do
   #   permitted
   # end
 
-  remove_filter :topic, :flash_card, :question, :video, :user, :test, :customer_issue_type
+  remove_filter :topic, :flash_card, :question, :video, :user, :test
 
   permit_params :resolved
 
