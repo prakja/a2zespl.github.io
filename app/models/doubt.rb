@@ -32,7 +32,9 @@ class Doubt < ApplicationRecord
   }
   scope :ignore_old_doubt, ->(ignore) {
     if ignore == "yes"
-      return where('"Doubt"."createdAt" > current_timestamp - INTERVAL \'3 Months\'');
+      ## TODO: fix this later..for now adding this to bring down doubt count increase due to changes to include mini question bank and 100Q question bank
+      return where('"Doubt"."createdAt" > current_timestamp - INTERVAL \'1 week\'');
+      #return where('"Doubt"."createdAt" > current_timestamp - INTERVAL \'3 Months\'');
     end
   }
   scope :solved, ->(solved) {
