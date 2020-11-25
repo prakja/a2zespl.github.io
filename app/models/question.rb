@@ -55,6 +55,10 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
 
+  scope :course_name, ->(course_id) {
+    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
+  }
+
   scope :similar_questions, ->(question_id) {
     neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.4 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" = (SELECT "topicId" from "Question" cq2 where cq2."id" = ?))', question_id, question_id);
   }
@@ -149,7 +153,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:subject_name, :similar_questions]
+    [:subject_name, :similar_questions, :course_name]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end
