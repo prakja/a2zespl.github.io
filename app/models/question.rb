@@ -55,8 +55,9 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
 
-  scope :course_name, ->(course_id) {
-    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
+  scope :course_name, ->(*course_ids) {
+    flatten_course_ids = course_ids.flatten
+    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :similar_questions, ->(question_id) {
