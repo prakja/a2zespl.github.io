@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_10_113505) do
+ActiveRecord::Schema.define(version: 2020_11_24_045410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -284,6 +284,15 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.integer "durationInSec"
   end
 
+  create_table "CopyChapterFlashCard20201111", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.integer "chapterId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "flashCardId"
+    t.integer "seqId"
+  end
+
 # Could not dump table "CopyCourse" because of following StandardError
 #   Unknown type '"enum_Course_package"' for column 'package'
 
@@ -350,6 +359,19 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.boolean "deleted"
     t.datetime "createdAt"
     t.datetime "updatedAt"
+  end
+
+  create_table "CopyTarget20201111", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "userId"
+    t.integer "score"
+    t.integer "testId"
+    t.datetime "targetDate"
+    t.string "status"
+    t.integer "maxMarks"
+    t.string "testType"
   end
 
   create_table "CopyTestAttempt", id: :serial, force: :cascade do |t|
@@ -693,6 +715,34 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.text "epubURL"
     t.text "epubContent"
     t.integer "lock_version", default: 0, null: false
+  end
+
+  create_table "Note03112020", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "content"
+    t.text "description"
+    t.integer "creatorId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.text "externalURL"
+    t.text "epubURL"
+    t.text "epubContent"
+    t.integer "lock_version"
+  end
+
+  create_table "Note20201026", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "content"
+    t.text "description"
+    t.integer "creatorId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.text "externalURL"
+    t.text "epubURL"
+    t.text "epubContent"
+    t.integer "lock_version"
   end
 
   create_table "Notification", id: :serial, force: :cascade do |t|
@@ -1411,7 +1461,7 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.integer "seqId", default: 0, null: false
     t.string "youtubeUrl", limit: 255
     t.string "language", limit: 255
-    t.string "url2", limit: 255
+    t.text "url2"
   end
 
   create_table "Video20200528", id: false, force: :cascade do |t|
@@ -1431,6 +1481,22 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
   end
 
   create_table "Video20200620", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "description"
+    t.text "url"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "creatorId"
+    t.text "thumbnail"
+    t.float "duration"
+    t.integer "seqId"
+    t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
+    t.string "url2", limit: 255
+  end
+
+  create_table "Video20201102", id: false, force: :cascade do |t|
     t.integer "id"
     t.string "name", limit: 255
     t.text "description"
@@ -1527,6 +1593,27 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
   create_table "admin_users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -1577,6 +1664,46 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.index ["doubtId"], name: "index_doubt_admins_on_doubtId", unique: true
   end
 
+  create_table "doubt_chat_channels", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "doubt_chat_doubt_answers", force: :cascade do |t|
+    t.bigint "doubt_chat_user_id", null: false
+    t.bigint "doubt_chat_doubt_id", null: false
+    t.json "content", null: false
+    t.string "ancestry"
+    t.integer "upvote_count", default: 0
+    t.integer "downvote_count", default: 0
+    t.boolean "deleted", default: false
+    t.string "display_parent_id"
+    t.integer "display_parent_position"
+    t.integer "children_count", default: 0, null: false
+    t.boolean "accepted_answer", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_doubt_chat_doubt_answers_on_ancestry"
+    t.index ["doubt_chat_doubt_id"], name: "index_dcda_on_dcd_id"
+    t.index ["doubt_chat_user_id"], name: "index_dcda_on_dcu_id"
+  end
+
+  create_table "doubt_chat_doubts", force: :cascade do |t|
+    t.bigint "doubt_chat_user_id", null: false
+    t.bigint "doubt_chat_channel_id", null: false
+    t.json "content", null: false
+    t.integer "upvote_count", default: 0
+    t.integer "downvote_count", default: 0
+    t.boolean "deleted", default: false
+    t.integer "doubt_answers_count", default: 0, null: false
+    t.integer "accepted_doubt_answer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doubt_chat_channel_id"], name: "index_dcd_on_dcc_id"
+    t.index ["doubt_chat_user_id"], name: "index_dcd_on_dcu_id"
+  end
+
   create_table "student_coaches", force: :cascade do |t|
     t.integer "studentId", null: false
     t.integer "coachId", null: false
@@ -1614,6 +1741,22 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
     t.integer "transaction_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
     t.index ["transaction_id"], name: "index_versions_on_transaction_id"
+  end
+
+  create_table "votes", force: :cascade do |t|
+    t.string "votable_type"
+    t.bigint "votable_id"
+    t.string "voter_type"
+    t.bigint "voter_id"
+    t.boolean "vote_flag"
+    t.string "vote_scope"
+    t.integer "vote_weight"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope"
+    t.index ["votable_type", "votable_id"], name: "index_votes_on_votable_type_and_votable_id"
+    t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"
+    t.index ["voter_type", "voter_id"], name: "index_votes_on_voter_type_and_voter_id"
   end
 
   add_foreign_key "Answer", "\"Question\"", column: "questionId", name: "Answer_questionId_fkey", on_update: :cascade, on_delete: :nullify
@@ -1709,7 +1852,10 @@ ActiveRecord::Schema.define(version: 2020_11_10_113505) do
   add_foreign_key "VideoSubTopic", "\"Video\"", column: "videoId", name: "fk_video_subtopic_videoid"
   add_foreign_key "VideoTest", "\"Test\"", column: "testId", name: "VideoTest_testId_fkey"
   add_foreign_key "VideoTest", "\"Video\"", column: "videoId", name: "VideoTest_videoId_fkey"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "doubt_admins", "\"Doubt\"", column: "doubtId"
+  add_foreign_key "doubt_chat_doubt_answers", "doubt_chat_doubts"
+  add_foreign_key "doubt_chat_doubts", "doubt_chat_channels"
   add_foreign_key "student_coaches", "\"User\"", column: "studentId"
   add_foreign_key "student_coaches", "admin_users", column: "coachId"
   add_foreign_key "user_actions", "\"User\"", column: "userId"

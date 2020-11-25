@@ -41,6 +41,7 @@ index do
   column ("Add/Delete Questions") {|test| raw('<a target="_blank" href="/tests/crud_question/' + test.id.to_s + '">Add/Delete Questions</a>')}
   column ("Get PDF") {|test| raw('<a target="_blank" href="https://www.neetprep.com/test-question/' + test.id.to_s + '?white&showId=true&orderBy=SEQASC">Get PDF</a>')}
   column ("Get PDF with Solution") {|test| raw('<a target="_blank" href="/questions/test_question_pdf/' + test.id.to_s + '">Get PDF with Solution</a>')}
+  column ("Check Translation") {|test| raw('<a target="_blank" href="/questions/test_translation?test=' + test.id.to_s + '">Check Translation</a>')}
   column ("History") {|test| raw('<a target="_blank" href="/admin/tests/' + (test.id).to_s + '/history">View History</a>')}
   actions
 end

@@ -48,6 +48,24 @@ class QuestionsController < ApplicationController
     # end
   end
 
+  def test_translation
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+
+    @testId = params[:test]
+    raise "Test ID error" if @testId.nil?
+    @test = Test.find(@testId)
+    raise "Test null" if @test.nil?
+
+    @questions = @test.questions.joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+  rescue => exception
+    render json: {
+      error: exception,
+    }, status: 500
+  end
+
   def pdf_questions
     if not current_admin_user
       redirect_to "/admin/login"
@@ -248,6 +266,7 @@ class QuestionsController < ApplicationController
     @limit = params[:limit] || 0
     @offset = params[:offset] || 0
     @showExplanation = params[:showExplanation] && params[:showExplanation] === "false" ? false : true
+    @showTranslations = params[:showTranslation] && params[:showTranslation] === 'true' ? true : false
 
     begin
       @test = Test.find(@testId)
@@ -259,7 +278,12 @@ class QuestionsController < ApplicationController
       end
 
       @testQuestions.each_with_index do |question, index|
-        @questions_data[question.id] = [question.question, @showExplanation == true ? (question.explanations.map(&:explanation).join('<br />') + (question.explanations.length > 0 ? '<p>Only for checking. Not part of test question solution</p><hr />' : '') + question.explanation.to_s) : nil, question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , index+1]
+        @questions_data[question.id] = [
+          question.question, 
+          @showExplanation == true ? (question.explanations.map(&:explanation).join('<br />') + (question.explanations.length > 0 ? '<p>Only for checking. Not part of test question solution</p><hr />' : '') + question.explanation.to_s) : nil, 
+          question.question_analytic != nil ?  question.question_analytic.correctPercentage : 0, question.correctOptionIndex != nil ? question.correctOptionIndex : nil , 
+          index+1
+        ]
       end
     rescue => exception
       p exception
