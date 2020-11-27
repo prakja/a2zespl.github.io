@@ -16,9 +16,32 @@ ActiveAdmin.register TestAttemptQuestion do
   # end
 
   csv do
-    column :userAnswer
-    column :mistake
-    column :action
+    column ("userAnswer") { |attempt|
+      attempt.userAnswer
+    }
+    column ("test") { |attempt|
+      Test.find(attempt.testId).name
+    }
+    column ("mistake") { |attempt|
+      mistake_value = {
+        "1" => "Silly Mistake (incorrect)",
+        "2" => "Conceptual Mistake (incorrect)",
+        "3" => "Made a Guess",
+        "4" => "Conceptual Mistake (not attempted)",
+        "5" => "Time Management (not attempted)",
+        "6" => "Not Studied or Forgotten (not attempted)",
+      }
+      mistake_value[attempt.mistake.to_s] || attempt.mistake
+    }
+    column ("action") { |attempt|
+      action_value = {
+        "1" => "I will revise topic",
+        "2" => "I will practice more questions",
+        "3" => "I will improve speed",
+        "4" => "I will understand concept",
+      }
+      action_value[attempt.action.to_s] || attempt.action
+    }
     column :subTopicName
     column :chapterName
     column :subjectName
