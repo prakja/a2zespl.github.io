@@ -20,10 +20,14 @@ ActiveAdmin.register TestAttemptQuestion do
     #   attempt.userAnswer
     # }
     column ("userAnswer") { |attempt|
-      if attempt.isCorrect
-        "Correct"
+      if not attempt.userAnswer.nil?
+        if attempt.isCorrect
+          "Correct"
+        else
+          "Incorrect"
+        end
       else
-        "Incorrect"
+        "Not Attempted"
       end
     }
     column ("test") { |attempt|
