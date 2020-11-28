@@ -16,8 +16,15 @@ ActiveAdmin.register TestAttemptQuestion do
   # end
 
   csv do
+    # column ("userAnswer") { |attempt|
+    #   attempt.userAnswer
+    # }
     column ("userAnswer") { |attempt|
-      attempt.userAnswer
+      if attempt.isCorrect
+        "Correct"
+      else
+        "Incorrect"
+      end
     }
     column ("test") { |attempt|
       Test.find(attempt.testId).name
