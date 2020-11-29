@@ -9,6 +9,8 @@ module ActiveAdmin
         resource = CustomerSupport.find(self.resource_id)
       elsif self.resource_type == "CustomerIssue"
         resource = CustomerIssue.find(self.resource_id)
+      else
+        return
       end
       user_id = resource.userId
       user = User.find(user_id)
