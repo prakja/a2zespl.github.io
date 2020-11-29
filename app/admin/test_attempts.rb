@@ -51,6 +51,9 @@ ActiveAdmin.register TestAttempt do
       end
     end
     column ("Link") {|testAttempt| testAttempt.completed ? raw('<a target="_blank" href="https://www.neetprep.com/testResult/' + Base64.encode64("TestAttempt:" + testAttempt.id.to_s) + '">Result Summary</a>') : ''}
+    column ("Analysis") {|testAttempt|
+      testAttempt.completed ? raw('<a target="_blank" href="/admin/test_attempt_questions?q[attemptId_eq]=' + testAttempt.id.to_s + '">Analysis</a>') : ''
+    }
     actions
   end
 
