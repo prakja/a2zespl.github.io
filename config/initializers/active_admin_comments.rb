@@ -3,19 +3,17 @@ module ActiveAdmin
     after_create :send_notification
 
     def send_notification
-      p "In notification block"
       resource = nil
       if self.resource_type == "CustomerSupport"
         resource = CustomerSupport.find(self.resource_id)
       elsif self.resource_type == "CustomerIssue"
         resource = CustomerIssue.find(self.resource_id)
       else
-        return
+        return nil
       end
       user_id = resource.userId
       user = User.find(user_id)
       comment_body = self.body
-      p "Checking body and issue"
       if not resource.resolved? and comment_body.start_with?("Resolved:")
         resource.resolved = true
         resource.save
@@ -36,7 +34,7 @@ module ActiveAdmin
             actionUrl: url || nil,
             courseId: nil,
             userId: user_id
-        })
+          })
         HTTParty.post(
           Rails.configuration.node_site_url + "/api/v1/webhook/sendEmail",
           body: {
@@ -44,7 +42,7 @@ module ActiveAdmin
             subject: "Issue Resolved",
             message: message,
             altText: ""
-        })
+          })
       else
         p "Passed, either format mis-match or issue is resolved!"
       end
