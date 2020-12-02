@@ -32,22 +32,24 @@ class User < ApplicationRecord
  scope :student_phone, ->(phone) {
   User.joins('FULL JOIN "UserProfile" ON "UserProfile"."userId" = "User"."id"').where('"UserProfile"."phone" ILIKE ? or "User"."phone" ILIKE ?', "%#{phone}%", "%#{phone}%")
  }
+
+ has_paper_trail
  # scope :free_users, -> {
 #   where.not(UserCourse.where('"UserCourse"."userId" = "User"."id"').exists)
 # }
 # scope :paid_users, -> {
-#   joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
-# }
+ #   joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
+ # }
 
-  def self.ransackable_scopes(_auth_object = nil)
-    [:student_name, :student_email, :student_phone]
-  end
+ def self.ransackable_scopes(_auth_object = nil)
+   [:student_name, :student_email, :student_phone]
+ end
 
  def name
-  if not self.user_profile.blank? and not self.user_profile.displayName.blank?
-    return self.user_profile.displayName
-  else
-    return 'NEET student'
-  end
+   if not self.user_profile.blank? and not self.user_profile.displayName.blank?
+     return self.user_profile.displayName
+   else
+     return 'NEET student'
+   end
  end
 end
