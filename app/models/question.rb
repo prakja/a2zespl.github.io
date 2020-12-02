@@ -60,6 +60,11 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
+  scope :subject_name, ->(*subject_ids) {
+    flatten_subject_ids = subject_ids.flatten
+    joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
+  }
+
   scope :similar_questions, ->(question_id) {
     neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.4 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" = (SELECT "topicId" from "Question" cq2 where cq2."id" = ?))', question_id, question_id);
   }
