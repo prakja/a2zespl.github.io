@@ -44,6 +44,24 @@ class Video < ApplicationRecord
     end
   end
 
+  scope :subject_name, ->(subject_id) {
+    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+  }
+
+  scope :subject_names, ->(*subject_ids) {
+    flatten_subject_ids = subject_ids.flatten
+    joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
+  }
+
+  scope :course_name, -> (course_id) {
+    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
+  }
+
+  scope :course_names, ->(*course_ids) {
+    flatten_course_ids = course_ids.flatten
+    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
+  }
+
   # scope :subject_name_by_id, ->(subject_id) {
   #   joins(:topics => :subject).where(topic: {Subject: {id: subject_id}})
   # }
