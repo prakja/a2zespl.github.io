@@ -3,6 +3,7 @@ ActiveAdmin.register TestLeaderBoard do
   preserve_default_filters!
   scope :paid_students, show_count: false
   scope :high_yield_paid_students, show_count: false
+  scope :inspire_students, show_count: false
   filter :testId_eq, as: :number, label: "Test ID"
   filter :userId_eq, as: :number, label: "User ID"
   filter :test_attempt_createdAt, as: :date_range, label: "Test Attempt Date"

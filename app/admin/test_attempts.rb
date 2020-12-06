@@ -8,6 +8,7 @@ ActiveAdmin.register TestAttempt do
 
   scope :test_series, show_count: false
   scope :aryan_raj_test_series, show_count: false
+  scope :inspire_batch, show_count: false
   controller do
     def scoped_collection
       super.includes(:test, user: :user_profile)
