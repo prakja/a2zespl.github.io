@@ -118,7 +118,7 @@ class Question < ApplicationRecord
   scope :zoology_mcqs_difficult, ->(topic_id) {
     subject_name(56).topic(topic_id).difficult
   }
-  scope :empty_explanation, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}}).where('LENGTH("Question"."explanation") < 30')}
+  scope :empty_explanation, -> {where('LENGTH("Question"."explanation") < 30')}
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
   scope :botany_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 53}})}
   scope :zoology_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 56}})}
