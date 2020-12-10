@@ -1,16 +1,16 @@
 ActiveAdmin.register StudentCoach do
   permit_params :studentId, :coachId, :role
-  remove_filter :studentId, :coachId, :user, :admin_user
+  remove_filter :studentId, :coachId, :student, :admin_user
 
   filter :studentId_eq, as: :number, label: "Student ID"
-  filter :user_email, as: :string, label: "Student Email"
-  filter :user_phone, as: :string, label: "Student Phone"
+  filter :student_email, as: :string, label: "Student Email"
+  filter :student_phone, as: :string, label: "Student Phone"
   filter :coachId_eq, as: :searchable_select, label: "Coach", :collection => AdminUser.distinct_email_id
 
   index do
     id_column
     column "Student" do |student_coach|
-      student_coach.user
+      student_coach.student
     end
     column "Coach" do |student_coach|
       student_coach.admin_user.email

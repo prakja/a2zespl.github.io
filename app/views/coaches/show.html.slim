@@ -1,0 +1,89 @@
+script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+script crossorigin="anonymous" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet"
+.container.mt-2
+  form#student-selection action="/" method="get"
+    .form-group
+      label for="student"  Choose the student email address
+      input#student.form-control list="students" name="student" value="#{@current_student.email}"
+      datalist#students
+        - @students.each do |student|
+          option value="#{student.email}" id="#{student.id.to_s}"
+    .form-group
+      label for="start" Choose start date
+      input#start type="date" value="#{@start}"
+    .form-group
+      label for="end" Choose end date
+      input#end type="date" value="#{@end}"
+    button.btn.btn-primary type="submit" Get
+  
+  .video-stats.mt-2
+    h3 Video Data
+    p #{@video_data_count} video(s) watched
+    table.table
+      thread
+        th scope="col" Video Name
+        th scope="col" Date
+      tbody
+        - @video_data.each do |data|
+          tr
+            td = data[:video_name]
+            td = data[:on_day].strftime("%a, %d/%m/%y")
+  
+  .test-stats.mt-2
+    h3 Test Data
+    p #{@test_data_count} test(s) attempted
+    table.table
+      thread
+        th scope="col" Test Name
+        th scope="col" Date
+        th scope="col" Time Taken(mins)
+        th scope="col" Score
+      tbody
+        - @test_data.each do |data|
+          tr
+            td = data[:test_name]
+            td = data[:on_day].strftime("%a, %d/%m/%y")
+            td = (data[:time_spent].to_f/60).round(1)
+            - result = data[:test_result]
+            td = raw("<p>Correct Answer: " + result["correctAnswerCount"].to_s + "</p><p>Incorrect Answer: " + result["incorrectAnswerCount"].to_s + "</p><p>Marks: " + result["totalMarks"].to_s + "</p>")
+  
+  .question-stats.mt-2
+    h3 Question Data
+    p #{@question_data_count} questions(s) practiced
+    table.table
+      thread
+        th scope="col" Index
+        th scope="col" Date
+        th scope="col" Correct
+      tbody
+        - @question_data.each_with_index do |data, index|
+          tr
+            td = index+1
+            td = data[:on_day].strftime("%a, %d/%m/%y")
+            - correct = 'Yes' if data[:correct_option] == data[:user_answer]
+            td =  correct || 'No'
+
+javascript:
+  $("#student-selection").submit(function(event) {
+    event.preventDefault();
+    let selectedStudentEmail = $('#student').val();
+    let selectedStudentId = '';
+    var options = $('datalist')[0].options;
+    for (var i=0;i<options.length;i++) {
+      if (options[i].value == selectedStudentEmail) {
+        selectedStudentId = options[i].id;
+        break;
+      }
+    }
+    if (selectedStudentId) {
+      let url = "/coach-dashboard?studentId=" + selectedStudentId
+      if ($("#start") != "" && $("#end") != "") {
+        url += "&start=" + $("#start").val();
+        url += "&end=" + $("#end").val();
+      }
+      window.location.href = url;
+    } else {
+      alert("Something went wrong");
+    }
+  });

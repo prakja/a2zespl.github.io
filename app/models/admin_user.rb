@@ -8,6 +8,7 @@ class AdminUser < ApplicationRecord
   has_many :doubt_admins, class_name: "DoubtAdmin", foreign_key: "admin_user_id"
   has_many :doubts, through: :doubt_admins
   has_many :coachStudents, foreign_key: "coachId", class_name: 'StudentCoach'
+  has_many :students, through: :coachStudents
   has_one :course_offer, class_name: "CourseOffer", foreign_key: "admin_user_id"
   has_many :course_invitations, class_name: "CourseInvitation", foreign_key: "admin_user_id"
   has_many :customer_supports, class_name: "CustomerSupport", foreign_key: "adminUserId"

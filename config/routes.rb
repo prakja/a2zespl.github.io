@@ -97,6 +97,8 @@ Rails.application.routes.draw do
   post "/livesession/show_analytics", to: "group_chats#show_analytics"
   post "/assign_to_me", to: "doubt_answers#assign_to_me"
 
+  get "/coach-dashboard", to: "coaches#show"
+
   namespace :admin do
     get "/topics/:id/print_flashcards", to: "topics#print_flashcards"
   end
