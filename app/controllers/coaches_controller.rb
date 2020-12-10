@@ -14,8 +14,10 @@ class CoachesController < ApplicationController
     redirect_to "/coach-dashboard?studentId=" + @students.first.id.to_s if @student_id.nil?
     @current_student = User.find(@student_id.to_i)
 
-    @start = params[:start] || 10.year.ago.strftime("%F")
-    @end = params[:end] || Time.now.strftime("%F")
+    @start = params[:start]
+    @start = 10.year.ago.strftime("%F") if @start.blank?
+    @end = params[:end]
+    @end = Time.now.strftime("%F") if @end.blank?
 
     # video data
     @video_data_count = User.joins(user_video_stats: :video).where(id: @current_student.id).where(UserVideoStat: {completed: true, createdAt: @start..@end}).order('"UserVideoStat"."updatedAt" DESC').count
