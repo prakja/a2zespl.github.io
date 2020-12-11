@@ -14,7 +14,7 @@ class User < ApplicationRecord
  has_one :common_rank, class_name: "CommonLeaderBoard", foreign_key: "userId"
  has_many :subject_rank, class_name: "SubjectLeaderBoard", foreign_key: "userId"
  has_many :studentCoches, foreign_key: "studentId", class_name: 'StudentCoach'
- has_many :coaches, through: :studentCoches
+#  has_many :coaches, through: :studentCoches
 
  has_many :answers, class_name: "Answer", foreign_key: "userId"
 
