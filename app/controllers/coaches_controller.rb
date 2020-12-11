@@ -7,11 +7,17 @@ class CoachesController < ApplicationController
       return
     end
     # render html: helpers.tag.strong('You are not a coach') if current_admin_user.role != 'coach'
-    render html: helpers.tag.strong('You are not coaching any student currently') if current_admin_user.students.count == 0
+    if current_admin_user.students.count == 0
+      render html: helpers.tag.strong('You are not coaching any student currently')
+      return
+    end
     @students = current_admin_user.students
     @student_count = @students.count
     @student_id = params[:studentId]
-    redirect_to "/coach-dashboard?studentId=" + @students.first.id.to_s if @student_id.nil?
+    if @student_id.nil?
+      redirect_to "/coach-dashboard?studentId=" + @students.first.id.to_s
+      return
+    end
     @current_student = User.find(@student_id.to_i)
 
     @start = params[:start]
