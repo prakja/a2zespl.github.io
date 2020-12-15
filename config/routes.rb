@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get "questions/translation_pdf"
   get "questions/test_translation"
   get "questions/easy_questions"
+  get "questions/sub-topic-difficulty", to: "questions#sub_topic_difficutly"
   get "course_invitations/multiple_courses"
   post "course_invitations/createCourseInvitation"
   get "questions/add_explanation/:id", to: "questions#add_explanation"

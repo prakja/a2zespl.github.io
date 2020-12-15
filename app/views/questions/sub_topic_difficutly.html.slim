@@ -1,0 +1,58 @@
+script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+script crossorigin="anonymous" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet"
+.container.mt-2
+  form#topic-selection action="/" method="get"
+    .form-group
+      label for="topic"  Choose the topic
+      input#topic.form-control list="students" name="topic" value="#{@current_topic_object[0]}"
+      datalist#students
+        - @topics.each do |topic|
+          option value="#{topic[0]}" id="#{topic[1].to_s}"
+    button.btn.btn-primary type="submit" Get
+  
+  .mt-2
+    - @sub_topic_objects.each do |sub_topic|
+      h4 = sub_topic[:sub_topic_name]
+      table.table
+        tbody
+          td Easy
+          - if sub_topic[:total_questions] > 0
+            td #{ sub_topic[:easy_questions].to_s + " (" + ((sub_topic[:easy_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+          - else
+            td #{ sub_topic[:easy_questions].to_s }
+        tbody
+          td Medium
+          - if sub_topic[:total_questions] > 0
+            td #{ sub_topic[:medium_questions].to_s + " (" + ((sub_topic[:medium_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+          - else
+            td #{ sub_topic[:medium_questions].to_s }
+        tbody
+          td Difficult
+          - if sub_topic[:total_questions] > 0
+            td #{ sub_topic[:difficult_questions].to_s + " (" + ((sub_topic[:difficult_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+          - else
+            td #{ sub_topic[:difficult_questions].to_s }
+        tbody
+          td Total
+          td = sub_topic[:total_questions]
+
+javascript:
+  $("#topic-selection").submit(function(event) {
+    event.preventDefault();
+    let topic = $('#topic').val();
+    let topicId = '';
+    var options = $('datalist')[0].options;
+    for (var i=0;i<options.length;i++) {
+      if (options[i].value == topic) {
+        topicId = options[i].id;
+        break;
+      }
+    }
+    if (topicId) {
+      let url = "/questions/sub-topic-difficulty?topicId=" + topicId
+      window.location.href = url;
+    } else {
+      alert("Something went wrong");
+    }
+  });

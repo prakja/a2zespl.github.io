@@ -3,6 +3,35 @@ class QuestionsController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  def sub_topic_difficutly
+    @topics = Topic.name_with_subject_hinglish
+    @topicId = params[:topicId].to_i
+    p @topicId
+    if @topicId.nil?
+      redirect_to "/questions/sub-topic-difficulty?topicId=622" 
+      return
+    end
+    @current_topic_object = @topics.select { |topic| topic[1] == @topicId }[0]
+    @current_topic = Topic.find(@current_topic_object[1])
+    @sub_topic_objects = []
+    @sub_topics = @current_topic.subTopics
+    @sub_topics.each do |sub_topic|
+      questions = Question.joins(:subTopics).joins(:question_analytic).where(SubTopic: {id: sub_topic.id}).where(QuestionAnalytics: {difficultyLevel: ['easy', 'medium', 'difficult']}).count
+      easy_questions = Question.joins(:subTopics).joins(:question_analytic).where(SubTopic: {id: sub_topic.id}).where(QuestionAnalytics: {difficultyLevel: 'easy'}).count
+      medium_questions = Question.joins(:subTopics).joins(:question_analytic).where(SubTopic: {id: sub_topic.id}).where(QuestionAnalytics: {difficultyLevel: 'medium'}).count
+      difficult_questions = Question.joins(:subTopics).joins(:question_analytic).where(SubTopic: {id: sub_topic.id}).where(QuestionAnalytics: {difficultyLevel: 'difficult'}).count
+      temp = {
+        sub_topic_id: sub_topic.id,
+        sub_topic_name: sub_topic.name,
+        total_questions: questions,
+        easy_questions: easy_questions,
+        medium_questions: medium_questions,
+        difficult_questions: difficult_questions
+      }
+      @sub_topic_objects << temp
+    end
+  end
+
   def sync_course_questions
     id = params.require(:id)
     ActiveRecord::Base.connection.execute('SELECT "SyncCourseQuestions" (' + id.to_s + ')')
