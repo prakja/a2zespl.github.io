@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_082410) do
+ActiveRecord::Schema.define(version: 2020_12_14_095843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -501,6 +501,23 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
     t.index ["videoId"], name: "CustomerIssue_videoId_idx"
   end
 
+  create_table "CustomerIssue20201120", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.text "description"
+    t.integer "typeId"
+    t.integer "questionId"
+    t.integer "videoId"
+    t.integer "noteId"
+    t.integer "topicId"
+    t.boolean "deleted"
+    t.boolean "resolved"
+    t.integer "userId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "testId"
+    t.integer "flashCardId"
+  end
+
   create_table "CustomerIssueType", id: :serial, force: :cascade do |t|
     t.string "code", limit: 255, null: false
     t.string "displayName", limit: 255, null: false
@@ -705,6 +722,15 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
     t.datetime "updatedAt"
   end
 
+  create_table "NksAppVersion", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255
+    t.string "version", limit: 255
+    t.text "description"
+    t.boolean "forceUpdate"
+    t.datetime "createdAt", null: false
+    t.datetime "updatedAt", null: false
+  end
+
   create_table "Note", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.text "content"
@@ -805,6 +831,9 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
 # Could not dump table "Question20201305" because of following StandardError
 #   Unknown type '"enum_Question_type"' for column 'type'
 
+# Could not dump table "Question20203011" because of following StandardError
+#   Unknown type '"enum_Question_type"' for column 'type'
+
   create_table "QuestionCourse", primary_key: "questionId", id: :integer, default: nil, force: :cascade do |t|
     t.integer "courseId", null: false
     t.index ["questionId"], name: "QuestionCourse_questionId_idx"
@@ -877,8 +906,21 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
     t.datetime "updatedAt", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.boolean "reviewed", default: false
     t.boolean "completed", default: false
+    t.integer "newQuestionId"
     t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_idx", unique: true
     t.index ["questionId", "language"], name: "QuestionTranslation_questionId_language_key", unique: true
+  end
+
+  create_table "QuestionTranslation20201119", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "questionId"
+    t.text "question"
+    t.text "explanation"
+    t.string "language", limit: 255
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.boolean "reviewed"
+    t.boolean "completed"
   end
 
   create_table "Quiz", id: :serial, force: :cascade do |t|
@@ -1191,6 +1233,15 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
     t.index ["testId"], name: "test_question_test_id"
   end
 
+  create_table "TestQuestion20201130", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.integer "testId"
+    t.integer "questionId"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "seqNum"
+  end
+
   create_table "Topic", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.text "image"
@@ -1498,6 +1549,22 @@ ActiveRecord::Schema.define(version: 2020_11_30_082410) do
   end
 
   create_table "Video20201102", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "name", limit: 255
+    t.text "description"
+    t.text "url"
+    t.datetime "createdAt"
+    t.datetime "updatedAt"
+    t.integer "creatorId"
+    t.text "thumbnail"
+    t.float "duration"
+    t.integer "seqId"
+    t.string "youtubeUrl", limit: 255
+    t.string "language", limit: 255
+    t.string "url2", limit: 255
+  end
+
+  create_table "Video20201119", id: false, force: :cascade do |t|
     t.integer "id"
     t.string "name", limit: 255
     t.text "description"
