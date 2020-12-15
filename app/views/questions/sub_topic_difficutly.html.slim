@@ -18,24 +18,31 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
         tbody
           td Easy
           - if sub_topic[:total_questions] > 0
-            td #{ sub_topic[:easy_questions].to_s + " (" + ((sub_topic[:easy_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+            td 
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "&q[question_analytic_correctPercentage_gteq]=50"}" #{ sub_topic[:easy_questions].to_s + " (" + ((sub_topic[:easy_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
           - else
-            td #{ sub_topic[:easy_questions].to_s }
+            td
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "&q[question_analytic_correctPercentage_gteq]=50"}" #{ sub_topic[:easy_questions].to_s }
         tbody
           td Medium
           - if sub_topic[:total_questions] > 0
-            td #{ sub_topic[:medium_questions].to_s + " (" + ((sub_topic[:medium_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+            td 
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "q[question_analytic_correctPercentage_gteq]=25&q[question_analytic_correctPercentage_lt]=50"}" #{ sub_topic[:medium_questions].to_s + " (" + ((sub_topic[:medium_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
           - else
-            td #{ sub_topic[:medium_questions].to_s }
+            td 
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "q[question_analytic_correctPercentage_gteq]=25&q[question_analytic_correctPercentage_lt]=50"}" #{ sub_topic[:medium_questions].to_s }
         tbody
           td Difficult
           - if sub_topic[:total_questions] > 0
-            td #{ sub_topic[:difficult_questions].to_s + " (" + ((sub_topic[:difficult_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
+            td 
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "&q[question_analytic_correctPercentage_lt]=25"}" #{ sub_topic[:difficult_questions].to_s + " (" + ((sub_topic[:difficult_questions].to_f/sub_topic[:total_questions].to_f) * 100).round(2).to_s + "%)" }
           - else
-            td #{ sub_topic[:difficult_questions].to_s }
+            td 
+              a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s + "&q[question_analytic_correctPercentage_lt]=25"}" #{ sub_topic[:difficult_questions].to_s }
         tbody
           td Total
-          td = sub_topic[:total_questions]
+          td
+            a target="_blank" href="#{"/admin/questions?q[subTopics_id_eq]=" + sub_topic[:sub_topic_id].to_s}" = sub_topic[:total_questions]
 
 javascript:
   $("#topic-selection").submit(function(event) {
