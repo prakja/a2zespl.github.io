@@ -227,7 +227,7 @@ class ChaptersController < ApplicationController
     end
 
     @current_admin_user = current_admin_user
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'support' or current_admin_user.role == "supportAndFaculty"
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'support' or current_admin_user.role == "supportAndFaculty" or current_admin_user.role == "superfaculty"
       @chapters_data = {}
       @ids = [53,54,55,56]
       @chapters = Topic.where(subject: @ids)
