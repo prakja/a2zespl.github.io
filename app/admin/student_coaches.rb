@@ -7,6 +7,45 @@ ActiveAdmin.register StudentCoach do
   filter :student_phone, as: :string, label: "Student Phone"
   filter :coachId_eq, as: :searchable_select, label: "Coach", :collection => AdminUser.distinct_email_id
 
+  active_admin_import validate: true,
+    batch_size: 1,
+    timestamps: true,
+    headers_rewrites: { 'coachId': :coachId, 'studentId': :studentId, 'role': :role, 'created_at': :created_at, 'updated_at': :updated_at },
+    before_batch_import: ->(importer) {
+      # add created at and upated at
+      studentEmail = nil
+      importer.csv_lines.each do |line|
+        time = Time.now
+        studentEmail = line[-1]
+        coachId = line[0]
+        check_existing = StudentCoach.joins(:student).where(User: {email: studentEmail}).first
+        if check_existing.nil?
+          student = User.where(email: studentEmail).first
+          if not student.nil?
+            line.pop
+            line.insert(-1, student.id)
+            line.insert(-1, "PrimaryCoach")
+            line.insert(-1, time)
+            line.insert(-1, time)
+
+            p line
+          else
+            return
+          end
+        else
+          return
+        end
+      end
+    },
+    after_batch_import:  ->(importer){
+      p "after_import"
+    },
+    template_object: ActiveAdminImport::Model.new(
+        hint: "File will be imported with such header format: coachId, student_email.
+        Remove the header from the CSV before uploading.",
+        csv_headers: ['coachId', 'studentId', 'role', 'created_at', 'updated_at']
+    )
+
   index do
     id_column
     column "Student" do |student_coach|

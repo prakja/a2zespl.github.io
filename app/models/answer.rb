@@ -9,7 +9,7 @@ class Answer < ApplicationRecord
     return self.userAnswer == self.question&.correctOptionIndex
   end
 
-  default_scope {joins(:question).where('"Question"."deleted" = false')}
+  # default_scope {joins(:question).where(Question: {deleted: false})}
 
   scope :correct_answers, -> {
     joins(:question).where('"Question"."correctOptionIndex" = "userAnswer"')

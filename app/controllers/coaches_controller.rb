@@ -27,10 +27,14 @@ class CoachesController < ApplicationController
 
     # video data
     @video_data_count = User.joins(user_video_stats: :video).where(id: @current_student.id).where(UserVideoStat: {completed: true, createdAt: @start..@end}).order('"UserVideoStat"."updatedAt" DESC').count
-    @video_data = User.joins(user_video_stats: :video).where(id: @current_student.id).where(UserVideoStat: {completed: true, createdAt: @start..@end}).order('"UserVideoStat"."updatedAt" DESC')
+    @video_data = User.joins(user_video_stats: {video: {topics: :subject}}).where(id: @current_student.id).where(UserVideoStat: {completed: true, createdAt: @start..@end}).order('"UserVideoStat"."updatedAt" DESC')
     .select('
+      "Video"."id" as id,
       "Video"."name" as video_name,
-      "UserVideoStat"."updatedAt" as on_day
+      "UserVideoStat"."updatedAt" as on_day,
+      "Topic"."name" as topic,
+      "Subject"."name" as subject,
+      "UserVideoStat"."lastPosition" as pos
     ')
     
     # test data
@@ -45,11 +49,13 @@ class CoachesController < ApplicationController
 
     # question data
     @question_data_count = User.joins(:answers).where(id: @current_student.id).where(Answer: {testAttemptId: nil, createdAt: @start..@end}).order('"Answer"."createdAt" DESC').count
-    @question_data = User.joins(:answers).where(id: @current_student.id).where(Answer: {testAttemptId: nil, createdAt: @start..@end}).order('"Answer"."createdAt" DESC')
+    @question_data = User.joins(answers: {question: {topics: :subject}}).where(id: @current_student.id).where(Answer: {testAttemptId: nil, createdAt: @start..@end}).order('"Answer"."createdAt" DESC')
     .select('
       "Question"."correctOptionIndex" as correct_option,
       "Answer"."createdAt" as on_day,
-      "Answer"."userAnswer" as user_answer
+      "Answer"."userAnswer" as user_answer,
+      "Topic"."name" as topic,
+      "Subject"."name" as subject
     ')
   end
 end
