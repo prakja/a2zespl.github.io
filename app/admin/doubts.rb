@@ -23,6 +23,7 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_doubts, show_count: false
   scope :masterclass_paid_student_doubts, show_count: false
   scope :all, show_count: false
+  scope :concept_building_student_doubts, show_count: false
   # if current_admin_user.role == "admin"
   #   scope :all
   # end
