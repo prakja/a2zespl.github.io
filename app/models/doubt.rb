@@ -89,6 +89,7 @@ class Doubt < ApplicationRecord
   scope :physics_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 18, 100, 51, 518], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170, 985, 988, 992]).distinct}
   scope :zoology_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([8, 141, 20, 100, 51, 120, 518], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448, 986, 989]).distinct}
   scope :masterclass_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([253, 254, 255], 'yes').deleted('no').subject_name([627, 628, 629, 630]).distinct}
+  scope :concept_building_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([617], 'yes').deleted('no').subject_name([1049]).distinct}
 
   scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135]).distinct}
 

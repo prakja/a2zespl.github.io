@@ -23,6 +23,7 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_doubts, show_count: false
   scope :masterclass_paid_student_doubts, show_count: false
   scope :all, show_count: false
+  scope :concept_building_student_doubts, show_count: false
   # if current_admin_user.role == "admin"
   #   scope :all
   # end
@@ -139,7 +140,7 @@ ActiveAdmin.register Doubt do
 
   controller do
     def scoped_collection
-      if params[:scope]
+      if (params[:scope].present? and params[:scope] != 'all') or params[:scope].nil?
         params[:order] = 'week_doubt_count_asc_and_createdAt_asc' if params[:order].blank?
         super.left_outer_joins(:user_doubt_stat).select('"Doubt".*, sum("UserDoubtStat"."doubt7DaysCount") as "week_doubt_count"').group('"Doubt"."id"').preload(:admin_user, :topic, user: [:common_rank, :user_profile, subject_rank: :subject])
       else
