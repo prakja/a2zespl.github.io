@@ -27,8 +27,6 @@ ActiveAdmin.register StudentCoach do
             line.insert(-1, "PrimaryCoach")
             line.insert(-1, time)
             line.insert(-1, time)
-
-            p line
           else
             return
           end

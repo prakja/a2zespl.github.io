@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_14_095843) do
+ActiveRecord::Schema.define(version: 2020_12_21_113137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
@@ -1211,6 +1211,13 @@ ActiveRecord::Schema.define(version: 2020_12_14_095843) do
     t.datetime "nextTargetDate"
   end
 
+  create_table "TestAttemptHistory", id: false, force: :cascade do |t|
+    t.datetime "eventTime", precision: 2
+    t.integer "userId"
+    t.integer "testId"
+    t.jsonb "changedAnswers"
+  end
+
   create_table "TestAttemptPostmartem", id: :serial, force: :cascade do |t|
     t.integer "questionId", null: false
     t.integer "userId", null: false
@@ -1752,6 +1759,13 @@ ActiveRecord::Schema.define(version: 2020_12_14_095843) do
     t.boolean "accepted_answer", default: false, null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "cached_votes_total", default: 0
+    t.integer "cached_votes_score", default: 0
+    t.integer "cached_votes_up", default: 0
+    t.integer "cached_votes_down", default: 0
+    t.integer "cached_weighted_score", default: 0
+    t.integer "cached_weighted_total", default: 0
+    t.float "cached_weighted_average", default: 0.0
     t.index ["ancestry"], name: "index_doubt_chat_doubt_answers_on_ancestry"
     t.index ["doubt_chat_doubt_id"], name: "index_dcda_on_dcd_id"
     t.index ["doubt_chat_user_id"], name: "index_dcda_on_dcu_id"
@@ -1768,8 +1782,22 @@ ActiveRecord::Schema.define(version: 2020_12_14_095843) do
     t.integer "accepted_doubt_answer_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "cached_votes_total", default: 0
+    t.integer "cached_votes_score", default: 0
+    t.integer "cached_votes_up", default: 0
+    t.integer "cached_votes_down", default: 0
+    t.integer "cached_weighted_score", default: 0
+    t.integer "cached_weighted_total", default: 0
+    t.float "cached_weighted_average", default: 0.0
     t.index ["doubt_chat_channel_id"], name: "index_dcd_on_dcc_id"
     t.index ["doubt_chat_user_id"], name: "index_dcd_on_dcu_id"
+  end
+
+  create_table "history", id: false, force: :cascade do |t|
+    t.datetime "event_time", precision: 2
+    t.text "executed_by"
+    t.jsonb "origin_value"
+    t.jsonb "new_value"
   end
 
   create_table "student_coaches", force: :cascade do |t|
@@ -1779,6 +1807,12 @@ ActiveRecord::Schema.define(version: 2020_12_14_095843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["studentId", "coachId"], name: "index_student_coaches_on_studentId_and_coachId", unique: true
+  end
+
+  create_table "test", id: false, force: :cascade do |t|
+    t.integer "a"
+    t.integer "b"
+    t.integer "c"
   end
 
   create_table "user_actions", force: :cascade do |t|

@@ -99,6 +99,7 @@ Rails.application.routes.draw do
   post "/assign_to_me", to: "doubt_answers#assign_to_me"
 
   get "/coach-dashboard", to: "coaches#show"
+  get "/coach-dashboard-summary", to: "coaches#summary"
 
   namespace :admin do
     get "/topics/:id/print_flashcards", to: "topics#print_flashcards"
