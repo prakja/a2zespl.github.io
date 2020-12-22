@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -43,6 +43,7 @@ ActiveAdmin.register Question do
   scope :image_question, show_count: false
   scope :test_image_question, show_count: false
   scope :unused_in_high_yield_bio, show_count: false
+  scope :NEET_Test_Questions, show_count: false
 
   controller do
     def scoped_collection
@@ -156,6 +157,7 @@ ActiveAdmin.register Question do
     column (:id)
     column (:chapter_id) {|question| question&.topicId}
     column (:chapter) {|question| question&.topic&.name}
+    column (:subject) {|question| question&.subject&.name}
     # column (:chapter) {|question| question&.topics&.first&.id}
     column (:subtopic_id) {|question| question&.subTopics&.first&.id}
     column (:subtopic) {|question| question&.subTopics&.first&.name}
