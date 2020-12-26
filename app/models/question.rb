@@ -125,6 +125,7 @@ class Question < ApplicationRecord
   scope :test_questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."id" in (select "testId" from  "ChapterTest" union select "testId" from "CourseTest"))')}
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
+  scope :NEET_Test_Questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."exam" in (\'NEET\', \'AIPMT\'))')}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   scope :unused_in_high_yield_bio, -> {where('"id" in (select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" = 270) and "seqNum" = 0 except select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" in (148,452)))')}
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
@@ -149,6 +150,7 @@ class Question < ApplicationRecord
   has_many :answers, class_name: "Answer", foreign_key: :questionId
 
   belongs_to :topic, foreign_key: "topicId", class_name: "Topic", optional: true
+  belongs_to :subject, foreign_key: "subjectId", class_name: "Subject", optional: true
 
   def self.distinct_type
     Question.connection.select_all("select distinct \"type\" from \"Question\"")

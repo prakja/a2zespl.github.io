@@ -111,5 +111,5 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.site_url_for_socket = "https://www.neetprep.com:5000/"
+  config.site_url_for_socket = ENV["WEBSITE_URL"].to_s + ":5000/"
 end
