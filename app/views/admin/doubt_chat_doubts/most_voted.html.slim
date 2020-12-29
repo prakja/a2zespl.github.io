@@ -1,0 +1,36 @@
+script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+script crossorigin="anonymous" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet"
+.container.mt-2
+  form#student-selection action="/" method="get"
+    .form-group
+      label for="start" Choose start date
+      input#start type="date" value="#{@start}"
+    .form-group
+      label for="end" Choose end date
+      input#end type="date" value="#{@end}"
+    button.btn.btn-primary type="submit" Get
+
+  .phy
+    h3 Physics
+    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @phy_doubt.id.to_s}" = @phy_doubt.id
+  
+  .chem
+    h3 Chemistry
+    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @chem_doubt.id.to_s}" = @chem_doubt.id
+
+  .bio
+    h3 Biology
+    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @phy_doubt.id.to_s}" = @bio_doubt.id
+
+
+javascript:
+  $("#student-selection").submit(function(event) {
+    event.preventDefault();
+    let url = "/admin/top_voted_doubt"
+    if ($("#start") != "" && $("#end") != "") {
+      url += "?start=" + $("#start").val();
+      url += "&end=" + $("#end").val();
+    }
+    window.location.href = url;
+  });

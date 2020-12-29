@@ -26,7 +26,7 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
         th scope="col" Subject
         th scope="col" Topic
         th scope="col" Video Name
-        th scope="col" Duration (sec)
+        th scope="col" Duration (mins)
         th scope="col" Date
       tbody
         - @video_data.each do |data|
@@ -34,7 +34,7 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
             td = data[:subject_name]
             td = data[:topic_name]
             td = data[:video_name]
-            td = data[:pos]
+            td = (data[:pos]/60).round(2)
             td = data[:on_day].strftime("%a, %d/%m/%y")
   
   .test-stats.mt-2
