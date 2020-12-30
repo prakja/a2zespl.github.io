@@ -9,6 +9,7 @@ ActiveAdmin.register UserCourse do
   filter :user_phone, as: :string, label: "User Phone"
 
   scope "Active Courses", :active, default: true
+  scope "Active Trial Courses", :active_trial_courses
   scope "Duration > 10 days", :duration_10_days, :show_count => false
   scope "Achiever Batch Only", :achiever_batch_access_only, :show_count => false
   scope "Inspire Batch Only", :inspire_batch_access_only, :show_count => false

@@ -20,6 +20,14 @@ class UserCourse < ApplicationRecord
     with_course_count.where('"UserCourse"."courseCount" = 1 and "UserCourse"."courseId" = 386');
   }
 
+  scope :active_trial_courses, ->() {
+    UserCourse.active.duration_lt_5_days
+  }
+
+  scope :duration_lt_5_days, -> (){
+    where('"UserCourse"."expiryAt" - "UserCourse"."startedAt" <  interval \'5 days\'')
+  }
+
   scope :duration_10_days, -> (){
     where('"UserCourse"."expiryAt" - "UserCourse"."startedAt" >  interval \'10 days\'')
   }
