@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject
-  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
 
@@ -86,8 +86,12 @@ ActiveAdmin.register Question do
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' and params[:showProofRead] == 'yes'
-     toggle_bool_column :proofRead
+    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showProofRead] == 'yes'
+      toggle_bool_column :proofRead
+    end
+
+    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showNCERT] == 'yes'
+      toggle_bool_column :ncert
     end
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'

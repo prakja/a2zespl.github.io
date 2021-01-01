@@ -5,7 +5,7 @@ class Question < ApplicationRecord
     self.level = nil if self.level.blank?
     # find subjectId to be populated
     if (not self.topicId.blank?)
-      self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take().subjectId;
+      self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take()&.subjectId;
     end
     # replace s3 urls with cdn urls
     if (not self.explanation.blank?) and (self.explanation.include? 'https://questionexplanation.s3-us-west-2.amazonaws.com/' or self.explanation.include? 'https://learner-users.s3.ap-south-1.amazonaws.com/')
