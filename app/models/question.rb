@@ -102,6 +102,7 @@ class Question < ApplicationRecord
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
+  scope :not_neetprep_course, -> {left_outer_joins(:topics => :subject).where(topics: {Subject: {courseId: nil}})}
   scope :bio_masterclass_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.bio_masterclass_course_id}})}
   scope :neetprep_tests, -> {joins(:tests => :topics).where(tests: {Topic: {subjectId: [53,54,55,56]}})}
 
