@@ -12,8 +12,8 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject
-  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version
+  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
 
@@ -31,7 +31,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
-  filter :subject_name, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
+  filter :subject_id_eq, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
   filter :similar_questions, as: :number, label: "Similar to ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
@@ -44,6 +44,7 @@ ActiveAdmin.register Question do
   scope :test_image_question, show_count: false
   scope :unused_in_high_yield_bio, show_count: false
   scope :NEET_Test_Questions, show_count: false
+  scope :not_neetprep_course, show_count: false
 
   controller do
     def scoped_collection
@@ -86,8 +87,12 @@ ActiveAdmin.register Question do
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' and params[:showProofRead] == 'yes'
-     toggle_bool_column :proofRead
+    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showProofRead] == 'yes'
+      toggle_bool_column :proofRead
+    end
+
+    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showNCERT] == 'yes'
+      toggle_bool_column :ncert
     end
 
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'

@@ -5,7 +5,7 @@ class Question < ApplicationRecord
     self.level = nil if self.level.blank?
     # find subjectId to be populated
     if (not self.topicId.blank?)
-      self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take().subjectId;
+      self.subjectId = SubjectChapter.where(chapterId: self.topicId, subjectId: [53,54,55,56]).limit(1).take()&.subjectId;
     end
     # replace s3 urls with cdn urls
     if (not self.explanation.blank?) and (self.explanation.include? 'https://questionexplanation.s3-us-west-2.amazonaws.com/' or self.explanation.include? 'https://learner-users.s3.ap-south-1.amazonaws.com/')
@@ -51,7 +51,7 @@ class Question < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
-  scope :subject_name, ->(subject_id) {
+  scope :subject_id, ->(subject_id) {
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
 
@@ -60,7 +60,7 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
-  scope :subject_name, ->(*subject_ids) {
+  scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
     joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
   }
@@ -102,21 +102,22 @@ class Question < ApplicationRecord
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
+  scope :not_neetprep_course, -> {left_outer_joins(:topics => :subject).where(topics: {Subject: {courseId: nil}})}
   scope :bio_masterclass_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.bio_masterclass_course_id}})}
   scope :neetprep_tests, -> {joins(:tests => :topics).where(tests: {Topic: {subjectId: [53,54,55,56]}})}
 
   scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
   scope :physics_mcqs_difficult, ->(topic_id) {
-    subject_name(55).topic(topic_id).difficult
+    subject_id(55).topic(topic_id).difficult
   }
   scope :chemistry_mcqs_difficult, ->(topic_id) {
-    subject_name(54).topic(topic_id).difficult
+    subject_id(54).topic(topic_id).difficult
   }
   scope :botany_mcqs_difficult, ->(topic_id) {
-    subject_name(53).topic(topic_id).difficult
+    subject_id(53).topic(topic_id).difficult
   }
   scope :zoology_mcqs_difficult, ->(topic_id) {
-    subject_name(56).topic(topic_id).difficult
+    subject_id(56).topic(topic_id).difficult
   }
   scope :empty_explanation, -> {where('LENGTH("Question"."explanation") < 30')}
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
@@ -161,7 +162,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:subject_name, :similar_questions, :course_name]
+    [:subject_id, :similar_questions, :course_name]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end

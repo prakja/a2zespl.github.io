@@ -46,6 +46,12 @@ index do
   actions
 end
 
+  # remove one of the duplicate question
+  member_action :remove_duplicate, method: :post do
+    ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
+    redirect_to duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"
+  end
+
 member_action :history do
   @test = Test.find(params[:id])
   @versions = PaperTrail::Version.where(item_type: 'Test', item_id: @test.id)

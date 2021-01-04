@@ -16,6 +16,7 @@ class Ability
       can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
+      can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'superfaculty'
@@ -25,6 +26,7 @@ class Ability
       can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
+      can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'supportAndFaculty'
@@ -39,6 +41,7 @@ class Ability
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:duplicate_questions, :remove_duplicate, :question_issues], [Topic]
+      can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
     elsif user.role == 'support'
