@@ -46,7 +46,7 @@ build-develop:
     - echo "TAG=$VER_CODE" >> build.env
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build . -t $CI_REGISTRY/learner.in/neetprepadmin/develop:$VER_CODE --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE
-    - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop
+    - docker push $CI_REGISTRY/learner.in/neetprepadmin/develop:$VER_CODE
   artifacts:
     reports:
       dotenv: build.env
