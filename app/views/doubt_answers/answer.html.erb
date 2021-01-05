@@ -56,74 +56,83 @@
       </div>
     <% end %>
   </div>
-  <div class="mark-as-solved" style="margin: 32px">
-    <% if not @doubt.doubtSolved %>
-      <h4>Mark solved:</h4>
-      <button onclick="markAsSolved()">Mark as Solved</button>
-    <% else %>
-      <h4>Doubt is marked solved</h4>
-    <% end %>
-  </div>
-  <div style="margin: 32px; margin-top: 4px;">
-    <h4>Add your Answer:</h4>
-
-    <% if not @doubt.topicId.nil? %>
-      <div style="margin: 8px">
-        <p>Add video to answer</p>
-        <select id="videos">
-          <option value=''>Select Video</option>
-          <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
-            <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
-          <% end %>
-        </select>
-        <button onclick="addVideo()">Add selected video</button>
+  <% if (not @doubt.admin_user.nil? and @doubt.admin_user.id == current_admin_user.id) or (current_admin_user.role == 'admin' or current_admin_user.role == 'superfaculty') %>
+    <div>
+      <div class="mark-as-solved" style="margin: 32px">
+        <% if not @doubt.doubtSolved %>
+          <h4>Mark solved:</h4>
+          <button onclick="markAsSolved()">Mark as Solved</button>
+        <% else %>
+          <h4>Doubt is marked solved</h4>
+        <% end %>
       </div>
-    <% end %>
+      <div style="margin: 32px; margin-top: 4px;">
+        <h4>Add your Answer:</h4>
 
-    <style>
-      .loader {
-        border: 8px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 9px solid #3498db;
-        width: 20px;
-        height: 20px;
-        -webkit-animation: spin 2s linear infinite; /* Safari */
-        animation: spin 2s linear infinite;
-      }
+        <% if not @doubt.topicId.nil? %>
+          <div style="margin: 8px">
+            <p>Add video to answer</p>
+            <select id="videos">
+              <option value=''>Select Video</option>
+              <% Topic.find(@doubt.topicId).videos.pluck("id", "name").each do |video| %>
+                <%= raw("<option value='" + video.to_s + "'>" + video.to_s + "</option>") %>
+              <% end %>
+            </select>
+            <button onclick="addVideo()">Add selected video</button>
+          </div>
+        <% end %>
 
-      /* Safari */
-      @-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-      }
+        <style>
+          .loader {
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 9px solid #3498db;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+          }
 
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    </style>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
-    <div style="margin: 8px">
-      <p>Record audio explanation</p>
-      <div style="display: none" class="loader" id="loader"></div>
-      <div id="input_div" style="display: none">
-        <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
-        -- or --
-        <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
-      </div>
-      <div id="preview_div" style="display: none">
-        <audio controls id="audio_player_preview"></audio>
-      </div>
-      <div id="input_stop_div" style="display: none">
-          <button style="margin-top: 8px" onclick="stopRecording()" id="rec_stop_button">Stop Recording</button>
-      </div>
-      <div id="upload_div" style="display: none">
-        <button style="margin-top: 8px" onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
+          /* Safari */
+          @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+          }
+
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        </style>
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
+        <div style="margin: 8px">
+          <p>Record audio explanation</p>
+          <div style="display: none" class="loader" id="loader"></div>
+          <div id="input_div" style="display: none">
+            <button style="margin-top: 8px" onclick="startRecording()" id="audio_button">Start Recording</button>
+            -- or --
+            <input id="audioFile" type="file" name="myFile" onchange="fileSelected()">
+          </div>
+          <div id="preview_div" style="display: none">
+            <audio controls id="audio_player_preview"></audio>
+          </div>
+          <div id="input_stop_div" style="display: none">
+              <button style="margin-top: 8px" onclick="stopRecording()" id="rec_stop_button">Stop Recording</button>
+          </div>
+          <div id="upload_div" style="display: none">
+            <button style="margin-top: 8px" onclick="uploadAndAttachRecording()" id="upload_attach_button">Upload and Attach</button>
+          </div>
+        </div>
+
+        <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
       </div>
     </div>
-
-    <%= text_area(:doubtAnswer, :content, cols: 20, rows: 10) %>
-  </div>
+    <div style="text-align: center">
+      <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
+    </div>
+  <% else %>
+    <p>You can't post answer to this doubt as it is not assigned to you. </p>
+  <% end %>
 </div>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.2/tinymce.min.js'></script>
@@ -192,10 +201,6 @@ tinymce.init({
   }
 });
 </script>
-
-<div style="text-align: center">
-  <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
-</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
 <script>
 
