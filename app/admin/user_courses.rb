@@ -10,10 +10,10 @@ ActiveAdmin.register UserCourse do
 
   scope "Active Courses", :active, default: true
   scope "Active Trial Courses", :active_trial_courses
+  scope "Inactive Trial Courses", :inactive_trial_courses, :show_count => false
   scope "Duration > 10 days", :duration_10_days, :show_count => false
   scope "Achiever Batch Only", :achiever_batch_access_only, :show_count => false
   scope "Inspire Batch Only", :inspire_batch_access_only, :show_count => false
-  scope "Inactive Trial Courses", :inactive_trial_courses, :show_count => false
   scope :all, :show_count => false
 
   index do
