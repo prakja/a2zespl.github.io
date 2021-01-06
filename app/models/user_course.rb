@@ -9,7 +9,11 @@ class UserCourse < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   scope :active, ->() {
-    where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" > current_timestamp')
+    with_course_count.where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" > current_timestamp and "UserCourse"."courseCount" = 1')
+  }
+
+  scope :inactive, ->() {
+    with_course_count.where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" < current_timestamp and "UserCourse"."courseCount" = 1')
   }
 
   scope :achiever_batch_access_only, ->() {
@@ -22,6 +26,10 @@ class UserCourse < ApplicationRecord
 
   scope :active_trial_courses, ->() {
     UserCourse.active.duration_lt_5_days
+  }
+
+  scope :inactive_trial_courses, ->() {
+    UserCourse.inactive.duration_lt_5_days
   }
 
   scope :duration_lt_5_days, -> (){
