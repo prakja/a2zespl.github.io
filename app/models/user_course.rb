@@ -9,7 +9,11 @@ class UserCourse < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   scope :active, ->() {
-    where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" > current_timestamp')
+    with_all_course_count.where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" > current_timestamp and "UserCourse"."courseCount" = 1')
+  }
+
+  scope :inactive, ->() {
+    with_all_course_count.where('"UserCourse"."startedAt" <= current_timestamp and "UserCourse"."expiryAt" < current_timestamp and "UserCourse"."courseCount" = 1')
   }
 
   scope :achiever_batch_access_only, ->() {
@@ -24,6 +28,10 @@ class UserCourse < ApplicationRecord
     UserCourse.active.duration_lt_5_days
   }
 
+  scope :inactive_trial_courses, ->() {
+    UserCourse.inactive.duration_lt_5_days
+  }
+
   scope :duration_lt_5_days, -> (){
     where('"UserCourse"."expiryAt" - "UserCourse"."startedAt" <  interval \'5 days\'')
   }
@@ -33,11 +41,19 @@ class UserCourse < ApplicationRecord
   }
 
   private
+  def self.with_all_course_count
+    from <<-SQL.strip_heredoc
+    (SELECT *, count(*) OVER (
+    PARTITION BY "userId"
+    ) as "courseCount" FROM "UserCourse") AS "UserCourse"
+    SQL
+  end
+
   def self.with_course_count
     from <<-SQL.strip_heredoc
     (SELECT *, count(*) OVER (
     PARTITION BY "userId"
-    ) as "courseCount" FROM "UserCourse" where "courseId" in (287, 386, 8, 141, 18, 19, 20, 271, 272, 273) and "expiryAt" > current_timestamp + interval '15 days') AS "UserCourse"
+    ) as "courseCount" FROM "UserCourse" where "courseId" in (287, 386, 8, 141, 18, 19, 20, 271, 272, 273) and ("startedAt" - "expiryAt" > interval '10 days') and "expiryAt" > current_timestamp) AS "UserCourse"
     SQL
   end
 

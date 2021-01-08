@@ -8,8 +8,9 @@ ActiveAdmin.register UserCourse do
   filter :user_email, as: :string, label: "User Email"
   filter :user_phone, as: :string, label: "User Phone"
 
-  scope "Active Courses", :active, default: true
-  scope "Active Trial Courses", :active_trial_courses
+  scope "Active Courses", :active, default: true, :show_count => false
+  scope "Active Trial Courses", :active_trial_courses, :show_count => false
+  scope "Inactive Trial Courses", :inactive_trial_courses, :show_count => false
   scope "Duration > 10 days", :duration_10_days, :show_count => false
   scope "Achiever Batch Only", :achiever_batch_access_only, :show_count => false
   scope "Inspire Batch Only", :inspire_batch_access_only, :show_count => false
@@ -45,7 +46,14 @@ ActiveAdmin.register UserCourse do
         userCourse.user.user_profile.phone
       end
     }
-    column (:role) { |userCourse| raw(userCourse.role)  }
+    if ["active_trial_courses", "inactive_trial_courses"].include? params[:scope]
+      column ("Solved Questions") do |userCourse|
+        link_to userCourse&.user&.user_profile_analytics&.ansCount || 0 , admin_answers_path(q: {userId_eq: userCourse.userId}), target: :_blank
+      end
+      column ("Watched Videos") do |userCourse|
+        link_to userCourse&.user&.user_profile_analytics&.videoCount || 0, admin_videos_path(q: {userId_eq: userCourse.userId}), target: :_blank
+      end
+    end
     column :startedAt
     column :expiryAt
     column :createdAt
@@ -124,11 +132,21 @@ ActiveAdmin.register UserCourse do
     }
     column :startedAt
     column :expiryAt
+    column ("Solved Questions") { |userCourse|
+      userCourse&.user&.user_profile_analytics&.ansCount
+    }
+    column ("Watched Videos") { |userCourse|
+      userCourse&.user&.user_profile_analytics&.videoCount
+    }
   end
 
   controller do
     def scoped_collection
-      super.includes(:course, user: [:user_profile])
+      if ["active_trial_courses", "inactive_trial_courses"].include? params[:scope]
+        super.includes(:course, user: [:user_profile, :user_profile_analytics])
+      else
+        super.includes(:course, user: [:user_profile])
+      end
     end
   end
 

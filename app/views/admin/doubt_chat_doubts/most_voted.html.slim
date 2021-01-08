@@ -13,16 +13,24 @@ link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/
 
   .phy
     h3 Physics
-    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @phy_doubt.id.to_s}" = @phy_doubt.id
-  
+    - if not @phy_doubt.nil?
+      a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @phy_doubt.id.to_s}" = @phy_doubt.id
+    - else
+      p No Doubt
+
   .chem
     h3 Chemistry
-    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @chem_doubt.id.to_s}" = @chem_doubt.id
+    - if not @chem_doubt.nil?
+      a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @chem_doubt.id.to_s}" = @chem_doubt.id
+    - else
+      p No Doubt
 
   .bio
     h3 Biology
-    a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @phy_doubt.id.to_s}" = @bio_doubt.id
-
+    - if not @bio_doubt.nil?
+      a target="_blank" href="#{'/admin/doubt_chat_doubts/' + @bio_doubt.id.to_s}" = @bio_doubt.id
+    - else
+      p No Doubt
 
 javascript:
   $("#student-selection").submit(function(event) {
