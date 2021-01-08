@@ -15,7 +15,7 @@ ActiveAdmin.register Video do
   active_admin_import validate: true,
     batch_size: 1,
     timestamps: true,
-    headers_rewrites: { 'name': :name, 'description': :description, 'thumbnail': :thumbnail, 'url': :url, 'url2': :url2, 'language': :language, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
+    headers_rewrites: { 'name': :name, 'seqId': :seqId, 'description': :description, 'thumbnail': :thumbnail, 'url': :url, 'url2': :url2, 'language': :language, 'createdAt': :createdAt, 'updatedAt': :updatedAt },
     before_batch_import: ->(importer) {
       # add created at and upated at
       time = Time.now
@@ -49,9 +49,9 @@ ActiveAdmin.register Video do
       end
     },
     template_object: ActiveAdminImport::Model.new(
-        hint: "File will be imported with such header format: name',	'description', 'thumbnail', 'url', 'url2', 'language', 'topicId'.
+        hint: "File will be imported with such header format: name', 'seqId',	'description', 'thumbnail', 'url', 'url2', 'language', 'topicId'.
         Remove the header from the CSV before uploading.",
-        csv_headers: ['name',	'description', 'thumbnail', 'url', 'url2', 'language', 'createdAt', 'updatedAt']
+        csv_headers: ['name', 'seqId',	'description', 'thumbnail', 'url', 'url2', 'language', 'createdAt', 'updatedAt', 'seqId']
     )
   remove_filter :videoTopics, :videoSubTopics, :subTopics, :issues, :versions, :video_annotations, :notes, :user_video_stats, :videoLinks
   filter :id_eq, as: :number, label: "Video ID"
