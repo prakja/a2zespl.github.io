@@ -224,6 +224,10 @@ ActiveAdmin.register Question do
     link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
   end
 
+  action_item :see_ncert_marking, only: :index do
+    link_to 'From NCERT Marking', request.params.merge(showNCERT: 'yes')
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
