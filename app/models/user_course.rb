@@ -61,7 +61,7 @@ class UserCourse < ApplicationRecord
     from <<-SQL.strip_heredoc
     (SELECT *, count(*) OVER (
     PARTITION BY "userId"
-    ) as "courseCount" FROM "UserCourse" where "courseId" in (287, 386, 8, 141, 18, 19, 20, 271, 272, 273) and ("startedAt" - "expiryAt" > interval '10 days') and "expiryAt" > current_timestamp) AS "UserCourse"
+    ) as "courseCount" FROM "UserCourse" where "courseId" in (287, 386, 8, 141, 18, 19, 20, 271, 272, 273) and ("expiryAt" - "startedAt" > interval '10 days') and "expiryAt" > current_timestamp) AS "UserCourse"
     SQL
   end
 
