@@ -175,4 +175,15 @@ form do |f|
   f.actions
 end
 
+controller do
+  def leader_board
+    @test_id = params[:id]
+    test = Test.find(@test_id)
+    @date_time = params[:last_date] || test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
+    # .where('"finishedAt" < ?', @date_time)
+    @attempts = TestAttempt.where(testId: @test_id, completed: true).where(finishedAt: test.createdAt..@date_time).order("(\"result\"->>'totalMarks')::INTEGER ASC").limit(20)
+  end
+end
+
+
 end
