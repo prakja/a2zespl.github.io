@@ -104,5 +104,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/topics/:id/print_flashcards", to: "topics#print_flashcards"
     get "/top_voted_doubt", to: "doubt_chat_doubts#most_voted"
+
+    get "tests/:id/leader_board", to: "tests#leader_board"
   end
 end

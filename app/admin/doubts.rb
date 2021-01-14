@@ -100,6 +100,7 @@ ActiveAdmin.register Doubt do
   end
 
   index do
+    render partial: 'img_css'
     selectable_column
     id_column
     column (:content) { |doubt| raw(doubt.content) }

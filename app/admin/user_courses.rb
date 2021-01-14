@@ -46,7 +46,7 @@ ActiveAdmin.register UserCourse do
         userCourse.user.user_profile.phone
       end
     }
-    if ["active_trial_courses", "inactive_trial_courses"].include? params[:scope]
+    if ["active_trial_courses", "inactive_trial_courses", "achiever_batch_only", "inspire_batch_only"].include? params[:scope]
       column ("Solved Questions") do |userCourse|
         link_to userCourse&.user&.user_profile_analytics&.ansCount || 0 , admin_answers_path(q: {userId_eq: userCourse.userId}), target: :_blank
       end
@@ -142,7 +142,7 @@ ActiveAdmin.register UserCourse do
 
   controller do
     def scoped_collection
-      if ["active_trial_courses", "inactive_trial_courses"].include? params[:scope]
+      if ["active_trial_courses", "inactive_trial_courses", "achiever_batch_only", "inspire_batch_only"].include? params[:scope]
         super.includes(:course, user: [:user_profile, :user_profile_analytics])
       else
         super.includes(:course, user: [:user_profile])

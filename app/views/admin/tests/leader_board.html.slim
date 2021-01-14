@@ -1,0 +1,65 @@
+.container
+  form method='get' action=""
+    label for="last_date" Select End Date
+    input type="datetime-local" id="last_date" name="last_date" value="#{@date_time}"
+    input type="submit"
+
+  div style="margin-top: 32px;"
+    button onclick='exportTableToCSV("#{@test_id + '-leaderboard.csv'}")' Download CSV
+
+  table style="margin-top: 32px;"
+    tr
+      th User
+      th Email
+      th Phone
+      th Score
+    - @attempts.each do |attempt|
+      tr
+        td
+          a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
+        td = attempt.user.email || attempt.user.user_profile.email
+        td = attempt.user.phone || attempt.user.user_profile.phone
+        td = attempt.result["totalMarks"]
+javascript:
+  function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (var j = 0; j < cols.length; j++) 
+            row.push(cols[j].innerText);
+        
+        csv.push(row.join(","));        
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+  }
+
+  function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+  }
