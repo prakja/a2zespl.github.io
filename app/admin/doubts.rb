@@ -50,7 +50,7 @@ ActiveAdmin.register Doubt do
     p assign_to
     admin_user_id = AdminUser.where(email: assign_to).first.id
     ids.each do |id|
-      current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').three_days_pending().count
+      current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').count
       p "Current count: " + current_unsoved_unassigned_count.to_s
       if current_unsoved_unassigned_count.to_i >= 1
         p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
