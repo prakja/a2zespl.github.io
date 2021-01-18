@@ -48,7 +48,7 @@ ActiveAdmin.register TestAttempt do
     end
     column "Time Taken 2" do |testAttempt|
       if testAttempt.createdAt.present? and testAttempt.updatedAt.present?
-        raw(((testAttempt.updatedAt - testAttempt.createdAt) / 60).round.to_s + " minutes")
+        raw((((testAttempt.finishedAt || testAttempt.updatedAt) - testAttempt.createdAt) / 60).round.to_s + " minutes")
       end
     end
     column ("Link") {|testAttempt| testAttempt.completed ? raw('<a target="_blank" href="https://www.neetprep.com/testResult/' + Base64.encode64("TestAttempt:" + testAttempt.id.to_s) + '">Result Summary</a>') : ''}
@@ -125,6 +125,7 @@ ActiveAdmin.register TestAttempt do
       end
       row :createdAt
       row :updatedAt
+      row :finishedAt
       row ("Question Answers") { |testAttempt|
         raw("<pre>#{JSON.pretty_generate(testAttempt.userAnswers)}</pre>")
       }
