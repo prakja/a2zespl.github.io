@@ -20,7 +20,7 @@
           a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
         td = attempt.user.email || attempt.user.user_profile.email
         td = attempt.user.phone || attempt.user.user_profile.phone
-        td = attempt.finishedAt..strftime("%d-%m-%Y %H:%M")
+        td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
         td = attempt.result["totalMarks"]
 javascript:
   function exportTableToCSV(filename) {
