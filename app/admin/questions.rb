@@ -156,6 +156,7 @@ ActiveAdmin.register Question do
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
     end
+    active_admin_comments
   end
 
   csv do
