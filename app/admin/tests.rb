@@ -186,10 +186,8 @@ controller do
     @date_time = params[:last_date] || test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
     # .where('"finishedAt" < ?', @date_time)
     # .where('"finishedAt" < ?', @date_time)
-    @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
-    p @paid_attempts
-    @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
-    p @inspire_attempts
+    @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
+    @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
   end
 end
 
