@@ -1,4 +1,5 @@
 class ChapterQuestion < ApplicationRecord
+  has_paper_trail
   self.table_name = "ChapterQuestion"
 
   before_create :setCreatedTime, :setUpdatedTime
