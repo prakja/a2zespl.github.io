@@ -183,9 +183,15 @@ controller do
   def leader_board
     @test_id = params[:id]
     test = Test.find(@test_id)
-    @date_time = params[:last_date] || test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
-    # .where('"finishedAt" < ?', @date_time)
-    @attempts = TestAttempt.where(testId: @test_id, completed: true).where(finishedAt: test.startedAt..@date_time).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
+    if params[:last_date].nil?
+      @date_time = test&.reviewAt || DateTime.now
+      @display_date_time = test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
+    else
+      @date_time = DateTime.parse(params[:last_date])
+      @display_date_time = params[:last_date]
+    end
+    @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
+    @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
   end
 end
 
