@@ -192,6 +192,7 @@ controller do
     end
     @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
     @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
+    @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (287)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
   end
 end
 
