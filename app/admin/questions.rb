@@ -248,7 +248,7 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
-      f.input :topics, input_html: { class: "select2" } if current_admin_user.role != 'support'
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject if current_admin_user.role != 'support'
       f.input :lock_version, :as => :hidden
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
