@@ -45,6 +45,7 @@ ActiveAdmin.register Question do
   scope :unused_in_high_yield_bio, show_count: false
   scope :NEET_Test_Questions, show_count: false
   scope :not_neetprep_course, show_count: false
+  scope :bio_masterclass_course, show_count: false
 
   controller do
     def scoped_collection
@@ -161,17 +162,20 @@ ActiveAdmin.register Question do
 
   csv do
     column (:id)
-    column (:chapter_id) {|question| question&.topicId}
-    column (:chapter) {|question| question&.topic&.name}
-    column (:subject) {|question| question&.subject&.name}
+    # column (:chapter_id) {|question| question&.topicId}
+    # column (:chapter) {|question| question&.topic&.name}
+    # column (:subject) {|question| question&.subject&.name}
+    column (:chapter_ids) {|question|
+      DuplicateChapter.where(dupId: question&.topics&.first.id).first.origId
+    }
     # column (:chapter) {|question| question&.topics&.first&.id}
-    column (:subtopic_id) {|question| question&.subTopics&.first&.id}
-    column (:subtopic) {|question| question&.subTopics&.first&.name}
+    # column (:subtopic_id) {|question| question&.subTopics&.first&.id}
+    # column (:subtopic) {|question| question&.subTopics&.first&.name}
     # column (:subject) {|question| question&.topics&.first&.subject&.name}
-    column (:question) {|question| question.question && question.question.squish}
-    column (:explanation) {|question| question.explanation && question.explanation.squish}
-    column :options
-    column :correctOptionIndex
+    # column (:question) {|question| question.question && question.question.squish}
+    # column (:explanation) {|question| question.explanation && question.explanation.squish}
+    # column :options
+    # column :correctOptionIndex
   end
 
   # Label works with filters but not with scope xD
@@ -244,7 +248,7 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject if current_admin_user.role != 'support'
+      f.input :topics, input_html: { class: "select2" } if current_admin_user.role != 'support'
       f.input :lock_version, :as => :hidden
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
