@@ -1,9 +1,9 @@
 ActiveAdmin.register ChapterQuestion do 
-  remove_filter :topic, :question
+  remove_filter :topic, :question, :versions
 
   active_admin_import validate: true,
     timestamps: false,
-    batch_size: 1,
+    batch_size: 1000,
     on_duplicate_key_update: [:questionId, :chapterId],
     headers_rewrites: { 'id': :id, 'chapterId': :chapterId, 'questionId': :questionId},
     before_batch_import: lambda { |importer|
