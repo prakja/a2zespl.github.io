@@ -105,7 +105,15 @@ ActiveAdmin.register Topic do
   member_action :duplicate_questions do
     @topic = Topic.find(resource.id)
     cutoff = params[:cutoff].to_f > 0 ? params[:cutoff] : "0.7"
-    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > ' + cutoff + ' and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and not exists (select * from "NotDuplicateQuestion" where "questionId1" = "Question"."id" and "questionId2" = "Question1"."id") and similarity("Question1"."question", "Question"."question") > ' + cutoff + ' and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+  end
+
+  member_action :mark_not_duplicate, method: :post do
+    NotDuplicateQuestion.create!(
+      questionId1: params[:question_id1].to_i,
+      questionId2: params[:question_id2].to_i
+    )
+    redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"
   end
 
   member_action :question_issues do
