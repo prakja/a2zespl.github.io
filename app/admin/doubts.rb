@@ -52,20 +52,20 @@ ActiveAdmin.register Doubt do
     ids.each do |id|
       current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').count
       p "Current count: " + current_unsoved_unassigned_count.to_s
-      if current_unsoved_unassigned_count.to_i >= 1
-        p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
-        next
-      end
-      doubt = Doubt.find(id)
-      if not doubt.doubt_admin.blank?
-        next
+      if current_unsoved_unassigned_count.to_i < 1
+        doubt = Doubt.find(id)
+        if doubt.doubt_admin.blank?
+          doubt_admin = DoubtAdmin.new()
+          doubt_admin[:doubtId] = id
+          doubt_admin[:admin_user_id] = admin_user_id
+          doubt_admin[:created_at] = Time.now
+          doubt_admin[:created_at] = Time.now
+          doubt_admin.save
+        else
+          p "Already assigned!"
+        end
       else
-        doubt_admin = DoubtAdmin.new()
-        doubt_admin[:doubtId] = id
-        doubt_admin[:admin_user_id] = admin_user_id
-        doubt_admin[:created_at] = Time.now
-        doubt_admin[:created_at] = Time.now
-        doubt_admin.save
+        p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
       end
     end
   end
