@@ -52,7 +52,7 @@ end
       questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
       questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
     );
-    ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
+    ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
     redirect_to duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"
   end
 
