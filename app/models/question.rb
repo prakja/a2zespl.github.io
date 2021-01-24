@@ -51,8 +51,12 @@ class Question < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
-  scope :subject_id, ->(subject_id) {
+  scope :course_subject_id, ->(subject_id) {
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+  }
+
+  scope :course_id, ->(course_id) {
+    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
   }
 
   scope :course_name, ->(*course_ids) {
@@ -63,6 +67,11 @@ class Question < ApplicationRecord
   scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
     joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
+  }
+
+  scope :course_ids, ->(*course_ids) {
+    flatten_course_ids = course_ids.flatten
+    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :similar_questions, ->(question_id) {
@@ -162,7 +171,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:subject_id, :similar_questions, :course_name]
+    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end
