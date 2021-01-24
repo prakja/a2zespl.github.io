@@ -163,19 +163,19 @@ ActiveAdmin.register Question do
   csv do
     column (:id)
     column (:topicId)
-    # column (:chapter) {|question| question&.topic&.name}
-    # column (:subject) {|question| question&.subject&.name}
-    # column (:chapter_ids) {|question|
-    #   DuplicateChapter.where(dupId: question&.topics&.first.id).first.origId
-    # }
-    # column (:chapter) {|question| question&.topics&.first&.id}
-    # column (:subtopic_id) {|question| question&.subTopics&.first&.id}
-    # column (:subtopic) {|question| question&.subTopics&.first&.name}
-    # column (:subject) {|question| question&.topics&.first&.subject&.name}
-    # column (:question) {|question| question.question && question.question.squish}
-    # column (:explanation) {|question| question.explanation && question.explanation.squish}
-    # column :options
-    # column :correctOptionIndex
+    column (:chapter) {|question| question&.topic&.name}
+    column (:subject) {|question| question&.subject&.name}
+    column (:chapter_ids) {|question|
+      DuplicateChapter.where(dupId: question&.topics&.first&.id)&.first&.origId
+    }
+    column (:chapter) {|question| question&.topics&.first&.id}
+    column (:subtopic_id) {|question| question&.subTopics&.first&.id}
+    column (:subtopic) {|question| question&.subTopics&.first&.name}
+    column (:subject) {|question| question&.topics&.first&.subject&.name}
+    column (:question) {|question| question.question && question.question.squish}
+    column (:explanation) {|question| question.explanation && question.explanation.squish}
+    column :options
+    column :correctOptionIndex
   end
 
   # Label works with filters but not with scope xD
