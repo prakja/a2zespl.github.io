@@ -130,6 +130,10 @@ ActiveAdmin.register Topic do
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
+    DuplicateQuestion.create!(
+      questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+      questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+    );
     ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
     redirect_to duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
   end
