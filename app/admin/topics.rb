@@ -113,7 +113,10 @@ ActiveAdmin.register Topic do
       questionId1: params[:question_id1].to_i,
       questionId2: params[:question_id2].to_i
     )
-    redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"}
+      format.js
+    end
   end
 
   member_action :question_issues do
@@ -135,7 +138,10 @@ ActiveAdmin.register Topic do
       questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
     );
     ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
-    redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"}
+      format.js
+    end
   end
 
   action_item :print_flashcards, only: :show do

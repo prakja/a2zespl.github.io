@@ -1,0 +1,7 @@
+<% if params[:delete_question_id].to_i < params[:retain_question_id].to_i %>
+  $("#q_<%=params[:delete_question_id]%>_<%=params[:retain_question_id]%>").remove();
+  $("#nd_<%=params[:delete_question_id]%>_<%=params[:retain_question_id]%>").remove();
+<% else %>
+  $("#q_<%=params[:retain_question_id]%>_<%=params[:delete_question_id]%>").remove();
+  $("#nd_<%=params[:retain_question_id]%>_<%=params[:delete_question_id]%>").remove();
+<% end %>
