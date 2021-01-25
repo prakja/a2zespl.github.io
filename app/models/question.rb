@@ -55,6 +55,10 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
 
+  scope :test_course_id, ->(course_id) {
+    joins('INNER JOIN "CourseTestQuestion" ON "questionId" = "id"').where('"courseId" = ' + course_id.to_s)
+  }
+
   scope :course_id, ->(course_id) {
     joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
   }
@@ -171,7 +175,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids]
+    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end
