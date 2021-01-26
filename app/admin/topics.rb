@@ -82,6 +82,8 @@ ActiveAdmin.register Topic do
       li link_to "Question w/o NCERT", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'missing_ncert_reference')
       li link_to "Add Practice Questions", '/chapters/add_question/' + topic.id.to_s
       li link_to "Delete Practice Questions", '/chapters/del_question/' + topic.id.to_s
+      li link_to "Add Notes", '/chapters/add_note/' + topic.id.to_s
+      li link_to "Delete Notes", '/chapters/del_note/' + topic.id.to_s
     end
   end
 
