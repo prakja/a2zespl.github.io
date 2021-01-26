@@ -141,8 +141,11 @@ ActiveAdmin.register Question do
       row :correctOption do |question|
         question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank?
       end
-      row :topics do |question|
+      row "Question Bank Chapters" do |question|
         question.topics
+      end
+      row "Chapter" do |question|
+        question.topic
       end
       row :subTopics do |question|
         question.subTopics
