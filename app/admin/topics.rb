@@ -82,6 +82,8 @@ ActiveAdmin.register Topic do
       li link_to "Question w/o NCERT", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'missing_ncert_reference')
       li link_to "Add Practice Questions", '/chapters/add_question/' + topic.id.to_s
       li link_to "Delete Practice Questions", '/chapters/del_question/' + topic.id.to_s
+      li link_to "Add Notes", '/chapters/add_note/' + topic.id.to_s
+      li link_to "Delete Notes", '/chapters/del_note/' + topic.id.to_s
     end
   end
 
@@ -113,7 +115,10 @@ ActiveAdmin.register Topic do
       questionId1: params[:question_id1].to_i,
       questionId2: params[:question_id2].to_i
     )
-    redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"}
+      format.js
+    end
   end
 
   member_action :question_issues do
@@ -130,8 +135,15 @@ ActiveAdmin.register Topic do
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
-    ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
-    redirect_to duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
+    DuplicateQuestion.create!(
+      questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+      questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+    );
+    ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"}
+      format.js
+    end
   end
 
   action_item :print_flashcards, only: :show do

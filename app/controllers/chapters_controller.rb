@@ -18,7 +18,6 @@ class ChaptersController < ApplicationController
 
   end
 
-
   def add_question
     if not current_admin_user
       redirect_to "/admin/login"
@@ -35,6 +34,84 @@ class ChaptersController < ApplicationController
     end
     @chapterId = params[:chapterId]
     @chapter = Topic.where(id: @chapterId).first
+  end
+
+  def add_note
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    @chapterId = params[:chapterId]
+    @chapter = Topic.where(id: @chapterId).first
+  end
+
+  def del_note
+    if not current_admin_user
+      redirect_to "/admin/login"
+      return
+    end
+    @chapterId = params[:chapterId]
+    @chapter = Topic.where(id: @chapterId).first
+  end
+
+  def deleteChapterNote
+    begin
+      @chapterId = params[:chapterId]
+      @noteIds = params[:noteIds].map(&:strip).reject(&:blank?)
+      @chapter = Topic.where(id: @chapterId).first
+
+      if(@noteIds.length() > 0)
+        ChapterNote.where(chapterId: @chapterId.to_i).where(noteId: @noteIds).delete_all
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: {response: "Done", count: @chapter.notes.length}, status: 200 }
+      end
+
+    rescue => exception
+      p exception
+      render json: {error: exception.to_s}, status: 500
+    end
+  end
+
+  def createChapterNote
+    begin
+      @chapterId = params[:chapterId]
+      @noteIds = params[:noteIds].map(&:strip).reject(&:blank?)
+      @chapter = Topic.where(id: @chapterId).first
+      @rowsArray = []
+      note_ids = []
+
+      @chapterNotes = @chapter.notes.select("id")
+      @chapterNotes.each do |note|
+        note_ids.push(note.id.to_s)
+      end
+
+      @noteIds = @noteIds.uniq
+
+      @noteIds = @noteIds - note_ids
+
+      @noteIds.each do |noteId|
+        @row = {}
+        @row["chapterId"] = @chapter.id
+        @row["noteId"] = noteId
+        @rowsArray.push(@row)
+      end
+
+      if(@noteIds.length() > 0)
+        ChapterNote.create(@rowsArray)
+      end
+
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: {response: "Done", count: @chapterNotes.length + @noteIds.length}, status: 200 }
+      end
+
+    rescue => exception
+      p exception
+      render json: {error: exception.to_s}, status: 500
+    end
   end
 
   def deleteChapterQuestion

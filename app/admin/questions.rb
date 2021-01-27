@@ -31,7 +31,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
-  filter :subject_id_eq, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
+  filter :course_subject_id, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
   filter :similar_questions, as: :number, label: "Similar to ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
@@ -141,8 +141,11 @@ ActiveAdmin.register Question do
       row :correctOption do |question|
         question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank?
       end
-      row :topics do |question|
+      row "Question Bank Chapters" do |question|
         question.topics
+      end
+      row "Chapter" do |question|
+        question.topic
       end
       row :subTopics do |question|
         question.subTopics
@@ -163,19 +166,19 @@ ActiveAdmin.register Question do
   csv do
     column (:id)
     column (:topicId)
-    # column (:chapter) {|question| question&.topic&.name}
-    # column (:subject) {|question| question&.subject&.name}
-    # column (:chapter_ids) {|question|
-    #   DuplicateChapter.where(dupId: question&.topics&.first.id).first.origId
-    # }
-    # column (:chapter) {|question| question&.topics&.first&.id}
-    # column (:subtopic_id) {|question| question&.subTopics&.first&.id}
-    # column (:subtopic) {|question| question&.subTopics&.first&.name}
-    # column (:subject) {|question| question&.topics&.first&.subject&.name}
-    # column (:question) {|question| question.question && question.question.squish}
-    # column (:explanation) {|question| question.explanation && question.explanation.squish}
-    # column :options
-    # column :correctOptionIndex
+    column (:chapter) {|question| question&.topic&.name}
+    column (:subject) {|question| question&.subject&.name}
+    column (:chapter_ids) {|question|
+      DuplicateChapter.where(dupId: question&.topics&.first&.id)&.first&.origId
+    }
+    column (:chapter) {|question| question&.topics&.first&.id}
+    column (:subtopic_id) {|question| question&.subTopics&.first&.id}
+    column (:subtopic) {|question| question&.subTopics&.first&.name}
+    column (:subject) {|question| question&.topics&.first&.subject&.name}
+    column (:question) {|question| question.question && question.question.squish}
+    column (:explanation) {|question| question.explanation && question.explanation.squish}
+    column :options
+    column :correctOptionIndex
   end
 
   # Label works with filters but not with scope xD
