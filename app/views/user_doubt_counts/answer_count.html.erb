@@ -27,6 +27,7 @@
   
     <% @final_data.each do |key, value| %>
       <tr>
+        <%= p @admin_user_data[key].id %>
         <td style="border: 1px dotted #999999;text-align: center;"><p><a href="/admin/admin_users/<%=@admin_user_data[key].id%>" target="_blank"><%= @user_data[key].name %></a></p></td>
         <% value.each do |val| %>
           <% if val != 0 %>
