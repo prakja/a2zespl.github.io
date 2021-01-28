@@ -71,7 +71,7 @@ ActiveAdmin.register Course do
   end
 
   action_item :sync_course_questions, only: :show, if: proc{ current_admin_user.admin? } do
-    link_to 'Sync Course Questions', '/questions/sync_course_questions/' + resource.id.to_s, method: :post
+    link_to 'Sync Course Questions', '/questions/sync_course_questions/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This will potentially modify all questions of the course and even delete unintended questions. Recommended to take a backup of ChapterQuestion before proceeding'}
   end
 
 end

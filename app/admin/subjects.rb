@@ -31,7 +31,7 @@ ActiveAdmin.register Subject do
   end
 
   action_item :sync_subject_questions, only: :show, if: proc{ current_admin_user.admin? } do
-    link_to 'Sync Subject Questions', '/questions/sync_subject_questions/' + resource.id.to_s, method: :post
+    link_to 'Sync Subject Questions', '/questions/sync_subject_questions/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This will potentially modify all questions of the subject and even delete unintended questions. Recommended to take a backup of ChapterQuestion before proceeding'}
   end
 
   form do |f|
