@@ -56,6 +56,10 @@ ActiveAdmin.register Question do
       end
     end
 
+    def apply_filtering(chain)
+      super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
+    end
+
     def create_token
       payload = {
         "type": "Question",
