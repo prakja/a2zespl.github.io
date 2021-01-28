@@ -57,7 +57,11 @@ ActiveAdmin.register Question do
     end
 
     def apply_filtering(chain)
-      super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
+      if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
+        super(chain)
+      else
+        super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
+      end
     end
 
     def create_token
