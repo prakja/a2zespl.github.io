@@ -70,7 +70,7 @@ ActiveAdmin.register Course do
     f.actions
   end
 
-  action_item :sync_course_questions, only: :show do
+  action_item :sync_course_questions, only: :show, if: proc{ current_admin_user.admin? } do
     link_to 'Sync Course Questions', '/questions/sync_course_questions/' + resource.id.to_s, method: :post
   end
 

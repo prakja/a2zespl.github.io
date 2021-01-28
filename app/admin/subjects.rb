@@ -30,6 +30,10 @@ ActiveAdmin.register Subject do
     end
   end
 
+  action_item :sync_subject_questions, only: :show, if: proc{ current_admin_user.admin? } do
+    link_to 'Sync Subject Questions', '/questions/sync_subject_questions/' + resource.id.to_s, method: :post
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Course" do

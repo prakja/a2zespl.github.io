@@ -39,6 +39,13 @@ class QuestionsController < ApplicationController
     redirect_to "/admin/courses/" + id.to_s
   end
 
+  def sync_subject_questions
+    id = params.require(:id)
+    ActiveRecord::Base.connection.execute('SELECT "SyncSubjectQuestions" (' + id.to_s + ')')
+    flash[:notice] = "Sync Completed!"
+    redirect_to "/admin/subjects/" + id.to_s
+  end
+
   def translation_pdf
     if not current_admin_user
       redirect_to "/admin/login"
