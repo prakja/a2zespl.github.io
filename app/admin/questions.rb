@@ -71,6 +71,21 @@ ActiveAdmin.register Question do
       }
       @token_lambda = JsonWebToken.encode_for_lambda(payload)
     end
+
+    def create_translation
+      if not current_admin_user
+        redirect_to "/admin/login"
+        return
+      end
+      question_id = params[:id]
+      question = Question.find(question_id)
+      QuestionTranslation.create!({
+        questionId: question_id,
+        question: question.question,
+        explanation: question.explanation,
+        language: 'hindi'
+      })
+    end
   end
 
   member_action :history do
@@ -124,6 +139,7 @@ ActiveAdmin.register Question do
 
   show do
     render partial: 'mathjax'
+    render partial: 'questions_show'
     attributes_table do
       row :id
       row :question do |question|
@@ -206,6 +222,10 @@ ActiveAdmin.register Question do
 
   action_item :set_image_link, only: :show do
     link_to 'Set Image Link', '#'
+  end
+
+  action_item :set_hindi_translation, only: :show do
+    link_to('Set Hindi Translation', '#', class: 'addTranslation')
   end
 
   action_item :see_physics_difficult_questions, only: :index do
