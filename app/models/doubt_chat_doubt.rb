@@ -16,7 +16,15 @@ class DoubtChatDoubt < ApplicationRecord
     where(created_at: Time.now-100.days..Time.now-1.day, accepted_doubt_answer_id: nil).where(_not_exists(DoubtChatDoubtAnswer.where('"doubt_chat_doubt_answers"."doubt_chat_doubt_id"="doubt_chat_doubts"."id"')))
   }
 
+  scope :subject_doubts, ->(name) {
+    joins(:channel).where('"doubt_chat_channels"."name" LIKE ?', name + '%')
+  }
+
+  scope :physics_doubts, -> { subject_doubts('Phy')}
+  scope :chemistry_doubts, -> { subject_doubts('Chem')}
+  scope :biology_doubts, -> { subject_doubts('Bio')}
+
   def self.ransackable_scopes(_auth_object = nil)
-    [:older_than_one_day]
+    [:older_than_one_day, :subject_doubts]
   end
 end

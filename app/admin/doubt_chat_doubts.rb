@@ -50,8 +50,24 @@ ActiveAdmin.register DoubtChatDoubt do
     end
   end
 
+  index do
+    selectable_column
+    id_column
+    column :content
+    column :upvote_count
+    column :downvote_count
+    column :channel
+    column (:answers) { |doubt|
+      link_to "Answers", "https://discuss.neetprep.com/channels/" + doubt.doubt_chat_channel_id.to_s + "/doubts/" + doubt.id.to_s, target: "_blank"
+    }
+    actions
+  end
+
   scope :all, default: true
   scope :unsoved_older_than_one_day
+  scope :physics_doubts
+  scope :chemistry_doubts
+  scope :biology_doubts
 
   action_item :most_voted_doubts, only: :index do
     link_to 'Top Voted Doubt', '/admin/top_voted_doubt'
