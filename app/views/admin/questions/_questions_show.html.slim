@@ -1,0 +1,13 @@
+javascript:
+  $('a.addTranslation').click(function(e) {
+      e.stopPropagation();  // prevent Rails UJS click event
+      e.preventDefault();
+      url = window.location.href + "/create_translation"
+      $.post(url, {authenticity_token: $('meta[name="csrf-token"]').attr('content')})
+        .done(function(data) {
+          alert("Translation added")
+        })
+        .fail(function(data) {
+          alert("Failed to add translation.")
+        });
+    });

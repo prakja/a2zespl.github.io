@@ -110,5 +110,7 @@ Rails.application.routes.draw do
     get "/top_voted_doubt", to: "doubt_chat_doubts#most_voted"
 
     get "tests/:id/leader_board", to: "tests#leader_board"
+
+    post "/questions/:id/create_translation", to: "questions#create_translation"
   end
 end
