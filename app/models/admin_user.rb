@@ -23,6 +23,10 @@ class AdminUser < ApplicationRecord
     AdminUser.pluck("email")
   end
 
+  def admin?
+    return self.role == 'admin'
+  end
+
   def self.sales_role
     AdminUser.where(role: 'sales').pluck("id")
   end

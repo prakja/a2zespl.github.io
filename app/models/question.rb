@@ -56,7 +56,7 @@ class Question < ApplicationRecord
   }
 
   scope :test_course_id, ->(course_id) {
-    joins('INNER JOIN "CourseTestQuestion" ON "questionId" = "id"').where('"courseId" = ' + course_id.to_s)
+    joins('INNER JOIN "CourseTestQuestion" ON "CourseTestQuestion"."questionId" = "Question"."id"').where('"courseId" = ' + course_id.to_s)
   }
 
   scope :course_id, ->(course_id) {

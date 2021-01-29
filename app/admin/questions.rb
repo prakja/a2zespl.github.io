@@ -56,6 +56,14 @@ ActiveAdmin.register Question do
       end
     end
 
+    def apply_filtering(chain)
+      if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
+        super(chain)
+      else
+        super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
+      end
+    end
+
     def create_token
       payload = {
         "type": "Question",
@@ -265,13 +273,13 @@ ActiveAdmin.register Question do
       f.input :explanation
       f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
       render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
-      f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject if current_admin_user.role != 'support'
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.role != 'support'
+      f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject, label: "Question Chapter", hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.role != 'support'
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
       f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : [])) if current_admin_user.role != 'support'
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject if current_admin_user.role != 'support'
       f.input :lock_version, :as => :hidden
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
