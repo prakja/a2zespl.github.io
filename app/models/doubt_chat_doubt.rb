@@ -19,12 +19,16 @@ class DoubtChatDoubt < ApplicationRecord
   scope :subject_doubts, ->(name) {
     joins(:channel).where('"doubt_chat_channels"."name" LIKE ?', name + '%')
   }
+  
+  scope :chapter_doubts, ->(name) {
+    joins(:channel).where('"doubt_chat_channels"."name" LIKE ?', '% - ' + name)
+  }
 
   scope :physics_doubts, -> { subject_doubts('Phy')}
   scope :chemistry_doubts, -> { subject_doubts('Chem')}
   scope :biology_doubts, -> { subject_doubts('Bio')}
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:older_than_one_day, :subject_doubts]
+    [:older_than_one_day, :subject_doubts, :chapter_doubts]
   end
 end

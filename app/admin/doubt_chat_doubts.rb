@@ -17,6 +17,8 @@ ActiveAdmin.register DoubtChatDoubt do
   # end
 
   filter :channel, as: :searchable_select
+  filter :subject_doubts, as: :select, collection: -> {[["Physics", "Phy"], ["Chemistry", "Chem"], ["Biology", "Bio"]]}
+  filter :chapter_doubts, as: :select, collection: -> { DoubtChatChannel.channel_chapter_name }
   preserve_default_filters!
 
   form do |f|
