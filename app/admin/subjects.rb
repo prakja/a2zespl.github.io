@@ -37,7 +37,7 @@ ActiveAdmin.register Subject do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Course" do
-      f.input :course, :include_hidden: false, input_html: {class: "select2"}
+      f.input :course, include_hidden: false, input_html: {class: "select2"}
       f.input :name
       f.input :description
     end
