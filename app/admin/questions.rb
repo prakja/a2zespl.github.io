@@ -264,6 +264,10 @@ ActiveAdmin.register Question do
     link_to 'From NCERT Marking', request.params.merge(showNCERT: 'yes')
   end
 
+  action_item :delete_from_question_banks, only: :show, if: proc{ current_admin_user.question_bank_owner? } do
+    link_to 'Delete From Question Banks', '/questions/delete_from_question_banks/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This Question will be deleted from all question banks. It will still be available in tests though.'}
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do

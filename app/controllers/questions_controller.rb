@@ -33,6 +33,11 @@ class QuestionsController < ApplicationController
   end
 
   def sync_course_questions
+    if not current_admin_user.admin?
+      flash[:error] = "Unauthorized access to sync_course_questions"
+      redirect_to "/admin/courses/" + id.to_s
+      return
+    end
     id = params.require(:id)
     ActiveRecord::Base.connection.execute('SELECT "SyncCourseQuestions" (' + id.to_s + ')')
     flash[:notice] = "Sync Completed!"
@@ -40,10 +45,27 @@ class QuestionsController < ApplicationController
   end
 
   def sync_subject_questions
+    if not current_admin_user.admin?
+      flash[:error] = "Unauthorized access to sync_subject_questions"
+      redirect_to "/admin/subjects/" + id.to_s
+      return
+    end
     id = params.require(:id)
     ActiveRecord::Base.connection.execute('SELECT "SyncSubjectQuestions" (' + id.to_s + ')')
     flash[:notice] = "Sync Completed!"
     redirect_to "/admin/subjects/" + id.to_s
+  end
+
+  def delete_from_question_banks
+    if not current_admin_user.question_bank_owner?
+      flash[:error] = "Unauthorized access to delete_from_question_banks"
+      redirect_to "/admin/questions/" + id.to_s
+      return
+    end
+    id = params.require(:id)
+    ChapterQuestion.where(questionId: id.to_i).destroy_all
+    flash[:notice] = "Deleted this question from all question banks!"
+    redirect_to "/admin/questions/" + id.to_s
   end
 
   def translation_pdf

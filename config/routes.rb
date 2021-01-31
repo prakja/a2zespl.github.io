@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   post "questions/remove_video_link_hint", to: "questions#remove_video_link_hint"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'
   post "questions/sync_course_questions/:id", to: "questions#sync_course_questions"
+  post "questions/delete_from_question_banks/:id", to: "questions#delete_from_question_banks"
   post "questions/sync_subject_questions/:id", to: "questions#sync_subject_questions"
   get "videos/add_chapter_video/:videoId", to: "videos#add_chapter_video"
   post "videos/getSubjectsList"
