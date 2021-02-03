@@ -17,24 +17,24 @@ CREATE SCHEMA google_ads;
 
 
 --
--- Name: RubyActiveAdmin_test; Type: SCHEMA; Schema: -; Owner: -
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
 --
 
-CREATE SCHEMA RubyActiveAdmin_test;
-
-
---
--- Name: SCHEMA RubyActiveAdmin_test; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON SCHEMA RubyActiveAdmin_test IS 'standard RubyActiveAdmin_test schema';
+CREATE SCHEMA public;
 
 
 --
--- Name: enum_Advertisement_platform; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Advertisement_platform" AS ENUM (
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- Name: enum_Advertisement_platform; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public."enum_Advertisement_platform" AS ENUM (
     'website',
     'mobile',
     'both'
@@ -42,20 +42,20 @@ CREATE TYPE RubyActiveAdmin_test."enum_Advertisement_platform" AS ENUM (
 
 
 --
--- Name: enum_Coupon_discountType; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Coupon_discountType; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Coupon_discountType" AS ENUM (
+CREATE TYPE public."enum_Coupon_discountType" AS ENUM (
     'percentage',
     'absolute'
 );
 
 
 --
--- Name: enum_CourseInvitation_role; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_CourseInvitation_role; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_CourseInvitation_role" AS ENUM (
+CREATE TYPE public."enum_CourseInvitation_role" AS ENUM (
     'courseStudent',
     'courseManager',
     'courseCreator',
@@ -64,10 +64,10 @@ CREATE TYPE RubyActiveAdmin_test."enum_CourseInvitation_role" AS ENUM (
 
 
 --
--- Name: enum_Course_package; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Course_package; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Course_package" AS ENUM (
+CREATE TYPE public."enum_Course_package" AS ENUM (
     'k12',
     'iit',
     'neet',
@@ -78,10 +78,10 @@ CREATE TYPE RubyActiveAdmin_test."enum_Course_package" AS ENUM (
 
 
 --
--- Name: enum_Doubt_doubtType; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Doubt_doubtType; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Doubt_doubtType" AS ENUM (
+CREATE TYPE public."enum_Doubt_doubtType" AS ENUM (
     'Content_Issue',
     'Wrong_Answer',
     'Wrong_Explanation',
@@ -96,10 +96,10 @@ CREATE TYPE RubyActiveAdmin_test."enum_Doubt_doubtType" AS ENUM (
 
 
 --
--- Name: enum_Message_type; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Message_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Message_type" AS ENUM (
+CREATE TYPE public."enum_Message_type" AS ENUM (
     'normal',
     'joinChat',
     'leftChat',
@@ -110,10 +110,10 @@ CREATE TYPE RubyActiveAdmin_test."enum_Message_type" AS ENUM (
 
 
 --
--- Name: enum_Payment_status; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Payment_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Payment_status" AS ENUM (
+CREATE TYPE public."enum_Payment_status" AS ENUM (
     'created',
     'requestSent',
     'responseReceivedSuccess',
@@ -122,20 +122,20 @@ CREATE TYPE RubyActiveAdmin_test."enum_Payment_status" AS ENUM (
 
 
 --
--- Name: enum_Question_level; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Question_level; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Question_level" AS ENUM (
+CREATE TYPE public."enum_Question_level" AS ENUM (
     'BASIC-NCERT',
     'MASTER-NCERT'
 );
 
 
 --
--- Name: enum_Question_type; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Question_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Question_type" AS ENUM (
+CREATE TYPE public."enum_Question_type" AS ENUM (
     'MCQ-SO',
     'MCQ-AR',
     'MCQ-MO',
@@ -144,20 +144,20 @@ CREATE TYPE RubyActiveAdmin_test."enum_Question_type" AS ENUM (
 
 
 --
--- Name: enum_SOS_gender; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_SOS_gender; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_SOS_gender" AS ENUM (
+CREATE TYPE public."enum_SOS_gender" AS ENUM (
     'Male',
     'Female'
 );
 
 
 --
--- Name: enum_Test_exam; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_Test_exam; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_Test_exam" AS ENUM (
+CREATE TYPE public."enum_Test_exam" AS ENUM (
     'AIIMS',
     'NEET',
     'AIPMT',
@@ -166,10 +166,10 @@ CREATE TYPE RubyActiveAdmin_test."enum_Test_exam" AS ENUM (
 
 
 --
--- Name: enum_UserCourse_role; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_UserCourse_role; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_UserCourse_role" AS ENUM (
+CREATE TYPE public."enum_UserCourse_role" AS ENUM (
     'courseStudent',
     'courseManager',
     'courseCreator',
@@ -178,30 +178,30 @@ CREATE TYPE RubyActiveAdmin_test."enum_UserCourse_role" AS ENUM (
 
 
 --
--- Name: enum_UserProfile_gender; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: enum_UserProfile_gender; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test."enum_UserProfile_gender" AS ENUM (
+CREATE TYPE public."enum_UserProfile_gender" AS ENUM (
     'Male',
     'Female'
 );
 
 
 --
--- Name: jwt_token; Type: TYPE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: jwt_token; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE RubyActiveAdmin_test.jwt_token AS (
+CREATE TYPE public.jwt_token AS (
 	role text,
 	userid integer
 );
 
 
 --
--- Name: AddCourseOfferForShortDurationCourse(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AddCourseOfferForShortDurationCourse(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."AddCourseOfferForShortDurationCourse"() RETURNS void
+CREATE FUNCTION public."AddCourseOfferForShortDurationCourse"() RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -227,10 +227,10 @@ $$;
 
 
 --
--- Name: CreateCourseAccessForZeroFee(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CreateCourseAccessForZeroFee(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."CreateCourseAccessForZeroFee"() RETURNS void
+CREATE FUNCTION public."CreateCourseAccessForZeroFee"() RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -250,7 +250,7 @@ for t_row in
   AND ("offerExpiryAt" > current_timestamp) 
   AND ("offerStartedAt" < current_timestamp) loop
     with user_row as (select * from "User" where "email" = "t_row"."email")
-    INSERT INTO RubyActiveAdmin_test."UserCourse"
+    INSERT INTO public."UserCourse"
 ("startedAt", "expiryAt", "role", "courseId", "userId", "couponId", trial, "invitationId", "courseOfferId")
 select current_timestamp, "t_row"."expiryAt", 'courseStudent', "t_row"."courseId", user_row."id", NULL, true, NULL, "t_row"."id"
  from user_row;
@@ -261,10 +261,10 @@ $$;
 
 
 --
--- Name: InsertSelectQuestions(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: InsertSelectQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."InsertSelectQuestions"(chapterid integer) RETURNS void
+CREATE FUNCTION public."InsertSelectQuestions"(chapterid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -274,10 +274,10 @@ $$;
 
 
 --
--- Name: LongRunningQueries(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: LongRunningQueries(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."LongRunningQueries"(minutes integer DEFAULT 1) RETURNS TABLE(processid integer, dur interval, q text, s text)
+CREATE FUNCTION public."LongRunningQueries"(minutes integer DEFAULT 1) RETURNS TABLE(processid integer, dur interval, q text, s text)
     LANGUAGE plpgsql
     AS $$
   BEGIN
@@ -293,10 +293,10 @@ CREATE FUNCTION RubyActiveAdmin_test."LongRunningQueries"(minutes integer DEFAUL
 
 
 --
--- Name: PopulateDailyUserCourseEvent(integer, integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PopulateDailyUserCourseEvent(integer, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."PopulateDailyUserCourseEvent"(days integer DEFAULT 1, courseid integer DEFAULT 255) RETURNS void
+CREATE FUNCTION public."PopulateDailyUserCourseEvent"(days integer DEFAULT 1, courseid integer DEFAULT 255) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -313,10 +313,10 @@ $$;
 
 
 --
--- Name: PopulateDailyUserEvent(integer, date); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PopulateDailyUserEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."PopulateDailyUserEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+CREATE FUNCTION public."PopulateDailyUserEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -334,10 +334,10 @@ $$;
 
 
 --
--- Name: SetChapterFlashCardSeq(boolean); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SetChapterFlashCardSeq(boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."SetChapterFlashCardSeq"(forcerefresh boolean DEFAULT false) RETURNS void
+CREATE FUNCTION public."SetChapterFlashCardSeq"(forcerefresh boolean DEFAULT false) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -361,10 +361,10 @@ $$;
 
 
 --
--- Name: SetChapterFlashCardSeq(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SetChapterFlashCardSeq(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."SetChapterFlashCardSeq"(chapterid integer) RETURNS void
+CREATE FUNCTION public."SetChapterFlashCardSeq"(chapterid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -379,10 +379,10 @@ $$;
 
 
 --
--- Name: SyncChapterQuestions(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SyncChapterQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."SyncChapterQuestions"(chapterid integer) RETURNS void
+CREATE FUNCTION public."SyncChapterQuestions"(chapterid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -417,10 +417,10 @@ $$;
 
 
 --
--- Name: SyncCourseQuestions(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SyncCourseQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."SyncCourseQuestions"(courseid integer) RETURNS void
+CREATE FUNCTION public."SyncCourseQuestions"(courseid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -438,10 +438,10 @@ $$;
 
 
 --
--- Name: SyncSubjectQuestions(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SyncSubjectQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."SyncSubjectQuestions"(subjectid integer) RETURNS void
+CREATE FUNCTION public."SyncSubjectQuestions"(subjectid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -459,10 +459,10 @@ $$;
 
 
 --
--- Name: TestAttemptDetailFunc(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptDetailFunc(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."TestAttemptDetailFunc"(usertestattemptid integer) RETURNS boolean
+CREATE FUNCTION public."TestAttemptDetailFunc"(usertestattemptid integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -512,10 +512,10 @@ $$;
 
 
 --
--- Name: _final_median(numeric[]); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: _final_median(numeric[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test._final_median(numeric[]) RETURNS numeric
+CREATE FUNCTION public._final_median(numeric[]) RETURNS numeric
     LANGUAGE sql IMMUTABLE
     AS $_$
    SELECT AVG(val)
@@ -530,10 +530,10 @@ $_$;
 
 
 --
--- Name: duplicateChapterQuestions(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: duplicateChapterQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."duplicateChapterQuestions"(chapterid integer) RETURNS void
+CREATE FUNCTION public."duplicateChapterQuestions"(chapterid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -550,10 +550,10 @@ $$;
 
 
 --
--- Name: duplicateChapterQuestions(integer, integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: duplicateChapterQuestions(integer, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."duplicateChapterQuestions"(questionid integer, chapterid integer) RETURNS void
+CREATE FUNCTION public."duplicateChapterQuestions"(questionid integer, chapterid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -563,10 +563,10 @@ $$;
 
 
 --
--- Name: history_delete(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: history_delete(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.history_delete() RETURNS trigger
+CREATE FUNCTION public.history_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -578,10 +578,10 @@ $$;
 
 
 --
--- Name: history_insert(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: history_insert(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.history_insert() RETURNS trigger
+CREATE FUNCTION public.history_insert() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -593,10 +593,10 @@ $$;
 
 
 --
--- Name: history_update(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: history_update(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.history_update() RETURNS trigger
+CREATE FUNCTION public.history_update() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -611,10 +611,10 @@ $$;
 
 
 --
--- Name: jsonb_delete_left(jsonb, text[]); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: jsonb_delete_left(jsonb, text[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b text[]) RETURNS jsonb
+CREATE FUNCTION public.jsonb_delete_left(a jsonb, b text[]) RETURNS jsonb
     LANGUAGE sql IMMUTABLE STRICT
     AS $$
     SELECT COALESCE(     
@@ -628,17 +628,17 @@ $$;
 
 
 --
--- Name: FUNCTION jsonb_delete_left(a jsonb, b text[]); Type: COMMENT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FUNCTION jsonb_delete_left(a jsonb, b text[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b text[]) IS 'delete keys in second argument from first argument';
+COMMENT ON FUNCTION public.jsonb_delete_left(a jsonb, b text[]) IS 'delete keys in second argument from first argument';
 
 
 --
--- Name: jsonb_delete_left(jsonb, jsonb); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: jsonb_delete_left(jsonb, jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b jsonb) RETURNS jsonb
+CREATE FUNCTION public.jsonb_delete_left(a jsonb, b jsonb) RETURNS jsonb
     LANGUAGE sql IMMUTABLE STRICT
     AS $$
     SELECT COALESCE(     
@@ -652,17 +652,17 @@ $$;
 
 
 --
--- Name: FUNCTION jsonb_delete_left(a jsonb, b jsonb); Type: COMMENT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FUNCTION jsonb_delete_left(a jsonb, b jsonb); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b jsonb) IS 'delete matching pairs in second argument from first argument';
+COMMENT ON FUNCTION public.jsonb_delete_left(a jsonb, b jsonb) IS 'delete matching pairs in second argument from first argument';
 
 
 --
--- Name: jsonb_delete_left(jsonb, text); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: jsonb_delete_left(jsonb, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b text) RETURNS jsonb
+CREATE FUNCTION public.jsonb_delete_left(a jsonb, b text) RETURNS jsonb
     LANGUAGE sql IMMUTABLE STRICT
     AS $$
     SELECT COALESCE(     
@@ -676,17 +676,17 @@ $$;
 
 
 --
--- Name: FUNCTION jsonb_delete_left(a jsonb, b text); Type: COMMENT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FUNCTION jsonb_delete_left(a jsonb, b text); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION RubyActiveAdmin_test.jsonb_delete_left(a jsonb, b text) IS 'delete key in second argument from first argument';
+COMMENT ON FUNCTION public.jsonb_delete_left(a jsonb, b text) IS 'delete key in second argument from first argument';
 
 
 --
--- Name: test_attempt_history_update(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_attempt_history_update(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test.test_attempt_history_update() RETURNS trigger
+CREATE FUNCTION public.test_attempt_history_update() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE 
@@ -702,10 +702,10 @@ $$;
 
 
 --
--- Name: updateCourseLiveSessionQuestionExplanation(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: updateCourseLiveSessionQuestionExplanation(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."updateCourseLiveSessionQuestionExplanation"(courseid integer) RETURNS void
+CREATE FUNCTION public."updateCourseLiveSessionQuestionExplanation"(courseid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -724,10 +724,10 @@ $$;
 
 
 --
--- Name: updateLiveSessionQuestionExplanation(integer); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: updateLiveSessionQuestionExplanation(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."updateLiveSessionQuestionExplanation"(testid integer) RETURNS void
+CREATE FUNCTION public."updateLiveSessionQuestionExplanation"(testid integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -737,10 +737,10 @@ $$;
 
 
 --
--- Name: updateQuestionSubjectId(); Type: FUNCTION; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: updateQuestionSubjectId(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION RubyActiveAdmin_test."updateQuestionSubjectId"() RETURNS void
+CREATE FUNCTION public."updateQuestionSubjectId"() RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -750,55 +750,55 @@ $$;
 
 
 --
--- Name: median(numeric); Type: AGGREGATE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: median(numeric); Type: AGGREGATE; Schema: public; Owner: -
 --
 
-CREATE AGGREGATE RubyActiveAdmin_test.median(numeric) (
+CREATE AGGREGATE public.median(numeric) (
     SFUNC = array_append,
     STYPE = numeric[],
     INITCOND = '{}',
-    FINALFUNC = RubyActiveAdmin_test._final_median
+    FINALFUNC = public._final_median
 );
 
 
 --
--- Name: -; Type: OPERATOR; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
 --
 
-CREATE OPERATOR RubyActiveAdmin_test.- (
-    FUNCTION = RubyActiveAdmin_test.jsonb_delete_left,
+CREATE OPERATOR public.- (
+    FUNCTION = public.jsonb_delete_left,
     LEFTARG = jsonb,
     RIGHTARG = text
 );
 
 
 --
--- Name: -; Type: OPERATOR; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
 --
 
-CREATE OPERATOR RubyActiveAdmin_test.- (
-    FUNCTION = RubyActiveAdmin_test.jsonb_delete_left,
+CREATE OPERATOR public.- (
+    FUNCTION = public.jsonb_delete_left,
     LEFTARG = jsonb,
     RIGHTARG = text[]
 );
 
 
 --
--- Name: -; Type: OPERATOR; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
 --
 
-CREATE OPERATOR RubyActiveAdmin_test.- (
-    FUNCTION = RubyActiveAdmin_test.jsonb_delete_left,
+CREATE OPERATOR public.- (
+    FUNCTION = public.jsonb_delete_left,
     LEFTARG = jsonb,
     RIGHTARG = jsonb
 );
 
 
 --
--- Name: OPERATOR - (jsonb, jsonb); Type: COMMENT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OPERATOR - (jsonb, jsonb); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON OPERATOR RubyActiveAdmin_test.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
+COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
 
 
 SET default_tablespace = '';
@@ -850,20 +850,20 @@ CREATE TABLE google_ads._sdc_rejected (
 
 
 --
--- Name: ActiveFlashCardChapter; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ActiveFlashCardChapter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ActiveFlashCardChapter" (
+CREATE TABLE public."ActiveFlashCardChapter" (
     id bigint NOT NULL,
     "chapterId" integer
 );
 
 
 --
--- Name: ActiveFlashCardChapter_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ActiveFlashCardChapter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ActiveFlashCardChapter_id_seq"
+CREATE SEQUENCE public."ActiveFlashCardChapter_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -872,23 +872,23 @@ CREATE SEQUENCE RubyActiveAdmin_test."ActiveFlashCardChapter_id_seq"
 
 
 --
--- Name: ActiveFlashCardChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ActiveFlashCardChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ActiveFlashCardChapter_id_seq" OWNED BY RubyActiveAdmin_test."ActiveFlashCardChapter".id;
+ALTER SEQUENCE public."ActiveFlashCardChapter_id_seq" OWNED BY public."ActiveFlashCardChapter".id;
 
 
 --
--- Name: Advertisement; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Advertisement" (
+CREATE TABLE public."Advertisement" (
     id integer NOT NULL,
     "webUrl" character varying(255) NOT NULL,
     "mobileUrl" character varying(255) NOT NULL,
     "startedAt" timestamp with time zone NOT NULL,
     "expiryAt" timestamp with time zone NOT NULL,
-    platform RubyActiveAdmin_test."enum_Advertisement_platform" DEFAULT 'both'::RubyActiveAdmin_test."enum_Advertisement_platform",
+    platform public."enum_Advertisement_platform" DEFAULT 'both'::public."enum_Advertisement_platform",
     link character varying(255),
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
@@ -898,10 +898,10 @@ CREATE TABLE RubyActiveAdmin_test."Advertisement" (
 
 
 --
--- Name: Advertisement_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Advertisement_id_seq"
+CREATE SEQUENCE public."Advertisement_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -910,17 +910,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Advertisement_id_seq"
 
 
 --
--- Name: Advertisement_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Advertisement_id_seq" OWNED BY RubyActiveAdmin_test."Advertisement".id;
+ALTER SEQUENCE public."Advertisement_id_seq" OWNED BY public."Advertisement".id;
 
 
 --
--- Name: Announcement; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Announcement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Announcement" (
+CREATE TABLE public."Announcement" (
     id integer NOT NULL,
     title character varying(255),
     content text,
@@ -932,10 +932,10 @@ CREATE TABLE RubyActiveAdmin_test."Announcement" (
 
 
 --
--- Name: Announcement_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Announcement_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Announcement_id_seq"
+CREATE SEQUENCE public."Announcement_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -944,17 +944,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Announcement_id_seq"
 
 
 --
--- Name: Announcement_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Announcement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Announcement_id_seq" OWNED BY RubyActiveAdmin_test."Announcement".id;
+ALTER SEQUENCE public."Announcement_id_seq" OWNED BY public."Announcement".id;
 
 
 --
--- Name: Answer; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Answer" (
+CREATE TABLE public."Answer" (
     id integer NOT NULL,
     "userAnswer" integer,
     "createdAt" timestamp with time zone NOT NULL,
@@ -969,10 +969,10 @@ CREATE TABLE RubyActiveAdmin_test."Answer" (
 
 
 --
--- Name: Answer_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Answer_id_seq"
+CREATE SEQUENCE public."Answer_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -981,17 +981,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Answer_id_seq"
 
 
 --
--- Name: Answer_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Answer_id_seq" OWNED BY RubyActiveAdmin_test."Answer".id;
+ALTER SEQUENCE public."Answer_id_seq" OWNED BY public."Answer".id;
 
 
 --
--- Name: AppVersion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AppVersion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."AppVersion" (
+CREATE TABLE public."AppVersion" (
     id integer NOT NULL,
     name character varying(255),
     version character varying(255),
@@ -1003,10 +1003,10 @@ CREATE TABLE RubyActiveAdmin_test."AppVersion" (
 
 
 --
--- Name: AppVersion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AppVersion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."AppVersion_id_seq"
+CREATE SEQUENCE public."AppVersion_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1015,17 +1015,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."AppVersion_id_seq"
 
 
 --
--- Name: AppVersion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AppVersion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."AppVersion_id_seq" OWNED BY RubyActiveAdmin_test."AppVersion".id;
+ALTER SEQUENCE public."AppVersion_id_seq" OWNED BY public."AppVersion".id;
 
 
 --
--- Name: BiologyChapterNCERTSeq; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BiologyChapterNCERTSeq; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."BiologyChapterNCERTSeq" (
+CREATE TABLE public."BiologyChapterNCERTSeq" (
     "chapterId" integer NOT NULL,
     "seqId" integer NOT NULL,
     class integer NOT NULL
@@ -1033,10 +1033,10 @@ CREATE TABLE RubyActiveAdmin_test."BiologyChapterNCERTSeq" (
 
 
 --
--- Name: Question; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Question" (
+CREATE TABLE public."Question" (
     id integer NOT NULL,
     question text,
     options json,
@@ -1048,10 +1048,10 @@ CREATE TABLE RubyActiveAdmin_test."Question" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean DEFAULT false NOT NULL,
-    type RubyActiveAdmin_test."enum_Question_type" DEFAULT 'MCQ-SO'::RubyActiveAdmin_test."enum_Question_type" NOT NULL,
+    type public."enum_Question_type" DEFAULT 'MCQ-SO'::public."enum_Question_type" NOT NULL,
     "paidAccess" boolean DEFAULT false,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean DEFAULT false,
     "sequenceId" integer DEFAULT 0,
     "proofRead" boolean DEFAULT false,
@@ -1065,10 +1065,10 @@ WITH (autovacuum_enabled='true', autovacuum_vacuum_scale_factor='0.01', autovacu
 
 
 --
--- Name: QuestionDetail; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionDetail" (
+CREATE TABLE public."QuestionDetail" (
     id integer NOT NULL,
     year integer,
     exam character varying(255),
@@ -1080,23 +1080,23 @@ CREATE TABLE RubyActiveAdmin_test."QuestionDetail" (
 
 
 --
--- Name: BoardExamQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BoardExamQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."BoardExamQuestion" AS
+CREATE VIEW public."BoardExamQuestion" AS
  SELECT "Question".id,
     "Question".deleted
-   FROM RubyActiveAdmin_test."Question"
+   FROM public."Question"
   WHERE (EXISTS ( SELECT 1
-           FROM RubyActiveAdmin_test."QuestionDetail"
+           FROM public."QuestionDetail"
           WHERE (("Question".id = "QuestionDetail"."questionId") AND (("QuestionDetail".exam)::text = 'BOARD'::text))));
 
 
 --
--- Name: BookmarkQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."BookmarkQuestion" (
+CREATE TABLE public."BookmarkQuestion" (
     id integer NOT NULL,
     "questionId" integer NOT NULL,
     "userId" integer NOT NULL,
@@ -1106,10 +1106,10 @@ CREATE TABLE RubyActiveAdmin_test."BookmarkQuestion" (
 
 
 --
--- Name: BookmarkQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."BookmarkQuestion_id_seq"
+CREATE SEQUENCE public."BookmarkQuestion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1119,17 +1119,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."BookmarkQuestion_id_seq"
 
 
 --
--- Name: BookmarkQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."BookmarkQuestion_id_seq" OWNED BY RubyActiveAdmin_test."BookmarkQuestion".id;
+ALTER SEQUENCE public."BookmarkQuestion_id_seq" OWNED BY public."BookmarkQuestion".id;
 
 
 --
--- Name: ChapterQuestionCopy; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestionCopy; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestionCopy" (
+CREATE TABLE public."ChapterQuestionCopy" (
     id integer NOT NULL,
     "chapterId" integer,
     "questionId" integer,
@@ -1139,10 +1139,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestionCopy" (
 
 
 --
--- Name: ChapterQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterQuestion_id_seq"
+CREATE SEQUENCE public."ChapterQuestion_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1151,18 +1151,18 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterQuestion_id_seq"
 
 
 --
--- Name: ChapterQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterQuestion_id_seq" OWNED BY RubyActiveAdmin_test."ChapterQuestionCopy".id;
+ALTER SEQUENCE public."ChapterQuestion_id_seq" OWNED BY public."ChapterQuestionCopy".id;
 
 
 --
--- Name: ChapterQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion" (
-    id integer DEFAULT nextval('RubyActiveAdmin_test."ChapterQuestion_id_seq"'::regclass) NOT NULL,
+CREATE TABLE public."ChapterQuestion" (
+    id integer DEFAULT nextval('public."ChapterQuestion_id_seq"'::regclass) NOT NULL,
     "chapterId" integer NOT NULL,
     "questionId" integer NOT NULL,
     "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
@@ -1171,17 +1171,17 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion" (
 
 
 --
--- Name: Topic; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Topic" (
+CREATE TABLE public."Topic" (
     id integer NOT NULL,
     name character varying(255),
     image text,
     description text,
     "position" integer,
-    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT now() NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "subjectId" integer,
     free boolean DEFAULT false NOT NULL,
     published boolean DEFAULT false NOT NULL,
@@ -1193,10 +1193,10 @@ CREATE TABLE RubyActiveAdmin_test."Topic" (
 
 
 --
--- Name: User; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."User" (
+CREATE TABLE public."User" (
     id integer NOT NULL,
     email character varying(255),
     "emailConfirmed" boolean DEFAULT false,
@@ -1220,29 +1220,29 @@ CREATE TABLE RubyActiveAdmin_test."User" (
 
 
 --
--- Name: ChapQuesUserAnswer; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapQuesUserAnswer; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."ChapQuesUserAnswer" AS
+CREATE VIEW public."ChapQuesUserAnswer" AS
  SELECT ((("User".id - 1) * ( SELECT count(*) AS count
-           FROM RubyActiveAdmin_test."Topic" "Topic_1")) + "Topic".id) AS id,
+           FROM public."Topic" "Topic_1")) + "Topic".id) AS id,
     "Topic".id AS "topicId",
     "User".id AS "userId",
     json_object_agg("Question".id, "Answer"."userAnswer") AS "userAnswers"
-   FROM RubyActiveAdmin_test."Topic",
-    RubyActiveAdmin_test."User",
-    RubyActiveAdmin_test."ChapterQuestion",
-    RubyActiveAdmin_test."Question",
-    RubyActiveAdmin_test."Answer"
+   FROM public."Topic",
+    public."User",
+    public."ChapterQuestion",
+    public."Question",
+    public."Answer"
   WHERE (("Topic".id = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Question".id = "Answer"."questionId") AND ("User".id = "Answer"."userId"))
   GROUP BY "Topic".id, "User".id;
 
 
 --
--- Name: ChapterFlashCard; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard" (
+CREATE TABLE public."ChapterFlashCard" (
     id bigint NOT NULL,
     "chapterId" integer NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
@@ -1253,10 +1253,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard" (
 
 
 --
--- Name: ChapterFlashCard20200609; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard20200609; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard20200609" (
+CREATE TABLE public."ChapterFlashCard20200609" (
     id bigint,
     "chapterId" integer,
     "createdAt" timestamp without time zone,
@@ -1267,10 +1267,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard20200609" (
 
 
 --
--- Name: ChapterFlashCard20200924; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard20200924; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard20200924" (
+CREATE TABLE public."ChapterFlashCard20200924" (
     id bigint,
     "chapterId" integer,
     "createdAt" timestamp without time zone,
@@ -1281,10 +1281,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterFlashCard20200924" (
 
 
 --
--- Name: ChapterFlashCardCopy; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCardCopy; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterFlashCardCopy" (
+CREATE TABLE public."ChapterFlashCardCopy" (
     id bigint,
     "chapterId" integer,
     "createdAt" timestamp without time zone,
@@ -1295,10 +1295,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterFlashCardCopy" (
 
 
 --
--- Name: ChapterFlashCard_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterFlashCard_id_seq"
+CREATE SEQUENCE public."ChapterFlashCard_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1307,17 +1307,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterFlashCard_id_seq"
 
 
 --
--- Name: ChapterFlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterFlashCard_id_seq" OWNED BY RubyActiveAdmin_test."ChapterFlashCard".id;
+ALTER SEQUENCE public."ChapterFlashCard_id_seq" OWNED BY public."ChapterFlashCard".id;
 
 
 --
--- Name: ChapterGlossary; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterGlossary" (
+CREATE TABLE public."ChapterGlossary" (
     id bigint NOT NULL,
     "chapterId" integer,
     "glossaryId" integer,
@@ -1328,10 +1328,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterGlossary" (
 
 
 --
--- Name: ChapterGlossary_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterGlossary_id_seq"
+CREATE SEQUENCE public."ChapterGlossary_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1340,17 +1340,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterGlossary_id_seq"
 
 
 --
--- Name: ChapterGlossary_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterGlossary_id_seq" OWNED BY RubyActiveAdmin_test."ChapterGlossary".id;
+ALTER SEQUENCE public."ChapterGlossary_id_seq" OWNED BY public."ChapterGlossary".id;
 
 
 --
--- Name: ChapterMindmap; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterMindmap" (
+CREATE TABLE public."ChapterMindmap" (
     id integer NOT NULL,
     "chapterId" integer NOT NULL,
     "noteId" integer NOT NULL,
@@ -1360,10 +1360,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterMindmap" (
 
 
 --
--- Name: ChapterMindmap_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterMindmap_id_seq"
+CREATE SEQUENCE public."ChapterMindmap_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1373,17 +1373,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterMindmap_id_seq"
 
 
 --
--- Name: ChapterMindmap_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterMindmap_id_seq" OWNED BY RubyActiveAdmin_test."ChapterMindmap".id;
+ALTER SEQUENCE public."ChapterMindmap_id_seq" OWNED BY public."ChapterMindmap".id;
 
 
 --
--- Name: ChapterNote; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterNote" (
+CREATE TABLE public."ChapterNote" (
     id integer NOT NULL,
     "chapterId" integer,
     "noteId" integer,
@@ -1393,10 +1393,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterNote" (
 
 
 --
--- Name: ChapterNote_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterNote_id_seq"
+CREATE SEQUENCE public."ChapterNote_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1405,17 +1405,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterNote_id_seq"
 
 
 --
--- Name: ChapterNote_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterNote_id_seq" OWNED BY RubyActiveAdmin_test."ChapterNote".id;
+ALTER SEQUENCE public."ChapterNote_id_seq" OWNED BY public."ChapterNote".id;
 
 
 --
--- Name: ChapterQuestion20200516; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20200516; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200516" (
+CREATE TABLE public."ChapterQuestion20200516" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1425,10 +1425,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200516" (
 
 
 --
--- Name: ChapterQuestion20200528; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20200528; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200528" (
+CREATE TABLE public."ChapterQuestion20200528" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1438,10 +1438,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200528" (
 
 
 --
--- Name: ChapterQuestion20200929; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20200929; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200929" (
+CREATE TABLE public."ChapterQuestion20200929" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1451,10 +1451,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20200929" (
 
 
 --
--- Name: ChapterQuestion20201005; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20201005; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20201005" (
+CREATE TABLE public."ChapterQuestion20201005" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1464,10 +1464,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20201005" (
 
 
 --
--- Name: ChapterQuestion20211801; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20211801; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801" (
+CREATE TABLE public."ChapterQuestion20211801" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1477,10 +1477,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801" (
 
 
 --
--- Name: ChapterQuestion20211801_1; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20211801_1; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801_1" (
+CREATE TABLE public."ChapterQuestion20211801_1" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1490,10 +1490,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801_1" (
 
 
 --
--- Name: ChapterQuestion20211801_2; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion20211801_2; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801_2" (
+CREATE TABLE public."ChapterQuestion20211801_2" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -1503,10 +1503,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterQuestion20211801_2" (
 
 
 --
--- Name: ChapterTask; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterTask" (
+CREATE TABLE public."ChapterTask" (
     id integer NOT NULL,
     "chapterId" integer,
     "taskId" integer,
@@ -1516,10 +1516,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterTask" (
 
 
 --
--- Name: ChapterTask_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterTask_id_seq"
+CREATE SEQUENCE public."ChapterTask_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1528,17 +1528,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterTask_id_seq"
 
 
 --
--- Name: ChapterTask_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterTask_id_seq" OWNED BY RubyActiveAdmin_test."ChapterTask".id;
+ALTER SEQUENCE public."ChapterTask_id_seq" OWNED BY public."ChapterTask".id;
 
 
 --
--- Name: ChapterTest; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterTest" (
+CREATE TABLE public."ChapterTest" (
     id integer NOT NULL,
     "chapterId" integer NOT NULL,
     "testId" integer NOT NULL,
@@ -1548,10 +1548,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterTest" (
 
 
 --
--- Name: SubjectChapter; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."SubjectChapter" (
+CREATE TABLE public."SubjectChapter" (
     id integer NOT NULL,
     "subjectId" integer,
     "chapterId" integer,
@@ -1562,10 +1562,10 @@ CREATE TABLE RubyActiveAdmin_test."SubjectChapter" (
 
 
 --
--- Name: TestQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestQuestion" (
+CREATE TABLE public."TestQuestion" (
     id integer NOT NULL,
     "testId" integer NOT NULL,
     "questionId" integer NOT NULL,
@@ -1576,31 +1576,31 @@ CREATE TABLE RubyActiveAdmin_test."TestQuestion" (
 
 
 --
--- Name: ChapterTestQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTestQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."ChapterTestQuestion" AS
+CREATE VIEW public."ChapterTestQuestion" AS
  SELECT "Topic".id AS "chapterId",
     "Question".id AS "questionId"
-   FROM (((RubyActiveAdmin_test."Topic"
+   FROM (((public."Topic"
      JOIN ( SELECT ct."chapterId",
             ct."testId"
            FROM ( SELECT "ChapterTest"."chapterId",
                     "ChapterTest"."testId",
                     count(*) OVER (PARTITION BY "ChapterTest"."testId") AS "countChapter"
-                   FROM RubyActiveAdmin_test."ChapterTest",
-                    RubyActiveAdmin_test."SubjectChapter"
+                   FROM public."ChapterTest",
+                    public."SubjectChapter"
                   WHERE (("ChapterTest"."chapterId" = "SubjectChapter"."chapterId") AND ("SubjectChapter"."subjectId" = ANY (ARRAY[53, 54, 55, 56])))) ct
           WHERE (ct."countChapter" = 1)) ct1 ON ((ct1."chapterId" = "Topic".id)))
-     JOIN RubyActiveAdmin_test."TestQuestion" ON (("TestQuestion"."testId" = ct1."testId")))
-     JOIN RubyActiveAdmin_test."Question" ON (("Question".id = "TestQuestion"."questionId")));
+     JOIN public."TestQuestion" ON (("TestQuestion"."testId" = ct1."testId")))
+     JOIN public."Question" ON (("Question".id = "TestQuestion"."questionId")));
 
 
 --
--- Name: ChapterTest_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterTest_id_seq"
+CREATE SEQUENCE public."ChapterTest_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1610,17 +1610,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterTest_id_seq"
 
 
 --
--- Name: ChapterTest_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterTest_id_seq" OWNED BY RubyActiveAdmin_test."ChapterTest".id;
+ALTER SEQUENCE public."ChapterTest_id_seq" OWNED BY public."ChapterTest".id;
 
 
 --
--- Name: ChapterVideo; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterVideo" (
+CREATE TABLE public."ChapterVideo" (
     id integer NOT NULL,
     "chapterId" integer NOT NULL,
     "videoId" integer NOT NULL,
@@ -1630,10 +1630,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterVideo" (
 
 
 --
--- Name: ChapterVideo10012021; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo10012021; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChapterVideo10012021" (
+CREATE TABLE public."ChapterVideo10012021" (
     id integer,
     "chapterId" integer,
     "videoId" integer,
@@ -1643,10 +1643,10 @@ CREATE TABLE RubyActiveAdmin_test."ChapterVideo10012021" (
 
 
 --
--- Name: Video; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Video" (
+CREATE TABLE public."Video" (
     id integer NOT NULL,
     name character varying(255),
     description text,
@@ -1664,10 +1664,10 @@ CREATE TABLE RubyActiveAdmin_test."Video" (
 
 
 --
--- Name: ChapterVideoStat; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideoStat; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."ChapterVideoStat" AS
+CREATE MATERIALIZED VIEW public."ChapterVideoStat" AS
  SELECT "ChapterVideoStatDataWithId".id,
     "ChapterVideoStatDataWithId"."chapterId",
     "ChapterVideoStatDataWithId"."videoCount",
@@ -1679,19 +1679,19 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."ChapterVideoStat" AS
            FROM ( SELECT "ChapterVideo"."chapterId",
                     count("Video".id) AS "videoCount",
                     sum("Video".duration) AS "totalDuration"
-                   FROM RubyActiveAdmin_test."ChapterVideo",
-                    RubyActiveAdmin_test."Video",
-                    RubyActiveAdmin_test."SubjectChapter"
+                   FROM public."ChapterVideo",
+                    public."Video",
+                    public."SubjectChapter"
                   WHERE (("ChapterVideo"."chapterId" = "SubjectChapter"."chapterId") AND ("SubjectChapter"."subjectId" = ANY (ARRAY[53, 54, 55, 56])) AND ("ChapterVideo"."videoId" = "Video".id) AND ((("Video".language)::text = 'hinglish'::text) OR ("SubjectChapter"."chapterId" = ANY (ARRAY[639, 640]))))
                   GROUP BY "ChapterVideo"."chapterId") "ChapterVideoStatData") "ChapterVideoStatDataWithId"
   WITH NO DATA;
 
 
 --
--- Name: ChapterVideo_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChapterVideo_id_seq"
+CREATE SEQUENCE public."ChapterVideo_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1700,17 +1700,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChapterVideo_id_seq"
 
 
 --
--- Name: ChapterVideo_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChapterVideo_id_seq" OWNED BY RubyActiveAdmin_test."ChapterVideo".id;
+ALTER SEQUENCE public."ChapterVideo_id_seq" OWNED BY public."ChapterVideo".id;
 
 
 --
--- Name: ChatAnswer; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChatAnswer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ChatAnswer" (
+CREATE TABLE public."ChatAnswer" (
     id integer NOT NULL,
     "userAnswer" integer,
     "questionId" integer NOT NULL,
@@ -1723,10 +1723,10 @@ CREATE TABLE RubyActiveAdmin_test."ChatAnswer" (
 
 
 --
--- Name: ChatAnswer_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChatAnswer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ChatAnswer_id_seq"
+CREATE SEQUENCE public."ChatAnswer_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1736,17 +1736,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ChatAnswer_id_seq"
 
 
 --
--- Name: ChatAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChatAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ChatAnswer_id_seq" OWNED BY RubyActiveAdmin_test."ChatAnswer".id;
+ALTER SEQUENCE public."ChatAnswer_id_seq" OWNED BY public."ChatAnswer".id;
 
 
 --
--- Name: Comment; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Comment" (
+CREATE TABLE public."Comment" (
     id integer NOT NULL,
     text text,
     "imgUrl" text,
@@ -1759,10 +1759,10 @@ CREATE TABLE RubyActiveAdmin_test."Comment" (
 
 
 --
--- Name: Comment_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Comment_id_seq"
+CREATE SEQUENCE public."Comment_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1771,17 +1771,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Comment_id_seq"
 
 
 --
--- Name: Comment_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Comment_id_seq" OWNED BY RubyActiveAdmin_test."Comment".id;
+ALTER SEQUENCE public."Comment_id_seq" OWNED BY public."Comment".id;
 
 
 --
--- Name: Constant; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Constant" (
+CREATE TABLE public."Constant" (
     id integer NOT NULL,
     key text NOT NULL,
     value jsonb NOT NULL
@@ -1789,10 +1789,10 @@ CREATE TABLE RubyActiveAdmin_test."Constant" (
 
 
 --
--- Name: CommonLeaderBoard; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CommonLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."CommonLeaderBoard" AS
+CREATE MATERIALIZED VIEW public."CommonLeaderBoard" AS
  SELECT "CommonLeaderBoardDatarank".id,
     "CommonLeaderBoardDatarank"."userId",
     "CommonLeaderBoardDatarank".score,
@@ -1818,7 +1818,7 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."CommonLeaderBoard" AS
                     count(
                         CASE
                             WHEN ("Answer"."createdAt" > (CURRENT_DATE - ((( SELECT ("Constant".value)::text AS value
-                               FROM RubyActiveAdmin_test."Constant"
+                               FROM public."Constant"
                               WHERE ("Constant".key = 'LEADERBOARD_CUTOFF_DAYS'::text)) || ' days'::text))::interval)) THEN 1
                             ELSE NULL::integer
                         END) AS "recentAnswerCount",
@@ -1831,9 +1831,9 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."CommonLeaderBoard" AS
                             WHEN ("Question"."correctOptionIndex" <> "Answer"."userAnswer") THEN 1
                             ELSE NULL::integer
                         END) * '-1'::integer)) AS score
-                   FROM RubyActiveAdmin_test."Question",
-                    RubyActiveAdmin_test."Answer",
-                    RubyActiveAdmin_test."User"
+                   FROM public."Question",
+                    public."Answer",
+                    public."User"
                   WHERE (("User".id = "Answer"."userId") AND ("Question".id = "Answer"."questionId"))
                   GROUP BY "User".id) "CommonLeaderBoardData"
           WHERE (("CommonLeaderBoardData"."correctAnswerCount" <> 0) AND ("CommonLeaderBoardData"."incorrectAnswerCount" <> 0) AND ("CommonLeaderBoardData"."recentAnswerCount" > 0))) "CommonLeaderBoardDatarank"
@@ -1841,10 +1841,10 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."CommonLeaderBoard" AS
 
 
 --
--- Name: ConfigValue; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ConfigValue; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ConfigValue" (
+CREATE TABLE public."ConfigValue" (
     id integer NOT NULL,
     "accessToken" text,
     "refreshToken" character varying(255),
@@ -1854,10 +1854,10 @@ CREATE TABLE RubyActiveAdmin_test."ConfigValue" (
 
 
 --
--- Name: ConfigValue_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ConfigValue_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ConfigValue_id_seq"
+CREATE SEQUENCE public."ConfigValue_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1867,17 +1867,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ConfigValue_id_seq"
 
 
 --
--- Name: ConfigValue_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ConfigValue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ConfigValue_id_seq" OWNED BY RubyActiveAdmin_test."ConfigValue".id;
+ALTER SEQUENCE public."ConfigValue_id_seq" OWNED BY public."ConfigValue".id;
 
 
 --
--- Name: Constant_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Constant_id_seq"
+CREATE SEQUENCE public."Constant_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1887,17 +1887,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Constant_id_seq"
 
 
 --
--- Name: Constant_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Constant_id_seq" OWNED BY RubyActiveAdmin_test."Constant".id;
+ALTER SEQUENCE public."Constant_id_seq" OWNED BY public."Constant".id;
 
 
 --
--- Name: CopyAnswer; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyAnswer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyAnswer" (
+CREATE TABLE public."CopyAnswer" (
     id integer NOT NULL,
     "userAnswer" integer,
     "createdAt" timestamp with time zone NOT NULL,
@@ -1910,10 +1910,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyAnswer" (
 
 
 --
--- Name: CopyAnswer_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyAnswer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CopyAnswer_id_seq"
+CREATE SEQUENCE public."CopyAnswer_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -1923,17 +1923,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CopyAnswer_id_seq"
 
 
 --
--- Name: CopyAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CopyAnswer_id_seq" OWNED BY RubyActiveAdmin_test."CopyAnswer".id;
+ALTER SEQUENCE public."CopyAnswer_id_seq" OWNED BY public."CopyAnswer".id;
 
 
 --
--- Name: CopyChapterFlashCard20201111; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyChapterFlashCard20201111; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyChapterFlashCard20201111" (
+CREATE TABLE public."CopyChapterFlashCard20201111" (
     id bigint,
     "chapterId" integer,
     "createdAt" timestamp without time zone,
@@ -1944,19 +1944,19 @@ CREATE TABLE RubyActiveAdmin_test."CopyChapterFlashCard20201111" (
 
 
 --
--- Name: CopyCourse; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyCourse; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyCourse" (
+CREATE TABLE public."CopyCourse" (
     id integer,
     name character varying(255),
     image text,
     description text,
-    package RubyActiveAdmin_test."enum_Course_package",
+    package public."enum_Course_package",
     "createdAt" timestamp with time zone,
     "updatedAt" timestamp with time zone,
     fee numeric(10,2),
-    RubyActiveAdmin_test boolean,
+    public boolean,
     "origFee" numeric(10,2),
     discount numeric(10,2),
     "expiryAt" timestamp with time zone,
@@ -1983,10 +1983,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyCourse" (
 
 
 --
--- Name: CopyCourseTest20200916; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyCourseTest20200916; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyCourseTest20200916" (
+CREATE TABLE public."CopyCourseTest20200916" (
     id integer,
     "courseId" integer,
     "testId" integer,
@@ -1996,10 +1996,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyCourseTest20200916" (
 
 
 --
--- Name: CopyNote; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyNote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyNote" (
+CREATE TABLE public."CopyNote" (
     id integer,
     name character varying(255),
     content text,
@@ -2014,10 +2014,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyNote" (
 
 
 --
--- Name: CopyQuestion01012019; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion01012019; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion01012019" (
+CREATE TABLE public."CopyQuestion01012019" (
     id integer,
     question text,
     options json,
@@ -2030,15 +2030,15 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion01012019" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type"
+    type public."enum_Question_type"
 );
 
 
 --
--- Name: CopyQuestion010120191; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion010120191; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion010120191" (
+CREATE TABLE public."CopyQuestion010120191" (
     id integer,
     question text,
     options json,
@@ -2051,15 +2051,15 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion010120191" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type"
+    type public."enum_Question_type"
 );
 
 
 --
--- Name: CopyQuestion20200504; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion20200504; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion20200504" (
+CREATE TABLE public."CopyQuestion20200504" (
     id integer,
     question text,
     options json,
@@ -2071,10 +2071,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion20200504" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -2085,10 +2085,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion20200504" (
 
 
 --
--- Name: CopyQuestion20201231; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion20201231; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion20201231" (
+CREATE TABLE public."CopyQuestion20201231" (
     id integer,
     question text,
     options json,
@@ -2100,10 +2100,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion20201231" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -2115,10 +2115,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion20201231" (
 
 
 --
--- Name: CopyQuestion23092020; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion23092020; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion23092020" (
+CREATE TABLE public."CopyQuestion23092020" (
     id integer,
     question text,
     options json,
@@ -2130,10 +2130,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion23092020" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -2145,10 +2145,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion23092020" (
 
 
 --
--- Name: CopyQuestion29092018; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestion29092018; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestion29092018" (
+CREATE TABLE public."CopyQuestion29092018" (
     id integer,
     question text,
     options json,
@@ -2161,15 +2161,15 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestion29092018" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type"
+    type public."enum_Question_type"
 );
 
 
 --
--- Name: CopyQuestionTranslation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestionTranslation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestionTranslation" (
+CREATE TABLE public."CopyQuestionTranslation" (
     id integer,
     "questionId" integer,
     question text,
@@ -2181,10 +2181,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestionTranslation" (
 
 
 --
--- Name: CopyQuestionTranslation1; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyQuestionTranslation1; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyQuestionTranslation1" (
+CREATE TABLE public."CopyQuestionTranslation1" (
     id integer,
     "questionId" integer,
     question text,
@@ -2196,10 +2196,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyQuestionTranslation1" (
 
 
 --
--- Name: CopySubjectChapter; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopySubjectChapter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopySubjectChapter" (
+CREATE TABLE public."CopySubjectChapter" (
     id integer,
     "subjectId" integer,
     "chapterId" integer,
@@ -2210,10 +2210,10 @@ CREATE TABLE RubyActiveAdmin_test."CopySubjectChapter" (
 
 
 --
--- Name: CopyTarget20201111; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTarget20201111; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyTarget20201111" (
+CREATE TABLE public."CopyTarget20201111" (
     id bigint,
     "createdAt" timestamp without time zone,
     "updatedAt" timestamp without time zone,
@@ -2228,10 +2228,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyTarget20201111" (
 
 
 --
--- Name: CopyTestAttempt; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTestAttempt; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyTestAttempt" (
+CREATE TABLE public."CopyTestAttempt" (
     id integer NOT NULL,
     "testId" integer,
     "userId" integer,
@@ -2249,10 +2249,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyTestAttempt" (
 
 
 --
--- Name: CopyTestAttempt_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTestAttempt_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CopyTestAttempt_id_seq"
+CREATE SEQUENCE public."CopyTestAttempt_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2262,17 +2262,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CopyTestAttempt_id_seq"
 
 
 --
--- Name: CopyTestAttempt_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTestAttempt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CopyTestAttempt_id_seq" OWNED BY RubyActiveAdmin_test."CopyTestAttempt".id;
+ALTER SEQUENCE public."CopyTestAttempt_id_seq" OWNED BY public."CopyTestAttempt".id;
 
 
 --
--- Name: CopyTopic20200917; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTopic20200917; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CopyTopic20200917" (
+CREATE TABLE public."CopyTopic20200917" (
     id integer,
     name character varying(255),
     image text,
@@ -2291,10 +2291,10 @@ CREATE TABLE RubyActiveAdmin_test."CopyTopic20200917" (
 
 
 --
--- Name: VideoQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."VideoQuestion" (
+CREATE TABLE public."VideoQuestion" (
     id integer NOT NULL,
     "videoId" integer,
     "questionId" integer,
@@ -2305,50 +2305,50 @@ CREATE TABLE RubyActiveAdmin_test."VideoQuestion" (
 
 
 --
--- Name: CorrectAnswerVideo; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CorrectAnswerVideo; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."CorrectAnswerVideo" AS
+CREATE VIEW public."CorrectAnswerVideo" AS
  SELECT row_number() OVER (ORDER BY "Answer".id, "Video".id) AS id,
     "Question".id AS "questionId",
     "Answer"."userId",
     "Video".id AS "videoId",
     "Answer"."testAttemptId",
     "Answer".id AS "answerId"
-   FROM (((RubyActiveAdmin_test."Question"
-     JOIN RubyActiveAdmin_test."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question"."correctOptionIndex" = "Answer"."userAnswer"))))
-     JOIN RubyActiveAdmin_test."VideoQuestion" ON (("VideoQuestion"."questionId" = "Question".id)))
-     JOIN RubyActiveAdmin_test."Video" ON (("Video".id = "VideoQuestion"."videoId")));
+   FROM (((public."Question"
+     JOIN public."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question"."correctOptionIndex" = "Answer"."userAnswer"))))
+     JOIN public."VideoQuestion" ON (("VideoQuestion"."questionId" = "Question".id)))
+     JOIN public."Video" ON (("Video".id = "VideoQuestion"."videoId")));
 
 
 --
--- Name: Coupon; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Coupon; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Coupon" (
+CREATE TABLE public."Coupon" (
     id integer,
     code character varying(255),
     description text,
     quantity integer DEFAULT '-1'::integer NOT NULL,
     discount numeric(10,2) DEFAULT 0 NOT NULL,
-    "discountType" RubyActiveAdmin_test."enum_Coupon_discountType" DEFAULT 'absolute'::RubyActiveAdmin_test."enum_Coupon_discountType"
+    "discountType" public."enum_Coupon_discountType" DEFAULT 'absolute'::public."enum_Coupon_discountType"
 );
 
 
 --
--- Name: Course; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Course" (
+CREATE TABLE public."Course" (
     id integer NOT NULL,
     name character varying(255),
     image text,
     description text,
-    package RubyActiveAdmin_test."enum_Course_package" DEFAULT 'k12'::RubyActiveAdmin_test."enum_Course_package",
+    package public."enum_Course_package" DEFAULT 'k12'::public."enum_Course_package",
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     fee numeric(10,2) DEFAULT 0 NOT NULL,
-    RubyActiveAdmin_test boolean DEFAULT false NOT NULL,
+    public boolean DEFAULT false NOT NULL,
     "origFee" numeric(10,2),
     discount numeric(10,2),
     "expiryAt" timestamp with time zone,
@@ -2375,10 +2375,10 @@ CREATE TABLE RubyActiveAdmin_test."Course" (
 
 
 --
--- Name: Subject; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Subject" (
+CREATE TABLE public."Subject" (
     id integer NOT NULL,
     name character varying(255),
     image text,
@@ -2390,23 +2390,23 @@ CREATE TABLE RubyActiveAdmin_test."Subject" (
 
 
 --
--- Name: CourseChapter; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseChapter; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."CourseChapter" AS
+CREATE VIEW public."CourseChapter" AS
  SELECT "Subject"."courseId",
     "SubjectChapter"."chapterId",
     "SubjectChapter"."subjectId"
-   FROM RubyActiveAdmin_test."Subject",
-    RubyActiveAdmin_test."SubjectChapter"
+   FROM public."Subject",
+    public."SubjectChapter"
   WHERE ("SubjectChapter"."subjectId" = "Subject".id);
 
 
 --
--- Name: CourseDetail; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CourseDetail" (
+CREATE TABLE public."CourseDetail" (
     id bigint NOT NULL,
     "courseId" integer NOT NULL,
     description character varying,
@@ -2429,10 +2429,10 @@ CREATE TABLE RubyActiveAdmin_test."CourseDetail" (
 
 
 --
--- Name: CourseDetail_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CourseDetail_id_seq"
+CREATE SEQUENCE public."CourseDetail_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2441,23 +2441,23 @@ CREATE SEQUENCE RubyActiveAdmin_test."CourseDetail_id_seq"
 
 
 --
--- Name: CourseDetail_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CourseDetail_id_seq" OWNED BY RubyActiveAdmin_test."CourseDetail".id;
+ALTER SEQUENCE public."CourseDetail_id_seq" OWNED BY public."CourseDetail".id;
 
 
 --
--- Name: CourseInvitation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CourseInvitation" (
+CREATE TABLE public."CourseInvitation" (
     id integer NOT NULL,
     "courseId" integer NOT NULL,
     email character varying(255) NOT NULL,
     phone character varying(255),
     "expiryAt" timestamp with time zone NOT NULL,
-    role RubyActiveAdmin_test."enum_CourseInvitation_role" DEFAULT 'courseStudent'::RubyActiveAdmin_test."enum_CourseInvitation_role" NOT NULL,
+    role public."enum_CourseInvitation_role" DEFAULT 'courseStudent'::public."enum_CourseInvitation_role" NOT NULL,
     accepted boolean DEFAULT false NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
@@ -2469,10 +2469,10 @@ CREATE TABLE RubyActiveAdmin_test."CourseInvitation" (
 
 
 --
--- Name: CourseInvitation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CourseInvitation_id_seq"
+CREATE SEQUENCE public."CourseInvitation_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2481,17 +2481,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CourseInvitation_id_seq"
 
 
 --
--- Name: CourseInvitation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CourseInvitation_id_seq" OWNED BY RubyActiveAdmin_test."CourseInvitation".id;
+ALTER SEQUENCE public."CourseInvitation_id_seq" OWNED BY public."CourseInvitation".id;
 
 
 --
--- Name: CourseOffer; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CourseOffer" (
+CREATE TABLE public."CourseOffer" (
     id integer NOT NULL,
     title character varying(255),
     description text,
@@ -2515,10 +2515,10 @@ CREATE TABLE RubyActiveAdmin_test."CourseOffer" (
 
 
 --
--- Name: CourseOffer_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CourseOffer_id_seq"
+CREATE SEQUENCE public."CourseOffer_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2528,33 +2528,33 @@ CREATE SEQUENCE RubyActiveAdmin_test."CourseOffer_id_seq"
 
 
 --
--- Name: CourseOffer_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CourseOffer_id_seq" OWNED BY RubyActiveAdmin_test."CourseOffer".id;
+ALTER SEQUENCE public."CourseOffer_id_seq" OWNED BY public."CourseOffer".id;
 
 
 --
--- Name: CourseQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."CourseQuestion" AS
+CREATE VIEW public."CourseQuestion" AS
  SELECT "Subject"."courseId",
     "Subject".id AS "subjectId",
     "SubjectChapter"."chapterId",
     "ChapterQuestion"."questionId"
-   FROM RubyActiveAdmin_test."Subject",
-    RubyActiveAdmin_test."SubjectChapter",
-    RubyActiveAdmin_test."ChapterQuestion",
-    RubyActiveAdmin_test."Question"
+   FROM public."Subject",
+    public."SubjectChapter",
+    public."ChapterQuestion",
+    public."Question"
   WHERE (("SubjectChapter"."subjectId" = "Subject".id) AND ("SubjectChapter"."chapterId" = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Question".deleted = false));
 
 
 --
--- Name: CourseTest; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CourseTest" (
+CREATE TABLE public."CourseTest" (
     id integer NOT NULL,
     "courseId" integer NOT NULL,
     "testId" integer NOT NULL,
@@ -2564,25 +2564,25 @@ CREATE TABLE RubyActiveAdmin_test."CourseTest" (
 
 
 --
--- Name: CourseTestQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."CourseTestQuestion" AS
+CREATE VIEW public."CourseTestQuestion" AS
  SELECT "CourseTest"."courseId",
     "TestQuestion"."questionId",
     "Question"."topicId" AS "chapterId",
     "Question"."subjectId"
-   FROM RubyActiveAdmin_test."CourseTest",
-    RubyActiveAdmin_test."TestQuestion",
-    RubyActiveAdmin_test."Question"
+   FROM public."CourseTest",
+    public."TestQuestion",
+    public."Question"
   WHERE (("CourseTest"."testId" = "TestQuestion"."testId") AND ("TestQuestion"."questionId" = "Question".id) AND ("Question".deleted = false));
 
 
 --
--- Name: CourseTest_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CourseTest_id_seq"
+CREATE SEQUENCE public."CourseTest_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2591,17 +2591,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CourseTest_id_seq"
 
 
 --
--- Name: CourseTest_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CourseTest_id_seq" OWNED BY RubyActiveAdmin_test."CourseTest".id;
+ALTER SEQUENCE public."CourseTest_id_seq" OWNED BY public."CourseTest".id;
 
 
 --
--- Name: CourseTestimonial; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CourseTestimonial" (
+CREATE TABLE public."CourseTestimonial" (
     id integer NOT NULL,
     "courseId" integer NOT NULL,
     content text NOT NULL,
@@ -2612,10 +2612,10 @@ CREATE TABLE RubyActiveAdmin_test."CourseTestimonial" (
 
 
 --
--- Name: CourseTestimonial_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CourseTestimonial_id_seq"
+CREATE SEQUENCE public."CourseTestimonial_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2625,17 +2625,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CourseTestimonial_id_seq"
 
 
 --
--- Name: CourseTestimonial_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CourseTestimonial_id_seq" OWNED BY RubyActiveAdmin_test."CourseTestimonial".id;
+ALTER SEQUENCE public."CourseTestimonial_id_seq" OWNED BY public."CourseTestimonial".id;
 
 
 --
--- Name: Course_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Course_id_seq"
+CREATE SEQUENCE public."Course_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2644,17 +2644,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Course_id_seq"
 
 
 --
--- Name: Course_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Course_id_seq" OWNED BY RubyActiveAdmin_test."Course".id;
+ALTER SEQUENCE public."Course_id_seq" OWNED BY public."Course".id;
 
 
 --
--- Name: CustomerIssue; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CustomerIssue" (
+CREATE TABLE public."CustomerIssue" (
     id integer NOT NULL,
     description text NOT NULL,
     "typeId" integer NOT NULL,
@@ -2673,10 +2673,10 @@ CREATE TABLE RubyActiveAdmin_test."CustomerIssue" (
 
 
 --
--- Name: CustomerIssue20201120; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue20201120; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CustomerIssue20201120" (
+CREATE TABLE public."CustomerIssue20201120" (
     id integer,
     description text,
     "typeId" integer,
@@ -2695,10 +2695,10 @@ CREATE TABLE RubyActiveAdmin_test."CustomerIssue20201120" (
 
 
 --
--- Name: CustomerIssueType; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CustomerIssueType" (
+CREATE TABLE public."CustomerIssueType" (
     id integer NOT NULL,
     code character varying(255) NOT NULL,
     "displayName" character varying(255) NOT NULL,
@@ -2711,10 +2711,10 @@ CREATE TABLE RubyActiveAdmin_test."CustomerIssueType" (
 
 
 --
--- Name: CustomerIssueType_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CustomerIssueType_id_seq"
+CREATE SEQUENCE public."CustomerIssueType_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2723,17 +2723,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CustomerIssueType_id_seq"
 
 
 --
--- Name: CustomerIssueType_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CustomerIssueType_id_seq" OWNED BY RubyActiveAdmin_test."CustomerIssueType".id;
+ALTER SEQUENCE public."CustomerIssueType_id_seq" OWNED BY public."CustomerIssueType".id;
 
 
 --
--- Name: CustomerIssue_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CustomerIssue_id_seq"
+CREATE SEQUENCE public."CustomerIssue_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2742,17 +2742,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CustomerIssue_id_seq"
 
 
 --
--- Name: CustomerIssue_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CustomerIssue_id_seq" OWNED BY RubyActiveAdmin_test."CustomerIssue".id;
+ALTER SEQUENCE public."CustomerIssue_id_seq" OWNED BY public."CustomerIssue".id;
 
 
 --
--- Name: CustomerSupport; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."CustomerSupport" (
+CREATE TABLE public."CustomerSupport" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     content character varying(255),
@@ -2769,10 +2769,10 @@ CREATE TABLE RubyActiveAdmin_test."CustomerSupport" (
 
 
 --
--- Name: CustomerSupport_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."CustomerSupport_id_seq"
+CREATE SEQUENCE public."CustomerSupport_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2782,17 +2782,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."CustomerSupport_id_seq"
 
 
 --
--- Name: CustomerSupport_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."CustomerSupport_id_seq" OWNED BY RubyActiveAdmin_test."CustomerSupport".id;
+ALTER SEQUENCE public."CustomerSupport_id_seq" OWNED BY public."CustomerSupport".id;
 
 
 --
--- Name: DailyUserEvent; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DailyUserEvent" (
+CREATE TABLE public."DailyUserEvent" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     "eventDate" date NOT NULL,
@@ -2803,10 +2803,10 @@ CREATE TABLE RubyActiveAdmin_test."DailyUserEvent" (
 
 
 --
--- Name: DailyUserEvent_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."DailyUserEvent_id_seq"
+CREATE SEQUENCE public."DailyUserEvent_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2816,17 +2816,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."DailyUserEvent_id_seq"
 
 
 --
--- Name: DailyUserEvent_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."DailyUserEvent_id_seq" OWNED BY RubyActiveAdmin_test."DailyUserEvent".id;
+ALTER SEQUENCE public."DailyUserEvent_id_seq" OWNED BY public."DailyUserEvent".id;
 
 
 --
--- Name: Delivery; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Delivery; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Delivery" (
+CREATE TABLE public."Delivery" (
     id integer NOT NULL,
     "deliveryType" character varying(255),
     course character varying(255),
@@ -2857,10 +2857,10 @@ CREATE TABLE RubyActiveAdmin_test."Delivery" (
 
 
 --
--- Name: Delivery_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Delivery_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Delivery_id_seq"
+CREATE SEQUENCE public."Delivery_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2870,17 +2870,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Delivery_id_seq"
 
 
 --
--- Name: Delivery_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Delivery_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Delivery_id_seq" OWNED BY RubyActiveAdmin_test."Delivery".id;
+ALTER SEQUENCE public."Delivery_id_seq" OWNED BY public."Delivery".id;
 
 
 --
--- Name: Doubt; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Doubt" (
+CREATE TABLE public."Doubt" (
     id integer NOT NULL,
     content text,
     "imgUrl" text,
@@ -2895,7 +2895,7 @@ CREATE TABLE RubyActiveAdmin_test."Doubt" (
     "videoId" integer,
     "testId" integer,
     "teacherReply" text,
-    "doubtType" RubyActiveAdmin_test."enum_Doubt_doubtType",
+    "doubtType" public."enum_Doubt_doubtType",
     "goodFlag" boolean DEFAULT false,
     "audioLink" character varying,
     "voteCount" integer DEFAULT 0,
@@ -2904,10 +2904,10 @@ CREATE TABLE RubyActiveAdmin_test."Doubt" (
 
 
 --
--- Name: DoubtAnswer; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DoubtAnswer" (
+CREATE TABLE public."DoubtAnswer" (
     id integer NOT NULL,
     content text,
     "imgUrl" text,
@@ -2921,10 +2921,10 @@ CREATE TABLE RubyActiveAdmin_test."DoubtAnswer" (
 
 
 --
--- Name: DoubtAnswer_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."DoubtAnswer_id_seq"
+CREATE SEQUENCE public."DoubtAnswer_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2933,17 +2933,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."DoubtAnswer_id_seq"
 
 
 --
--- Name: DoubtAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."DoubtAnswer_id_seq" OWNED BY RubyActiveAdmin_test."DoubtAnswer".id;
+ALTER SEQUENCE public."DoubtAnswer_id_seq" OWNED BY public."DoubtAnswer".id;
 
 
 --
--- Name: Doubt_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Doubt_id_seq"
+CREATE SEQUENCE public."Doubt_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2952,17 +2952,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Doubt_id_seq"
 
 
 --
--- Name: Doubt_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Doubt_id_seq" OWNED BY RubyActiveAdmin_test."Doubt".id;
+ALTER SEQUENCE public."Doubt_id_seq" OWNED BY public."Doubt".id;
 
 
 --
--- Name: DuplicateChapter; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DuplicateChapter" (
+CREATE TABLE public."DuplicateChapter" (
     id integer NOT NULL,
     "origId" integer NOT NULL,
     "dupId" integer NOT NULL
@@ -2970,10 +2970,10 @@ CREATE TABLE RubyActiveAdmin_test."DuplicateChapter" (
 
 
 --
--- Name: DuplicateChapter_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."DuplicateChapter_id_seq"
+CREATE SEQUENCE public."DuplicateChapter_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -2983,17 +2983,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."DuplicateChapter_id_seq"
 
 
 --
--- Name: DuplicateChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."DuplicateChapter_id_seq" OWNED BY RubyActiveAdmin_test."DuplicateChapter".id;
+ALTER SEQUENCE public."DuplicateChapter_id_seq" OWNED BY public."DuplicateChapter".id;
 
 
 --
--- Name: DuplicatePost; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicatePost; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DuplicatePost" (
+CREATE TABLE public."DuplicatePost" (
     id integer NOT NULL,
     "postId" integer NOT NULL,
     content text,
@@ -3003,10 +3003,10 @@ CREATE TABLE RubyActiveAdmin_test."DuplicatePost" (
 
 
 --
--- Name: DuplicatePost_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicatePost_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."DuplicatePost_id_seq"
+CREATE SEQUENCE public."DuplicatePost_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3015,17 +3015,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."DuplicatePost_id_seq"
 
 
 --
--- Name: DuplicatePost_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicatePost_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."DuplicatePost_id_seq" OWNED BY RubyActiveAdmin_test."DuplicatePost".id;
+ALTER SEQUENCE public."DuplicatePost_id_seq" OWNED BY public."DuplicatePost".id;
 
 
 --
--- Name: DuplicateQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DuplicateQuestion" (
+CREATE TABLE public."DuplicateQuestion" (
     id integer NOT NULL,
     "questionId1" integer NOT NULL,
     "questionId2" integer NOT NULL
@@ -3033,10 +3033,10 @@ CREATE TABLE RubyActiveAdmin_test."DuplicateQuestion" (
 
 
 --
--- Name: DuplicateQuestion20200710; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion20200710; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."DuplicateQuestion20200710" (
+CREATE TABLE public."DuplicateQuestion20200710" (
     id integer,
     question text,
     options json,
@@ -3048,10 +3048,10 @@ CREATE TABLE RubyActiveAdmin_test."DuplicateQuestion20200710" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -3062,10 +3062,10 @@ CREATE TABLE RubyActiveAdmin_test."DuplicateQuestion20200710" (
 
 
 --
--- Name: DuplicateQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."DuplicateQuestion_id_seq"
+CREATE SEQUENCE public."DuplicateQuestion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3075,30 +3075,30 @@ CREATE SEQUENCE RubyActiveAdmin_test."DuplicateQuestion_id_seq"
 
 
 --
--- Name: DuplicateQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."DuplicateQuestion_id_seq" OWNED BY RubyActiveAdmin_test."DuplicateQuestion".id;
+ALTER SEQUENCE public."DuplicateQuestion_id_seq" OWNED BY public."DuplicateQuestion".id;
 
 
 --
--- Name: ExamQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ExamQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."ExamQuestion" AS
+CREATE VIEW public."ExamQuestion" AS
  SELECT "Question".id,
     "Question".deleted
-   FROM RubyActiveAdmin_test."Question"
+   FROM public."Question"
   WHERE (EXISTS ( SELECT 1
-           FROM RubyActiveAdmin_test."QuestionDetail"
+           FROM public."QuestionDetail"
           WHERE (("Question".id = "QuestionDetail"."questionId") AND ((("QuestionDetail".exam)::text <> 'BOARD'::text) OR ("QuestionDetail".exam IS NULL)))));
 
 
 --
--- Name: FcmToken; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."FcmToken" (
+CREATE TABLE public."FcmToken" (
     id integer NOT NULL,
     "fcmToken" character varying(255) NOT NULL,
     "deviceId" character varying(255),
@@ -3112,10 +3112,10 @@ CREATE TABLE RubyActiveAdmin_test."FcmToken" (
 
 
 --
--- Name: FcmToken_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."FcmToken_id_seq"
+CREATE SEQUENCE public."FcmToken_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3124,17 +3124,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."FcmToken_id_seq"
 
 
 --
--- Name: FcmToken_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."FcmToken_id_seq" OWNED BY RubyActiveAdmin_test."FcmToken".id;
+ALTER SEQUENCE public."FcmToken_id_seq" OWNED BY public."FcmToken".id;
 
 
 --
--- Name: FestivalDiscount; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FestivalDiscount; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."FestivalDiscount" (
+CREATE TABLE public."FestivalDiscount" (
     id integer NOT NULL,
     title character varying(255),
     description text,
@@ -3147,10 +3147,10 @@ CREATE TABLE RubyActiveAdmin_test."FestivalDiscount" (
 
 
 --
--- Name: FestivalDiscount_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FestivalDiscount_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."FestivalDiscount_id_seq"
+CREATE SEQUENCE public."FestivalDiscount_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3159,17 +3159,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."FestivalDiscount_id_seq"
 
 
 --
--- Name: FestivalDiscount_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FestivalDiscount_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."FestivalDiscount_id_seq" OWNED BY RubyActiveAdmin_test."FestivalDiscount".id;
+ALTER SEQUENCE public."FestivalDiscount_id_seq" OWNED BY public."FestivalDiscount".id;
 
 
 --
--- Name: FlashCard; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."FlashCard" (
+CREATE TABLE public."FlashCard" (
     id bigint NOT NULL,
     content character varying,
     title character varying,
@@ -3179,10 +3179,10 @@ CREATE TABLE RubyActiveAdmin_test."FlashCard" (
 
 
 --
--- Name: FlashCard20200609; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard20200609; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."FlashCard20200609" (
+CREATE TABLE public."FlashCard20200609" (
     id bigint,
     content character varying,
     title character varying,
@@ -3192,10 +3192,10 @@ CREATE TABLE RubyActiveAdmin_test."FlashCard20200609" (
 
 
 --
--- Name: FlashCard_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."FlashCard_id_seq"
+CREATE SEQUENCE public."FlashCard_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3204,17 +3204,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."FlashCard_id_seq"
 
 
 --
--- Name: FlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."FlashCard_id_seq" OWNED BY RubyActiveAdmin_test."FlashCard".id;
+ALTER SEQUENCE public."FlashCard_id_seq" OWNED BY public."FlashCard".id;
 
 
 --
--- Name: Glossary; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Glossary; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Glossary" (
+CREATE TABLE public."Glossary" (
     id bigint NOT NULL,
     word character varying,
     translation character varying,
@@ -3225,10 +3225,10 @@ CREATE TABLE RubyActiveAdmin_test."Glossary" (
 
 
 --
--- Name: Glossary_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Glossary_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Glossary_id_seq"
+CREATE SEQUENCE public."Glossary_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3237,17 +3237,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Glossary_id_seq"
 
 
 --
--- Name: Glossary_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Glossary_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Glossary_id_seq" OWNED BY RubyActiveAdmin_test."Glossary".id;
+ALTER SEQUENCE public."Glossary_id_seq" OWNED BY public."Glossary".id;
 
 
 --
--- Name: Group; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Group; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Group" (
+CREATE TABLE public."Group" (
     id integer NOT NULL,
     title character varying(255),
     description character varying(255),
@@ -3260,10 +3260,10 @@ CREATE TABLE RubyActiveAdmin_test."Group" (
 
 
 --
--- Name: Group_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Group_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Group_id_seq"
+CREATE SEQUENCE public."Group_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3273,34 +3273,34 @@ CREATE SEQUENCE RubyActiveAdmin_test."Group_id_seq"
 
 
 --
--- Name: Group_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Group_id_seq" OWNED BY RubyActiveAdmin_test."Group".id;
+ALTER SEQUENCE public."Group_id_seq" OWNED BY public."Group".id;
 
 
 --
--- Name: IncorrectAnswerVideo; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: IncorrectAnswerVideo; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."IncorrectAnswerVideo" AS
+CREATE VIEW public."IncorrectAnswerVideo" AS
  SELECT row_number() OVER (ORDER BY "Answer".id, "Video".id) AS id,
     "Answer"."testAttemptId",
     "Question".id AS "questionId",
     "Answer"."userId",
     "Video".id AS "videoId",
     "Answer".id AS "answerId"
-   FROM (((RubyActiveAdmin_test."Question"
-     JOIN RubyActiveAdmin_test."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question"."correctOptionIndex" <> "Answer"."userAnswer"))))
-     JOIN RubyActiveAdmin_test."VideoQuestion" ON (("VideoQuestion"."questionId" = "Question".id)))
-     JOIN RubyActiveAdmin_test."Video" ON (("Video".id = "VideoQuestion"."videoId")));
+   FROM (((public."Question"
+     JOIN public."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question"."correctOptionIndex" <> "Answer"."userAnswer"))))
+     JOIN public."VideoQuestion" ON (("VideoQuestion"."questionId" = "Question".id)))
+     JOIN public."Video" ON (("Video".id = "VideoQuestion"."videoId")));
 
 
 --
--- Name: Installment; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Installment; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Installment" (
+CREATE TABLE public."Installment" (
     id integer NOT NULL,
     "paymentId" integer NOT NULL,
     "secondInstallmentDate" timestamp with time zone,
@@ -3313,10 +3313,10 @@ CREATE TABLE RubyActiveAdmin_test."Installment" (
 
 
 --
--- Name: Installment_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Installment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Installment_id_seq"
+CREATE SEQUENCE public."Installment_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3326,32 +3326,32 @@ CREATE SEQUENCE RubyActiveAdmin_test."Installment_id_seq"
 
 
 --
--- Name: Installment_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Installment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Installment_id_seq" OWNED BY RubyActiveAdmin_test."Installment".id;
+ALTER SEQUENCE public."Installment_id_seq" OWNED BY public."Installment".id;
 
 
 --
--- Name: MasterClassFreeUser; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: MasterClassFreeUser; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."MasterClassFreeUser" (
+CREATE TABLE public."MasterClassFreeUser" (
     "userId" integer,
     total_count bigint
 );
 
 
 --
--- Name: Message; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Message; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Message" (
+CREATE TABLE public."Message" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     "groupId" integer NOT NULL,
     content character varying(255),
-    type RubyActiveAdmin_test."enum_Message_type" DEFAULT 'normal'::RubyActiveAdmin_test."enum_Message_type",
+    type public."enum_Message_type" DEFAULT 'normal'::public."enum_Message_type",
     deleted boolean DEFAULT false,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
@@ -3360,10 +3360,10 @@ CREATE TABLE RubyActiveAdmin_test."Message" (
 
 
 --
--- Name: Message_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Message_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Message_id_seq"
+CREATE SEQUENCE public."Message_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3373,17 +3373,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Message_id_seq"
 
 
 --
--- Name: Message_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Message_id_seq" OWNED BY RubyActiveAdmin_test."Message".id;
+ALTER SEQUENCE public."Message_id_seq" OWNED BY public."Message".id;
 
 
 --
--- Name: Motivation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Motivation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Motivation" (
+CREATE TABLE public."Motivation" (
     id integer NOT NULL,
     message text NOT NULL,
     author character varying(255),
@@ -3393,10 +3393,10 @@ CREATE TABLE RubyActiveAdmin_test."Motivation" (
 
 
 --
--- Name: Motivation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Motivation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Motivation_id_seq"
+CREATE SEQUENCE public."Motivation_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3406,27 +3406,27 @@ CREATE SEQUENCE RubyActiveAdmin_test."Motivation_id_seq"
 
 
 --
--- Name: Motivation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Motivation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Motivation_id_seq" OWNED BY RubyActiveAdmin_test."Motivation".id;
+ALTER SEQUENCE public."Motivation_id_seq" OWNED BY public."Motivation".id;
 
 
 --
--- Name: NCERTQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."NCERTQuestion" (
+CREATE TABLE public."NCERTQuestion" (
     id integer NOT NULL,
     "questionId" integer
 );
 
 
 --
--- Name: NCERTQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."NCERTQuestion_id_seq"
+CREATE SEQUENCE public."NCERTQuestion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3436,17 +3436,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."NCERTQuestion_id_seq"
 
 
 --
--- Name: NCERTQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."NCERTQuestion_id_seq" OWNED BY RubyActiveAdmin_test."NCERTQuestion".id;
+ALTER SEQUENCE public."NCERTQuestion_id_seq" OWNED BY public."NCERTQuestion".id;
 
 
 --
--- Name: NEETExamResult; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NEETExamResult; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."NEETExamResult" (
+CREATE TABLE public."NEETExamResult" (
     id integer NOT NULL,
     name character varying(255),
     dob date,
@@ -3461,10 +3461,10 @@ CREATE TABLE RubyActiveAdmin_test."NEETExamResult" (
 
 
 --
--- Name: NEETExamResult_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NEETExamResult_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."NEETExamResult_id_seq"
+CREATE SEQUENCE public."NEETExamResult_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3474,17 +3474,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."NEETExamResult_id_seq"
 
 
 --
--- Name: NEETExamResult_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NEETExamResult_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."NEETExamResult_id_seq" OWNED BY RubyActiveAdmin_test."NEETExamResult".id;
+ALTER SEQUENCE public."NEETExamResult_id_seq" OWNED BY public."NEETExamResult".id;
 
 
 --
--- Name: NewUserVideoStat; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NewUserVideoStat; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."NewUserVideoStat" (
+CREATE TABLE public."NewUserVideoStat" (
     id integer,
     "userId" integer,
     "videoId" integer,
@@ -3496,10 +3496,10 @@ CREATE TABLE RubyActiveAdmin_test."NewUserVideoStat" (
 
 
 --
--- Name: NksAppVersion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NksAppVersion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."NksAppVersion" (
+CREATE TABLE public."NksAppVersion" (
     id integer NOT NULL,
     name character varying(255),
     version character varying(255),
@@ -3511,10 +3511,10 @@ CREATE TABLE RubyActiveAdmin_test."NksAppVersion" (
 
 
 --
--- Name: NksAppVersion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NksAppVersion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."NksAppVersion_id_seq"
+CREATE SEQUENCE public."NksAppVersion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3524,17 +3524,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."NksAppVersion_id_seq"
 
 
 --
--- Name: NksAppVersion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NksAppVersion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."NksAppVersion_id_seq" OWNED BY RubyActiveAdmin_test."NksAppVersion".id;
+ALTER SEQUENCE public."NksAppVersion_id_seq" OWNED BY public."NksAppVersion".id;
 
 
 --
--- Name: NotDuplicateQuestion; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."NotDuplicateQuestion" (
+CREATE TABLE public."NotDuplicateQuestion" (
     "questionId1" integer NOT NULL,
     "questionId2" integer NOT NULL,
     id integer NOT NULL,
@@ -3544,10 +3544,10 @@ CREATE TABLE RubyActiveAdmin_test."NotDuplicateQuestion" (
 
 
 --
--- Name: NotDuplicateQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."NotDuplicateQuestion_id_seq"
+CREATE SEQUENCE public."NotDuplicateQuestion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3557,17 +3557,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."NotDuplicateQuestion_id_seq"
 
 
 --
--- Name: NotDuplicateQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."NotDuplicateQuestion_id_seq" OWNED BY RubyActiveAdmin_test."NotDuplicateQuestion".id;
+ALTER SEQUENCE public."NotDuplicateQuestion_id_seq" OWNED BY public."NotDuplicateQuestion".id;
 
 
 --
--- Name: Note; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Note" (
+CREATE TABLE public."Note" (
     id integer NOT NULL,
     name character varying(255),
     content text,
@@ -3583,10 +3583,10 @@ CREATE TABLE RubyActiveAdmin_test."Note" (
 
 
 --
--- Name: Note03112020; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note03112020; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Note03112020" (
+CREATE TABLE public."Note03112020" (
     id integer,
     name character varying(255),
     content text,
@@ -3602,10 +3602,10 @@ CREATE TABLE RubyActiveAdmin_test."Note03112020" (
 
 
 --
--- Name: Note20201026; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note20201026; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Note20201026" (
+CREATE TABLE public."Note20201026" (
     id integer,
     name character varying(255),
     content text,
@@ -3621,10 +3621,10 @@ CREATE TABLE RubyActiveAdmin_test."Note20201026" (
 
 
 --
--- Name: Note_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Note_id_seq"
+CREATE SEQUENCE public."Note_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3633,17 +3633,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Note_id_seq"
 
 
 --
--- Name: Note_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Note_id_seq" OWNED BY RubyActiveAdmin_test."Note".id;
+ALTER SEQUENCE public."Note_id_seq" OWNED BY public."Note".id;
 
 
 --
--- Name: Notification; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Notification; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Notification" (
+CREATE TABLE public."Notification" (
     id integer NOT NULL,
     "userId" integer,
     "contextId" integer,
@@ -3664,10 +3664,10 @@ CREATE TABLE RubyActiveAdmin_test."Notification" (
 
 
 --
--- Name: Notification_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Notification_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Notification_id_seq"
+CREATE SEQUENCE public."Notification_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3676,17 +3676,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Notification_id_seq"
 
 
 --
--- Name: Notification_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Notification_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Notification_id_seq" OWNED BY RubyActiveAdmin_test."Notification".id;
+ALTER SEQUENCE public."Notification_id_seq" OWNED BY public."Notification".id;
 
 
 --
--- Name: OldCourseTest; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OldCourseTest; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."OldCourseTest" (
+CREATE TABLE public."OldCourseTest" (
     id integer NOT NULL,
     "courseId" integer,
     "testId" integer,
@@ -3696,10 +3696,10 @@ CREATE TABLE RubyActiveAdmin_test."OldCourseTest" (
 
 
 --
--- Name: OldCourseTest_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OldCourseTest_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."OldCourseTest_id_seq"
+CREATE SEQUENCE public."OldCourseTest_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3709,21 +3709,21 @@ CREATE SEQUENCE RubyActiveAdmin_test."OldCourseTest_id_seq"
 
 
 --
--- Name: OldCourseTest_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OldCourseTest_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."OldCourseTest_id_seq" OWNED BY RubyActiveAdmin_test."OldCourseTest".id;
+ALTER SEQUENCE public."OldCourseTest_id_seq" OWNED BY public."OldCourseTest".id;
 
 
 --
--- Name: Payment; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Payment" (
+CREATE TABLE public."Payment" (
     id integer NOT NULL,
     request json,
     response json,
-    status RubyActiveAdmin_test."enum_Payment_status" DEFAULT 'created'::RubyActiveAdmin_test."enum_Payment_status",
+    status public."enum_Payment_status" DEFAULT 'created'::public."enum_Payment_status",
     "paymentForId" integer,
     "paymentForType" character varying(255),
     "purchasedItemId" integer,
@@ -3753,10 +3753,52 @@ CREATE TABLE RubyActiveAdmin_test."Payment" (
 
 
 --
--- Name: PaymentCourseInvitation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentConversion; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."PaymentCourseInvitation" (
+CREATE TABLE public."PaymentConversion" (
+    id bigint NOT NULL,
+    utm_campaign character varying,
+    utm_source character varying,
+    utm_medium character varying,
+    campaignid character varying,
+    adgroupid character varying,
+    keyword character varying,
+    matchtype character varying,
+    creative character varying,
+    placement character varying,
+    target character varying,
+    gclid character varying,
+    "paymentId" integer NOT NULL,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: PaymentConversion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."PaymentConversion_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: PaymentConversion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."PaymentConversion_id_seq" OWNED BY public."PaymentConversion".id;
+
+
+--
+-- Name: PaymentCourseInvitation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."PaymentCourseInvitation" (
     id integer NOT NULL,
     "paymentId" integer NOT NULL,
     "courseInvitationId" integer NOT NULL,
@@ -3766,10 +3808,10 @@ CREATE TABLE RubyActiveAdmin_test."PaymentCourseInvitation" (
 
 
 --
--- Name: PaymentCourseInvitation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentCourseInvitation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."PaymentCourseInvitation_id_seq"
+CREATE SEQUENCE public."PaymentCourseInvitation_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -3779,17 +3821,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."PaymentCourseInvitation_id_seq"
 
 
 --
--- Name: PaymentCourseInvitation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentCourseInvitation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."PaymentCourseInvitation_id_seq" OWNED BY RubyActiveAdmin_test."PaymentCourseInvitation".id;
+ALTER SEQUENCE public."PaymentCourseInvitation_id_seq" OWNED BY public."PaymentCourseInvitation".id;
 
 
 --
--- Name: Payment_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Payment_id_seq"
+CREATE SEQUENCE public."Payment_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3798,17 +3840,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Payment_id_seq"
 
 
 --
--- Name: Payment_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Payment_id_seq" OWNED BY RubyActiveAdmin_test."Payment".id;
+ALTER SEQUENCE public."Payment_id_seq" OWNED BY public."Payment".id;
 
 
 --
--- Name: Post; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Post" (
+CREATE TABLE public."Post" (
     id integer NOT NULL,
     url text NOT NULL,
     title text NOT NULL,
@@ -3824,10 +3866,10 @@ CREATE TABLE RubyActiveAdmin_test."Post" (
 
 
 --
--- Name: Post_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Post_id_seq"
+CREATE SEQUENCE public."Post_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3836,17 +3878,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Post_id_seq"
 
 
 --
--- Name: Post_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Post_id_seq" OWNED BY RubyActiveAdmin_test."Post".id;
+ALTER SEQUENCE public."Post_id_seq" OWNED BY public."Post".id;
 
 
 --
--- Name: Question20200516; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question20200516; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Question20200516" (
+CREATE TABLE public."Question20200516" (
     id integer,
     question text,
     options json,
@@ -3858,10 +3900,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20200516" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -3872,10 +3914,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20200516" (
 
 
 --
--- Name: Question20201305; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question20201305; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Question20201305" (
+CREATE TABLE public."Question20201305" (
     id integer,
     question text,
     options json,
@@ -3887,10 +3929,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20201305" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -3901,10 +3943,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20201305" (
 
 
 --
--- Name: Question20203011; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question20203011; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Question20203011" (
+CREATE TABLE public."Question20203011" (
     id integer,
     question text,
     options json,
@@ -3916,10 +3958,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20203011" (
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
     deleted boolean,
-    type RubyActiveAdmin_test."enum_Question_type",
+    type public."enum_Question_type",
     "paidAccess" boolean,
     "explanationMp4" text,
-    level RubyActiveAdmin_test."enum_Question_level",
+    level public."enum_Question_level",
     jee boolean,
     "sequenceId" integer,
     "proofRead" boolean,
@@ -3931,10 +3973,10 @@ CREATE TABLE RubyActiveAdmin_test."Question20203011" (
 
 
 --
--- Name: QuestionCopy; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCopy; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."QuestionCopy" AS
+CREATE VIEW public."QuestionCopy" AS
  SELECT "CopyQuestion29092018".id,
     "CopyQuestion29092018".question,
     "CopyQuestion29092018".options,
@@ -3948,24 +3990,24 @@ CREATE VIEW RubyActiveAdmin_test."QuestionCopy" AS
     "CopyQuestion29092018"."canvasQuizId",
     "CopyQuestion29092018".deleted,
     "CopyQuestion29092018".type
-   FROM RubyActiveAdmin_test."CopyQuestion29092018";
+   FROM public."CopyQuestion29092018";
 
 
 --
--- Name: QuestionCourse; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCourse; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionCourse" (
+CREATE TABLE public."QuestionCourse" (
     "questionId" integer NOT NULL,
     "courseId" integer NOT NULL
 );
 
 
 --
--- Name: QuestionDetail_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."QuestionDetail_id_seq"
+CREATE SEQUENCE public."QuestionDetail_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3974,17 +4016,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."QuestionDetail_id_seq"
 
 
 --
--- Name: QuestionDetail_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."QuestionDetail_id_seq" OWNED BY RubyActiveAdmin_test."QuestionDetail".id;
+ALTER SEQUENCE public."QuestionDetail_id_seq" OWNED BY public."QuestionDetail".id;
 
 
 --
--- Name: QuestionExplanation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionExplanation" (
+CREATE TABLE public."QuestionExplanation" (
     id integer NOT NULL,
     "questionId" integer,
     explanation text,
@@ -3998,10 +4040,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionExplanation" (
 
 
 --
--- Name: QuestionExplanation20200516; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation20200516; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionExplanation20200516" (
+CREATE TABLE public."QuestionExplanation20200516" (
     id integer,
     "questionId" integer,
     explanation text,
@@ -4015,10 +4057,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionExplanation20200516" (
 
 
 --
--- Name: QuestionExplanation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."QuestionExplanation_id_seq"
+CREATE SEQUENCE public."QuestionExplanation_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4028,17 +4070,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."QuestionExplanation_id_seq"
 
 
 --
--- Name: QuestionExplanation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."QuestionExplanation_id_seq" OWNED BY RubyActiveAdmin_test."QuestionExplanation".id;
+ALTER SEQUENCE public."QuestionExplanation_id_seq" OWNED BY public."QuestionExplanation".id;
 
 
 --
--- Name: QuestionHint; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionHint" (
+CREATE TABLE public."QuestionHint" (
     id integer NOT NULL,
     "questionId" integer,
     hint text,
@@ -4053,10 +4095,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionHint" (
 
 
 --
--- Name: QuestionHint_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."QuestionHint_id_seq"
+CREATE SEQUENCE public."QuestionHint_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4066,17 +4108,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."QuestionHint_id_seq"
 
 
 --
--- Name: QuestionHint_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."QuestionHint_id_seq" OWNED BY RubyActiveAdmin_test."QuestionHint".id;
+ALTER SEQUENCE public."QuestionHint_id_seq" OWNED BY public."QuestionHint".id;
 
 
 --
--- Name: QuestionSubTopic; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionSubTopic" (
+CREATE TABLE public."QuestionSubTopic" (
     id integer NOT NULL,
     "questionId" integer,
     "subTopicId" integer,
@@ -4086,10 +4128,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionSubTopic" (
 
 
 --
--- Name: QuestionSubTopic_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."QuestionSubTopic_id_seq"
+CREATE SEQUENCE public."QuestionSubTopic_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4098,17 +4140,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."QuestionSubTopic_id_seq"
 
 
 --
--- Name: QuestionSubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."QuestionSubTopic_id_seq" OWNED BY RubyActiveAdmin_test."QuestionSubTopic".id;
+ALTER SEQUENCE public."QuestionSubTopic_id_seq" OWNED BY public."QuestionSubTopic".id;
 
 
 --
--- Name: QuestionTranslation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionTranslation" (
+CREATE TABLE public."QuestionTranslation" (
     id integer NOT NULL,
     "questionId" integer NOT NULL,
     question text,
@@ -4123,10 +4165,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionTranslation" (
 
 
 --
--- Name: QuestionTranslation20201119; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation20201119; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."QuestionTranslation20201119" (
+CREATE TABLE public."QuestionTranslation20201119" (
     id integer,
     "questionId" integer,
     question text,
@@ -4140,10 +4182,10 @@ CREATE TABLE RubyActiveAdmin_test."QuestionTranslation20201119" (
 
 
 --
--- Name: QuestionTranslation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."QuestionTranslation_id_seq"
+CREATE SEQUENCE public."QuestionTranslation_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4153,17 +4195,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."QuestionTranslation_id_seq"
 
 
 --
--- Name: QuestionTranslation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."QuestionTranslation_id_seq" OWNED BY RubyActiveAdmin_test."QuestionTranslation".id;
+ALTER SEQUENCE public."QuestionTranslation_id_seq" OWNED BY public."QuestionTranslation".id;
 
 
 --
--- Name: Question_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Question_id_seq"
+CREATE SEQUENCE public."Question_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4172,17 +4214,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Question_id_seq"
 
 
 --
--- Name: Question_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Question_id_seq" OWNED BY RubyActiveAdmin_test."Question".id;
+ALTER SEQUENCE public."Question_id_seq" OWNED BY public."Question".id;
 
 
 --
--- Name: Quiz; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Quiz; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Quiz" (
+CREATE TABLE public."Quiz" (
     id integer NOT NULL,
     name character varying(255),
     description text,
@@ -4194,10 +4236,10 @@ CREATE TABLE RubyActiveAdmin_test."Quiz" (
 
 
 --
--- Name: Quiz_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Quiz_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Quiz_id_seq"
+CREATE SEQUENCE public."Quiz_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4206,17 +4248,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Quiz_id_seq"
 
 
 --
--- Name: Quiz_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Quiz_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Quiz_id_seq" OWNED BY RubyActiveAdmin_test."Quiz".id;
+ALTER SEQUENCE public."Quiz_id_seq" OWNED BY public."Quiz".id;
 
 
 --
--- Name: SEOData; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SEOData; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."SEOData" (
+CREATE TABLE public."SEOData" (
     id integer NOT NULL,
     "ownerId" integer,
     "ownerType" character varying(255),
@@ -4231,10 +4273,10 @@ CREATE TABLE RubyActiveAdmin_test."SEOData" (
 
 
 --
--- Name: SEOData_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SEOData_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."SEOData_id_seq"
+CREATE SEQUENCE public."SEOData_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4243,17 +4285,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."SEOData_id_seq"
 
 
 --
--- Name: SEOData_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SEOData_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."SEOData_id_seq" OWNED BY RubyActiveAdmin_test."SEOData".id;
+ALTER SEQUENCE public."SEOData_id_seq" OWNED BY public."SEOData".id;
 
 
 --
--- Name: Schedule; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Schedule; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Schedule" (
+CREATE TABLE public."Schedule" (
     id integer NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
@@ -4264,10 +4306,10 @@ CREATE TABLE RubyActiveAdmin_test."Schedule" (
 
 
 --
--- Name: ScheduleItem; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduleItem" (
+CREATE TABLE public."ScheduleItem" (
     id integer NOT NULL,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -4282,10 +4324,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduleItem" (
 
 
 --
--- Name: ScheduleItemAsset; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAsset; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduleItemAsset" (
+CREATE TABLE public."ScheduleItemAsset" (
     id bigint NOT NULL,
     "ScheduleItem_id" bigint,
     "createdAt" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -4296,10 +4338,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduleItemAsset" (
 
 
 --
--- Name: ScheduleItemAssetBak; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAssetBak; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduleItemAssetBak" (
+CREATE TABLE public."ScheduleItemAssetBak" (
     id bigint,
     "ScheduleItem_id" bigint,
     "createdAt" timestamp without time zone,
@@ -4310,10 +4352,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduleItemAssetBak" (
 
 
 --
--- Name: ScheduleItemAsset_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAsset_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItemAsset_id_seq"
+CREATE SEQUENCE public."ScheduleItemAsset_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4322,17 +4364,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItemAsset_id_seq"
 
 
 --
--- Name: ScheduleItemAsset_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAsset_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ScheduleItemAsset_id_seq" OWNED BY RubyActiveAdmin_test."ScheduleItemAsset".id;
+ALTER SEQUENCE public."ScheduleItemAsset_id_seq" OWNED BY public."ScheduleItemAsset".id;
 
 
 --
--- Name: ScheduleItemBak; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemBak; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduleItemBak" (
+CREATE TABLE public."ScheduleItemBak" (
     id integer,
     "createdAt" timestamp with time zone,
     "updatedAt" timestamp with time zone,
@@ -4347,10 +4389,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduleItemBak" (
 
 
 --
--- Name: ScheduleItemUser; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduleItemUser" (
+CREATE TABLE public."ScheduleItemUser" (
     id integer NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
@@ -4361,10 +4403,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduleItemUser" (
 
 
 --
--- Name: ScheduleItemUser_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItemUser_id_seq"
+CREATE SEQUENCE public."ScheduleItemUser_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4374,17 +4416,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItemUser_id_seq"
 
 
 --
--- Name: ScheduleItemUser_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ScheduleItemUser_id_seq" OWNED BY RubyActiveAdmin_test."ScheduleItemUser".id;
+ALTER SEQUENCE public."ScheduleItemUser_id_seq" OWNED BY public."ScheduleItemUser".id;
 
 
 --
--- Name: ScheduleItem_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItem_id_seq"
+CREATE SEQUENCE public."ScheduleItem_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4394,17 +4436,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ScheduleItem_id_seq"
 
 
 --
--- Name: ScheduleItem_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ScheduleItem_id_seq" OWNED BY RubyActiveAdmin_test."ScheduleItem".id;
+ALTER SEQUENCE public."ScheduleItem_id_seq" OWNED BY public."ScheduleItem".id;
 
 
 --
--- Name: Schedule_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Schedule_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Schedule_id_seq"
+CREATE SEQUENCE public."Schedule_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -4414,17 +4456,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Schedule_id_seq"
 
 
 --
--- Name: Schedule_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Schedule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Schedule_id_seq" OWNED BY RubyActiveAdmin_test."Schedule".id;
+ALTER SEQUENCE public."Schedule_id_seq" OWNED BY public."Schedule".id;
 
 
 --
--- Name: ScheduledTask; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduledTask; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."ScheduledTask" (
+CREATE TABLE public."ScheduledTask" (
     id integer NOT NULL,
     "parentId" integer,
     "courseId" integer,
@@ -4442,10 +4484,10 @@ CREATE TABLE RubyActiveAdmin_test."ScheduledTask" (
 
 
 --
--- Name: ScheduledTask_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduledTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."ScheduledTask_id_seq"
+CREATE SEQUENCE public."ScheduledTask_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4454,17 +4496,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."ScheduledTask_id_seq"
 
 
 --
--- Name: ScheduledTask_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduledTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."ScheduledTask_id_seq" OWNED BY RubyActiveAdmin_test."ScheduledTask".id;
+ALTER SEQUENCE public."ScheduledTask_id_seq" OWNED BY public."ScheduledTask".id;
 
 
 --
--- Name: Section; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Section" (
+CREATE TABLE public."Section" (
     id bigint NOT NULL,
     name character varying NOT NULL,
     "chapterId" integer NOT NULL,
@@ -4478,10 +4520,10 @@ CREATE TABLE RubyActiveAdmin_test."Section" (
 
 
 --
--- Name: SectionContent; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."SectionContent" (
+CREATE TABLE public."SectionContent" (
     id bigint NOT NULL,
     title character varying,
     "contentId" integer NOT NULL,
@@ -4494,10 +4536,10 @@ CREATE TABLE RubyActiveAdmin_test."SectionContent" (
 
 
 --
--- Name: SectionContent_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."SectionContent_id_seq"
+CREATE SEQUENCE public."SectionContent_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4506,17 +4548,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."SectionContent_id_seq"
 
 
 --
--- Name: SectionContent_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."SectionContent_id_seq" OWNED BY RubyActiveAdmin_test."SectionContent".id;
+ALTER SEQUENCE public."SectionContent_id_seq" OWNED BY public."SectionContent".id;
 
 
 --
--- Name: Section_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Section_id_seq"
+CREATE SEQUENCE public."Section_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4525,26 +4567,26 @@ CREATE SEQUENCE RubyActiveAdmin_test."Section_id_seq"
 
 
 --
--- Name: Section_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Section_id_seq" OWNED BY RubyActiveAdmin_test."Section".id;
+ALTER SEQUENCE public."Section_id_seq" OWNED BY public."Section".id;
 
 
 --
--- Name: SequelizeMeta; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SequelizeMeta; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."SequelizeMeta" (
+CREATE TABLE public."SequelizeMeta" (
     name character varying(255) NOT NULL
 );
 
 
 --
--- Name: StudentNote; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."StudentNote" (
+CREATE TABLE public."StudentNote" (
     id bigint NOT NULL,
     "userId" integer NOT NULL,
     "questionId" integer,
@@ -4562,10 +4604,10 @@ CREATE TABLE RubyActiveAdmin_test."StudentNote" (
 
 
 --
--- Name: StudentNote_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."StudentNote_id_seq"
+CREATE SEQUENCE public."StudentNote_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4574,17 +4616,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."StudentNote_id_seq"
 
 
 --
--- Name: StudentNote_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."StudentNote_id_seq" OWNED BY RubyActiveAdmin_test."StudentNote".id;
+ALTER SEQUENCE public."StudentNote_id_seq" OWNED BY public."StudentNote".id;
 
 
 --
--- Name: StudentOnboardingEvents; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."StudentOnboardingEvents" (
+CREATE TABLE public."StudentOnboardingEvents" (
     id bigint NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL,
@@ -4594,10 +4636,10 @@ CREATE TABLE RubyActiveAdmin_test."StudentOnboardingEvents" (
 
 
 --
--- Name: StudentOnboardingEvents_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."StudentOnboardingEvents_id_seq"
+CREATE SEQUENCE public."StudentOnboardingEvents_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4606,17 +4648,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."StudentOnboardingEvents_id_seq"
 
 
 --
--- Name: StudentOnboardingEvents_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."StudentOnboardingEvents_id_seq" OWNED BY RubyActiveAdmin_test."StudentOnboardingEvents".id;
+ALTER SEQUENCE public."StudentOnboardingEvents_id_seq" OWNED BY public."StudentOnboardingEvents".id;
 
 
 --
--- Name: SubTopic; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."SubTopic" (
+CREATE TABLE public."SubTopic" (
     id integer NOT NULL,
     "topicId" integer,
     name character varying(255),
@@ -4628,10 +4670,10 @@ CREATE TABLE RubyActiveAdmin_test."SubTopic" (
 
 
 --
--- Name: SubTopic_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."SubTopic_id_seq"
+CREATE SEQUENCE public."SubTopic_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4640,17 +4682,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."SubTopic_id_seq"
 
 
 --
--- Name: SubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."SubTopic_id_seq" OWNED BY RubyActiveAdmin_test."SubTopic".id;
+ALTER SEQUENCE public."SubTopic_id_seq" OWNED BY public."SubTopic".id;
 
 
 --
--- Name: SubjectChapter_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."SubjectChapter_id_seq"
+CREATE SEQUENCE public."SubjectChapter_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4659,29 +4701,29 @@ CREATE SEQUENCE RubyActiveAdmin_test."SubjectChapter_id_seq"
 
 
 --
--- Name: SubjectChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."SubjectChapter_id_seq" OWNED BY RubyActiveAdmin_test."SubjectChapter".id;
+ALTER SEQUENCE public."SubjectChapter_id_seq" OWNED BY public."SubjectChapter".id;
 
 
 --
--- Name: TopicQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."TopicQuestion" AS
+CREATE VIEW public."TopicQuestion" AS
  SELECT "Question".id,
     "ChapterQuestion"."chapterId" AS "topicId"
-   FROM RubyActiveAdmin_test."Question",
-    RubyActiveAdmin_test."ChapterQuestion"
+   FROM public."Question",
+    public."ChapterQuestion"
   WHERE (("Question".deleted = false) AND ("Question".id = "ChapterQuestion"."questionId"));
 
 
 --
--- Name: SubjectLeaderBoard; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."SubjectLeaderBoard" AS
+CREATE MATERIALIZED VIEW public."SubjectLeaderBoard" AS
  SELECT "SubjectLeaderboardTableData".id,
     "SubjectLeaderboardTableData".rank,
     "SubjectLeaderboardTableData"."userId",
@@ -4722,12 +4764,12 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."SubjectLeaderBoard" AS
                                     ELSE NULL::integer
                                 END) * '-1'::integer)) AS score,
                             "Subject".id AS "subjectId"
-                           FROM RubyActiveAdmin_test."Question",
-                            RubyActiveAdmin_test."TopicQuestion",
-                            RubyActiveAdmin_test."Topic",
-                            RubyActiveAdmin_test."Subject",
-                            RubyActiveAdmin_test."Answer",
-                            RubyActiveAdmin_test."User"
+                           FROM public."Question",
+                            public."TopicQuestion",
+                            public."Topic",
+                            public."Subject",
+                            public."Answer",
+                            public."User"
                           WHERE (("User".id = "Answer"."userId") AND ("Question".id = "Answer"."questionId") AND ("TopicQuestion".id = "Answer"."questionId") AND ("Question".deleted = false) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8))
                           GROUP BY "Subject".id, "User".id) subjectleaderboarddata
                   WHERE (subjectleaderboarddata."correctAnswerCount" <> 0)) "SubjectLeaderboardTable") "SubjectLeaderboardTableData"
@@ -4735,10 +4777,10 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."SubjectLeaderBoard" AS
 
 
 --
--- Name: Subject_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Subject_id_seq"
+CREATE SEQUENCE public."Subject_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4747,17 +4789,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Subject_id_seq"
 
 
 --
--- Name: Subject_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Subject_id_seq" OWNED BY RubyActiveAdmin_test."Subject".id;
+ALTER SEQUENCE public."Subject_id_seq" OWNED BY public."Subject".id;
 
 
 --
--- Name: Target; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Target" (
+CREATE TABLE public."Target" (
     id bigint NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL,
@@ -4772,10 +4814,10 @@ CREATE TABLE RubyActiveAdmin_test."Target" (
 
 
 --
--- Name: TargetChapter; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TargetChapter" (
+CREATE TABLE public."TargetChapter" (
     id bigint NOT NULL,
     "chapterId" integer NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
@@ -4787,10 +4829,10 @@ CREATE TABLE RubyActiveAdmin_test."TargetChapter" (
 
 
 --
--- Name: TargetChapter_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."TargetChapter_id_seq"
+CREATE SEQUENCE public."TargetChapter_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4799,17 +4841,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."TargetChapter_id_seq"
 
 
 --
--- Name: TargetChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."TargetChapter_id_seq" OWNED BY RubyActiveAdmin_test."TargetChapter".id;
+ALTER SEQUENCE public."TargetChapter_id_seq" OWNED BY public."TargetChapter".id;
 
 
 --
--- Name: Target_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Target_id_seq"
+CREATE SEQUENCE public."Target_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4818,17 +4860,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Target_id_seq"
 
 
 --
--- Name: Target_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Target_id_seq" OWNED BY RubyActiveAdmin_test."Target".id;
+ALTER SEQUENCE public."Target_id_seq" OWNED BY public."Target".id;
 
 
 --
--- Name: Task; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Task; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Task" (
+CREATE TABLE public."Task" (
     id integer NOT NULL,
     "parentId" integer,
     "courseId" integer,
@@ -4849,10 +4891,10 @@ CREATE TABLE RubyActiveAdmin_test."Task" (
 
 
 --
--- Name: Task_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Task_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Task_id_seq"
+CREATE SEQUENCE public."Task_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4861,17 +4903,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Task_id_seq"
 
 
 --
--- Name: Task_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Task_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Task_id_seq" OWNED BY RubyActiveAdmin_test."Task".id;
+ALTER SEQUENCE public."Task_id_seq" OWNED BY public."Task".id;
 
 
 --
--- Name: Test; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Test" (
+CREATE TABLE public."Test" (
     id integer NOT NULL,
     name character varying(255),
     description text,
@@ -4894,7 +4936,7 @@ CREATE TABLE RubyActiveAdmin_test."Test" (
     "resultMsgHtml" text,
     "showAnswer" boolean DEFAULT true,
     year integer,
-    exam RubyActiveAdmin_test."enum_Test_exam",
+    exam public."enum_Test_exam",
     "pdfURL" text,
     "userId" integer,
     scholarship boolean DEFAULT false NOT NULL,
@@ -4904,10 +4946,10 @@ CREATE TABLE RubyActiveAdmin_test."Test" (
 
 
 --
--- Name: TestAttempt; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttempt; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestAttempt" (
+CREATE TABLE public."TestAttempt" (
     id integer NOT NULL,
     "testId" integer,
     "userId" integer,
@@ -4928,10 +4970,10 @@ CREATE TABLE RubyActiveAdmin_test."TestAttempt" (
 
 
 --
--- Name: TestAttemptBackup506173; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptBackup506173; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestAttemptBackup506173" (
+CREATE TABLE public."TestAttemptBackup506173" (
     id integer,
     "testId" integer,
     "userId" integer,
@@ -4951,21 +4993,21 @@ CREATE TABLE RubyActiveAdmin_test."TestAttemptBackup506173" (
 
 
 --
--- Name: TestAttemptDetail; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptDetail; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."TestAttemptDetail" AS
+CREATE VIEW public."TestAttemptDetail" AS
  SELECT "TestAttempt".id,
-    RubyActiveAdmin_test."TestAttemptDetailFunc"("TestAttempt".id) AS "showAnswer"
-   FROM RubyActiveAdmin_test."TestAttempt"
+    public."TestAttemptDetailFunc"("TestAttempt".id) AS "showAnswer"
+   FROM public."TestAttempt"
   WHERE ("TestAttempt".completed = true);
 
 
 --
--- Name: TestAttemptHistory; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptHistory; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestAttemptHistory" (
+CREATE TABLE public."TestAttemptHistory" (
     "eventTime" timestamp(2) without time zone,
     "userId" integer,
     "testId" integer,
@@ -4974,10 +5016,10 @@ CREATE TABLE RubyActiveAdmin_test."TestAttemptHistory" (
 
 
 --
--- Name: TestAttemptPostmartem; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptPostmartem; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestAttemptPostmartem" (
+CREATE TABLE public."TestAttemptPostmartem" (
     id integer NOT NULL,
     "questionId" integer NOT NULL,
     "userId" integer NOT NULL,
@@ -4990,10 +5032,10 @@ CREATE TABLE RubyActiveAdmin_test."TestAttemptPostmartem" (
 
 
 --
--- Name: TestAttemptPostmartem_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptPostmartem_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."TestAttemptPostmartem_id_seq"
+CREATE SEQUENCE public."TestAttemptPostmartem_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -5003,17 +5045,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."TestAttemptPostmartem_id_seq"
 
 
 --
--- Name: TestAttemptPostmartem_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptPostmartem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."TestAttemptPostmartem_id_seq" OWNED BY RubyActiveAdmin_test."TestAttemptPostmartem".id;
+ALTER SEQUENCE public."TestAttemptPostmartem_id_seq" OWNED BY public."TestAttemptPostmartem".id;
 
 
 --
--- Name: TestAttempt_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttempt_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."TestAttempt_id_seq"
+CREATE SEQUENCE public."TestAttempt_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5022,17 +5064,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."TestAttempt_id_seq"
 
 
 --
--- Name: TestAttempt_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttempt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."TestAttempt_id_seq" OWNED BY RubyActiveAdmin_test."TestAttempt".id;
+ALTER SEQUENCE public."TestAttempt_id_seq" OWNED BY public."TestAttempt".id;
 
 
 --
--- Name: TestQuestion20201130; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion20201130; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TestQuestion20201130" (
+CREATE TABLE public."TestQuestion20201130" (
     id integer,
     "testId" integer,
     "questionId" integer,
@@ -5043,10 +5085,10 @@ CREATE TABLE RubyActiveAdmin_test."TestQuestion20201130" (
 
 
 --
--- Name: TestQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."TestQuestion_id_seq"
+CREATE SEQUENCE public."TestQuestion_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -5056,17 +5098,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."TestQuestion_id_seq"
 
 
 --
--- Name: TestQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."TestQuestion_id_seq" OWNED BY RubyActiveAdmin_test."TestQuestion".id;
+ALTER SEQUENCE public."TestQuestion_id_seq" OWNED BY public."TestQuestion".id;
 
 
 --
--- Name: Test_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Test_id_seq"
+CREATE SEQUENCE public."Test_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5075,17 +5117,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Test_id_seq"
 
 
 --
--- Name: Test_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Test_id_seq" OWNED BY RubyActiveAdmin_test."Test".id;
+ALTER SEQUENCE public."Test_id_seq" OWNED BY public."Test".id;
 
 
 --
--- Name: TopicAsset; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAsset; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."TopicAsset" AS
+CREATE VIEW public."TopicAsset" AS
  SELECT row_number() OVER (ORDER BY "topicAsset"."assetId") AS id,
     "topicAsset"."assetId",
     "topicAsset"."topicId",
@@ -5105,10 +5147,10 @@ CREATE VIEW RubyActiveAdmin_test."TopicAsset" AS
             false AS deleted,
             "ChapterVideo"."createdAt",
             "ChapterVideo"."updatedAt"
-           FROM RubyActiveAdmin_test."ChapterVideo",
-            RubyActiveAdmin_test."SubjectChapter",
-            RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Course"
+           FROM public."ChapterVideo",
+            public."SubjectChapter",
+            public."Subject",
+            public."Course"
           WHERE (("SubjectChapter"."chapterId" = "ChapterVideo"."chapterId") AND ("SubjectChapter".deleted = false) AND ("SubjectChapter"."subjectId" = "Subject".id) AND ("Course".id = "Subject"."courseId") AND ("Course".id = 8))
         UNION ALL
          SELECT "ChapterQuestion"."questionId" AS "assetId",
@@ -5120,10 +5162,10 @@ CREATE VIEW RubyActiveAdmin_test."TopicAsset" AS
             false AS deleted,
             "ChapterQuestion"."createdAt",
             "ChapterQuestion"."updatedAt"
-           FROM RubyActiveAdmin_test."ChapterQuestion",
-            RubyActiveAdmin_test."SubjectChapter",
-            RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Course"
+           FROM public."ChapterQuestion",
+            public."SubjectChapter",
+            public."Subject",
+            public."Course"
           WHERE (("SubjectChapter"."chapterId" = "ChapterQuestion"."chapterId") AND ("SubjectChapter".deleted = false) AND ("SubjectChapter"."subjectId" = "Subject".id) AND ("Course".id = "Subject"."courseId") AND ("Course".id = 8))
         UNION ALL
          SELECT "ChapterNote"."noteId" AS "assetId",
@@ -5135,18 +5177,18 @@ CREATE VIEW RubyActiveAdmin_test."TopicAsset" AS
             false AS deleted,
             "ChapterNote"."createdAt",
             "ChapterNote"."updatedAt"
-           FROM RubyActiveAdmin_test."ChapterNote",
-            RubyActiveAdmin_test."SubjectChapter",
-            RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Course"
+           FROM public."ChapterNote",
+            public."SubjectChapter",
+            public."Subject",
+            public."Course"
           WHERE (("SubjectChapter"."chapterId" = "ChapterNote"."chapterId") AND ("SubjectChapter".deleted = false) AND ("SubjectChapter"."subjectId" = "Subject".id) AND ("Course".id = "Subject"."courseId") AND ("Course".id = 8))) "topicAsset";
 
 
 --
--- Name: TopicAssetOld; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAssetOld; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."TopicAssetOld" (
+CREATE TABLE public."TopicAssetOld" (
     id integer NOT NULL,
     "assetType" character varying(255),
     "assetId" integer,
@@ -5161,10 +5203,10 @@ CREATE TABLE RubyActiveAdmin_test."TopicAssetOld" (
 
 
 --
--- Name: TopicAsset_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAsset_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."TopicAsset_id_seq"
+CREATE SEQUENCE public."TopicAsset_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5173,17 +5215,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."TopicAsset_id_seq"
 
 
 --
--- Name: TopicAsset_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAsset_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."TopicAsset_id_seq" OWNED BY RubyActiveAdmin_test."TopicAssetOld".id;
+ALTER SEQUENCE public."TopicAsset_id_seq" OWNED BY public."TopicAssetOld".id;
 
 
 --
--- Name: TopicLeaderBoard; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."TopicLeaderBoard" AS
+CREATE MATERIALIZED VIEW public."TopicLeaderBoard" AS
  SELECT "TopicLeaderBoardDataWithRank".id,
     "TopicLeaderBoardDataWithRank".rank,
     "TopicLeaderBoardDataWithRank"."userId",
@@ -5227,12 +5269,12 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."TopicLeaderBoard" AS
                                     ELSE NULL::integer
                                 END) * '-1'::integer)) AS score,
                             "TopicQuestion"."topicId"
-                           FROM RubyActiveAdmin_test."Question",
-                            RubyActiveAdmin_test."Answer",
-                            RubyActiveAdmin_test."User",
-                            RubyActiveAdmin_test."TopicQuestion",
-                            RubyActiveAdmin_test."Topic",
-                            RubyActiveAdmin_test."Subject"
+                           FROM public."Question",
+                            public."Answer",
+                            public."User",
+                            public."TopicQuestion",
+                            public."Topic",
+                            public."Subject"
                           WHERE (("User".id = "Answer"."userId") AND ("Question".id = "Answer"."questionId") AND ("TopicQuestion".id = "Answer"."questionId") AND ("Question".deleted = false) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8))
                           GROUP BY "User".id, "TopicQuestion"."topicId") "TopicLeaderBoardData"
                   WHERE (("TopicLeaderBoardData"."correctAnswerCount" <> 0) OR ("TopicLeaderBoardData"."incorrectAnswerCount" <> 0))) "TopicLeaderBoardDataRank") "TopicLeaderBoardDataWithRank"
@@ -5240,10 +5282,10 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."TopicLeaderBoard" AS
 
 
 --
--- Name: Topic_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Topic_id_seq"
+CREATE SEQUENCE public."Topic_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5252,38 +5294,38 @@ CREATE SEQUENCE RubyActiveAdmin_test."Topic_id_seq"
 
 
 --
--- Name: Topic_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Topic_id_seq" OWNED BY RubyActiveAdmin_test."Topic".id;
+ALTER SEQUENCE public."Topic_id_seq" OWNED BY public."Topic".id;
 
 
 --
--- Name: UnattemptedQuestionVideo; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UnattemptedQuestionVideo; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."UnattemptedQuestionVideo" AS
+CREATE VIEW public."UnattemptedQuestionVideo" AS
  SELECT row_number() OVER (ORDER BY "Answer".id, "Video".id) AS id,
     "Test".id AS "testId",
     "Question".id AS "questionId",
     "TestAttempt".id AS "testAttemptId",
     "TestAttempt"."userId",
     "Video".id AS "videoId"
-   FROM RubyActiveAdmin_test."TestAttempt",
-    RubyActiveAdmin_test."Test",
-    RubyActiveAdmin_test."Question",
-    RubyActiveAdmin_test."VideoQuestion",
-    RubyActiveAdmin_test."Video",
-    RubyActiveAdmin_test."Answer",
-    RubyActiveAdmin_test."TestQuestion"
+   FROM public."TestAttempt",
+    public."Test",
+    public."Question",
+    public."VideoQuestion",
+    public."Video",
+    public."Answer",
+    public."TestQuestion"
   WHERE (("Answer".id IS NULL) AND ("Test".id = "TestAttempt"."testId") AND ("VideoQuestion"."questionId" = "Question".id) AND ("Video".id = "VideoQuestion"."videoId") AND ("Question".id = "Answer"."questionId") AND ("Test".id = "TestQuestion"."testId"));
 
 
 --
--- Name: admin_users; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: admin_users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.admin_users (
+CREATE TABLE public.admin_users (
     id bigint NOT NULL,
     email character varying DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
@@ -5300,10 +5342,10 @@ CREATE TABLE RubyActiveAdmin_test.admin_users (
 
 
 --
--- Name: UniqueDoubtAnswer; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UniqueDoubtAnswer; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."UniqueDoubtAnswer" AS
+CREATE VIEW public."UniqueDoubtAnswer" AS
  SELECT _event.id,
     _event.content,
     _event."imgUrl",
@@ -5324,23 +5366,23 @@ CREATE VIEW RubyActiveAdmin_test."UniqueDoubtAnswer" AS
             d."userId",
             d.deleted,
             row_number() OVER (PARTITION BY d."doubtId" ORDER BY d.id) AS row_number
-           FROM (RubyActiveAdmin_test."DoubtAnswer" d
-             JOIN RubyActiveAdmin_test."Doubt" a ON ((d."doubtId" = a.id)))
+           FROM (public."DoubtAnswer" d
+             JOIN public."Doubt" a ON ((d."doubtId" = a.id)))
           WHERE (d."userId" IN ( SELECT admin_users."userId"
-                   FROM RubyActiveAdmin_test.admin_users
+                   FROM public.admin_users
                   WHERE (((admin_users.role)::text = 'faculty'::text) OR ((admin_users.role)::text = 'superfaculty'::text))))) _event
   WHERE (_event.row_number = 1);
 
 
 --
--- Name: UserCourse; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserCourse" (
+CREATE TABLE public."UserCourse" (
     id integer NOT NULL,
     "startedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     "expiryAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    role RubyActiveAdmin_test."enum_UserCourse_role" DEFAULT 'courseStudent'::RubyActiveAdmin_test."enum_UserCourse_role",
+    role public."enum_UserCourse_role" DEFAULT 'courseStudent'::public."enum_UserCourse_role",
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "courseId" integer NOT NULL,
@@ -5353,10 +5395,10 @@ CREATE TABLE RubyActiveAdmin_test."UserCourse" (
 
 
 --
--- Name: UserChapter; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapter; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."UserChapter" AS
+CREATE VIEW public."UserChapter" AS
  SELECT 1 AS id,
     "allChapters"."userId",
     "allChapters"."chapterId",
@@ -5364,27 +5406,27 @@ CREATE VIEW RubyActiveAdmin_test."UserChapter" AS
    FROM ( SELECT "User".id AS "userId",
             "Topic".id AS "chapterId",
             "Subject".id AS "subjectId"
-           FROM RubyActiveAdmin_test."User",
-            RubyActiveAdmin_test."UserCourse",
-            RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Topic",
-            RubyActiveAdmin_test."SubjectChapter"
+           FROM public."User",
+            public."UserCourse",
+            public."Subject",
+            public."Topic",
+            public."SubjectChapter"
           WHERE (("User".id = "UserCourse"."userId") AND ("UserCourse"."courseId" = "Subject"."courseId") AND ("Subject".id = "SubjectChapter"."subjectId") AND ("SubjectChapter"."chapterId" = "Topic".id) AND ("UserCourse"."expiryAt" >= now()) AND ("SubjectChapter".deleted = false) AND ("Topic".free <> true))
         UNION
          SELECT NULL::integer AS "userId",
             "Topic".id AS "chapterId",
             "Subject".id AS "subjectId"
-           FROM RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Topic",
-            RubyActiveAdmin_test."SubjectChapter"
+           FROM public."Subject",
+            public."Topic",
+            public."SubjectChapter"
           WHERE (("Topic".free = true) AND ("Subject".id = "SubjectChapter"."subjectId") AND ("SubjectChapter"."chapterId" = "Topic".id) AND ("SubjectChapter".deleted = false))) "allChapters";
 
 
 --
--- Name: UserChapterStat; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserChapterStat" (
+CREATE TABLE public."UserChapterStat" (
     id integer NOT NULL,
     "userId" integer,
     "chapterId" integer,
@@ -5395,10 +5437,10 @@ CREATE TABLE RubyActiveAdmin_test."UserChapterStat" (
 
 
 --
--- Name: UserChapterStat_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserChapterStat_id_seq"
+CREATE SEQUENCE public."UserChapterStat_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -5408,17 +5450,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserChapterStat_id_seq"
 
 
 --
--- Name: UserChapterStat_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserChapterStat_id_seq" OWNED BY RubyActiveAdmin_test."UserChapterStat".id;
+ALTER SEQUENCE public."UserChapterStat_id_seq" OWNED BY public."UserChapterStat".id;
 
 
 --
--- Name: UserClaim; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserClaim" (
+CREATE TABLE public."UserClaim" (
     id integer NOT NULL,
     type character varying(255),
     value character varying(255),
@@ -5429,10 +5471,10 @@ CREATE TABLE RubyActiveAdmin_test."UserClaim" (
 
 
 --
--- Name: UserClaim_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserClaim_id_seq"
+CREATE SEQUENCE public."UserClaim_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5441,21 +5483,21 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserClaim_id_seq"
 
 
 --
--- Name: UserClaim_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserClaim_id_seq" OWNED BY RubyActiveAdmin_test."UserClaim".id;
+ALTER SEQUENCE public."UserClaim_id_seq" OWNED BY public."UserClaim".id;
 
 
 --
--- Name: UserCourse177174; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse177174; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserCourse177174" (
+CREATE TABLE public."UserCourse177174" (
     id integer,
     "startedAt" timestamp with time zone,
     "expiryAt" timestamp with time zone,
-    role RubyActiveAdmin_test."enum_UserCourse_role",
+    role public."enum_UserCourse_role",
     "createdAt" timestamp with time zone,
     "updatedAt" timestamp with time zone,
     "courseId" integer,
@@ -5468,10 +5510,10 @@ CREATE TABLE RubyActiveAdmin_test."UserCourse177174" (
 
 
 --
--- Name: UserCourse_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserCourse_id_seq"
+CREATE SEQUENCE public."UserCourse_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5480,17 +5522,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserCourse_id_seq"
 
 
 --
--- Name: UserCourse_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserCourse_id_seq" OWNED BY RubyActiveAdmin_test."UserCourse".id;
+ALTER SEQUENCE public."UserCourse_id_seq" OWNED BY public."UserCourse".id;
 
 
 --
--- Name: UserDoubtStat; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserDoubtStat; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserDoubtStat" AS
+CREATE MATERIALIZED VIEW public."UserDoubtStat" AS
  SELECT "UserDoubtStatTemp".id,
     "UserDoubtStatTemp"."userId",
     "UserDoubtStatTemp"."doubtCount",
@@ -5499,24 +5541,24 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserDoubtStat" AS
             "User".id AS "userId",
             doubt.doubt AS "doubtCount",
             doubt7."doubt7Count" AS "doubt7DaysCount"
-           FROM ((RubyActiveAdmin_test."User"
+           FROM ((public."User"
              JOIN ( SELECT "Doubt"."userId" AS ausrid,
                     count(*) AS doubt
-                   FROM RubyActiveAdmin_test."Doubt"
+                   FROM public."Doubt"
                   GROUP BY "Doubt"."userId") doubt ON (("User".id = doubt.ausrid)))
              LEFT JOIN ( SELECT "Doubt"."userId" AS aus7rid,
                     count(*) AS "doubt7Count"
-                   FROM RubyActiveAdmin_test."Doubt"
+                   FROM public."Doubt"
                   WHERE ("Doubt"."createdAt" > (CURRENT_DATE - '7 days'::interval))
                   GROUP BY "Doubt"."userId") doubt7 ON (("User".id = doubt7.aus7rid)))) "UserDoubtStatTemp"
   WITH NO DATA;
 
 
 --
--- Name: UserFlashCard; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserFlashCard" (
+CREATE TABLE public."UserFlashCard" (
     id bigint NOT NULL,
     "userId" integer NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
@@ -5526,10 +5568,10 @@ CREATE TABLE RubyActiveAdmin_test."UserFlashCard" (
 
 
 --
--- Name: UserFlashCard20200611; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard20200611; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserFlashCard20200611" (
+CREATE TABLE public."UserFlashCard20200611" (
     id bigint,
     "userId" integer,
     "createdAt" timestamp without time zone,
@@ -5539,10 +5581,10 @@ CREATE TABLE RubyActiveAdmin_test."UserFlashCard20200611" (
 
 
 --
--- Name: UserFlashCard_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserFlashCard_id_seq"
+CREATE SEQUENCE public."UserFlashCard_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5551,17 +5593,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserFlashCard_id_seq"
 
 
 --
--- Name: UserFlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserFlashCard_id_seq" OWNED BY RubyActiveAdmin_test."UserFlashCard".id;
+ALTER SEQUENCE public."UserFlashCard_id_seq" OWNED BY public."UserFlashCard".id;
 
 
 --
--- Name: UserHighlightedNote; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserHighlightedNote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserHighlightedNote" (
+CREATE TABLE public."UserHighlightedNote" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     "noteId" integer NOT NULL,
@@ -5580,10 +5622,10 @@ CREATE TABLE RubyActiveAdmin_test."UserHighlightedNote" (
 
 
 --
--- Name: UserHighlightedNote_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserHighlightedNote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserHighlightedNote_id_seq"
+CREATE SEQUENCE public."UserHighlightedNote_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5592,17 +5634,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserHighlightedNote_id_seq"
 
 
 --
--- Name: UserHighlightedNote_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserHighlightedNote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserHighlightedNote_id_seq" OWNED BY RubyActiveAdmin_test."UserHighlightedNote".id;
+ALTER SEQUENCE public."UserHighlightedNote_id_seq" OWNED BY public."UserHighlightedNote".id;
 
 
 --
--- Name: UserLogin; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserLogin" (
+CREATE TABLE public."UserLogin" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     expiry integer NOT NULL,
@@ -5613,10 +5655,10 @@ CREATE TABLE RubyActiveAdmin_test."UserLogin" (
 
 
 --
--- Name: UserLogin_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserLogin_id_seq"
+CREATE SEQUENCE public."UserLogin_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -5626,17 +5668,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserLogin_id_seq"
 
 
 --
--- Name: UserLogin_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserLogin_id_seq" OWNED BY RubyActiveAdmin_test."UserLogin".id;
+ALTER SEQUENCE public."UserLogin_id_seq" OWNED BY public."UserLogin".id;
 
 
 --
--- Name: UserNoteStat; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserNoteStat" (
+CREATE TABLE public."UserNoteStat" (
     id integer NOT NULL,
     "userId" integer NOT NULL,
     "noteId" integer NOT NULL,
@@ -5653,10 +5695,10 @@ CREATE TABLE RubyActiveAdmin_test."UserNoteStat" (
 
 
 --
--- Name: UserNoteStat_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserNoteStat_id_seq"
+CREATE SEQUENCE public."UserNoteStat_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5665,17 +5707,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserNoteStat_id_seq"
 
 
 --
--- Name: UserNoteStat_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserNoteStat_id_seq" OWNED BY RubyActiveAdmin_test."UserNoteStat".id;
+ALTER SEQUENCE public."UserNoteStat_id_seq" OWNED BY public."UserNoteStat".id;
 
 
 --
--- Name: UserProfile; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserProfile" (
+CREATE TABLE public."UserProfile" (
     id integer NOT NULL,
     "displayName" character varying(100),
     picture text,
@@ -5714,10 +5756,10 @@ CREATE TABLE RubyActiveAdmin_test."UserProfile" (
 
 
 --
--- Name: UserVideoStat; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserVideoStat" (
+CREATE TABLE public."UserVideoStat" (
     id integer NOT NULL,
     "userId" integer,
     "videoId" integer,
@@ -5730,10 +5772,10 @@ CREATE TABLE RubyActiveAdmin_test."UserVideoStat" (
 
 
 --
--- Name: UserProfileAnalytic; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfileAnalytic; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserProfileAnalytic" AS
+CREATE MATERIALIZED VIEW public."UserProfileAnalytic" AS
  SELECT "UserProfileAnalyticTable".id,
     "UserProfileAnalyticTable"."userId",
     "UserProfileAnalyticTable"."ansCount",
@@ -5750,34 +5792,34 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserProfileAnalytic" AS
             test7atp."test7Count" AS "test7DaysCount",
             "userV".vidid AS "videoCount",
             "user7V"."vid7Count" AS "video7DaysCount"
-           FROM ((((((RubyActiveAdmin_test."User"
+           FROM ((((((public."User"
              LEFT JOIN ( SELECT "Answer"."userId" AS ausrid,
                     count("Answer"."userAnswer") AS ans
-                   FROM RubyActiveAdmin_test."Answer"
+                   FROM public."Answer"
                   GROUP BY "Answer"."userId") ans ON (("User".id = ans.ausrid)))
              LEFT JOIN ( SELECT "Answer"."userId" AS aus7rid,
                     count("Answer"."userAnswer") AS "ans7Count"
-                   FROM RubyActiveAdmin_test."Answer"
+                   FROM public."Answer"
                   WHERE ("Answer"."createdAt" > (CURRENT_DATE - '7 days'::interval))
                   GROUP BY "Answer"."userId") answer7 ON (("User".id = answer7.aus7rid)))
              LEFT JOIN ( SELECT "TestAttempt"."userId" AS usrid,
                     count("TestAttempt"."testId") AS "testId"
-                   FROM RubyActiveAdmin_test."TestAttempt"
+                   FROM public."TestAttempt"
                   WHERE ("TestAttempt".completed = true)
                   GROUP BY "TestAttempt"."userId") testatp ON (("User".id = testatp.usrid)))
              LEFT JOIN ( SELECT "TestAttempt"."userId" AS usr7id,
                     count("TestAttempt"."testId") AS "test7Count"
-                   FROM RubyActiveAdmin_test."TestAttempt"
+                   FROM public."TestAttempt"
                   WHERE (("TestAttempt".completed = true) AND ("TestAttempt"."createdAt" > (CURRENT_DATE - '7 days'::interval)))
                   GROUP BY "TestAttempt"."userId") test7atp ON (("User".id = test7atp.usr7id)))
              LEFT JOIN ( SELECT "UserVideoStat"."userId" AS vidusrid,
                     count("UserVideoStat"."videoId") AS vidid
-                   FROM RubyActiveAdmin_test."UserVideoStat"
+                   FROM public."UserVideoStat"
                   WHERE ("UserVideoStat".completed = true)
                   GROUP BY "UserVideoStat"."userId") "userV" ON (("User".id = "userV".vidusrid)))
              LEFT JOIN ( SELECT "UserVideoStat"."userId" AS vidusr7id,
                     count("UserVideoStat"."videoId") AS "vid7Count"
-                   FROM RubyActiveAdmin_test."UserVideoStat"
+                   FROM public."UserVideoStat"
                   WHERE (("UserVideoStat".completed = true) AND ("UserVideoStat"."createdAt" > (CURRENT_DATE - '7 days'::interval)))
                   GROUP BY "UserVideoStat"."userId") "user7V" ON (("User".id = "user7V".vidusr7id)))
           ORDER BY ans.ans, testatp."testId", "userV".vidid, answer7."ans7Count", test7atp."test7Count", "user7V"."vid7Count") "UserProfileAnalyticTable"
@@ -5785,10 +5827,10 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserProfileAnalytic" AS
 
 
 --
--- Name: UserProfile_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserProfile_id_seq"
+CREATE SEQUENCE public."UserProfile_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5797,17 +5839,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserProfile_id_seq"
 
 
 --
--- Name: UserProfile_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserProfile_id_seq" OWNED BY RubyActiveAdmin_test."UserProfile".id;
+ALTER SEQUENCE public."UserProfile_id_seq" OWNED BY public."UserProfile".id;
 
 
 --
--- Name: UserResult; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserResult" (
+CREATE TABLE public."UserResult" (
     id bigint NOT NULL,
     "userId" integer NOT NULL,
     name character varying,
@@ -5823,10 +5865,10 @@ CREATE TABLE RubyActiveAdmin_test."UserResult" (
 
 
 --
--- Name: UserResult_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserResult_id_seq"
+CREATE SEQUENCE public."UserResult_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5835,17 +5877,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserResult_id_seq"
 
 
 --
--- Name: UserResult_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserResult_id_seq" OWNED BY RubyActiveAdmin_test."UserResult".id;
+ALTER SEQUENCE public."UserResult_id_seq" OWNED BY public."UserResult".id;
 
 
 --
--- Name: UserScheduledTask; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserScheduledTask; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserScheduledTask" (
+CREATE TABLE public."UserScheduledTask" (
     id integer NOT NULL,
     "userId" integer,
     "scheduledTaskId" integer,
@@ -5858,10 +5900,10 @@ CREATE TABLE RubyActiveAdmin_test."UserScheduledTask" (
 
 
 --
--- Name: UserScheduledTask_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserScheduledTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserScheduledTask_id_seq"
+CREATE SEQUENCE public."UserScheduledTask_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5870,17 +5912,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserScheduledTask_id_seq"
 
 
 --
--- Name: UserScheduledTask_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserScheduledTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserScheduledTask_id_seq" OWNED BY RubyActiveAdmin_test."UserScheduledTask".id;
+ALTER SEQUENCE public."UserScheduledTask_id_seq" OWNED BY public."UserScheduledTask".id;
 
 
 --
--- Name: UserSectionStat; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserSectionStat" (
+CREATE TABLE public."UserSectionStat" (
     id integer NOT NULL,
     "userId" integer,
     "sectionId" integer,
@@ -5891,10 +5933,10 @@ CREATE TABLE RubyActiveAdmin_test."UserSectionStat" (
 
 
 --
--- Name: UserSectionStat_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserSectionStat_id_seq"
+CREATE SEQUENCE public."UserSectionStat_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -5904,17 +5946,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserSectionStat_id_seq"
 
 
 --
--- Name: UserSectionStat_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserSectionStat_id_seq" OWNED BY RubyActiveAdmin_test."UserSectionStat".id;
+ALTER SEQUENCE public."UserSectionStat_id_seq" OWNED BY public."UserSectionStat".id;
 
 
 --
--- Name: UserTask; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTask; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserTask" (
+CREATE TABLE public."UserTask" (
     id integer NOT NULL,
     "userId" integer,
     "taskId" integer,
@@ -5928,10 +5970,10 @@ CREATE TABLE RubyActiveAdmin_test."UserTask" (
 
 
 --
--- Name: UserTaskProgress; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTaskProgress; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserTaskProgress" AS
+CREATE MATERIALIZED VIEW public."UserTaskProgress" AS
  SELECT "UserTaskProgressTable".id,
     "UserTaskProgressTable"."userId",
     "UserTaskProgressTable"."totalTaskHour",
@@ -5946,24 +5988,24 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."UserTaskProgress" AS
            FROM ( SELECT "ScheduleItemUser"."userId",
                     sum("ScheduleItem".hours) AS "totalSum",
                     "ScheduleItem"."scheduleId" AS "userScheduleId"
-                   FROM RubyActiveAdmin_test."ScheduleItemUser",
-                    RubyActiveAdmin_test."ScheduleItem",
-                    RubyActiveAdmin_test."Schedule"
+                   FROM public."ScheduleItemUser",
+                    public."ScheduleItem",
+                    public."Schedule"
                   WHERE (("ScheduleItemUser".completed = true) AND ("ScheduleItemUser"."scheduleItemId" = "ScheduleItem".id) AND ("Schedule".id = "ScheduleItem"."scheduleId") AND ("Schedule"."isActive" = true))
                   GROUP BY "ScheduleItemUser"."userId", "ScheduleItem"."scheduleId") "totalProgress",
             ( SELECT sum("ScheduleItem".hours) AS sum,
                     "ScheduleItem"."scheduleId"
-                   FROM RubyActiveAdmin_test."ScheduleItem"
+                   FROM public."ScheduleItem"
                   GROUP BY "ScheduleItem"."scheduleId") "totalDuration") "UserTaskProgressTable"
   WHERE ("UserTaskProgressTable"."userSchedule" = "UserTaskProgressTable"."scheduleId")
   WITH NO DATA;
 
 
 --
--- Name: UserTask_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserTask_id_seq"
+CREATE SEQUENCE public."UserTask_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5972,17 +6014,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserTask_id_seq"
 
 
 --
--- Name: UserTask_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserTask_id_seq" OWNED BY RubyActiveAdmin_test."UserTask".id;
+ALTER SEQUENCE public."UserTask_id_seq" OWNED BY public."UserTask".id;
 
 
 --
--- Name: UserTodo; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."UserTodo" (
+CREATE TABLE public."UserTodo" (
     id bigint NOT NULL,
     "userId" integer NOT NULL,
     task_type integer NOT NULL,
@@ -6001,10 +6043,10 @@ CREATE TABLE RubyActiveAdmin_test."UserTodo" (
 
 
 --
--- Name: UserTodo_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserTodo_id_seq"
+CREATE SEQUENCE public."UserTodo_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6013,17 +6055,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserTodo_id_seq"
 
 
 --
--- Name: UserTodo_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserTodo_id_seq" OWNED BY RubyActiveAdmin_test."UserTodo".id;
+ALTER SEQUENCE public."UserTodo_id_seq" OWNED BY public."UserTodo".id;
 
 
 --
--- Name: UserVideo; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideo; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."UserVideo" AS
+CREATE VIEW public."UserVideo" AS
  SELECT 1 AS id,
     "allVideos"."userId",
     "allVideos"."topicId",
@@ -6031,28 +6073,28 @@ CREATE VIEW RubyActiveAdmin_test."UserVideo" AS
    FROM ( SELECT "User".id AS "userId",
             "Topic".id AS "topicId",
             "ChapterVideo"."videoId"
-           FROM RubyActiveAdmin_test."User",
-            RubyActiveAdmin_test."UserCourse",
-            RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Topic",
-            RubyActiveAdmin_test."ChapterVideo",
-            RubyActiveAdmin_test."SubjectChapter"
+           FROM public."User",
+            public."UserCourse",
+            public."Subject",
+            public."Topic",
+            public."ChapterVideo",
+            public."SubjectChapter"
           WHERE (("User".id = "UserCourse"."userId") AND ("UserCourse"."courseId" = "Subject"."courseId") AND ("Subject".id = "SubjectChapter"."subjectId") AND ("SubjectChapter"."chapterId" = "Topic".id) AND ("ChapterVideo"."chapterId" = "Topic".id) AND ("UserCourse"."expiryAt" >= now()) AND ("SubjectChapter".deleted = false) AND ("Topic".free <> true))
         UNION
          SELECT NULL::integer AS "userId",
             "Topic".id AS "topicId",
             "ChapterVideo"."videoId"
-           FROM RubyActiveAdmin_test."Subject",
-            RubyActiveAdmin_test."Topic",
-            RubyActiveAdmin_test."ChapterVideo"
+           FROM public."Subject",
+            public."Topic",
+            public."ChapterVideo"
           WHERE (("Topic".free = true) AND ("ChapterVideo"."chapterId" = "Topic".id))) "allVideos";
 
 
 --
--- Name: UserVideoStat_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."UserVideoStat_id_seq"
+CREATE SEQUENCE public."UserVideoStat_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6061,17 +6103,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."UserVideoStat_id_seq"
 
 
 --
--- Name: UserVideoStat_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."UserVideoStat_id_seq" OWNED BY RubyActiveAdmin_test."UserVideoStat".id;
+ALTER SEQUENCE public."UserVideoStat_id_seq" OWNED BY public."UserVideoStat".id;
 
 
 --
--- Name: User_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."User_id_seq"
+CREATE SEQUENCE public."User_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6080,17 +6122,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."User_id_seq"
 
 
 --
--- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."User_id_seq" OWNED BY RubyActiveAdmin_test."User".id;
+ALTER SEQUENCE public."User_id_seq" OWNED BY public."User".id;
 
 
 --
--- Name: Video20200528; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video20200528; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Video20200528" (
+CREATE TABLE public."Video20200528" (
     id integer,
     name character varying(255),
     description text,
@@ -6108,10 +6150,10 @@ CREATE TABLE RubyActiveAdmin_test."Video20200528" (
 
 
 --
--- Name: Video20200620; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video20200620; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Video20200620" (
+CREATE TABLE public."Video20200620" (
     id integer,
     name character varying(255),
     description text,
@@ -6129,10 +6171,10 @@ CREATE TABLE RubyActiveAdmin_test."Video20200620" (
 
 
 --
--- Name: Video20201102; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video20201102; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Video20201102" (
+CREATE TABLE public."Video20201102" (
     id integer,
     name character varying(255),
     description text,
@@ -6150,10 +6192,10 @@ CREATE TABLE RubyActiveAdmin_test."Video20201102" (
 
 
 --
--- Name: Video20201119; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video20201119; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Video20201119" (
+CREATE TABLE public."Video20201119" (
     id integer,
     name character varying(255),
     description text,
@@ -6171,10 +6213,10 @@ CREATE TABLE RubyActiveAdmin_test."Video20201119" (
 
 
 --
--- Name: VideoAnnotation; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."VideoAnnotation" (
+CREATE TABLE public."VideoAnnotation" (
     id integer NOT NULL,
     "annotationType" character varying(255),
     "annotationId" integer,
@@ -6187,10 +6229,10 @@ CREATE TABLE RubyActiveAdmin_test."VideoAnnotation" (
 
 
 --
--- Name: VideoAnnotation_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."VideoAnnotation_id_seq"
+CREATE SEQUENCE public."VideoAnnotation_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6199,17 +6241,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."VideoAnnotation_id_seq"
 
 
 --
--- Name: VideoAnnotation_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."VideoAnnotation_id_seq" OWNED BY RubyActiveAdmin_test."VideoAnnotation".id;
+ALTER SEQUENCE public."VideoAnnotation_id_seq" OWNED BY public."VideoAnnotation".id;
 
 
 --
--- Name: VideoLink; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoLink; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."VideoLink" (
+CREATE TABLE public."VideoLink" (
     id integer NOT NULL,
     "videoId" integer NOT NULL,
     name character varying(255),
@@ -6222,10 +6264,10 @@ CREATE TABLE RubyActiveAdmin_test."VideoLink" (
 
 
 --
--- Name: VideoLink_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoLink_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."VideoLink_id_seq"
+CREATE SEQUENCE public."VideoLink_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -6235,17 +6277,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."VideoLink_id_seq"
 
 
 --
--- Name: VideoLink_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoLink_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."VideoLink_id_seq" OWNED BY RubyActiveAdmin_test."VideoLink".id;
+ALTER SEQUENCE public."VideoLink_id_seq" OWNED BY public."VideoLink".id;
 
 
 --
--- Name: VideoQuestion_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."VideoQuestion_id_seq"
+CREATE SEQUENCE public."VideoQuestion_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6254,17 +6296,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."VideoQuestion_id_seq"
 
 
 --
--- Name: VideoQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."VideoQuestion_id_seq" OWNED BY RubyActiveAdmin_test."VideoQuestion".id;
+ALTER SEQUENCE public."VideoQuestion_id_seq" OWNED BY public."VideoQuestion".id;
 
 
 --
--- Name: VideoSubTopic; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."VideoSubTopic" (
+CREATE TABLE public."VideoSubTopic" (
     id integer NOT NULL,
     "videoId" integer,
     "subTopicId" integer,
@@ -6274,10 +6316,10 @@ CREATE TABLE RubyActiveAdmin_test."VideoSubTopic" (
 
 
 --
--- Name: VideoSubTopicQuestion; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopicQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test."VideoSubTopicQuestion" AS
+CREATE VIEW public."VideoSubTopicQuestion" AS
 SELECT
     NULL::integer AS id,
     NULL::integer AS "videoId",
@@ -6285,10 +6327,10 @@ SELECT
 
 
 --
--- Name: VideoSubTopic_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."VideoSubTopic_id_seq"
+CREATE SEQUENCE public."VideoSubTopic_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6297,17 +6339,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."VideoSubTopic_id_seq"
 
 
 --
--- Name: VideoSubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."VideoSubTopic_id_seq" OWNED BY RubyActiveAdmin_test."VideoSubTopic".id;
+ALTER SEQUENCE public."VideoSubTopic_id_seq" OWNED BY public."VideoSubTopic".id;
 
 
 --
--- Name: VideoTest; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."VideoTest" (
+CREATE TABLE public."VideoTest" (
     id integer NOT NULL,
     "videoId" integer NOT NULL,
     "testId" integer NOT NULL,
@@ -6317,10 +6359,10 @@ CREATE TABLE RubyActiveAdmin_test."VideoTest" (
 
 
 --
--- Name: VideoTest_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."VideoTest_id_seq"
+CREATE SEQUENCE public."VideoTest_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -6330,17 +6372,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."VideoTest_id_seq"
 
 
 --
--- Name: VideoTest_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."VideoTest_id_seq" OWNED BY RubyActiveAdmin_test."VideoTest".id;
+ALTER SEQUENCE public."VideoTest_id_seq" OWNED BY public."VideoTest".id;
 
 
 --
--- Name: Video_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Video_id_seq"
+CREATE SEQUENCE public."Video_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6349,17 +6391,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Video_id_seq"
 
 
 --
--- Name: Video_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Video_id_seq" OWNED BY RubyActiveAdmin_test."Video".id;
+ALTER SEQUENCE public."Video_id_seq" OWNED BY public."Video".id;
 
 
 --
--- Name: Vote; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test."Vote" (
+CREATE TABLE public."Vote" (
     id integer NOT NULL,
     "userId" integer,
     "ownerId" integer,
@@ -6371,10 +6413,10 @@ CREATE TABLE RubyActiveAdmin_test."Vote" (
 
 
 --
--- Name: Vote_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test."Vote_id_seq"
+CREATE SEQUENCE public."Vote_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6383,17 +6425,17 @@ CREATE SEQUENCE RubyActiveAdmin_test."Vote_id_seq"
 
 
 --
--- Name: Vote_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test."Vote_id_seq" OWNED BY RubyActiveAdmin_test."Vote".id;
+ALTER SEQUENCE public."Vote_id_seq" OWNED BY public."Vote".id;
 
 
 --
--- Name: active_admin_comments; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.active_admin_comments (
+CREATE TABLE public.active_admin_comments (
     id bigint NOT NULL,
     namespace character varying,
     body text,
@@ -6407,10 +6449,10 @@ CREATE TABLE RubyActiveAdmin_test.active_admin_comments (
 
 
 --
--- Name: active_admin_comments_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_admin_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.active_admin_comments_id_seq
+CREATE SEQUENCE public.active_admin_comments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6419,17 +6461,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.active_admin_comments_id_seq
 
 
 --
--- Name: active_admin_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_admin_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.active_admin_comments_id_seq OWNED BY RubyActiveAdmin_test.active_admin_comments.id;
+ALTER SEQUENCE public.active_admin_comments_id_seq OWNED BY public.active_admin_comments.id;
 
 
 --
--- Name: active_storage_attachments; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.active_storage_attachments (
+CREATE TABLE public.active_storage_attachments (
     id bigint NOT NULL,
     name character varying NOT NULL,
     record_type character varying NOT NULL,
@@ -6440,10 +6482,10 @@ CREATE TABLE RubyActiveAdmin_test.active_storage_attachments (
 
 
 --
--- Name: active_storage_attachments_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.active_storage_attachments_id_seq
+CREATE SEQUENCE public.active_storage_attachments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6452,17 +6494,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.active_storage_attachments_id_seq
 
 
 --
--- Name: active_storage_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.active_storage_attachments_id_seq OWNED BY RubyActiveAdmin_test.active_storage_attachments.id;
+ALTER SEQUENCE public.active_storage_attachments_id_seq OWNED BY public.active_storage_attachments.id;
 
 
 --
--- Name: active_storage_blobs; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_blobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.active_storage_blobs (
+CREATE TABLE public.active_storage_blobs (
     id bigint NOT NULL,
     key character varying NOT NULL,
     filename character varying NOT NULL,
@@ -6475,10 +6517,10 @@ CREATE TABLE RubyActiveAdmin_test.active_storage_blobs (
 
 
 --
--- Name: active_storage_blobs_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.active_storage_blobs_id_seq
+CREATE SEQUENCE public.active_storage_blobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6487,17 +6529,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.active_storage_blobs_id_seq
 
 
 --
--- Name: active_storage_blobs_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.active_storage_blobs_id_seq OWNED BY RubyActiveAdmin_test.active_storage_blobs.id;
+ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage_blobs.id;
 
 
 --
--- Name: admin_users_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: admin_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.admin_users_id_seq
+CREATE SEQUENCE public.admin_users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6506,17 +6548,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.admin_users_id_seq
 
 
 --
--- Name: admin_users_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: admin_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.admin_users_id_seq OWNED BY RubyActiveAdmin_test.admin_users.id;
+ALTER SEQUENCE public.admin_users_id_seq OWNED BY public.admin_users.id;
 
 
 --
--- Name: ar_internal_metadata; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.ar_internal_metadata (
+CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
     created_at timestamp without time zone NOT NULL,
@@ -6525,10 +6567,10 @@ CREATE TABLE RubyActiveAdmin_test.ar_internal_metadata (
 
 
 --
--- Name: coach_question_dashboard; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: coach_question_dashboard; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test.coach_question_dashboard AS
+CREATE VIEW public.coach_question_dashboard AS
  SELECT "Answer".id,
     "Question"."correctOptionIndex" AS correct_option,
     "Question".id AS question_id,
@@ -6541,20 +6583,20 @@ CREATE VIEW RubyActiveAdmin_test.coach_question_dashboard AS
     "User".id AS user_id,
     "Answer"."createdAt",
     "Answer"."updatedAt"
-   FROM (((((RubyActiveAdmin_test."User"
-     JOIN RubyActiveAdmin_test."Answer" ON (("Answer"."userId" = "User".id)))
-     JOIN RubyActiveAdmin_test."Question" ON (("Question".id = "Answer"."questionId")))
-     JOIN RubyActiveAdmin_test."ChapterQuestion" ON (("ChapterQuestion"."questionId" = "Question".id)))
-     JOIN RubyActiveAdmin_test."Topic" ON (("Topic".id = "ChapterQuestion"."chapterId")))
-     JOIN RubyActiveAdmin_test."Subject" ON (("Subject".id = "Topic"."subjectId")))
+   FROM (((((public."User"
+     JOIN public."Answer" ON (("Answer"."userId" = "User".id)))
+     JOIN public."Question" ON (("Question".id = "Answer"."questionId")))
+     JOIN public."ChapterQuestion" ON (("ChapterQuestion"."questionId" = "Question".id)))
+     JOIN public."Topic" ON (("Topic".id = "ChapterQuestion"."chapterId")))
+     JOIN public."Subject" ON (("Subject".id = "Topic"."subjectId")))
   WHERE (("Answer"."testAttemptId" IS NULL) AND ("Question".deleted = false));
 
 
 --
--- Name: coach_video_dashboard; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: coach_video_dashboard; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test.coach_video_dashboard AS
+CREATE VIEW public.coach_video_dashboard AS
  SELECT "Video".id,
     "Video".name AS video_name,
     "UserVideoStat"."updatedAt" AS on_day,
@@ -6567,19 +6609,19 @@ CREATE VIEW RubyActiveAdmin_test.coach_video_dashboard AS
     "UserVideoStat"."createdAt",
     "UserVideoStat"."updatedAt",
     "UserVideoStat"."lastPosition" AS pos
-   FROM (((((RubyActiveAdmin_test."User"
-     JOIN RubyActiveAdmin_test."UserVideoStat" ON (("UserVideoStat"."userId" = "User".id)))
-     JOIN RubyActiveAdmin_test."Video" ON (("Video".id = "UserVideoStat"."videoId")))
-     JOIN RubyActiveAdmin_test."ChapterVideo" ON (("ChapterVideo"."videoId" = "Video".id)))
-     JOIN RubyActiveAdmin_test."Topic" ON (("Topic".id = "ChapterVideo"."chapterId")))
-     JOIN RubyActiveAdmin_test."Subject" ON (("Subject".id = "Topic"."subjectId")));
+   FROM (((((public."User"
+     JOIN public."UserVideoStat" ON (("UserVideoStat"."userId" = "User".id)))
+     JOIN public."Video" ON (("Video".id = "UserVideoStat"."videoId")))
+     JOIN public."ChapterVideo" ON (("ChapterVideo"."videoId" = "Video".id)))
+     JOIN public."Topic" ON (("Topic".id = "ChapterVideo"."chapterId")))
+     JOIN public."Subject" ON (("Subject".id = "Topic"."subjectId")));
 
 
 --
--- Name: copychaptervideo; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: copychaptervideo; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.copychaptervideo (
+CREATE TABLE public.copychaptervideo (
     id integer,
     "chapterId" integer,
     "videoId" integer,
@@ -6589,10 +6631,10 @@ CREATE TABLE RubyActiveAdmin_test.copychaptervideo (
 
 
 --
--- Name: copyvideo; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: copyvideo; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.copyvideo (
+CREATE TABLE public.copyvideo (
     id integer,
     name character varying(255),
     description text,
@@ -6609,10 +6651,10 @@ CREATE TABLE RubyActiveAdmin_test.copyvideo (
 
 
 --
--- Name: doubt_admins; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.doubt_admins (
+CREATE TABLE public.doubt_admins (
     id bigint NOT NULL,
     "doubtId" integer,
     admin_user_id bigint,
@@ -6622,10 +6664,10 @@ CREATE TABLE RubyActiveAdmin_test.doubt_admins (
 
 
 --
--- Name: doubt_admins_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.doubt_admins_id_seq
+CREATE SEQUENCE public.doubt_admins_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6634,17 +6676,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.doubt_admins_id_seq
 
 
 --
--- Name: doubt_admins_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.doubt_admins_id_seq OWNED BY RubyActiveAdmin_test.doubt_admins.id;
+ALTER SEQUENCE public.doubt_admins_id_seq OWNED BY public.doubt_admins.id;
 
 
 --
--- Name: doubt_chat_channels; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_channels; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.doubt_chat_channels (
+CREATE TABLE public.doubt_chat_channels (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -6653,10 +6695,10 @@ CREATE TABLE RubyActiveAdmin_test.doubt_chat_channels (
 
 
 --
--- Name: doubt_chat_channels_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_channels_id_seq
+CREATE SEQUENCE public.doubt_chat_channels_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6665,17 +6707,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_channels_id_seq
 
 
 --
--- Name: doubt_chat_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.doubt_chat_channels_id_seq OWNED BY RubyActiveAdmin_test.doubt_chat_channels.id;
+ALTER SEQUENCE public.doubt_chat_channels_id_seq OWNED BY public.doubt_chat_channels.id;
 
 
 --
--- Name: doubt_chat_doubt_answers; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.doubt_chat_doubt_answers (
+CREATE TABLE public.doubt_chat_doubt_answers (
     id bigint NOT NULL,
     doubt_chat_user_id bigint NOT NULL,
     doubt_chat_doubt_id bigint NOT NULL,
@@ -6701,10 +6743,10 @@ CREATE TABLE RubyActiveAdmin_test.doubt_chat_doubt_answers (
 
 
 --
--- Name: doubt_chat_doubt_answers_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_doubt_answers_id_seq
+CREATE SEQUENCE public.doubt_chat_doubt_answers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6713,17 +6755,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_doubt_answers_id_seq
 
 
 --
--- Name: doubt_chat_doubt_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.doubt_chat_doubt_answers_id_seq OWNED BY RubyActiveAdmin_test.doubt_chat_doubt_answers.id;
+ALTER SEQUENCE public.doubt_chat_doubt_answers_id_seq OWNED BY public.doubt_chat_doubt_answers.id;
 
 
 --
--- Name: doubt_chat_doubts; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.doubt_chat_doubts (
+CREATE TABLE public.doubt_chat_doubts (
     id bigint NOT NULL,
     doubt_chat_user_id bigint NOT NULL,
     doubt_chat_channel_id bigint NOT NULL,
@@ -6746,10 +6788,10 @@ CREATE TABLE RubyActiveAdmin_test.doubt_chat_doubts (
 
 
 --
--- Name: doubt_chat_doubts_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_doubts_id_seq
+CREATE SEQUENCE public.doubt_chat_doubts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6758,17 +6800,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.doubt_chat_doubts_id_seq
 
 
 --
--- Name: doubt_chat_doubts_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.doubt_chat_doubts_id_seq OWNED BY RubyActiveAdmin_test.doubt_chat_doubts.id;
+ALTER SEQUENCE public.doubt_chat_doubts_id_seq OWNED BY public.doubt_chat_doubts.id;
 
 
 --
--- Name: history; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: history; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.history (
+CREATE TABLE public.history (
     event_time timestamp(2) without time zone,
     executed_by text,
     origin_value jsonb,
@@ -6777,34 +6819,34 @@ CREATE TABLE RubyActiveAdmin_test.history (
 
 
 --
--- Name: note_details; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: note_details; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test.note_details AS
+CREATE VIEW public.note_details AS
  SELECT "Note".id,
     "Note".id AS "noteId",
     "ChapterNote"."chapterId",
     "SubjectChapter"."subjectId" AS "SubjectId"
-   FROM RubyActiveAdmin_test."Note",
-    RubyActiveAdmin_test."ChapterNote",
-    RubyActiveAdmin_test."SubjectChapter"
+   FROM public."Note",
+    public."ChapterNote",
+    public."SubjectChapter"
   WHERE (("Note".id = "ChapterNote"."noteId") AND ("SubjectChapter"."chapterId" = "ChapterNote"."chapterId") AND ("SubjectChapter"."subjectId" = ANY (ARRAY[53, 54, 55, 56])));
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
 
 
 --
--- Name: student_coaches; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.student_coaches (
+CREATE TABLE public.student_coaches (
     id bigint NOT NULL,
     "studentId" integer NOT NULL,
     "coachId" integer NOT NULL,
@@ -6815,10 +6857,10 @@ CREATE TABLE RubyActiveAdmin_test.student_coaches (
 
 
 --
--- Name: student_coaches_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.student_coaches_id_seq
+CREATE SEQUENCE public.student_coaches_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6827,17 +6869,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.student_coaches_id_seq
 
 
 --
--- Name: student_coaches_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.student_coaches_id_seq OWNED BY RubyActiveAdmin_test.student_coaches.id;
+ALTER SEQUENCE public.student_coaches_id_seq OWNED BY public.student_coaches.id;
 
 
 --
--- Name: test; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.test (
+CREATE TABLE public.test (
     a integer,
     b integer,
     c integer
@@ -6845,10 +6887,10 @@ CREATE TABLE RubyActiveAdmin_test.test (
 
 
 --
--- Name: test_attempt_questions; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_attempt_questions; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test.test_attempt_questions AS
+CREATE VIEW public.test_attempt_questions AS
  SELECT row_number() OVER (PARTITION BY "TestAttempt".id ORDER BY "TestQuestion"."seqNum", "Question".id) AS id,
     "TestAttempt"."testId",
     "TestAttempt".id AS "attemptId",
@@ -6863,26 +6905,26 @@ CREATE VIEW RubyActiveAdmin_test.test_attempt_questions AS
             WHEN ("Answer"."userAnswer" = "Question"."correctOptionIndex") THEN true
             ELSE false
         END AS "isCorrect"
-   FROM ((((((((RubyActiveAdmin_test."TestAttempt"
-     JOIN RubyActiveAdmin_test."Test" ON ((("Test".id = "TestAttempt"."testId") AND ("TestAttempt".completed = true))))
-     JOIN RubyActiveAdmin_test."TestQuestion" ON (("TestQuestion"."testId" = "Test".id)))
-     JOIN RubyActiveAdmin_test."Question" ON (("Question".id = "TestQuestion"."questionId")))
-     LEFT JOIN RubyActiveAdmin_test."Answer" ON ((("TestAttempt".id = "Answer"."testAttemptId") AND ("Answer"."questionId" = "Question".id))))
-     LEFT JOIN RubyActiveAdmin_test."TestAttemptPostmartem" ON ((("TestAttemptPostmartem"."testAttemptId" = "TestAttempt".id) AND ("TestAttemptPostmartem"."questionId" = "Question".id))))
+   FROM ((((((((public."TestAttempt"
+     JOIN public."Test" ON ((("Test".id = "TestAttempt"."testId") AND ("TestAttempt".completed = true))))
+     JOIN public."TestQuestion" ON (("TestQuestion"."testId" = "Test".id)))
+     JOIN public."Question" ON (("Question".id = "TestQuestion"."questionId")))
+     LEFT JOIN public."Answer" ON ((("TestAttempt".id = "Answer"."testAttemptId") AND ("Answer"."questionId" = "Question".id))))
+     LEFT JOIN public."TestAttemptPostmartem" ON ((("TestAttemptPostmartem"."testAttemptId" = "TestAttempt".id) AND ("TestAttemptPostmartem"."questionId" = "Question".id))))
      LEFT JOIN LATERAL ( SELECT "SubTopic".name
-           FROM RubyActiveAdmin_test."QuestionSubTopic",
-            RubyActiveAdmin_test."SubTopic"
+           FROM public."QuestionSubTopic",
+            public."SubTopic"
           WHERE (("QuestionSubTopic"."questionId" = "Question".id) AND ("QuestionSubTopic"."subTopicId" = "SubTopic".id))
          LIMIT 1) "SubTopic1" ON (true))
-     LEFT JOIN RubyActiveAdmin_test."Topic" ON (("Topic".id = "Question"."topicId")))
-     LEFT JOIN RubyActiveAdmin_test."Subject" ON (("Subject".id = "Question"."subjectId")));
+     LEFT JOIN public."Topic" ON (("Topic".id = "Question"."topicId")))
+     LEFT JOIN public."Subject" ON (("Subject".id = "Question"."subjectId")));
 
 
 --
--- Name: user_actions; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.user_actions (
+CREATE TABLE public.user_actions (
     id bigint NOT NULL,
     "userId" integer,
     count integer,
@@ -6892,10 +6934,10 @@ CREATE TABLE RubyActiveAdmin_test.user_actions (
 
 
 --
--- Name: user_actions_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.user_actions_id_seq
+CREATE SEQUENCE public.user_actions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6904,32 +6946,32 @@ CREATE SEQUENCE RubyActiveAdmin_test.user_actions_id_seq
 
 
 --
--- Name: user_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.user_actions_id_seq OWNED BY RubyActiveAdmin_test.user_actions.id;
+ALTER SEQUENCE public.user_actions_id_seq OWNED BY public.user_actions.id;
 
 
 --
--- Name: usrs; Type: VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: usrs; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW RubyActiveAdmin_test.usrs AS
+CREATE VIEW public.usrs AS
  SELECT "User".id,
     "UserProfile"."displayName" AS name,
     "User".email,
     "UserProfile".picture AS avatar,
     "User"."blockedUser" AS blocked
-   FROM RubyActiveAdmin_test."User",
-    RubyActiveAdmin_test."UserProfile"
+   FROM public."User",
+    public."UserProfile"
   WHERE ("User".id = "UserProfile"."userId");
 
 
 --
--- Name: version_associations; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.version_associations (
+CREATE TABLE public.version_associations (
     id bigint NOT NULL,
     version_id integer,
     foreign_key_name character varying NOT NULL,
@@ -6939,10 +6981,10 @@ CREATE TABLE RubyActiveAdmin_test.version_associations (
 
 
 --
--- Name: version_associations_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.version_associations_id_seq
+CREATE SEQUENCE public.version_associations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6951,17 +6993,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.version_associations_id_seq
 
 
 --
--- Name: version_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.version_associations_id_seq OWNED BY RubyActiveAdmin_test.version_associations.id;
+ALTER SEQUENCE public.version_associations_id_seq OWNED BY public.version_associations.id;
 
 
 --
--- Name: versions; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.versions (
+CREATE TABLE public.versions (
     id bigint NOT NULL,
     item_type character varying NOT NULL,
     item_id bigint NOT NULL,
@@ -6975,10 +7017,10 @@ CREATE TABLE RubyActiveAdmin_test.versions (
 
 
 --
--- Name: versions_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.versions_id_seq
+CREATE SEQUENCE public.versions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6987,17 +7029,17 @@ CREATE SEQUENCE RubyActiveAdmin_test.versions_id_seq
 
 
 --
--- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.versions_id_seq OWNED BY RubyActiveAdmin_test.versions.id;
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
--- Name: votes; Type: TABLE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: votes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE RubyActiveAdmin_test.votes (
+CREATE TABLE public.votes (
     id bigint NOT NULL,
     votable_type character varying,
     votable_id bigint,
@@ -7012,10 +7054,10 @@ CREATE TABLE RubyActiveAdmin_test.votes (
 
 
 --
--- Name: votes_id_seq; Type: SEQUENCE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE RubyActiveAdmin_test.votes_id_seq
+CREATE SEQUENCE public.votes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7024,851 +7066,858 @@ CREATE SEQUENCE RubyActiveAdmin_test.votes_id_seq
 
 
 --
--- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE RubyActiveAdmin_test.votes_id_seq OWNED BY RubyActiveAdmin_test.votes.id;
+ALTER SEQUENCE public.votes_id_seq OWNED BY public.votes.id;
 
 
 --
--- Name: ActiveFlashCardChapter id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ActiveFlashCardChapter id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ActiveFlashCardChapter" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ActiveFlashCardChapter_id_seq"'::regclass);
+ALTER TABLE ONLY public."ActiveFlashCardChapter" ALTER COLUMN id SET DEFAULT nextval('public."ActiveFlashCardChapter_id_seq"'::regclass);
 
 
 --
--- Name: Advertisement id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Advertisement" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Advertisement_id_seq"'::regclass);
+ALTER TABLE ONLY public."Advertisement" ALTER COLUMN id SET DEFAULT nextval('public."Advertisement_id_seq"'::regclass);
 
 
 --
--- Name: Announcement id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Announcement id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Announcement" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Announcement_id_seq"'::regclass);
+ALTER TABLE ONLY public."Announcement" ALTER COLUMN id SET DEFAULT nextval('public."Announcement_id_seq"'::regclass);
 
 
 --
--- Name: Answer id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Answer" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Answer_id_seq"'::regclass);
+ALTER TABLE ONLY public."Answer" ALTER COLUMN id SET DEFAULT nextval('public."Answer_id_seq"'::regclass);
 
 
 --
--- Name: AppVersion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AppVersion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."AppVersion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."AppVersion_id_seq"'::regclass);
+ALTER TABLE ONLY public."AppVersion" ALTER COLUMN id SET DEFAULT nextval('public."AppVersion_id_seq"'::regclass);
 
 
 --
--- Name: BookmarkQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."BookmarkQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."BookmarkQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."BookmarkQuestion" ALTER COLUMN id SET DEFAULT nextval('public."BookmarkQuestion_id_seq"'::regclass);
 
 
 --
--- Name: ChapterFlashCard id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterFlashCard" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterFlashCard_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterFlashCard" ALTER COLUMN id SET DEFAULT nextval('public."ChapterFlashCard_id_seq"'::regclass);
 
 
 --
--- Name: ChapterGlossary id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterGlossary" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterGlossary_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterGlossary" ALTER COLUMN id SET DEFAULT nextval('public."ChapterGlossary_id_seq"'::regclass);
 
 
 --
--- Name: ChapterMindmap id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterMindmap" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterMindmap_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterMindmap" ALTER COLUMN id SET DEFAULT nextval('public."ChapterMindmap_id_seq"'::regclass);
 
 
 --
--- Name: ChapterNote id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterNote" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterNote_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterNote" ALTER COLUMN id SET DEFAULT nextval('public."ChapterNote_id_seq"'::regclass);
 
 
 --
--- Name: ChapterQuestionCopy id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestionCopy id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestionCopy" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterQuestionCopy" ALTER COLUMN id SET DEFAULT nextval('public."ChapterQuestion_id_seq"'::regclass);
 
 
 --
--- Name: ChapterTask id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTask" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterTask_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterTask" ALTER COLUMN id SET DEFAULT nextval('public."ChapterTask_id_seq"'::regclass);
 
 
 --
--- Name: ChapterTest id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTest" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterTest_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterTest" ALTER COLUMN id SET DEFAULT nextval('public."ChapterTest_id_seq"'::regclass);
 
 
 --
--- Name: ChapterVideo id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterVideo" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChapterVideo_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChapterVideo" ALTER COLUMN id SET DEFAULT nextval('public."ChapterVideo_id_seq"'::regclass);
 
 
 --
--- Name: ChatAnswer id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChatAnswer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChatAnswer" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ChatAnswer_id_seq"'::regclass);
+ALTER TABLE ONLY public."ChatAnswer" ALTER COLUMN id SET DEFAULT nextval('public."ChatAnswer_id_seq"'::regclass);
 
 
 --
--- Name: Comment id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Comment" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Comment_id_seq"'::regclass);
+ALTER TABLE ONLY public."Comment" ALTER COLUMN id SET DEFAULT nextval('public."Comment_id_seq"'::regclass);
 
 
 --
--- Name: ConfigValue id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ConfigValue id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ConfigValue" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ConfigValue_id_seq"'::regclass);
+ALTER TABLE ONLY public."ConfigValue" ALTER COLUMN id SET DEFAULT nextval('public."ConfigValue_id_seq"'::regclass);
 
 
 --
--- Name: Constant id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Constant" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Constant_id_seq"'::regclass);
+ALTER TABLE ONLY public."Constant" ALTER COLUMN id SET DEFAULT nextval('public."Constant_id_seq"'::regclass);
 
 
 --
--- Name: CopyAnswer id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyAnswer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CopyAnswer" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CopyAnswer_id_seq"'::regclass);
+ALTER TABLE ONLY public."CopyAnswer" ALTER COLUMN id SET DEFAULT nextval('public."CopyAnswer_id_seq"'::regclass);
 
 
 --
--- Name: CopyTestAttempt id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTestAttempt id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CopyTestAttempt" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CopyTestAttempt_id_seq"'::regclass);
+ALTER TABLE ONLY public."CopyTestAttempt" ALTER COLUMN id SET DEFAULT nextval('public."CopyTestAttempt_id_seq"'::regclass);
 
 
 --
--- Name: Course id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Course" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Course_id_seq"'::regclass);
+ALTER TABLE ONLY public."Course" ALTER COLUMN id SET DEFAULT nextval('public."Course_id_seq"'::regclass);
 
 
 --
--- Name: CourseDetail id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseDetail" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CourseDetail_id_seq"'::regclass);
+ALTER TABLE ONLY public."CourseDetail" ALTER COLUMN id SET DEFAULT nextval('public."CourseDetail_id_seq"'::regclass);
 
 
 --
--- Name: CourseInvitation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseInvitation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CourseInvitation_id_seq"'::regclass);
+ALTER TABLE ONLY public."CourseInvitation" ALTER COLUMN id SET DEFAULT nextval('public."CourseInvitation_id_seq"'::regclass);
 
 
 --
--- Name: CourseOffer id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseOffer" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CourseOffer_id_seq"'::regclass);
+ALTER TABLE ONLY public."CourseOffer" ALTER COLUMN id SET DEFAULT nextval('public."CourseOffer_id_seq"'::regclass);
 
 
 --
--- Name: CourseTest id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTest" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CourseTest_id_seq"'::regclass);
+ALTER TABLE ONLY public."CourseTest" ALTER COLUMN id SET DEFAULT nextval('public."CourseTest_id_seq"'::regclass);
 
 
 --
--- Name: CourseTestimonial id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTestimonial" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CourseTestimonial_id_seq"'::regclass);
+ALTER TABLE ONLY public."CourseTestimonial" ALTER COLUMN id SET DEFAULT nextval('public."CourseTestimonial_id_seq"'::regclass);
 
 
 --
--- Name: CustomerIssue id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CustomerIssue_id_seq"'::regclass);
+ALTER TABLE ONLY public."CustomerIssue" ALTER COLUMN id SET DEFAULT nextval('public."CustomerIssue_id_seq"'::regclass);
 
 
 --
--- Name: CustomerIssueType id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssueType" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CustomerIssueType_id_seq"'::regclass);
+ALTER TABLE ONLY public."CustomerIssueType" ALTER COLUMN id SET DEFAULT nextval('public."CustomerIssueType_id_seq"'::regclass);
 
 
 --
--- Name: CustomerSupport id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerSupport" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."CustomerSupport_id_seq"'::regclass);
+ALTER TABLE ONLY public."CustomerSupport" ALTER COLUMN id SET DEFAULT nextval('public."CustomerSupport_id_seq"'::regclass);
 
 
 --
--- Name: DailyUserEvent id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DailyUserEvent" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."DailyUserEvent_id_seq"'::regclass);
+ALTER TABLE ONLY public."DailyUserEvent" ALTER COLUMN id SET DEFAULT nextval('public."DailyUserEvent_id_seq"'::regclass);
 
 
 --
--- Name: Delivery id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Delivery id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Delivery" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Delivery_id_seq"'::regclass);
+ALTER TABLE ONLY public."Delivery" ALTER COLUMN id SET DEFAULT nextval('public."Delivery_id_seq"'::regclass);
 
 
 --
--- Name: Doubt id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Doubt_id_seq"'::regclass);
+ALTER TABLE ONLY public."Doubt" ALTER COLUMN id SET DEFAULT nextval('public."Doubt_id_seq"'::regclass);
 
 
 --
--- Name: DoubtAnswer id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DoubtAnswer" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."DoubtAnswer_id_seq"'::regclass);
+ALTER TABLE ONLY public."DoubtAnswer" ALTER COLUMN id SET DEFAULT nextval('public."DoubtAnswer_id_seq"'::regclass);
 
 
 --
--- Name: DuplicateChapter id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateChapter" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."DuplicateChapter_id_seq"'::regclass);
+ALTER TABLE ONLY public."DuplicateChapter" ALTER COLUMN id SET DEFAULT nextval('public."DuplicateChapter_id_seq"'::regclass);
 
 
 --
--- Name: DuplicatePost id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicatePost id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicatePost" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."DuplicatePost_id_seq"'::regclass);
+ALTER TABLE ONLY public."DuplicatePost" ALTER COLUMN id SET DEFAULT nextval('public."DuplicatePost_id_seq"'::regclass);
 
 
 --
--- Name: DuplicateQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."DuplicateQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."DuplicateQuestion" ALTER COLUMN id SET DEFAULT nextval('public."DuplicateQuestion_id_seq"'::regclass);
 
 
 --
--- Name: FcmToken id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FcmToken" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."FcmToken_id_seq"'::regclass);
+ALTER TABLE ONLY public."FcmToken" ALTER COLUMN id SET DEFAULT nextval('public."FcmToken_id_seq"'::regclass);
 
 
 --
--- Name: FestivalDiscount id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FestivalDiscount id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FestivalDiscount" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."FestivalDiscount_id_seq"'::regclass);
+ALTER TABLE ONLY public."FestivalDiscount" ALTER COLUMN id SET DEFAULT nextval('public."FestivalDiscount_id_seq"'::regclass);
 
 
 --
--- Name: FlashCard id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FlashCard" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."FlashCard_id_seq"'::regclass);
+ALTER TABLE ONLY public."FlashCard" ALTER COLUMN id SET DEFAULT nextval('public."FlashCard_id_seq"'::regclass);
 
 
 --
--- Name: Glossary id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Glossary id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Glossary" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Glossary_id_seq"'::regclass);
+ALTER TABLE ONLY public."Glossary" ALTER COLUMN id SET DEFAULT nextval('public."Glossary_id_seq"'::regclass);
 
 
 --
--- Name: Group id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Group id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Group" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Group_id_seq"'::regclass);
+ALTER TABLE ONLY public."Group" ALTER COLUMN id SET DEFAULT nextval('public."Group_id_seq"'::regclass);
 
 
 --
--- Name: Installment id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Installment id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Installment" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Installment_id_seq"'::regclass);
+ALTER TABLE ONLY public."Installment" ALTER COLUMN id SET DEFAULT nextval('public."Installment_id_seq"'::regclass);
 
 
 --
--- Name: Message id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Message id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Message" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Message_id_seq"'::regclass);
+ALTER TABLE ONLY public."Message" ALTER COLUMN id SET DEFAULT nextval('public."Message_id_seq"'::regclass);
 
 
 --
--- Name: Motivation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Motivation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Motivation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Motivation_id_seq"'::regclass);
+ALTER TABLE ONLY public."Motivation" ALTER COLUMN id SET DEFAULT nextval('public."Motivation_id_seq"'::regclass);
 
 
 --
--- Name: NCERTQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NCERTQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."NCERTQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."NCERTQuestion" ALTER COLUMN id SET DEFAULT nextval('public."NCERTQuestion_id_seq"'::regclass);
 
 
 --
--- Name: NEETExamResult id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NEETExamResult id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NEETExamResult" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."NEETExamResult_id_seq"'::regclass);
+ALTER TABLE ONLY public."NEETExamResult" ALTER COLUMN id SET DEFAULT nextval('public."NEETExamResult_id_seq"'::regclass);
 
 
 --
--- Name: NksAppVersion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NksAppVersion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NksAppVersion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."NksAppVersion_id_seq"'::regclass);
+ALTER TABLE ONLY public."NksAppVersion" ALTER COLUMN id SET DEFAULT nextval('public."NksAppVersion_id_seq"'::regclass);
 
 
 --
--- Name: NotDuplicateQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NotDuplicateQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."NotDuplicateQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."NotDuplicateQuestion" ALTER COLUMN id SET DEFAULT nextval('public."NotDuplicateQuestion_id_seq"'::regclass);
 
 
 --
--- Name: Note id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Note" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Note_id_seq"'::regclass);
+ALTER TABLE ONLY public."Note" ALTER COLUMN id SET DEFAULT nextval('public."Note_id_seq"'::regclass);
 
 
 --
--- Name: Notification id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Notification id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Notification" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Notification_id_seq"'::regclass);
+ALTER TABLE ONLY public."Notification" ALTER COLUMN id SET DEFAULT nextval('public."Notification_id_seq"'::regclass);
 
 
 --
--- Name: OldCourseTest id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OldCourseTest id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."OldCourseTest" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."OldCourseTest_id_seq"'::regclass);
+ALTER TABLE ONLY public."OldCourseTest" ALTER COLUMN id SET DEFAULT nextval('public."OldCourseTest_id_seq"'::regclass);
 
 
 --
--- Name: Payment id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Payment" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Payment_id_seq"'::regclass);
+ALTER TABLE ONLY public."Payment" ALTER COLUMN id SET DEFAULT nextval('public."Payment_id_seq"'::regclass);
 
 
 --
--- Name: PaymentCourseInvitation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentConversion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."PaymentCourseInvitation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."PaymentCourseInvitation_id_seq"'::regclass);
+ALTER TABLE ONLY public."PaymentConversion" ALTER COLUMN id SET DEFAULT nextval('public."PaymentConversion_id_seq"'::regclass);
 
 
 --
--- Name: Post id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentCourseInvitation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Post" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Post_id_seq"'::regclass);
+ALTER TABLE ONLY public."PaymentCourseInvitation" ALTER COLUMN id SET DEFAULT nextval('public."PaymentCourseInvitation_id_seq"'::regclass);
 
 
 --
--- Name: Question id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Question" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Question_id_seq"'::regclass);
+ALTER TABLE ONLY public."Post" ALTER COLUMN id SET DEFAULT nextval('public."Post_id_seq"'::regclass);
 
 
 --
--- Name: QuestionDetail id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionDetail" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."QuestionDetail_id_seq"'::regclass);
+ALTER TABLE ONLY public."Question" ALTER COLUMN id SET DEFAULT nextval('public."Question_id_seq"'::regclass);
 
 
 --
--- Name: QuestionExplanation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionExplanation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."QuestionExplanation_id_seq"'::regclass);
+ALTER TABLE ONLY public."QuestionDetail" ALTER COLUMN id SET DEFAULT nextval('public."QuestionDetail_id_seq"'::regclass);
 
 
 --
--- Name: QuestionHint id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionHint" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."QuestionHint_id_seq"'::regclass);
+ALTER TABLE ONLY public."QuestionExplanation" ALTER COLUMN id SET DEFAULT nextval('public."QuestionExplanation_id_seq"'::regclass);
 
 
 --
--- Name: QuestionSubTopic id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionSubTopic" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."QuestionSubTopic_id_seq"'::regclass);
+ALTER TABLE ONLY public."QuestionHint" ALTER COLUMN id SET DEFAULT nextval('public."QuestionHint_id_seq"'::regclass);
 
 
 --
--- Name: QuestionTranslation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionTranslation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."QuestionTranslation_id_seq"'::regclass);
+ALTER TABLE ONLY public."QuestionSubTopic" ALTER COLUMN id SET DEFAULT nextval('public."QuestionSubTopic_id_seq"'::regclass);
 
 
 --
--- Name: Quiz id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Quiz" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Quiz_id_seq"'::regclass);
+ALTER TABLE ONLY public."QuestionTranslation" ALTER COLUMN id SET DEFAULT nextval('public."QuestionTranslation_id_seq"'::regclass);
 
 
 --
--- Name: SEOData id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Quiz id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SEOData" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."SEOData_id_seq"'::regclass);
+ALTER TABLE ONLY public."Quiz" ALTER COLUMN id SET DEFAULT nextval('public."Quiz_id_seq"'::regclass);
 
 
 --
--- Name: Schedule id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SEOData id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Schedule" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Schedule_id_seq"'::regclass);
+ALTER TABLE ONLY public."SEOData" ALTER COLUMN id SET DEFAULT nextval('public."SEOData_id_seq"'::regclass);
 
 
 --
--- Name: ScheduleItem id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Schedule id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItem" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ScheduleItem_id_seq"'::regclass);
+ALTER TABLE ONLY public."Schedule" ALTER COLUMN id SET DEFAULT nextval('public."Schedule_id_seq"'::regclass);
 
 
 --
--- Name: ScheduleItemAsset id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemAsset" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ScheduleItemAsset_id_seq"'::regclass);
+ALTER TABLE ONLY public."ScheduleItem" ALTER COLUMN id SET DEFAULT nextval('public."ScheduleItem_id_seq"'::regclass);
 
 
 --
--- Name: ScheduleItemUser id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAsset id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemUser" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ScheduleItemUser_id_seq"'::regclass);
+ALTER TABLE ONLY public."ScheduleItemAsset" ALTER COLUMN id SET DEFAULT nextval('public."ScheduleItemAsset_id_seq"'::regclass);
 
 
 --
--- Name: ScheduledTask id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduledTask" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."ScheduledTask_id_seq"'::regclass);
+ALTER TABLE ONLY public."ScheduleItemUser" ALTER COLUMN id SET DEFAULT nextval('public."ScheduleItemUser_id_seq"'::regclass);
 
 
 --
--- Name: Section id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduledTask id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Section" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Section_id_seq"'::regclass);
+ALTER TABLE ONLY public."ScheduledTask" ALTER COLUMN id SET DEFAULT nextval('public."ScheduledTask_id_seq"'::regclass);
 
 
 --
--- Name: SectionContent id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SectionContent" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."SectionContent_id_seq"'::regclass);
+ALTER TABLE ONLY public."Section" ALTER COLUMN id SET DEFAULT nextval('public."Section_id_seq"'::regclass);
 
 
 --
--- Name: StudentNote id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentNote" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."StudentNote_id_seq"'::regclass);
+ALTER TABLE ONLY public."SectionContent" ALTER COLUMN id SET DEFAULT nextval('public."SectionContent_id_seq"'::regclass);
 
 
 --
--- Name: StudentOnboardingEvents id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentOnboardingEvents" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."StudentOnboardingEvents_id_seq"'::regclass);
+ALTER TABLE ONLY public."StudentNote" ALTER COLUMN id SET DEFAULT nextval('public."StudentNote_id_seq"'::regclass);
 
 
 --
--- Name: SubTopic id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SubTopic" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."SubTopic_id_seq"'::regclass);
+ALTER TABLE ONLY public."StudentOnboardingEvents" ALTER COLUMN id SET DEFAULT nextval('public."StudentOnboardingEvents_id_seq"'::regclass);
 
 
 --
--- Name: Subject id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Subject" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Subject_id_seq"'::regclass);
+ALTER TABLE ONLY public."SubTopic" ALTER COLUMN id SET DEFAULT nextval('public."SubTopic_id_seq"'::regclass);
 
 
 --
--- Name: SubjectChapter id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SubjectChapter" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."SubjectChapter_id_seq"'::regclass);
+ALTER TABLE ONLY public."Subject" ALTER COLUMN id SET DEFAULT nextval('public."Subject_id_seq"'::regclass);
 
 
 --
--- Name: Target id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Target" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Target_id_seq"'::regclass);
+ALTER TABLE ONLY public."SubjectChapter" ALTER COLUMN id SET DEFAULT nextval('public."SubjectChapter_id_seq"'::regclass);
 
 
 --
--- Name: TargetChapter id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TargetChapter" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."TargetChapter_id_seq"'::regclass);
+ALTER TABLE ONLY public."Target" ALTER COLUMN id SET DEFAULT nextval('public."Target_id_seq"'::regclass);
 
 
 --
--- Name: Task id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Task" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Task_id_seq"'::regclass);
+ALTER TABLE ONLY public."TargetChapter" ALTER COLUMN id SET DEFAULT nextval('public."TargetChapter_id_seq"'::regclass);
 
 
 --
--- Name: Test id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Task id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Test" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Test_id_seq"'::regclass);
+ALTER TABLE ONLY public."Task" ALTER COLUMN id SET DEFAULT nextval('public."Task_id_seq"'::regclass);
 
 
 --
--- Name: TestAttempt id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestAttempt" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."TestAttempt_id_seq"'::regclass);
+ALTER TABLE ONLY public."Test" ALTER COLUMN id SET DEFAULT nextval('public."Test_id_seq"'::regclass);
 
 
 --
--- Name: TestAttemptPostmartem id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttempt id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestAttemptPostmartem" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."TestAttemptPostmartem_id_seq"'::regclass);
+ALTER TABLE ONLY public."TestAttempt" ALTER COLUMN id SET DEFAULT nextval('public."TestAttempt_id_seq"'::regclass);
 
 
 --
--- Name: TestQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptPostmartem id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."TestQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."TestAttemptPostmartem" ALTER COLUMN id SET DEFAULT nextval('public."TestAttemptPostmartem_id_seq"'::regclass);
 
 
 --
--- Name: Topic id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Topic" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Topic_id_seq"'::regclass);
+ALTER TABLE ONLY public."TestQuestion" ALTER COLUMN id SET DEFAULT nextval('public."TestQuestion_id_seq"'::regclass);
 
 
 --
--- Name: TopicAssetOld id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TopicAssetOld" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."TopicAsset_id_seq"'::regclass);
+ALTER TABLE ONLY public."Topic" ALTER COLUMN id SET DEFAULT nextval('public."Topic_id_seq"'::regclass);
 
 
 --
--- Name: User id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAssetOld id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."User" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."User_id_seq"'::regclass);
+ALTER TABLE ONLY public."TopicAssetOld" ALTER COLUMN id SET DEFAULT nextval('public."TopicAsset_id_seq"'::regclass);
 
 
 --
--- Name: UserChapterStat id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserChapterStat" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserChapterStat_id_seq"'::regclass);
+ALTER TABLE ONLY public."User" ALTER COLUMN id SET DEFAULT nextval('public."User_id_seq"'::regclass);
 
 
 --
--- Name: UserClaim id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserClaim" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserClaim_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserChapterStat" ALTER COLUMN id SET DEFAULT nextval('public."UserChapterStat_id_seq"'::regclass);
 
 
 --
--- Name: UserCourse id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserCourse" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserCourse_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserClaim" ALTER COLUMN id SET DEFAULT nextval('public."UserClaim_id_seq"'::regclass);
 
 
 --
--- Name: UserFlashCard id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserFlashCard" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserFlashCard_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserCourse" ALTER COLUMN id SET DEFAULT nextval('public."UserCourse_id_seq"'::regclass);
 
 
 --
--- Name: UserHighlightedNote id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserHighlightedNote" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserHighlightedNote_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserFlashCard" ALTER COLUMN id SET DEFAULT nextval('public."UserFlashCard_id_seq"'::regclass);
 
 
 --
--- Name: UserLogin id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserHighlightedNote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserLogin" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserLogin_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserHighlightedNote" ALTER COLUMN id SET DEFAULT nextval('public."UserHighlightedNote_id_seq"'::regclass);
 
 
 --
--- Name: UserNoteStat id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserNoteStat" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserNoteStat_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserLogin" ALTER COLUMN id SET DEFAULT nextval('public."UserLogin_id_seq"'::regclass);
 
 
 --
--- Name: UserProfile id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserProfile" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserProfile_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserNoteStat" ALTER COLUMN id SET DEFAULT nextval('public."UserNoteStat_id_seq"'::regclass);
 
 
 --
--- Name: UserResult id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserResult" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserResult_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserProfile" ALTER COLUMN id SET DEFAULT nextval('public."UserProfile_id_seq"'::regclass);
 
 
 --
--- Name: UserScheduledTask id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserScheduledTask" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserScheduledTask_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserResult" ALTER COLUMN id SET DEFAULT nextval('public."UserResult_id_seq"'::regclass);
 
 
 --
--- Name: UserSectionStat id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserScheduledTask id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserSectionStat" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserSectionStat_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserScheduledTask" ALTER COLUMN id SET DEFAULT nextval('public."UserScheduledTask_id_seq"'::regclass);
 
 
 --
--- Name: UserTask id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTask" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserTask_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserSectionStat" ALTER COLUMN id SET DEFAULT nextval('public."UserSectionStat_id_seq"'::regclass);
 
 
 --
--- Name: UserTodo id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTask id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTodo" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserTodo_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserTask" ALTER COLUMN id SET DEFAULT nextval('public."UserTask_id_seq"'::regclass);
 
 
 --
--- Name: UserVideoStat id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserVideoStat" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."UserVideoStat_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserTodo" ALTER COLUMN id SET DEFAULT nextval('public."UserTodo_id_seq"'::regclass);
 
 
 --
--- Name: Video id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Video" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Video_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserVideoStat" ALTER COLUMN id SET DEFAULT nextval('public."UserVideoStat_id_seq"'::regclass);
 
 
 --
--- Name: VideoAnnotation id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoAnnotation" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."VideoAnnotation_id_seq"'::regclass);
+ALTER TABLE ONLY public."Video" ALTER COLUMN id SET DEFAULT nextval('public."Video_id_seq"'::regclass);
 
 
 --
--- Name: VideoLink id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoLink" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."VideoLink_id_seq"'::regclass);
+ALTER TABLE ONLY public."VideoAnnotation" ALTER COLUMN id SET DEFAULT nextval('public."VideoAnnotation_id_seq"'::regclass);
 
 
 --
--- Name: VideoQuestion id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoLink id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoQuestion" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."VideoQuestion_id_seq"'::regclass);
+ALTER TABLE ONLY public."VideoLink" ALTER COLUMN id SET DEFAULT nextval('public."VideoLink_id_seq"'::regclass);
 
 
 --
--- Name: VideoSubTopic id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoSubTopic" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."VideoSubTopic_id_seq"'::regclass);
+ALTER TABLE ONLY public."VideoQuestion" ALTER COLUMN id SET DEFAULT nextval('public."VideoQuestion_id_seq"'::regclass);
 
 
 --
--- Name: VideoTest id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoTest" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."VideoTest_id_seq"'::regclass);
+ALTER TABLE ONLY public."VideoSubTopic" ALTER COLUMN id SET DEFAULT nextval('public."VideoSubTopic_id_seq"'::regclass);
 
 
 --
--- Name: Vote id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Vote" ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test."Vote_id_seq"'::regclass);
+ALTER TABLE ONLY public."VideoTest" ALTER COLUMN id SET DEFAULT nextval('public."VideoTest_id_seq"'::regclass);
 
 
 --
--- Name: active_admin_comments id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_admin_comments ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.active_admin_comments_id_seq'::regclass);
+ALTER TABLE ONLY public."Vote" ALTER COLUMN id SET DEFAULT nextval('public."Vote_id_seq"'::regclass);
 
 
 --
--- Name: active_storage_attachments id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_admin_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_storage_attachments ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.active_storage_attachments_id_seq'::regclass);
+ALTER TABLE ONLY public.active_admin_comments ALTER COLUMN id SET DEFAULT nextval('public.active_admin_comments_id_seq'::regclass);
 
 
 --
--- Name: active_storage_blobs id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.active_storage_blobs_id_seq'::regclass);
+ALTER TABLE ONLY public.active_storage_attachments ALTER COLUMN id SET DEFAULT nextval('public.active_storage_attachments_id_seq'::regclass);
 
 
 --
--- Name: admin_users id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_blobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.admin_users ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.admin_users_id_seq'::regclass);
+ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval('public.active_storage_blobs_id_seq'::regclass);
 
 
 --
--- Name: doubt_admins id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: admin_users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_admins ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.doubt_admins_id_seq'::regclass);
+ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.admin_users_id_seq'::regclass);
 
 
 --
--- Name: doubt_chat_channels id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_channels ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.doubt_chat_channels_id_seq'::regclass);
+ALTER TABLE ONLY public.doubt_admins ALTER COLUMN id SET DEFAULT nextval('public.doubt_admins_id_seq'::regclass);
 
 
 --
--- Name: doubt_chat_doubt_answers id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_channels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubt_answers ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.doubt_chat_doubt_answers_id_seq'::regclass);
+ALTER TABLE ONLY public.doubt_chat_channels ALTER COLUMN id SET DEFAULT nextval('public.doubt_chat_channels_id_seq'::regclass);
 
 
 --
--- Name: doubt_chat_doubts id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubts ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.doubt_chat_doubts_id_seq'::regclass);
+ALTER TABLE ONLY public.doubt_chat_doubt_answers ALTER COLUMN id SET DEFAULT nextval('public.doubt_chat_doubt_answers_id_seq'::regclass);
 
 
 --
--- Name: student_coaches id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.student_coaches ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.student_coaches_id_seq'::regclass);
+ALTER TABLE ONLY public.doubt_chat_doubts ALTER COLUMN id SET DEFAULT nextval('public.doubt_chat_doubts_id_seq'::regclass);
 
 
 --
--- Name: user_actions id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.user_actions ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.user_actions_id_seq'::regclass);
+ALTER TABLE ONLY public.student_coaches ALTER COLUMN id SET DEFAULT nextval('public.student_coaches_id_seq'::regclass);
 
 
 --
--- Name: version_associations id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.version_associations ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.version_associations_id_seq'::regclass);
+ALTER TABLE ONLY public.user_actions ALTER COLUMN id SET DEFAULT nextval('public.user_actions_id_seq'::regclass);
 
 
 --
--- Name: versions id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.versions ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.versions_id_seq'::regclass);
+ALTER TABLE ONLY public.version_associations ALTER COLUMN id SET DEFAULT nextval('public.version_associations_id_seq'::regclass);
 
 
 --
--- Name: votes id; Type: DEFAULT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.votes ALTER COLUMN id SET DEFAULT nextval('RubyActiveAdmin_test.votes_id_seq'::regclass);
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
--- Name: Question Question_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: votes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Question"
+ALTER TABLE ONLY public.votes ALTER COLUMN id SET DEFAULT nextval('public.votes_id_seq'::regclass);
+
+
+--
+-- Name: Question Question_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Question"
     ADD CONSTRAINT "Question_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionAnalytics; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics" AS
+CREATE MATERIALIZED VIEW public."QuestionAnalytics" AS
  SELECT "TempData".id,
     "TempData"."tagExist",
     "TempData"."correctAnswerCount",
@@ -7885,16 +7934,24 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics" AS
             ELSE NULL::numeric
         END AS "correctPercentage",
         CASE
-            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (50)::numeric)) THEN 'easy'::text
-            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (25)::numeric) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < (50)::numeric)) THEN 'medium'::text
-            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (0)::numeric) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < (25)::numeric)) THEN 'difficult'::text
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= ( SELECT ("Constant".value)::numeric AS value
+               FROM public."Constant"
+              WHERE ("Constant".key = 'CORRECT_PERCENTAGE_CEIL_MEDIUM'::text)))) THEN 'easy'::text
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= ( SELECT ("Constant".value)::numeric AS value
+               FROM public."Constant"
+              WHERE ("Constant".key = 'CORRECT_PERCENTAGE_CEIL_DIFFICULT'::text))) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < ( SELECT ("Constant".value)::numeric AS value
+               FROM public."Constant"
+              WHERE ("Constant".key = 'CORRECT_PERCENTAGE_CEIL_MEDIUM'::text)))) THEN 'medium'::text
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (0)::numeric) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < ( SELECT ("Constant".value)::numeric AS value
+               FROM public."Constant"
+              WHERE ("Constant".key = 'CORRECT_PERCENTAGE_CEIL_DIFFICULT'::text)))) THEN 'difficult'::text
             ELSE NULL::text
         END AS "difficultyLevel",
         CASE
             WHEN (EXISTS ( SELECT "Subject".id
-               FROM RubyActiveAdmin_test."TopicQuestion",
-                RubyActiveAdmin_test."Topic",
-                RubyActiveAdmin_test."Subject"
+               FROM public."TopicQuestion",
+                public."Topic",
+                public."Subject"
               WHERE (("TopicQuestion"."topicId" = "TempData".id) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8)))) THEN true
             ELSE false
         END AS "inFullCourse"
@@ -7948,17 +8005,17 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics" AS
                     WHEN (("Answer"."incorrectAnswerReason")::text = '3'::text) THEN 1
                     ELSE NULL::integer
                 END) AS "incorrectReason3Count"
-           FROM (RubyActiveAdmin_test."Question"
-             JOIN RubyActiveAdmin_test."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question".type = ANY (ARRAY['MCQ-SO'::RubyActiveAdmin_test."enum_Question_type", 'MCQ-AR'::RubyActiveAdmin_test."enum_Question_type"])))))
+           FROM (public."Question"
+             JOIN public."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question".type = ANY (ARRAY['MCQ-SO'::public."enum_Question_type", 'MCQ-AR'::public."enum_Question_type"])))))
           GROUP BY "Question".id) "TempData"
   WITH NO DATA;
 
 
 --
--- Name: QuestionAnalytics11; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics11" AS
+CREATE MATERIALIZED VIEW public."QuestionAnalytics11" AS
  SELECT "TempData".id,
     "TempData"."tagExist",
     "TempData"."correctAnswerCount",
@@ -7982,9 +8039,9 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics11" AS
         END AS "difficultyLevel",
         CASE
             WHEN (EXISTS ( SELECT "Subject".id
-               FROM RubyActiveAdmin_test."TopicQuestion",
-                RubyActiveAdmin_test."Topic",
-                RubyActiveAdmin_test."Subject"
+               FROM public."TopicQuestion",
+                public."Topic",
+                public."Subject"
               WHERE (("TopicQuestion"."topicId" = "TempData".id) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8)))) THEN true
             ELSE false
         END AS "inFullCourse"
@@ -8038,17 +8095,17 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics11" AS
                     WHEN (("Answer"."incorrectAnswerReason")::text = '3'::text) THEN 1
                     ELSE NULL::integer
                 END) AS "incorrectReason3Count"
-           FROM (RubyActiveAdmin_test."Question"
-             LEFT JOIN RubyActiveAdmin_test."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question".type = ANY (ARRAY['MCQ-SO'::RubyActiveAdmin_test."enum_Question_type", 'MCQ-AR'::RubyActiveAdmin_test."enum_Question_type"])))))
+           FROM (public."Question"
+             LEFT JOIN public."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question".type = ANY (ARRAY['MCQ-SO'::public."enum_Question_type", 'MCQ-AR'::public."enum_Question_type"])))))
           GROUP BY "Question".id) "TempData"
   WITH NO DATA;
 
 
 --
--- Name: QuestionAnalytics25; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics25; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics25" AS
+CREATE MATERIALIZED VIEW public."QuestionAnalytics25" AS
  SELECT "TempData".id,
     "TempData"."tagExist",
     "TempData"."correctAnswerCount",
@@ -8072,9 +8129,9 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics25" AS
         END AS "difficultyLevel",
         CASE
             WHEN (EXISTS ( SELECT "Subject".id
-               FROM RubyActiveAdmin_test."TopicQuestion",
-                RubyActiveAdmin_test."Topic",
-                RubyActiveAdmin_test."Subject"
+               FROM public."TopicQuestion",
+                public."Topic",
+                public."Subject"
               WHERE (("TopicQuestion"."topicId" = "TempData".id) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8)))) THEN true
             ELSE false
         END AS "inFullCourse"
@@ -8128,25 +8185,115 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."QuestionAnalytics25" AS
                     WHEN (("Answer"."incorrectAnswerReason")::text = '3'::text) THEN 1
                     ELSE NULL::integer
                 END) AS "incorrectReason3Count"
-           FROM (RubyActiveAdmin_test."Question"
-             LEFT JOIN RubyActiveAdmin_test."Answer" ON (("Question".id = "Answer"."questionId")))
+           FROM (public."Question"
+             LEFT JOIN public."Answer" ON (("Question".id = "Answer"."questionId")))
           GROUP BY "Question".id) "TempData"
   WITH NO DATA;
 
 
 --
--- Name: TestAttempt TestAttempt_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics26; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestAttempt"
+CREATE MATERIALIZED VIEW public."QuestionAnalytics26" AS
+ SELECT "TempData".id,
+    "TempData"."tagExist",
+    "TempData"."correctAnswerCount",
+    "TempData"."incorrectAnswerCount",
+    "TempData"."option1AnswerCount",
+    "TempData"."option2AnswerCount",
+    "TempData"."option3AnswerCount",
+    "TempData"."option4AnswerCount",
+    "TempData"."incorrectReason1Count",
+    "TempData"."incorrectReason2Count",
+    "TempData"."incorrectReason3Count",
+        CASE
+            WHEN (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) THEN (((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric)
+            ELSE NULL::numeric
+        END AS "correctPercentage",
+        CASE
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (50)::numeric)) THEN 'easy'::text
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (25)::numeric) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < (50)::numeric)) THEN 'medium'::text
+            WHEN ((("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount") > 10) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) >= (0)::numeric) AND ((((("TempData"."correctAnswerCount")::numeric * 1.0) / (("TempData"."correctAnswerCount" + "TempData"."incorrectAnswerCount"))::numeric) * (100)::numeric) < (25)::numeric)) THEN 'difficult'::text
+            ELSE NULL::text
+        END AS "difficultyLevel",
+        CASE
+            WHEN (EXISTS ( SELECT "Subject".id
+               FROM public."TopicQuestion",
+                public."Topic",
+                public."Subject"
+              WHERE (("TopicQuestion"."topicId" = "TempData".id) AND ("TopicQuestion"."topicId" = "Topic".id) AND ("Topic"."subjectId" = "Subject".id) AND ("Subject"."courseId" = 8)))) THEN true
+            ELSE false
+        END AS "inFullCourse"
+   FROM ( SELECT "Question".id,
+                CASE
+                    WHEN (("Question".explanation ~~ '%<audio%'::text) OR ("Question".explanation ~~ '%<video%'::text)) THEN true
+                    ELSE false
+                END AS "tagExist",
+            count(
+                CASE
+                    WHEN ("Question"."correctOptionIndex" = "Answer"."userAnswer") THEN 1
+                    ELSE NULL::integer
+                END) AS "correctAnswerCount",
+            count(
+                CASE
+                    WHEN ("Question"."correctOptionIndex" <> "Answer"."userAnswer") THEN 1
+                    ELSE NULL::integer
+                END) AS "incorrectAnswerCount",
+            count(
+                CASE
+                    WHEN ("Answer"."userAnswer" = 0) THEN 1
+                    ELSE NULL::integer
+                END) AS "option1AnswerCount",
+            count(
+                CASE
+                    WHEN ("Answer"."userAnswer" = 1) THEN 1
+                    ELSE NULL::integer
+                END) AS "option2AnswerCount",
+            count(
+                CASE
+                    WHEN ("Answer"."userAnswer" = 2) THEN 1
+                    ELSE NULL::integer
+                END) AS "option3AnswerCount",
+            count(
+                CASE
+                    WHEN ("Answer"."userAnswer" = 3) THEN 1
+                    ELSE NULL::integer
+                END) AS "option4AnswerCount",
+            count(
+                CASE
+                    WHEN (("Answer"."incorrectAnswerReason")::text = '1'::text) THEN 1
+                    ELSE NULL::integer
+                END) AS "incorrectReason1Count",
+            count(
+                CASE
+                    WHEN (("Answer"."incorrectAnswerReason")::text = '2'::text) THEN 1
+                    ELSE NULL::integer
+                END) AS "incorrectReason2Count",
+            count(
+                CASE
+                    WHEN (("Answer"."incorrectAnswerReason")::text = '3'::text) THEN 1
+                    ELSE NULL::integer
+                END) AS "incorrectReason3Count"
+           FROM (public."Question"
+             JOIN public."Answer" ON ((("Question".id = "Answer"."questionId") AND ("Question".type = ANY (ARRAY['MCQ-SO'::public."enum_Question_type", 'MCQ-AR'::public."enum_Question_type"])))))
+          GROUP BY "Question".id) "TempData"
+  WITH NO DATA;
+
+
+--
+-- Name: TestAttempt TestAttempt_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."TestAttempt"
     ADD CONSTRAINT "TestAttempt_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: TestLeaderBoard; Type: MATERIALIZED VIEW; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW RubyActiveAdmin_test."TestLeaderBoard" AS
+CREATE MATERIALIZED VIEW public."TestLeaderBoard" AS
  SELECT "TestLeaderBoardDataWithRank".id,
     "TestLeaderBoardDataWithRank".rank,
     "TestLeaderBoardDataWithRank"."testAttemptNo",
@@ -8172,8 +8319,8 @@ CREATE MATERIALIZED VIEW RubyActiveAdmin_test."TestLeaderBoard" AS
                     ("TestAttempt".result -> 'incorrectAnswerCount'::text) AS "incorrectAnswerCount",
                     row_number() OVER (PARTITION BY "TestAttempt"."userId", "TestAttempt"."testId" ORDER BY "TestAttempt".id) AS "testAttemptNo",
                     (("TestAttempt".result ->> 'totalMarks'::text))::integer AS score
-                   FROM RubyActiveAdmin_test."TestAttempt",
-                    RubyActiveAdmin_test."Test"
+                   FROM public."TestAttempt",
+                    public."Test"
                   WHERE (("TestAttempt"."testId" = "Test".id) AND ("Test"."userId" IS NULL) AND ("Test"."showAnswer" = true) AND ("TestAttempt".result IS NOT NULL) AND ("TestAttempt".completed = true))
                   GROUP BY "TestAttempt"."userId", "TestAttempt"."testId", "TestAttempt".id) "TestLeaderBoardData"
           WHERE ("TestLeaderBoardData"."testAttemptNo" = 1)) "TestLeaderBoardDataWithRank"
@@ -8189,3641 +8336,3712 @@ ALTER TABLE ONLY google_ads."CAMPAIGN_PERFORMANCE_REPORT"
 
 
 --
--- Name: ActiveFlashCardChapter ActiveFlashCardChapter_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ActiveFlashCardChapter ActiveFlashCardChapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ActiveFlashCardChapter"
+ALTER TABLE ONLY public."ActiveFlashCardChapter"
     ADD CONSTRAINT "ActiveFlashCardChapter_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Advertisement Advertisement_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement Advertisement_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Advertisement"
+ALTER TABLE ONLY public."Advertisement"
     ADD CONSTRAINT "Advertisement_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Announcement Announcement_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Announcement Announcement_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Announcement"
+ALTER TABLE ONLY public."Announcement"
     ADD CONSTRAINT "Announcement_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Answer Answer_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer Answer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Answer"
+ALTER TABLE ONLY public."Answer"
     ADD CONSTRAINT "Answer_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: AppVersion AppVersion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: AppVersion AppVersion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."AppVersion"
+ALTER TABLE ONLY public."AppVersion"
     ADD CONSTRAINT "AppVersion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: BookmarkQuestion BookmarkQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion BookmarkQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."BookmarkQuestion"
+ALTER TABLE ONLY public."BookmarkQuestion"
     ADD CONSTRAINT "BookmarkQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterFlashCard ChapterFlashCard_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard ChapterFlashCard_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterFlashCard"
+ALTER TABLE ONLY public."ChapterFlashCard"
     ADD CONSTRAINT "ChapterFlashCard_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterGlossary ChapterGlossary_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary ChapterGlossary_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterGlossary"
+ALTER TABLE ONLY public."ChapterGlossary"
     ADD CONSTRAINT "ChapterGlossary_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterMindmap ChapterMindmap_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap ChapterMindmap_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterMindmap"
+ALTER TABLE ONLY public."ChapterMindmap"
     ADD CONSTRAINT "ChapterMindmap_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterNote ChapterNote_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote ChapterNote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterNote"
+ALTER TABLE ONLY public."ChapterNote"
     ADD CONSTRAINT "ChapterNote_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterQuestion ChapterQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion ChapterQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestion"
+ALTER TABLE ONLY public."ChapterQuestion"
     ADD CONSTRAINT "ChapterQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterTask ChapterTask_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask ChapterTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTask"
+ALTER TABLE ONLY public."ChapterTask"
     ADD CONSTRAINT "ChapterTask_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterTest ChapterTest_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest ChapterTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTest"
+ALTER TABLE ONLY public."ChapterTest"
     ADD CONSTRAINT "ChapterTest_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChapterVideo ChapterVideo_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo ChapterVideo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterVideo"
+ALTER TABLE ONLY public."ChapterVideo"
     ADD CONSTRAINT "ChapterVideo_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ChatAnswer ChatAnswer_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChatAnswer ChatAnswer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChatAnswer"
+ALTER TABLE ONLY public."ChatAnswer"
     ADD CONSTRAINT "ChatAnswer_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Comment Comment_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment Comment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Comment"
+ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "Comment_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ConfigValue ConfigValue_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ConfigValue ConfigValue_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ConfigValue"
+ALTER TABLE ONLY public."ConfigValue"
     ADD CONSTRAINT "ConfigValue_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Constant Constant_key_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant Constant_key_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Constant"
+ALTER TABLE ONLY public."Constant"
     ADD CONSTRAINT "Constant_key_key" UNIQUE (key);
 
 
 --
--- Name: Constant Constant_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Constant Constant_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Constant"
+ALTER TABLE ONLY public."Constant"
     ADD CONSTRAINT "Constant_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CopyTestAttempt CopyTestAttempt_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CopyTestAttempt CopyTestAttempt_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CopyTestAttempt"
+ALTER TABLE ONLY public."CopyTestAttempt"
     ADD CONSTRAINT "CopyTestAttempt_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CourseDetail CourseDetail_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail CourseDetail_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseDetail"
+ALTER TABLE ONLY public."CourseDetail"
     ADD CONSTRAINT "CourseDetail_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CourseInvitation CourseInvitation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation CourseInvitation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseInvitation"
+ALTER TABLE ONLY public."CourseInvitation"
     ADD CONSTRAINT "CourseInvitation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CourseOffer CourseOffer_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer CourseOffer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseOffer"
+ALTER TABLE ONLY public."CourseOffer"
     ADD CONSTRAINT "CourseOffer_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CourseTest CourseTest_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest CourseTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTest"
+ALTER TABLE ONLY public."CourseTest"
     ADD CONSTRAINT "CourseTest_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CourseTestimonial CourseTestimonial_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial CourseTestimonial_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTestimonial"
+ALTER TABLE ONLY public."CourseTestimonial"
     ADD CONSTRAINT "CourseTestimonial_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Course Course_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course Course_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Course"
+ALTER TABLE ONLY public."Course"
     ADD CONSTRAINT "Course_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CustomerIssueType CustomerIssueType_code_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType CustomerIssueType_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssueType"
+ALTER TABLE ONLY public."CustomerIssueType"
     ADD CONSTRAINT "CustomerIssueType_code_key" UNIQUE (code);
 
 
 --
--- Name: CustomerIssueType CustomerIssueType_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssueType CustomerIssueType_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssueType"
+ALTER TABLE ONLY public."CustomerIssueType"
     ADD CONSTRAINT "CustomerIssueType_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CustomerIssue CustomerIssue_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue CustomerIssue_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
+ALTER TABLE ONLY public."CustomerIssue"
     ADD CONSTRAINT "CustomerIssue_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: CustomerSupport CustomerSupport_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport CustomerSupport_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerSupport"
+ALTER TABLE ONLY public."CustomerSupport"
     ADD CONSTRAINT "CustomerSupport_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DailyUserEvent DailyUserEvent_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent DailyUserEvent_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DailyUserEvent"
+ALTER TABLE ONLY public."DailyUserEvent"
     ADD CONSTRAINT "DailyUserEvent_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DailyUserEvent DailyUserEvent_userId_eventDate_event_courseId_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent DailyUserEvent_userId_eventDate_event_courseId_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DailyUserEvent"
+ALTER TABLE ONLY public."DailyUserEvent"
     ADD CONSTRAINT "DailyUserEvent_userId_eventDate_event_courseId_key" UNIQUE ("userId", "eventDate", event, "courseId");
 
 
 --
--- Name: Delivery Delivery_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Delivery Delivery_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Delivery"
+ALTER TABLE ONLY public."Delivery"
     ADD CONSTRAINT "Delivery_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DoubtAnswer DoubtAnswer_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer DoubtAnswer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DoubtAnswer"
+ALTER TABLE ONLY public."DoubtAnswer"
     ADD CONSTRAINT "DoubtAnswer_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Doubt Doubt_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt Doubt_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
+ALTER TABLE ONLY public."Doubt"
     ADD CONSTRAINT "Doubt_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DuplicateChapter DuplicateChapter_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter DuplicateChapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateChapter"
+ALTER TABLE ONLY public."DuplicateChapter"
     ADD CONSTRAINT "DuplicateChapter_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DuplicatePost DuplicatePost_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicatePost DuplicatePost_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicatePost"
+ALTER TABLE ONLY public."DuplicatePost"
     ADD CONSTRAINT "DuplicatePost_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DuplicateQuestion DuplicateQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion DuplicateQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateQuestion"
+ALTER TABLE ONLY public."DuplicateQuestion"
     ADD CONSTRAINT "DuplicateQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: DuplicateQuestion DuplicateQuestion_questionId1_questionId2_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateQuestion DuplicateQuestion_questionId1_questionId2_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateQuestion"
+ALTER TABLE ONLY public."DuplicateQuestion"
     ADD CONSTRAINT "DuplicateQuestion_questionId1_questionId2_key" UNIQUE ("questionId1", "questionId2");
 
 
 --
--- Name: FcmToken FcmToken_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken FcmToken_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FcmToken"
+ALTER TABLE ONLY public."FcmToken"
     ADD CONSTRAINT "FcmToken_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: FestivalDiscount FestivalDiscount_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FestivalDiscount FestivalDiscount_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FestivalDiscount"
+ALTER TABLE ONLY public."FestivalDiscount"
     ADD CONSTRAINT "FestivalDiscount_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: FlashCard FlashCard_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FlashCard FlashCard_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FlashCard"
+ALTER TABLE ONLY public."FlashCard"
     ADD CONSTRAINT "FlashCard_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Glossary Glossary_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Glossary Glossary_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Glossary"
+ALTER TABLE ONLY public."Glossary"
     ADD CONSTRAINT "Glossary_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Group Group_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Group Group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Group"
+ALTER TABLE ONLY public."Group"
     ADD CONSTRAINT "Group_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Installment Installment_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Installment Installment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Installment"
+ALTER TABLE ONLY public."Installment"
     ADD CONSTRAINT "Installment_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Message Message_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Message Message_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Message"
+ALTER TABLE ONLY public."Message"
     ADD CONSTRAINT "Message_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Motivation Motivation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Motivation Motivation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Motivation"
+ALTER TABLE ONLY public."Motivation"
     ADD CONSTRAINT "Motivation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: NCERTQuestion NCERTQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion NCERTQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NCERTQuestion"
+ALTER TABLE ONLY public."NCERTQuestion"
     ADD CONSTRAINT "NCERTQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: NEETExamResult NEETExamResult_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NEETExamResult NEETExamResult_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NEETExamResult"
+ALTER TABLE ONLY public."NEETExamResult"
     ADD CONSTRAINT "NEETExamResult_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: NksAppVersion NksAppVersion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NksAppVersion NksAppVersion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NksAppVersion"
+ALTER TABLE ONLY public."NksAppVersion"
     ADD CONSTRAINT "NksAppVersion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: NotDuplicateQuestion NotDuplicateQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion NotDuplicateQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NotDuplicateQuestion"
+ALTER TABLE ONLY public."NotDuplicateQuestion"
     ADD CONSTRAINT "NotDuplicateQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: NotDuplicateQuestion NotDuplicateQuestion_questionId1_questionId2_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NotDuplicateQuestion NotDuplicateQuestion_questionId1_questionId2_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NotDuplicateQuestion"
+ALTER TABLE ONLY public."NotDuplicateQuestion"
     ADD CONSTRAINT "NotDuplicateQuestion_questionId1_questionId2_key" UNIQUE ("questionId1", "questionId2");
 
 
 --
--- Name: Note Note_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Note Note_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Note"
+ALTER TABLE ONLY public."Note"
     ADD CONSTRAINT "Note_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Notification Notification_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Notification Notification_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Notification"
+ALTER TABLE ONLY public."Notification"
     ADD CONSTRAINT "Notification_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: OldCourseTest OldCourseTest_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: OldCourseTest OldCourseTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."OldCourseTest"
+ALTER TABLE ONLY public."OldCourseTest"
     ADD CONSTRAINT "OldCourseTest_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: PaymentCourseInvitation PaymentCourseInvitation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentConversion PaymentConversion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."PaymentCourseInvitation"
+ALTER TABLE ONLY public."PaymentConversion"
+    ADD CONSTRAINT "PaymentConversion_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: PaymentCourseInvitation PaymentCourseInvitation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."PaymentCourseInvitation"
     ADD CONSTRAINT "PaymentCourseInvitation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Payment Payment_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment Payment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Payment"
+ALTER TABLE ONLY public."Payment"
     ADD CONSTRAINT "Payment_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Post Post_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post Post_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Post"
+ALTER TABLE ONLY public."Post"
     ADD CONSTRAINT "Post_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Post Post_url_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Post Post_url_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Post"
+ALTER TABLE ONLY public."Post"
     ADD CONSTRAINT "Post_url_key" UNIQUE (url);
 
 
 --
--- Name: QuestionCourse QuestionCourse_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCourse QuestionCourse_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionCourse"
+ALTER TABLE ONLY public."QuestionCourse"
     ADD CONSTRAINT "QuestionCourse_pkey" PRIMARY KEY ("questionId");
 
 
 --
--- Name: QuestionDetail QuestionDetail_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail QuestionDetail_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionDetail"
+ALTER TABLE ONLY public."QuestionDetail"
     ADD CONSTRAINT "QuestionDetail_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionExplanation QuestionExplanation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation QuestionExplanation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionExplanation"
+ALTER TABLE ONLY public."QuestionExplanation"
     ADD CONSTRAINT "QuestionExplanation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionHint QuestionHint_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint QuestionHint_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionHint"
+ALTER TABLE ONLY public."QuestionHint"
     ADD CONSTRAINT "QuestionHint_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionSubTopic QuestionSubTopic_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic QuestionSubTopic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionSubTopic"
+ALTER TABLE ONLY public."QuestionSubTopic"
     ADD CONSTRAINT "QuestionSubTopic_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionTranslation QuestionTranslation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation QuestionTranslation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionTranslation"
+ALTER TABLE ONLY public."QuestionTranslation"
     ADD CONSTRAINT "QuestionTranslation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: QuestionTranslation QuestionTranslation_questionId_language_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation QuestionTranslation_questionId_language_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionTranslation"
+ALTER TABLE ONLY public."QuestionTranslation"
     ADD CONSTRAINT "QuestionTranslation_questionId_language_key" UNIQUE ("questionId", language);
 
 
 --
--- Name: Quiz Quiz_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Quiz Quiz_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Quiz"
+ALTER TABLE ONLY public."Quiz"
     ADD CONSTRAINT "Quiz_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: SEOData SEOData_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SEOData SEOData_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SEOData"
+ALTER TABLE ONLY public."SEOData"
     ADD CONSTRAINT "SEOData_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ScheduleItemAsset ScheduleItemAsset_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemAsset ScheduleItemAsset_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemAsset"
+ALTER TABLE ONLY public."ScheduleItemAsset"
     ADD CONSTRAINT "ScheduleItemAsset_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ScheduleItemUser ScheduleItemUser_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser ScheduleItemUser_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemUser"
+ALTER TABLE ONLY public."ScheduleItemUser"
     ADD CONSTRAINT "ScheduleItemUser_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ScheduleItem ScheduleItem_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem ScheduleItem_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItem"
+ALTER TABLE ONLY public."ScheduleItem"
     ADD CONSTRAINT "ScheduleItem_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Schedule Schedule_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Schedule Schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Schedule"
+ALTER TABLE ONLY public."Schedule"
     ADD CONSTRAINT "Schedule_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: ScheduledTask ScheduledTask_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduledTask ScheduledTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduledTask"
+ALTER TABLE ONLY public."ScheduledTask"
     ADD CONSTRAINT "ScheduledTask_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: SectionContent SectionContent_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent SectionContent_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SectionContent"
+ALTER TABLE ONLY public."SectionContent"
     ADD CONSTRAINT "SectionContent_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Section Section_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section Section_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Section"
+ALTER TABLE ONLY public."Section"
     ADD CONSTRAINT "Section_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: SequelizeMeta SequelizeMeta_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SequelizeMeta SequelizeMeta_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SequelizeMeta"
+ALTER TABLE ONLY public."SequelizeMeta"
     ADD CONSTRAINT "SequelizeMeta_pkey" PRIMARY KEY (name);
 
 
 --
--- Name: StudentNote StudentNoteNCERTHighlightNoOverlap; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote StudentNoteNCERTHighlightNoOverlap; Type: CONSTRAINT; Schema: public; Owner: -
 --
-CREATE EXTENSION btree_gist WITH SCHEMA RubyActiveAdmin_test;
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentNote"
+ALTER TABLE ONLY public."StudentNote"
     ADD CONSTRAINT "StudentNoteNCERTHighlightNoOverlap" EXCLUDE USING gist ("userId" WITH =, "noteId" WITH =, "noteRange" WITH &&);
 
 
 --
--- Name: StudentNote StudentNote_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote StudentNote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentNote"
+ALTER TABLE ONLY public."StudentNote"
     ADD CONSTRAINT "StudentNote_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: StudentOnboardingEvents StudentOnboardingEvents_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents StudentOnboardingEvents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentOnboardingEvents"
+ALTER TABLE ONLY public."StudentOnboardingEvents"
     ADD CONSTRAINT "StudentOnboardingEvents_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: SubTopic SubTopic_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic SubTopic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SubTopic"
+ALTER TABLE ONLY public."SubTopic"
     ADD CONSTRAINT "SubTopic_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: SubjectChapter SubjectChapter_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter SubjectChapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SubjectChapter"
+ALTER TABLE ONLY public."SubjectChapter"
     ADD CONSTRAINT "SubjectChapter_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Subject Subject_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject Subject_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Subject"
+ALTER TABLE ONLY public."Subject"
     ADD CONSTRAINT "Subject_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: TargetChapter TargetChapter_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter TargetChapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TargetChapter"
+ALTER TABLE ONLY public."TargetChapter"
     ADD CONSTRAINT "TargetChapter_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Target Target_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target Target_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Target"
+ALTER TABLE ONLY public."Target"
     ADD CONSTRAINT "Target_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Task Task_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Task Task_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Task"
+ALTER TABLE ONLY public."Task"
     ADD CONSTRAINT "Task_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: TestAttemptPostmartem TestAttemptPostmartem_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttemptPostmartem TestAttemptPostmartem_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestAttemptPostmartem"
+ALTER TABLE ONLY public."TestAttemptPostmartem"
     ADD CONSTRAINT "TestAttemptPostmartem_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: TestQuestion TestQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion TestQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestQuestion"
+ALTER TABLE ONLY public."TestQuestion"
     ADD CONSTRAINT "TestQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Test Test_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test Test_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Test"
+ALTER TABLE ONLY public."Test"
     ADD CONSTRAINT "Test_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: TopicAssetOld TopicAsset_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TopicAssetOld TopicAsset_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TopicAssetOld"
+ALTER TABLE ONLY public."TopicAssetOld"
     ADD CONSTRAINT "TopicAsset_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Topic Topic_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic Topic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Topic"
+ALTER TABLE ONLY public."Topic"
     ADD CONSTRAINT "Topic_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserChapterStat UserChapterStat_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat UserChapterStat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserChapterStat"
+ALTER TABLE ONLY public."UserChapterStat"
     ADD CONSTRAINT "UserChapterStat_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserClaim UserClaim_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim UserClaim_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserClaim"
+ALTER TABLE ONLY public."UserClaim"
     ADD CONSTRAINT "UserClaim_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserCourse UserCourse_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse UserCourse_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserCourse"
+ALTER TABLE ONLY public."UserCourse"
     ADD CONSTRAINT "UserCourse_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserFlashCard UserFlashCard_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard UserFlashCard_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserFlashCard"
+ALTER TABLE ONLY public."UserFlashCard"
     ADD CONSTRAINT "UserFlashCard_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserHighlightedNote UserHighlightedNote_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserHighlightedNote UserHighlightedNote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserHighlightedNote"
+ALTER TABLE ONLY public."UserHighlightedNote"
     ADD CONSTRAINT "UserHighlightedNote_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserLogin UserLogin_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin UserLogin_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserLogin"
+ALTER TABLE ONLY public."UserLogin"
     ADD CONSTRAINT "UserLogin_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserNoteStat UserNoteStat_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat UserNoteStat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserNoteStat"
+ALTER TABLE ONLY public."UserNoteStat"
     ADD CONSTRAINT "UserNoteStat_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserProfile UserProfile_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile UserProfile_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserProfile"
+ALTER TABLE ONLY public."UserProfile"
     ADD CONSTRAINT "UserProfile_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserResult UserResult_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult UserResult_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserResult"
+ALTER TABLE ONLY public."UserResult"
     ADD CONSTRAINT "UserResult_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserScheduledTask UserScheduledTask_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserScheduledTask UserScheduledTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserScheduledTask"
+ALTER TABLE ONLY public."UserScheduledTask"
     ADD CONSTRAINT "UserScheduledTask_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserSectionStat UserSectionStat_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat UserSectionStat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserSectionStat"
+ALTER TABLE ONLY public."UserSectionStat"
     ADD CONSTRAINT "UserSectionStat_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserTask UserTask_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTask UserTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTask"
+ALTER TABLE ONLY public."UserTask"
     ADD CONSTRAINT "UserTask_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserTodo UserTodo_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo UserTodo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTodo"
+ALTER TABLE ONLY public."UserTodo"
     ADD CONSTRAINT "UserTodo_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: UserVideoStat UserVideoStat_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat UserVideoStat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserVideoStat"
+ALTER TABLE ONLY public."UserVideoStat"
     ADD CONSTRAINT "UserVideoStat_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: User User_email_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User User_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."User"
+ALTER TABLE ONLY public."User"
     ADD CONSTRAINT "User_email_key" UNIQUE (email);
 
 
 --
--- Name: User User_phone_key; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User User_phone_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."User"
+ALTER TABLE ONLY public."User"
     ADD CONSTRAINT "User_phone_key" UNIQUE (phone);
 
 
 --
--- Name: User User_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."User"
+ALTER TABLE ONLY public."User"
     ADD CONSTRAINT "User_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: VideoAnnotation VideoAnnotation_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation VideoAnnotation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoAnnotation"
+ALTER TABLE ONLY public."VideoAnnotation"
     ADD CONSTRAINT "VideoAnnotation_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: VideoLink VideoLink_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoLink VideoLink_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoLink"
+ALTER TABLE ONLY public."VideoLink"
     ADD CONSTRAINT "VideoLink_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: VideoQuestion VideoQuestion_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion VideoQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoQuestion"
+ALTER TABLE ONLY public."VideoQuestion"
     ADD CONSTRAINT "VideoQuestion_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: VideoSubTopic VideoSubTopic_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic VideoSubTopic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoSubTopic"
+ALTER TABLE ONLY public."VideoSubTopic"
     ADD CONSTRAINT "VideoSubTopic_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: VideoTest VideoTest_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest VideoTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoTest"
+ALTER TABLE ONLY public."VideoTest"
     ADD CONSTRAINT "VideoTest_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Video Video_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video Video_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Video"
+ALTER TABLE ONLY public."Video"
     ADD CONSTRAINT "Video_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: Vote Vote_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote Vote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Vote"
+ALTER TABLE ONLY public."Vote"
     ADD CONSTRAINT "Vote_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: active_admin_comments active_admin_comments_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_admin_comments active_admin_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_admin_comments
+ALTER TABLE ONLY public.active_admin_comments
     ADD CONSTRAINT active_admin_comments_pkey PRIMARY KEY (id);
 
 
 --
--- Name: active_storage_attachments active_storage_attachments_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments active_storage_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_storage_attachments
+ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT active_storage_attachments_pkey PRIMARY KEY (id);
 
 
 --
--- Name: active_storage_blobs active_storage_blobs_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_blobs active_storage_blobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_storage_blobs
+ALTER TABLE ONLY public.active_storage_blobs
     ADD CONSTRAINT active_storage_blobs_pkey PRIMARY KEY (id);
 
 
 --
--- Name: admin_users admin_users_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: admin_users admin_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.admin_users
+ALTER TABLE ONLY public.admin_users
     ADD CONSTRAINT admin_users_pkey PRIMARY KEY (id);
 
 
 --
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.ar_internal_metadata
+ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
 --
--- Name: BookmarkQuestion bookmarkquestion_user_id_question_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: BookmarkQuestion bookmarkquestion_user_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."BookmarkQuestion"
+ALTER TABLE ONLY public."BookmarkQuestion"
     ADD CONSTRAINT bookmarkquestion_user_id_question_id UNIQUE ("userId", "questionId");
 
 
 --
--- Name: ChapterNote chapternote_chapter_id_note_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote chapternote_chapter_id_note_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterNote"
+ALTER TABLE ONLY public."ChapterNote"
     ADD CONSTRAINT chapternote_chapter_id_note_id UNIQUE ("chapterId", "noteId");
 
 
 --
--- Name: ChapterQuestion chapterquestion1_chapter_id_question_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion chapterquestion1_chapter_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestion"
+ALTER TABLE ONLY public."ChapterQuestion"
     ADD CONSTRAINT chapterquestion1_chapter_id_question_id UNIQUE ("chapterId", "questionId");
 
 
 --
--- Name: ChapterQuestionCopy chapterquestion_chapter_id_question_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestionCopy chapterquestion_chapter_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestionCopy"
+ALTER TABLE ONLY public."ChapterQuestionCopy"
     ADD CONSTRAINT chapterquestion_chapter_id_question_id UNIQUE ("chapterId", "questionId");
 
 
 --
--- Name: ChapterTest chaptertest_chapter_id_test_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest chaptertest_chapter_id_test_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTest"
+ALTER TABLE ONLY public."ChapterTest"
     ADD CONSTRAINT chaptertest_chapter_id_test_id UNIQUE ("chapterId", "testId");
 
 
 --
--- Name: ChapterVideo chaptervideo_chapter_id_video_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo chaptervideo_chapter_id_video_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterVideo"
+ALTER TABLE ONLY public."ChapterVideo"
     ADD CONSTRAINT chaptervideo_chapter_id_video_id UNIQUE ("chapterId", "videoId");
 
 
 --
--- Name: doubt_admins doubt_admins_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins doubt_admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_admins
+ALTER TABLE ONLY public.doubt_admins
     ADD CONSTRAINT doubt_admins_pkey PRIMARY KEY (id);
 
 
 --
--- Name: doubt_chat_channels doubt_chat_channels_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_channels doubt_chat_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_channels
+ALTER TABLE ONLY public.doubt_chat_channels
     ADD CONSTRAINT doubt_chat_channels_pkey PRIMARY KEY (id);
 
 
 --
--- Name: doubt_chat_doubt_answers doubt_chat_doubt_answers_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers doubt_chat_doubt_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubt_answers
+ALTER TABLE ONLY public.doubt_chat_doubt_answers
     ADD CONSTRAINT doubt_chat_doubt_answers_pkey PRIMARY KEY (id);
 
 
 --
--- Name: doubt_chat_doubts doubt_chat_doubts_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts doubt_chat_doubts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubts
+ALTER TABLE ONLY public.doubt_chat_doubts
     ADD CONSTRAINT doubt_chat_doubts_pkey PRIMARY KEY (id);
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.schema_migrations
+ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
 --
--- Name: CourseOffer single_applicable_course_offer; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer single_applicable_course_offer; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseOffer"
+ALTER TABLE ONLY public."CourseOffer"
     ADD CONSTRAINT single_applicable_course_offer UNIQUE ("courseId", email, "offerExpiryAt", title);
 
 
 --
--- Name: student_coaches student_coaches_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches student_coaches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.student_coaches
+ALTER TABLE ONLY public.student_coaches
     ADD CONSTRAINT student_coaches_pkey PRIMARY KEY (id);
 
 
 --
--- Name: SubjectChapter subject_chapter_subject_id_chapter_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter subject_chapter_subject_id_chapter_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SubjectChapter"
+ALTER TABLE ONLY public."SubjectChapter"
     ADD CONSTRAINT subject_chapter_subject_id_chapter_id UNIQUE ("chapterId", "subjectId");
 
 
 --
--- Name: ScheduleItemUser u_schedule_item_user_user; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser u_schedule_item_user_user; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemUser"
+ALTER TABLE ONLY public."ScheduleItemUser"
     ADD CONSTRAINT u_schedule_item_user_user UNIQUE ("scheduleItemId", "userId");
 
 
 --
--- Name: UserLogin u_user_id_platform; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin u_user_id_platform; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserLogin"
+ALTER TABLE ONLY public."UserLogin"
     ADD CONSTRAINT u_user_id_platform UNIQUE ("userId", platform);
 
 
 --
--- Name: DuplicateChapter unique_origId_dupId; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter unique_origId_dupId; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DuplicateChapter"
+ALTER TABLE ONLY public."DuplicateChapter"
     ADD CONSTRAINT "unique_origId_dupId" UNIQUE ("origId", "dupId");
 
 
 --
--- Name: NCERTQuestion unique_questionId; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion unique_questionId; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NCERTQuestion"
+ALTER TABLE ONLY public."NCERTQuestion"
     ADD CONSTRAINT "unique_questionId" UNIQUE ("questionId");
 
 
 --
--- Name: SectionContent unique_section_content_entry; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent unique_section_content_entry; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SectionContent"
+ALTER TABLE ONLY public."SectionContent"
     ADD CONSTRAINT unique_section_content_entry UNIQUE ("sectionId", "contentId", "contentType");
 
 
 --
--- Name: Vote unique_vote; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Vote unique_vote; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Vote"
+ALTER TABLE ONLY public."Vote"
     ADD CONSTRAINT unique_vote UNIQUE ("userId", "ownerId", "ownerType");
 
 
 --
--- Name: user_actions user_actions_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions user_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.user_actions
+ALTER TABLE ONLY public.user_actions
     ADD CONSTRAINT user_actions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: UserChapterStat userchapterstat_user_id_chapter_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserChapterStat userchapterstat_user_id_chapter_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserChapterStat"
+ALTER TABLE ONLY public."UserChapterStat"
     ADD CONSTRAINT userchapterstat_user_id_chapter_id UNIQUE ("userId", "chapterId");
 
 
 --
--- Name: UserNoteStat usernotestat_user_id_note_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserNoteStat usernotestat_user_id_note_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserNoteStat"
+ALTER TABLE ONLY public."UserNoteStat"
     ADD CONSTRAINT usernotestat_user_id_note_id UNIQUE ("userId", "noteId");
 
 
 --
--- Name: UserSectionStat usersectionstat_user_id_section_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserSectionStat usersectionstat_user_id_section_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserSectionStat"
+ALTER TABLE ONLY public."UserSectionStat"
     ADD CONSTRAINT usersectionstat_user_id_section_id UNIQUE ("userId", "sectionId");
 
 
 --
--- Name: UserVideoStat uservideostat_user_id_video_id; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserVideoStat uservideostat_user_id_video_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserVideoStat"
+ALTER TABLE ONLY public."UserVideoStat"
     ADD CONSTRAINT uservideostat_user_id_video_id UNIQUE ("userId", "videoId");
 
 
 --
--- Name: version_associations version_associations_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations version_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.version_associations
+ALTER TABLE ONLY public.version_associations
     ADD CONSTRAINT version_associations_pkey PRIMARY KEY (id);
 
 
 --
--- Name: versions versions_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.versions
+ALTER TABLE ONLY public.versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: votes votes_pkey; Type: CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: votes votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.votes
+ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: Advertisement_expiryAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement_expiryAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Advertisement_expiryAt_idx" ON RubyActiveAdmin_test."Advertisement" USING btree ("expiryAt");
+CREATE INDEX "Advertisement_expiryAt_idx" ON public."Advertisement" USING btree ("expiryAt");
 
 
 --
--- Name: Advertisement_platform_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Advertisement_platform_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Advertisement_platform_idx" ON RubyActiveAdmin_test."Advertisement" USING btree (platform);
+CREATE INDEX "Advertisement_platform_idx" ON public."Advertisement" USING btree (platform);
 
 
 --
--- Name: ChapterFlashCard_chapterId_flashCardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard_chapterId_flashCardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "ChapterFlashCard_chapterId_flashCardId_idx" ON RubyActiveAdmin_test."ChapterFlashCard" USING btree ("chapterId", "flashCardId");
+CREATE UNIQUE INDEX "ChapterFlashCard_chapterId_flashCardId_idx" ON public."ChapterFlashCard" USING btree ("chapterId", "flashCardId");
 
 
 --
--- Name: ChapterFlashCard_chapterId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard_chapterId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "ChapterFlashCard_chapterId_idx" ON RubyActiveAdmin_test."ChapterFlashCard" USING btree ("chapterId");
+CREATE INDEX "ChapterFlashCard_chapterId_idx" ON public."ChapterFlashCard" USING btree ("chapterId");
 
 
 --
--- Name: ChapterFlashCard_flashCardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard_flashCardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "ChapterFlashCard_flashCardId_idx" ON RubyActiveAdmin_test."ChapterFlashCard" USING btree ("flashCardId");
+CREATE INDEX "ChapterFlashCard_flashCardId_idx" ON public."ChapterFlashCard" USING btree ("flashCardId");
 
 
 --
--- Name: CourseOffer_email_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_email_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseOffer_email_idx" ON RubyActiveAdmin_test."CourseOffer" USING btree (email);
+CREATE INDEX "CourseOffer_email_idx" ON public."CourseOffer" USING btree (email);
 
 
 --
--- Name: CourseOffer_email_phone_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_email_phone_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseOffer_email_phone_idx" ON RubyActiveAdmin_test."CourseOffer" USING btree (email, phone);
+CREATE INDEX "CourseOffer_email_phone_idx" ON public."CourseOffer" USING btree (email, phone);
 
 
 --
--- Name: CourseOffer_hidden_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_hidden_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseOffer_hidden_idx" ON RubyActiveAdmin_test."CourseOffer" USING btree (hidden);
+CREATE INDEX "CourseOffer_hidden_idx" ON public."CourseOffer" USING btree (hidden);
 
 
 --
--- Name: CourseOffer_offerExpiryAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_offerExpiryAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseOffer_offerExpiryAt_idx" ON RubyActiveAdmin_test."CourseOffer" USING btree ("offerExpiryAt");
+CREATE INDEX "CourseOffer_offerExpiryAt_idx" ON public."CourseOffer" USING btree ("offerExpiryAt");
 
 
 --
--- Name: CourseOffer_phone_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer_phone_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseOffer_phone_idx" ON RubyActiveAdmin_test."CourseOffer" USING btree (phone);
+CREATE INDEX "CourseOffer_phone_idx" ON public."CourseOffer" USING btree (phone);
 
 
 --
--- Name: CourseTest_courseId_testId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest_courseId_testId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "CourseTest_courseId_testId_idx" ON RubyActiveAdmin_test."CourseTest" USING btree ("courseId", "testId");
+CREATE UNIQUE INDEX "CourseTest_courseId_testId_idx" ON public."CourseTest" USING btree ("courseId", "testId");
 
 
 --
--- Name: CourseTestimonial_courseId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CourseTestimonial_courseId_idx" ON RubyActiveAdmin_test."CourseTestimonial" USING btree ("courseId");
+CREATE INDEX "CourseTestimonial_courseId_idx" ON public."CourseTestimonial" USING btree ("courseId");
 
 
 --
--- Name: Course_package; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Course_package; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Course_package" ON RubyActiveAdmin_test."Course" USING btree (package);
+CREATE INDEX "Course_package" ON public."Course" USING btree (package);
 
 
 --
--- Name: CustomerIssue_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CustomerIssue_questionId_idx" ON RubyActiveAdmin_test."CustomerIssue" USING btree ("questionId");
+CREATE INDEX "CustomerIssue_questionId_idx" ON public."CustomerIssue" USING btree ("questionId");
 
 
 --
--- Name: CustomerIssue_videoId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue_videoId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "CustomerIssue_videoId_idx" ON RubyActiveAdmin_test."CustomerIssue" USING btree ("videoId");
+CREATE INDEX "CustomerIssue_videoId_idx" ON public."CustomerIssue" USING btree ("videoId");
 
 
 --
--- Name: DailyUserEvent_courseId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "DailyUserEvent_courseId_idx" ON RubyActiveAdmin_test."DailyUserEvent" USING btree ("courseId");
+CREATE INDEX "DailyUserEvent_courseId_idx" ON public."DailyUserEvent" USING btree ("courseId");
 
 
 --
--- Name: DailyUserEvent_eventCount_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent_eventCount_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "DailyUserEvent_eventCount_idx" ON RubyActiveAdmin_test."DailyUserEvent" USING btree ("eventCount");
+CREATE INDEX "DailyUserEvent_eventCount_idx" ON public."DailyUserEvent" USING btree ("eventCount");
 
 
 --
--- Name: Doubt_answer_doubt_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_answer_doubt_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_answer_doubt_id" ON RubyActiveAdmin_test."DoubtAnswer" USING btree ("doubtId");
+CREATE INDEX "Doubt_answer_doubt_id" ON public."DoubtAnswer" USING btree ("doubtId");
 
 
 --
--- Name: Doubt_answer_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_answer_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_answer_user_id" ON RubyActiveAdmin_test."DoubtAnswer" USING btree ("userId");
+CREATE INDEX "Doubt_answer_user_id" ON public."DoubtAnswer" USING btree ("userId");
 
 
 --
--- Name: Doubt_created_at_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_created_at_idx" ON RubyActiveAdmin_test."Doubt" USING btree ("createdAt");
+CREATE INDEX "Doubt_created_at_idx" ON public."Doubt" USING btree ("createdAt");
 
 
 --
--- Name: Doubt_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_question_id" ON RubyActiveAdmin_test."Doubt" USING btree ("questionId");
+CREATE INDEX "Doubt_question_id" ON public."Doubt" USING btree ("questionId");
 
 
 --
--- Name: Doubt_topic_id_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_topic_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_topic_id_idx" ON RubyActiveAdmin_test."Doubt" USING btree ("topicId");
+CREATE INDEX "Doubt_topic_id_idx" ON public."Doubt" USING btree ("topicId");
 
 
 --
--- Name: Doubt_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Doubt_user_id" ON RubyActiveAdmin_test."Doubt" USING btree ("userId");
+CREATE INDEX "Doubt_user_id" ON public."Doubt" USING btree ("userId");
 
 
 --
--- Name: DuplicateChapter_dupId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter_dupId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "DuplicateChapter_dupId_idx" ON RubyActiveAdmin_test."DuplicateChapter" USING btree ("dupId");
+CREATE INDEX "DuplicateChapter_dupId_idx" ON public."DuplicateChapter" USING btree ("dupId");
 
 
 --
--- Name: DuplicateChapter_dupId_idx1; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter_dupId_idx1; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "DuplicateChapter_dupId_idx1" ON RubyActiveAdmin_test."DuplicateChapter" USING btree ("dupId");
+CREATE UNIQUE INDEX "DuplicateChapter_dupId_idx1" ON public."DuplicateChapter" USING btree ("dupId");
 
 
 --
--- Name: DuplicateChapter_origId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DuplicateChapter_origId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "DuplicateChapter_origId_idx" ON RubyActiveAdmin_test."DuplicateChapter" USING btree ("origId");
+CREATE INDEX "DuplicateChapter_origId_idx" ON public."DuplicateChapter" USING btree ("origId");
 
 
 --
--- Name: FcmToken_platform_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken_platform_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "FcmToken_platform_idx" ON RubyActiveAdmin_test."FcmToken" USING btree (platform);
+CREATE INDEX "FcmToken_platform_idx" ON public."FcmToken" USING btree (platform);
 
 
 --
--- Name: FcmToken_userId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken_userId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "FcmToken_userId_idx" ON RubyActiveAdmin_test."FcmToken" USING btree ("userId");
+CREATE INDEX "FcmToken_userId_idx" ON public."FcmToken" USING btree ("userId");
 
 
 --
--- Name: NCERTQuestion_questionId_idx1; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion_questionId_idx1; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "NCERTQuestion_questionId_idx1" ON RubyActiveAdmin_test."NCERTQuestion" USING btree ("questionId");
+CREATE UNIQUE INDEX "NCERTQuestion_questionId_idx1" ON public."NCERTQuestion" USING btree ("questionId");
 
 
 --
--- Name: Payment_amount_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_amount_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Payment_amount_idx" ON RubyActiveAdmin_test."Payment" USING btree (amount);
+CREATE INDEX "Payment_amount_idx" ON public."Payment" USING btree (amount);
 
 
 --
--- Name: Payment_paymentDesc_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_paymentDesc_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Payment_paymentDesc_idx" ON RubyActiveAdmin_test."Payment" USING btree ("paymentDesc");
+CREATE INDEX "Payment_paymentDesc_idx" ON public."Payment" USING btree ("paymentDesc");
 
 
 --
--- Name: Payment_paymentMode_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_paymentMode_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Payment_paymentMode_idx" ON RubyActiveAdmin_test."Payment" USING btree ("paymentMode");
+CREATE INDEX "Payment_paymentMode_idx" ON public."Payment" USING btree ("paymentMode");
 
 
 --
--- Name: Payment_status_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_status_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Payment_status_idx" ON RubyActiveAdmin_test."Payment" USING btree (status);
+CREATE INDEX "Payment_status_idx" ON public."Payment" USING btree (status);
 
 
 --
--- Name: Payment_userId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment_userId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Payment_userId_idx" ON RubyActiveAdmin_test."Payment" USING btree ("userId");
+CREATE INDEX "Payment_userId_idx" ON public."Payment" USING btree ("userId");
 
 
 --
--- Name: QuestionAnalytics11_correctPercentage_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_correctPercentage_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_correctPercentage_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("correctPercentage");
+CREATE INDEX "QuestionAnalytics11_correctPercentage_idx" ON public."QuestionAnalytics11" USING btree ("correctPercentage");
 
 
 --
--- Name: QuestionAnalytics11_difficultyLevel_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_difficultyLevel_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_difficultyLevel_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("difficultyLevel");
+CREATE INDEX "QuestionAnalytics11_difficultyLevel_idx" ON public."QuestionAnalytics11" USING btree ("difficultyLevel");
 
 
 --
--- Name: QuestionAnalytics11_id_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "QuestionAnalytics11_id_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree (id);
+CREATE UNIQUE INDEX "QuestionAnalytics11_id_idx" ON public."QuestionAnalytics11" USING btree (id);
 
 
 --
--- Name: QuestionAnalytics11_inFullCourse_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_inFullCourse_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_inFullCourse_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("inFullCourse");
+CREATE INDEX "QuestionAnalytics11_inFullCourse_idx" ON public."QuestionAnalytics11" USING btree ("inFullCourse");
 
 
 --
--- Name: QuestionAnalytics11_incorrectReason1Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_incorrectReason1Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_incorrectReason1Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("incorrectReason1Count");
+CREATE INDEX "QuestionAnalytics11_incorrectReason1Count_idx" ON public."QuestionAnalytics11" USING btree ("incorrectReason1Count");
 
 
 --
--- Name: QuestionAnalytics11_incorrectReason2Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_incorrectReason2Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_incorrectReason2Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("incorrectReason2Count");
+CREATE INDEX "QuestionAnalytics11_incorrectReason2Count_idx" ON public."QuestionAnalytics11" USING btree ("incorrectReason2Count");
 
 
 --
--- Name: QuestionAnalytics11_incorrectReason3Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_incorrectReason3Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_incorrectReason3Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("incorrectReason3Count");
+CREATE INDEX "QuestionAnalytics11_incorrectReason3Count_idx" ON public."QuestionAnalytics11" USING btree ("incorrectReason3Count");
 
 
 --
--- Name: QuestionAnalytics11_tagExist_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics11_tagExist_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics11_tagExist_idx" ON RubyActiveAdmin_test."QuestionAnalytics11" USING btree ("tagExist");
+CREATE INDEX "QuestionAnalytics11_tagExist_idx" ON public."QuestionAnalytics11" USING btree ("tagExist");
 
 
 --
--- Name: QuestionAnalytics12_correctPercentage_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_correctPercentage_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_correctPercentage_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("correctPercentage");
+CREATE INDEX "QuestionAnalytics12_correctPercentage_idx" ON public."QuestionAnalytics26" USING btree ("correctPercentage");
 
 
 --
--- Name: QuestionAnalytics12_difficultyLevel_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_difficultyLevel_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_difficultyLevel_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("difficultyLevel");
+CREATE INDEX "QuestionAnalytics12_difficultyLevel_idx" ON public."QuestionAnalytics26" USING btree ("difficultyLevel");
 
 
 --
--- Name: QuestionAnalytics12_id_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_id_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree (id);
+CREATE INDEX "QuestionAnalytics12_id_idx" ON public."QuestionAnalytics26" USING btree (id);
 
 
 --
--- Name: QuestionAnalytics12_id_idx1; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_id_idx1; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "QuestionAnalytics12_id_idx1" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree (id);
+CREATE UNIQUE INDEX "QuestionAnalytics12_id_idx1" ON public."QuestionAnalytics26" USING btree (id);
 
 
 --
--- Name: QuestionAnalytics12_inFullCourse_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_inFullCourse_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_inFullCourse_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("inFullCourse");
+CREATE INDEX "QuestionAnalytics12_inFullCourse_idx" ON public."QuestionAnalytics26" USING btree ("inFullCourse");
 
 
 --
--- Name: QuestionAnalytics12_incorrectReason1Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_incorrectReason1Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_incorrectReason1Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("incorrectReason1Count");
+CREATE INDEX "QuestionAnalytics12_incorrectReason1Count_idx" ON public."QuestionAnalytics26" USING btree ("incorrectReason1Count");
 
 
 --
--- Name: QuestionAnalytics12_incorrectReason2Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_incorrectReason2Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_incorrectReason2Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("incorrectReason2Count");
+CREATE INDEX "QuestionAnalytics12_incorrectReason2Count_idx" ON public."QuestionAnalytics26" USING btree ("incorrectReason2Count");
 
 
 --
--- Name: QuestionAnalytics12_incorrectReason3Count_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_incorrectReason3Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_incorrectReason3Count_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("incorrectReason3Count");
+CREATE INDEX "QuestionAnalytics12_incorrectReason3Count_idx" ON public."QuestionAnalytics26" USING btree ("incorrectReason3Count");
 
 
 --
--- Name: QuestionAnalytics12_tagExist_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics12_tagExist_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionAnalytics12_tagExist_idx" ON RubyActiveAdmin_test."QuestionAnalytics" USING btree ("tagExist");
+CREATE INDEX "QuestionAnalytics12_tagExist_idx" ON public."QuestionAnalytics26" USING btree ("tagExist");
 
 
 --
--- Name: QuestionAnalytics_id25; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_correctPercentage_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "QuestionAnalytics_id25" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree (id);
+CREATE INDEX "QuestionAnalytics13_correctPercentage_idx" ON public."QuestionAnalytics" USING btree ("correctPercentage");
 
 
 --
--- Name: QuestionCourse_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_difficultyLevel_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionCourse_questionId_idx" ON RubyActiveAdmin_test."QuestionCourse" USING btree ("questionId");
+CREATE INDEX "QuestionAnalytics13_difficultyLevel_idx" ON public."QuestionAnalytics" USING btree ("difficultyLevel");
 
 
 --
--- Name: QuestionDetail_questionId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionDetail_questionId" ON RubyActiveAdmin_test."QuestionDetail" USING btree ("questionId");
+CREATE UNIQUE INDEX "QuestionAnalytics13_id_idx" ON public."QuestionAnalytics" USING btree (id);
 
 
 --
--- Name: QuestionExplanation_courseId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_inFullCourse_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionExplanation_courseId_idx" ON RubyActiveAdmin_test."QuestionExplanation" USING btree ("courseId");
+CREATE INDEX "QuestionAnalytics13_inFullCourse_idx" ON public."QuestionAnalytics" USING btree ("inFullCourse");
 
 
 --
--- Name: QuestionExplanation_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_incorrectReason1Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionExplanation_questionId_idx" ON RubyActiveAdmin_test."QuestionExplanation" USING btree ("questionId");
+CREATE INDEX "QuestionAnalytics13_incorrectReason1Count_idx" ON public."QuestionAnalytics" USING btree ("incorrectReason1Count");
 
 
 --
--- Name: QuestionHint_courseId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_incorrectReason2Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionHint_courseId_idx" ON RubyActiveAdmin_test."QuestionHint" USING btree ("courseId");
+CREATE INDEX "QuestionAnalytics13_incorrectReason2Count_idx" ON public."QuestionAnalytics" USING btree ("incorrectReason2Count");
 
 
 --
--- Name: QuestionHint_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_incorrectReason3Count_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "QuestionHint_questionId_idx" ON RubyActiveAdmin_test."QuestionHint" USING btree ("questionId");
+CREATE INDEX "QuestionAnalytics13_incorrectReason3Count_idx" ON public."QuestionAnalytics" USING btree ("incorrectReason3Count");
 
 
 --
--- Name: QuestionTranslation_questionId_language_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics13_tagExist_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "QuestionTranslation_questionId_language_idx" ON RubyActiveAdmin_test."QuestionTranslation" USING btree ("questionId", language);
+CREATE INDEX "QuestionAnalytics13_tagExist_idx" ON public."QuestionAnalytics" USING btree ("tagExist");
 
 
 --
--- Name: Question_ncert_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionAnalytics_id25; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Question_ncert_idx" ON RubyActiveAdmin_test."Question" USING btree (ncert);
+CREATE UNIQUE INDEX "QuestionAnalytics_id25" ON public."QuestionAnalytics25" USING btree (id);
 
 
 --
--- Name: Question_paidAccess_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCourse_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Question_paidAccess_idx" ON RubyActiveAdmin_test."Question" USING btree ("paidAccess");
+CREATE INDEX "QuestionCourse_questionId_idx" ON public."QuestionCourse" USING btree ("questionId");
 
 
 --
--- Name: Question_topicId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionDetail_questionId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Question_topicId_idx" ON RubyActiveAdmin_test."Question" USING btree ("topicId");
+CREATE INDEX "QuestionDetail_questionId" ON public."QuestionDetail" USING btree ("questionId");
 
 
 --
--- Name: Question_type_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Question_type_idx" ON RubyActiveAdmin_test."Question" USING btree (type);
+CREATE INDEX "QuestionExplanation_courseId_idx" ON public."QuestionExplanation" USING btree ("courseId");
 
 
 --
--- Name: ScheduleItem_scheduleId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionExplanation_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "ScheduleItem_scheduleId_idx" ON RubyActiveAdmin_test."ScheduleItem" USING btree ("scheduleId");
+CREATE INDEX "QuestionExplanation_questionId_idx" ON public."QuestionExplanation" USING btree ("questionId");
 
 
 --
--- Name: ScheduleItem_scheduledAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "ScheduleItem_scheduledAt_idx" ON RubyActiveAdmin_test."ScheduleItem" USING btree ("scheduledAt");
+CREATE INDEX "QuestionHint_courseId_idx" ON public."QuestionHint" USING btree ("courseId");
 
 
 --
--- Name: SelfCourseInvitationAccess; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionHint_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "SelfCourseInvitationAccess" ON RubyActiveAdmin_test."CourseInvitation" USING btree (email, "courseId") WHERE ((admin_user_id IS NULL) AND ("createdAt" > '2020-09-09 00:00:00+00'::timestamp with time zone));
+CREATE INDEX "QuestionHint_questionId_idx" ON public."QuestionHint" USING btree ("questionId");
 
 
 --
--- Name: StudentNote_flashcardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation_questionId_language_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_flashcardId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("flashcardId");
+CREATE UNIQUE INDEX "QuestionTranslation_questionId_language_idx" ON public."QuestionTranslation" USING btree ("questionId", language);
 
 
 --
--- Name: StudentNote_noteId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_ncert_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_noteId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("noteId");
+CREATE INDEX "Question_ncert_idx" ON public."Question" USING btree (ncert);
 
 
 --
--- Name: StudentNote_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_paidAccess_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_questionId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("questionId");
+CREATE INDEX "Question_paidAccess_idx" ON public."Question" USING btree ("paidAccess");
 
 
 --
--- Name: StudentNote_userId_flashcardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_topicId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_userId_flashcardId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("userId", "flashcardId");
+CREATE INDEX "Question_topicId_idx" ON public."Question" USING btree ("topicId");
 
 
 --
--- Name: StudentNote_userId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question_type_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_userId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("userId");
+CREATE INDEX "Question_type_idx" ON public."Question" USING btree (type);
 
 
 --
--- Name: StudentNote_userId_noteId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem_scheduleId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_userId_noteId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("userId", "noteId");
+CREATE INDEX "ScheduleItem_scheduleId_idx" ON public."ScheduleItem" USING btree ("scheduleId");
 
 
 --
--- Name: StudentNote_userId_questionId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem_scheduledAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "StudentNote_userId_questionId_idx" ON RubyActiveAdmin_test."StudentNote" USING btree ("userId", "questionId");
+CREATE INDEX "ScheduleItem_scheduledAt_idx" ON public."ScheduleItem" USING btree ("scheduledAt");
 
 
 --
--- Name: SubTopic_topicId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SelfCourseInvitationAccess; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubTopic_topicId" ON RubyActiveAdmin_test."SubTopic" USING btree ("topicId");
+CREATE UNIQUE INDEX "SelfCourseInvitationAccess" ON public."CourseInvitation" USING btree (email, "courseId") WHERE ((admin_user_id IS NULL) AND ("createdAt" > '2020-09-09 00:00:00+00'::timestamp with time zone));
 
 
 --
--- Name: SubjectChapter_chapterId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_flashcardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubjectChapter_chapterId_idx" ON RubyActiveAdmin_test."SubjectChapter" USING btree ("chapterId");
+CREATE INDEX "StudentNote_flashcardId_idx" ON public."StudentNote" USING btree ("flashcardId");
 
 
 --
--- Name: SubjectChapter_deleted_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_noteId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubjectChapter_deleted_idx" ON RubyActiveAdmin_test."SubjectChapter" USING btree (deleted);
+CREATE INDEX "StudentNote_noteId_idx" ON public."StudentNote" USING btree ("noteId");
 
 
 --
--- Name: SubjectChapter_subjectId_chapterId_deleted_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubjectChapter_subjectId_chapterId_deleted_idx" ON RubyActiveAdmin_test."SubjectChapter" USING btree ("subjectId", "chapterId", deleted);
+CREATE INDEX "StudentNote_questionId_idx" ON public."StudentNote" USING btree ("questionId");
 
 
 --
--- Name: SubjectChapter_subjectId_chapterId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_userId_flashcardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubjectChapter_subjectId_chapterId_idx" ON RubyActiveAdmin_test."SubjectChapter" USING btree ("subjectId", "chapterId");
+CREATE INDEX "StudentNote_userId_flashcardId_idx" ON public."StudentNote" USING btree ("userId", "flashcardId");
 
 
 --
--- Name: SubjectChapter_subjectId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_userId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "SubjectChapter_subjectId_idx" ON RubyActiveAdmin_test."SubjectChapter" USING btree ("subjectId");
+CREATE INDEX "StudentNote_userId_idx" ON public."StudentNote" USING btree ("userId");
 
 
 --
--- Name: Subject_courseId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_userId_noteId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Subject_courseId" ON RubyActiveAdmin_test."Subject" USING btree ("courseId");
+CREATE INDEX "StudentNote_userId_noteId_idx" ON public."StudentNote" USING btree ("userId", "noteId");
 
 
 --
--- Name: TargetChapter_chapterId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote_userId_questionId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "TargetChapter_chapterId_idx" ON RubyActiveAdmin_test."TargetChapter" USING btree ("chapterId");
+CREATE INDEX "StudentNote_userId_questionId_idx" ON public."StudentNote" USING btree ("userId", "questionId");
 
 
 --
--- Name: TargetChapter_targetId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubTopic_topicId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "TargetChapter_targetId_idx" ON RubyActiveAdmin_test."TargetChapter" USING btree ("targetId");
+CREATE INDEX "SubTopic_topicId" ON public."SubTopic" USING btree ("topicId");
 
 
 --
--- Name: Target_status_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_chapterId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Target_status_idx" ON RubyActiveAdmin_test."Target" USING btree (status);
+CREATE INDEX "SubjectChapter_chapterId_idx" ON public."SubjectChapter" USING btree ("chapterId");
 
 
 --
--- Name: Target_testId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_deleted_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Target_testId_idx" ON RubyActiveAdmin_test."Target" USING btree ("testId");
+CREATE INDEX "SubjectChapter_deleted_idx" ON public."SubjectChapter" USING btree (deleted);
 
 
 --
--- Name: Target_updatedAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_subjectId_chapterId_deleted_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Target_updatedAt_idx" ON RubyActiveAdmin_test."Target" USING btree ("updatedAt");
+CREATE INDEX "SubjectChapter_subjectId_chapterId_deleted_idx" ON public."SubjectChapter" USING btree ("subjectId", "chapterId", deleted);
 
 
 --
--- Name: Target_userId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_subjectId_chapterId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Target_userId_idx" ON RubyActiveAdmin_test."Target" USING btree ("userId");
+CREATE INDEX "SubjectChapter_subjectId_chapterId_idx" ON public."SubjectChapter" USING btree ("subjectId", "chapterId");
 
 
 --
--- Name: Target_userId_status_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SubjectChapter_subjectId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Target_userId_status_idx" ON RubyActiveAdmin_test."Target" USING btree ("userId", status);
+CREATE INDEX "SubjectChapter_subjectId_idx" ON public."SubjectChapter" USING btree ("subjectId");
 
 
 --
--- Name: Topic_free_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject_courseId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Topic_free_idx" ON RubyActiveAdmin_test."Topic" USING btree (free);
+CREATE INDEX "Subject_courseId" ON public."Subject" USING btree ("courseId");
 
 
 --
--- Name: Topic_subjectId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter_chapterId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "Topic_subjectId" ON RubyActiveAdmin_test."Topic" USING btree ("subjectId");
+CREATE INDEX "TargetChapter_chapterId_idx" ON public."TargetChapter" USING btree ("chapterId");
 
 
 --
--- Name: UserCourse_courseId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter_targetId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserCourse_courseId" ON RubyActiveAdmin_test."UserCourse" USING btree ("courseId");
+CREATE INDEX "TargetChapter_targetId_idx" ON public."TargetChapter" USING btree ("targetId");
 
 
 --
--- Name: UserCourse_expiryAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_status_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserCourse_expiryAt_idx" ON RubyActiveAdmin_test."UserCourse" USING btree ("expiryAt");
+CREATE INDEX "Target_status_idx" ON public."Target" USING btree (status);
 
 
 --
--- Name: UserCourse_startedAt_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_testId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserCourse_startedAt_idx" ON RubyActiveAdmin_test."UserCourse" USING btree ("startedAt");
+CREATE INDEX "Target_testId_idx" ON public."Target" USING btree ("testId");
 
 
 --
--- Name: UserCourse_userId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_updatedAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserCourse_userId" ON RubyActiveAdmin_test."UserCourse" USING btree ("userId");
+CREATE INDEX "Target_updatedAt_idx" ON public."Target" USING btree ("updatedAt");
 
 
 --
--- Name: UserFlashCard_flashCardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_userId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserFlashCard_flashCardId_idx" ON RubyActiveAdmin_test."UserFlashCard" USING btree ("flashCardId");
+CREATE INDEX "Target_userId_idx" ON public."Target" USING btree ("userId");
 
 
 --
--- Name: UserFlashCard_userId_flashCardId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target_userId_status_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "UserFlashCard_userId_flashCardId_idx" ON RubyActiveAdmin_test."UserFlashCard" USING btree ("userId", "flashCardId");
+CREATE INDEX "Target_userId_status_idx" ON public."Target" USING btree ("userId", status);
 
 
 --
--- Name: UserFlashCard_userId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic_free_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "UserFlashCard_userId_idx" ON RubyActiveAdmin_test."UserFlashCard" USING btree ("userId");
+CREATE INDEX "Topic_free_idx" ON public."Topic" USING btree (free);
 
 
 --
--- Name: announcement_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic_subjectId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX announcement_course_id ON RubyActiveAdmin_test."Announcement" USING btree ("courseId");
+CREATE INDEX "Topic_subjectId" ON public."Topic" USING btree ("subjectId");
 
 
 --
--- Name: announcement_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_courseId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX announcement_user_id ON RubyActiveAdmin_test."Announcement" USING btree ("userId");
+CREATE INDEX "UserCourse_courseId" ON public."UserCourse" USING btree ("courseId");
 
 
 --
--- Name: answer_incorrect_answer_reason; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_expiryAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX answer_incorrect_answer_reason ON RubyActiveAdmin_test."Answer" USING btree ("incorrectAnswerReason");
+CREATE INDEX "UserCourse_expiryAt_idx" ON public."UserCourse" USING btree ("expiryAt");
 
 
 --
--- Name: answer_test_attempt_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_startedAt_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX answer_test_attempt_id ON RubyActiveAdmin_test."Answer" USING btree ("testAttemptId");
+CREATE INDEX "UserCourse_startedAt_idx" ON public."UserCourse" USING btree ("startedAt");
 
 
 --
--- Name: answer_user_id_question_id_test_attempt_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse_userId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX answer_user_id_question_id_test_attempt_id ON RubyActiveAdmin_test."Answer" USING btree ("userId", "questionId", "testAttemptId");
+CREATE INDEX "UserCourse_userId" ON public."UserCourse" USING btree ("userId");
 
 
 --
--- Name: bookmark_question_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard_flashCardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX bookmark_question_question_id ON RubyActiveAdmin_test."BookmarkQuestion" USING btree ("questionId");
+CREATE INDEX "UserFlashCard_flashCardId_idx" ON public."UserFlashCard" USING btree ("flashCardId");
 
 
 --
--- Name: bookmark_question_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard_userId_flashCardId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX bookmark_question_user_id ON RubyActiveAdmin_test."BookmarkQuestion" USING btree ("userId");
+CREATE UNIQUE INDEX "UserFlashCard_userId_flashCardId_idx" ON public."UserFlashCard" USING btree ("userId", "flashCardId");
 
 
 --
--- Name: chapter_note_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard_userId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_note_chapter_id ON RubyActiveAdmin_test."ChapterNote" USING btree ("chapterId");
+CREATE INDEX "UserFlashCard_userId_idx" ON public."UserFlashCard" USING btree ("userId");
 
 
 --
--- Name: chapter_note_note_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: announcement_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_note_note_id ON RubyActiveAdmin_test."ChapterNote" USING btree ("noteId");
+CREATE INDEX announcement_course_id ON public."Announcement" USING btree ("courseId");
 
 
 --
--- Name: chapter_question_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: announcement_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_question_chapter_id ON RubyActiveAdmin_test."ChapterQuestion" USING btree ("chapterId");
+CREATE INDEX announcement_user_id ON public."Announcement" USING btree ("userId");
 
 
 --
--- Name: chapter_question_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: answer_incorrect_answer_reason; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_question_question_id ON RubyActiveAdmin_test."ChapterQuestion" USING btree ("questionId");
+CREATE INDEX answer_incorrect_answer_reason ON public."Answer" USING btree ("incorrectAnswerReason");
 
 
 --
--- Name: chapter_task_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: answer_test_attempt_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_task_chapter_id ON RubyActiveAdmin_test."ChapterTask" USING btree ("chapterId");
+CREATE INDEX answer_test_attempt_id ON public."Answer" USING btree ("testAttemptId");
 
 
 --
--- Name: chapter_task_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: answer_user_id_question_id_test_attempt_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_task_task_id ON RubyActiveAdmin_test."ChapterTask" USING btree ("taskId");
+CREATE UNIQUE INDEX answer_user_id_question_id_test_attempt_id ON public."Answer" USING btree ("userId", "questionId", "testAttemptId");
 
 
 --
--- Name: chapter_test_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: bookmark_question_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_test_chapter_id ON RubyActiveAdmin_test."ChapterTest" USING btree ("chapterId");
+CREATE INDEX bookmark_question_question_id ON public."BookmarkQuestion" USING btree ("questionId");
 
 
 --
--- Name: chapter_test_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: bookmark_question_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_test_test_id ON RubyActiveAdmin_test."ChapterTest" USING btree ("testId");
+CREATE INDEX bookmark_question_user_id ON public."BookmarkQuestion" USING btree ("userId");
 
 
 --
--- Name: chapter_video_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_note_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_video_chapter_id ON RubyActiveAdmin_test."ChapterVideo" USING btree ("chapterId");
+CREATE INDEX chapter_note_chapter_id ON public."ChapterNote" USING btree ("chapterId");
 
 
 --
--- Name: chapter_video_stat_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_note_note_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_video_stat_chapter_id ON RubyActiveAdmin_test."ChapterVideoStat" USING btree ("chapterId");
+CREATE INDEX chapter_note_note_id ON public."ChapterNote" USING btree ("noteId");
 
 
 --
--- Name: chapter_video_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_question_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX chapter_video_video_id ON RubyActiveAdmin_test."ChapterVideo" USING btree ("videoId");
+CREATE INDEX chapter_question_chapter_id ON public."ChapterQuestion" USING btree ("chapterId");
 
 
 --
--- Name: common_topic_leader_board_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_question_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX common_topic_leader_board_user_id ON RubyActiveAdmin_test."CommonLeaderBoard" USING btree ("userId");
+CREATE INDEX chapter_question_question_id ON public."ChapterQuestion" USING btree ("questionId");
 
 
 --
--- Name: correctPercentage10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_task_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "correctPercentage10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("correctPercentage");
+CREATE INDEX chapter_task_chapter_id ON public."ChapterTask" USING btree ("chapterId");
 
 
 --
--- Name: course_invitation_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_task_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_invitation_course_id ON RubyActiveAdmin_test."CourseInvitation" USING btree ("courseId");
+CREATE INDEX chapter_task_task_id ON public."ChapterTask" USING btree ("taskId");
 
 
 --
--- Name: course_invitation_email; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_test_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_invitation_email ON RubyActiveAdmin_test."CourseInvitation" USING btree (email);
+CREATE INDEX chapter_test_chapter_id ON public."ChapterTest" USING btree ("chapterId");
 
 
 --
--- Name: course_invitation_phone; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_test_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_invitation_phone ON RubyActiveAdmin_test."CourseInvitation" USING btree (phone);
+CREATE INDEX chapter_test_test_id ON public."ChapterTest" USING btree ("testId");
 
 
 --
--- Name: course_offer_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_video_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_offer_course_id ON RubyActiveAdmin_test."CourseOffer" USING btree ("courseId");
+CREATE INDEX chapter_video_chapter_id ON public."ChapterVideo" USING btree ("chapterId");
 
 
 --
--- Name: course_test_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_video_stat_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_test_course_id ON RubyActiveAdmin_test."CourseTest" USING btree ("courseId");
+CREATE INDEX chapter_video_stat_chapter_id ON public."ChapterVideoStat" USING btree ("chapterId");
 
 
 --
--- Name: course_test_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: chapter_video_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX course_test_test_id ON RubyActiveAdmin_test."CourseTest" USING btree ("testId");
+CREATE INDEX chapter_video_video_id ON public."ChapterVideo" USING btree ("videoId");
 
 
 --
--- Name: customerissueunresolvedflashcard; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: common_topic_leader_board_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX customerissueunresolvedflashcard ON RubyActiveAdmin_test."CustomerIssue" USING btree ("userId", "flashCardId") WHERE (resolved = false);
+CREATE UNIQUE INDEX common_topic_leader_board_user_id ON public."CommonLeaderBoard" USING btree ("userId");
 
 
 --
--- Name: difficultyLevel10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: correctPercentage10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "difficultyLevel10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("difficultyLevel");
+CREATE INDEX "correctPercentage10" ON public."QuestionAnalytics25" USING btree ("correctPercentage");
 
 
 --
--- Name: doubt_admins_doubtId_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_invitation_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "doubt_admins_doubtId_idx" ON RubyActiveAdmin_test.doubt_admins USING btree ("doubtId");
+CREATE INDEX course_invitation_course_id ON public."CourseInvitation" USING btree ("courseId");
 
 
 --
--- Name: inFullCourse10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_invitation_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "inFullCourse10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("inFullCourse");
+CREATE INDEX course_invitation_email ON public."CourseInvitation" USING btree (email);
 
 
 --
--- Name: incorrectReason1Count10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_invitation_phone; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "incorrectReason1Count10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("incorrectReason1Count");
+CREATE INDEX course_invitation_phone ON public."CourseInvitation" USING btree (phone);
 
 
 --
--- Name: incorrectReason2Count10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_offer_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "incorrectReason2Count10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("incorrectReason2Count");
+CREATE INDEX course_offer_course_id ON public."CourseOffer" USING btree ("courseId");
 
 
 --
--- Name: incorrectReason3Count10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_test_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "incorrectReason3Count10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("incorrectReason3Count");
+CREATE INDEX course_test_course_id ON public."CourseTest" USING btree ("courseId");
 
 
 --
--- Name: index_Glossary_on_word; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: course_test_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "index_Glossary_on_word" ON RubyActiveAdmin_test."Glossary" USING btree (word);
+CREATE INDEX course_test_test_id ON public."CourseTest" USING btree ("testId");
 
 
 --
--- Name: index_ScheduleItemAsset_on_ScheduleItem_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: customerissueunresolvedflashcard; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "index_ScheduleItemAsset_on_ScheduleItem_id" ON RubyActiveAdmin_test."ScheduleItemAsset" USING btree ("ScheduleItem_id");
+CREATE UNIQUE INDEX customerissueunresolvedflashcard ON public."CustomerIssue" USING btree ("userId", "flashCardId") WHERE (resolved = false);
 
 
 --
--- Name: index_TestQuestion_on_testId_and_questionId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: difficultyLevel10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "index_TestQuestion_on_testId_and_questionId" ON RubyActiveAdmin_test."TestQuestion" USING btree ("testId", "questionId");
+CREATE INDEX "difficultyLevel10" ON public."QuestionAnalytics25" USING btree ("difficultyLevel");
 
 
 --
--- Name: index_active_admin_comments_on_author_type_and_author_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins_doubtId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_active_admin_comments_on_author_type_and_author_id ON RubyActiveAdmin_test.active_admin_comments USING btree (author_type, author_id);
+CREATE INDEX "doubt_admins_doubtId_idx" ON public.doubt_admins USING btree ("doubtId");
 
 
 --
--- Name: index_active_admin_comments_on_namespace; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: inFullCourse10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_active_admin_comments_on_namespace ON RubyActiveAdmin_test.active_admin_comments USING btree (namespace);
+CREATE INDEX "inFullCourse10" ON public."QuestionAnalytics25" USING btree ("inFullCourse");
 
 
 --
--- Name: index_active_admin_comments_on_resource_type_and_resource_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: incorrectReason1Count10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON RubyActiveAdmin_test.active_admin_comments USING btree (resource_type, resource_id);
+CREATE INDEX "incorrectReason1Count10" ON public."QuestionAnalytics25" USING btree ("incorrectReason1Count");
 
 
 --
--- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: incorrectReason2Count10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_active_storage_attachments_on_blob_id ON RubyActiveAdmin_test.active_storage_attachments USING btree (blob_id);
+CREATE INDEX "incorrectReason2Count10" ON public."QuestionAnalytics25" USING btree ("incorrectReason2Count");
 
 
 --
--- Name: index_active_storage_attachments_uniqueness; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: incorrectReason3Count10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON RubyActiveAdmin_test.active_storage_attachments USING btree (record_type, record_id, name, blob_id);
+CREATE INDEX "incorrectReason3Count10" ON public."QuestionAnalytics25" USING btree ("incorrectReason3Count");
 
 
 --
--- Name: index_active_storage_blobs_on_key; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_Glossary_on_word; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON RubyActiveAdmin_test.active_storage_blobs USING btree (key);
+CREATE UNIQUE INDEX "index_Glossary_on_word" ON public."Glossary" USING btree (word);
 
 
 --
--- Name: index_admin_users_on_email; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_ScheduleItemAsset_on_ScheduleItem_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_admin_users_on_email ON RubyActiveAdmin_test.admin_users USING btree (email);
+CREATE INDEX "index_ScheduleItemAsset_on_ScheduleItem_id" ON public."ScheduleItemAsset" USING btree ("ScheduleItem_id");
 
 
 --
--- Name: index_admin_users_on_reset_password_token; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_TestQuestion_on_testId_and_questionId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON RubyActiveAdmin_test.admin_users USING btree (reset_password_token);
+CREATE UNIQUE INDEX "index_TestQuestion_on_testId_and_questionId" ON public."TestQuestion" USING btree ("testId", "questionId");
 
 
 --
--- Name: index_admin_users_on_role; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_admin_comments_on_author_type_and_author_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_admin_users_on_role ON RubyActiveAdmin_test.admin_users USING btree (role);
+CREATE INDEX index_active_admin_comments_on_author_type_and_author_id ON public.active_admin_comments USING btree (author_type, author_id);
 
 
 --
--- Name: index_dcd_on_dcc_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_admin_comments_on_namespace; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dcd_on_dcc_id ON RubyActiveAdmin_test.doubt_chat_doubts USING btree (doubt_chat_channel_id);
+CREATE INDEX index_active_admin_comments_on_namespace ON public.active_admin_comments USING btree (namespace);
 
 
 --
--- Name: index_dcd_on_dcu_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_admin_comments_on_resource_type_and_resource_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dcd_on_dcu_id ON RubyActiveAdmin_test.doubt_chat_doubts USING btree (doubt_chat_user_id);
+CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON public.active_admin_comments USING btree (resource_type, resource_id);
 
 
 --
--- Name: index_dcda_on_dcd_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dcda_on_dcd_id ON RubyActiveAdmin_test.doubt_chat_doubt_answers USING btree (doubt_chat_doubt_id);
+CREATE INDEX index_active_storage_attachments_on_blob_id ON public.active_storage_attachments USING btree (blob_id);
 
 
 --
--- Name: index_dcda_on_dcu_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_storage_attachments_uniqueness; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dcda_on_dcu_id ON RubyActiveAdmin_test.doubt_chat_doubt_answers USING btree (doubt_chat_user_id);
+CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active_storage_attachments USING btree (record_type, record_id, name, blob_id);
 
 
 --
--- Name: index_doubt_admins_on_admin_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_active_storage_blobs_on_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_doubt_admins_on_admin_user_id ON RubyActiveAdmin_test.doubt_admins USING btree (admin_user_id);
+CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
 
 
 --
--- Name: index_doubt_admins_on_doubtId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_admin_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "index_doubt_admins_on_doubtId" ON RubyActiveAdmin_test.doubt_admins USING btree ("doubtId");
+CREATE UNIQUE INDEX index_admin_users_on_email ON public.admin_users USING btree (email);
 
 
 --
--- Name: index_doubt_chat_doubt_answers_on_ancestry; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_admin_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_doubt_chat_doubt_answers_on_ancestry ON RubyActiveAdmin_test.doubt_chat_doubt_answers USING btree (ancestry);
+CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_users USING btree (reset_password_token);
 
 
 --
--- Name: index_student_coaches_on_studentId_and_coachId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_admin_users_on_role; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "index_student_coaches_on_studentId_and_coachId" ON RubyActiveAdmin_test.student_coaches USING btree ("studentId", "coachId");
+CREATE INDEX index_admin_users_on_role ON public.admin_users USING btree (role);
 
 
 --
--- Name: index_user_actions_on_userId; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_dcd_on_dcc_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "index_user_actions_on_userId" ON RubyActiveAdmin_test.user_actions USING btree ("userId");
+CREATE INDEX index_dcd_on_dcc_id ON public.doubt_chat_doubts USING btree (doubt_chat_channel_id);
 
 
 --
--- Name: index_version_associations_on_foreign_key; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_dcd_on_dcu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_version_associations_on_foreign_key ON RubyActiveAdmin_test.version_associations USING btree (foreign_key_name, foreign_key_id, foreign_type);
+CREATE INDEX index_dcd_on_dcu_id ON public.doubt_chat_doubts USING btree (doubt_chat_user_id);
 
 
 --
--- Name: index_version_associations_on_version_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_dcda_on_dcd_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_version_associations_on_version_id ON RubyActiveAdmin_test.version_associations USING btree (version_id);
+CREATE INDEX index_dcda_on_dcd_id ON public.doubt_chat_doubt_answers USING btree (doubt_chat_doubt_id);
 
 
 --
--- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_dcda_on_dcu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_versions_on_item_type_and_item_id ON RubyActiveAdmin_test.versions USING btree (item_type, item_id);
+CREATE INDEX index_dcda_on_dcu_id ON public.doubt_chat_doubt_answers USING btree (doubt_chat_user_id);
 
 
 --
--- Name: index_versions_on_transaction_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_doubt_admins_on_admin_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_versions_on_transaction_id ON RubyActiveAdmin_test.versions USING btree (transaction_id);
+CREATE INDEX index_doubt_admins_on_admin_user_id ON public.doubt_admins USING btree (admin_user_id);
 
 
 --
--- Name: index_votes_on_votable_id_and_votable_type_and_vote_scope; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_doubt_admins_on_doubtId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_votes_on_votable_id_and_votable_type_and_vote_scope ON RubyActiveAdmin_test.votes USING btree (votable_id, votable_type, vote_scope);
+CREATE UNIQUE INDEX "index_doubt_admins_on_doubtId" ON public.doubt_admins USING btree ("doubtId");
 
 
 --
--- Name: index_votes_on_votable_type_and_votable_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_doubt_chat_doubt_answers_on_ancestry; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_votes_on_votable_type_and_votable_id ON RubyActiveAdmin_test.votes USING btree (votable_type, votable_id);
+CREATE INDEX index_doubt_chat_doubt_answers_on_ancestry ON public.doubt_chat_doubt_answers USING btree (ancestry);
 
 
 --
--- Name: index_votes_on_voter_id_and_voter_type_and_vote_scope; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_student_coaches_on_studentId_and_coachId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_votes_on_voter_id_and_voter_type_and_vote_scope ON RubyActiveAdmin_test.votes USING btree (voter_id, voter_type, vote_scope);
+CREATE UNIQUE INDEX "index_student_coaches_on_studentId_and_coachId" ON public.student_coaches USING btree ("studentId", "coachId");
 
 
 --
--- Name: index_votes_on_voter_type_and_voter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_user_actions_on_userId; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_votes_on_voter_type_and_voter_id ON RubyActiveAdmin_test.votes USING btree (voter_type, voter_id);
+CREATE UNIQUE INDEX "index_user_actions_on_userId" ON public.user_actions USING btree ("userId");
 
 
 --
--- Name: motivation_message_unique; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_version_associations_on_foreign_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX motivation_message_unique ON RubyActiveAdmin_test."Motivation" USING btree (message);
+CREATE INDEX index_version_associations_on_foreign_key ON public.version_associations USING btree (foreign_key_name, foreign_key_id, foreign_type);
 
 
 --
--- Name: notification_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_version_associations_on_version_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX notification_user_id ON RubyActiveAdmin_test."Notification" USING btree ("userId");
+CREATE INDEX index_version_associations_on_version_id ON public.version_associations USING btree (version_id);
 
 
 --
--- Name: question_deleted; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX question_deleted ON RubyActiveAdmin_test."Question" USING btree (deleted);
+CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
 
 
 --
--- Name: question_gin_idx; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: index_versions_on_transaction_id; Type: INDEX; Schema: public; Owner: -
 --
-CREATE EXTENSION pg_trgm WITH schema RubyActiveAdmin_test; 
-CREATE INDEX question_gin_idx ON RubyActiveAdmin_test."Question" USING gin (question RubyActiveAdmin_test.gin_trgm_ops);
 
+CREATE INDEX index_versions_on_transaction_id ON public.versions USING btree (transaction_id);
 
+
+--
+-- Name: index_votes_on_votable_id_and_votable_type_and_vote_scope; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_votes_on_votable_id_and_votable_type_and_vote_scope ON public.votes USING btree (votable_id, votable_type, vote_scope);
+
+
+--
+-- Name: index_votes_on_votable_type_and_votable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_votes_on_votable_type_and_votable_id ON public.votes USING btree (votable_type, votable_id);
+
+
+--
+-- Name: index_votes_on_voter_id_and_voter_type_and_vote_scope; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_votes_on_voter_id_and_voter_type_and_vote_scope ON public.votes USING btree (voter_id, voter_type, vote_scope);
+
+
+--
+-- Name: index_votes_on_voter_type_and_voter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_votes_on_voter_type_and_voter_id ON public.votes USING btree (voter_type, voter_id);
+
+
+--
+-- Name: motivation_message_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX motivation_message_unique ON public."Motivation" USING btree (message);
+
+
+--
+-- Name: notification_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX notification_user_id ON public."Notification" USING btree ("userId");
+
+
+--
+-- Name: question_deleted; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX question_deleted ON public."Question" USING btree (deleted);
+
+
+--
+-- Name: question_gin_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX question_gin_idx ON public."Question" USING gin (question public.gin_trgm_ops);
+
+
 --
--- Name: question_subTopic_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: question_subTopic_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "question_subTopic_question_id" ON RubyActiveAdmin_test."QuestionSubTopic" USING btree ("questionId");
+CREATE INDEX "question_subTopic_question_id" ON public."QuestionSubTopic" USING btree ("questionId");
 
 
 --
--- Name: question_subTopic_subTopic_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: question_subTopic_subTopic_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "question_subTopic_subTopic_id" ON RubyActiveAdmin_test."QuestionSubTopic" USING btree ("subTopicId");
+CREATE INDEX "question_subTopic_subTopic_id" ON public."QuestionSubTopic" USING btree ("subTopicId");
 
 
 --
--- Name: s_e_o_data_owner_id_owner_type; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: s_e_o_data_owner_id_owner_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX s_e_o_data_owner_id_owner_type ON RubyActiveAdmin_test."SEOData" USING btree ("ownerId", "ownerType");
+CREATE UNIQUE INDEX s_e_o_data_owner_id_owner_type ON public."SEOData" USING btree ("ownerId", "ownerType");
 
 
 --
--- Name: scheduled_task_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: scheduled_task_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX scheduled_task_course_id ON RubyActiveAdmin_test."ScheduledTask" USING btree ("courseId");
+CREATE INDEX scheduled_task_course_id ON public."ScheduledTask" USING btree ("courseId");
 
 
 --
--- Name: scheduled_task_expired_at; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: scheduled_task_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX scheduled_task_expired_at ON RubyActiveAdmin_test."ScheduledTask" USING btree ("expiredAt");
+CREATE INDEX scheduled_task_expired_at ON public."ScheduledTask" USING btree ("expiredAt");
 
 
 --
--- Name: scheduled_task_scheduled_at; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: scheduled_task_scheduled_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX scheduled_task_scheduled_at ON RubyActiveAdmin_test."ScheduledTask" USING btree ("scheduledAt");
+CREATE INDEX scheduled_task_scheduled_at ON public."ScheduledTask" USING btree ("scheduledAt");
 
 
 --
--- Name: scheduled_task_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: scheduled_task_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX scheduled_task_task_id ON RubyActiveAdmin_test."ScheduledTask" USING btree ("taskId");
+CREATE INDEX scheduled_task_task_id ON public."ScheduledTask" USING btree ("taskId");
 
 
 --
--- Name: scheduled_task_year; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: scheduled_task_year; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX scheduled_task_year ON RubyActiveAdmin_test."ScheduledTask" USING btree (year);
+CREATE INDEX scheduled_task_year ON public."ScheduledTask" USING btree (year);
 
 
 --
--- Name: single_applicable_course_offer_constraint; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: single_applicable_course_offer_constraint; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX single_applicable_course_offer_constraint ON RubyActiveAdmin_test."CourseOffer" USING btree ("courseId", email, "offerExpiryAt", title);
+CREATE UNIQUE INDEX single_applicable_course_offer_constraint ON public."CourseOffer" USING btree ("courseId", email, "offerExpiryAt", title);
 
 
 --
--- Name: studentnoteuniquencerthighlight; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: studentnoteuniquencerthighlight; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX studentnoteuniquencerthighlight ON RubyActiveAdmin_test."StudentNote" USING btree ("userId", "noteId", details);
+CREATE UNIQUE INDEX studentnoteuniquencerthighlight ON public."StudentNote" USING btree ("userId", "noteId", details);
 
 
 --
--- Name: subject_chapter_chapter_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: subject_chapter_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX subject_chapter_chapter_id ON RubyActiveAdmin_test."SubjectChapter" USING btree ("chapterId");
+CREATE INDEX subject_chapter_chapter_id ON public."SubjectChapter" USING btree ("chapterId");
 
 
 --
--- Name: subject_chapter_deleted; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: subject_chapter_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX subject_chapter_deleted ON RubyActiveAdmin_test."SubjectChapter" USING btree (deleted);
+CREATE INDEX subject_chapter_deleted ON public."SubjectChapter" USING btree (deleted);
 
 
 --
--- Name: subject_chapter_subject_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: subject_chapter_subject_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX subject_chapter_subject_id ON RubyActiveAdmin_test."SubjectChapter" USING btree ("subjectId");
+CREATE INDEX subject_chapter_subject_id ON public."SubjectChapter" USING btree ("subjectId");
 
 
 --
--- Name: subject_leader_board_subject_id3; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: subject_leader_board_subject_id3; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX subject_leader_board_subject_id3 ON RubyActiveAdmin_test."SubjectLeaderBoard" USING btree ("subjectId");
+CREATE INDEX subject_leader_board_subject_id3 ON public."SubjectLeaderBoard" USING btree ("subjectId");
 
 
 --
--- Name: subject_leader_board_user_id_subject_id3; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: subject_leader_board_user_id_subject_id3; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX subject_leader_board_user_id_subject_id3 ON RubyActiveAdmin_test."SubjectLeaderBoard" USING btree ("subjectId", "userId");
+CREATE UNIQUE INDEX subject_leader_board_user_id_subject_id3 ON public."SubjectLeaderBoard" USING btree ("subjectId", "userId");
 
 
 --
--- Name: tagExist10; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: tagExist10; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "tagExist10" ON RubyActiveAdmin_test."QuestionAnalytics25" USING btree ("tagExist");
+CREATE INDEX "tagExist10" ON public."QuestionAnalytics25" USING btree ("tagExist");
 
 
 --
--- Name: task_course_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: task_course_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX task_course_id ON RubyActiveAdmin_test."Task" USING btree ("courseId");
+CREATE INDEX task_course_id ON public."Task" USING btree ("courseId");
 
 
 --
--- Name: task_expired_at; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: task_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX task_expired_at ON RubyActiveAdmin_test."Task" USING btree ("expiredAt");
+CREATE INDEX task_expired_at ON public."Task" USING btree ("expiredAt");
 
 
 --
--- Name: task_parent_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: task_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX task_parent_id ON RubyActiveAdmin_test."Task" USING btree ("parentId");
+CREATE INDEX task_parent_id ON public."Task" USING btree ("parentId");
 
 
 --
--- Name: task_scheduled_at; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: task_scheduled_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX task_scheduled_at ON RubyActiveAdmin_test."Task" USING btree ("scheduledAt");
+CREATE INDEX task_scheduled_at ON public."Task" USING btree ("scheduledAt");
 
 
 --
--- Name: task_year; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: task_year; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX task_year ON RubyActiveAdmin_test."Task" USING btree (year);
+CREATE INDEX task_year ON public."Task" USING btree (year);
 
 
 --
--- Name: testAttempt_postmartem_testAttempt_id_user_id_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: testAttempt_postmartem_testAttempt_id_user_id_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX "testAttempt_postmartem_testAttempt_id_user_id_question_id" ON RubyActiveAdmin_test."TestAttemptPostmartem" USING btree ("testAttemptId", "userId", "questionId");
+CREATE UNIQUE INDEX "testAttempt_postmartem_testAttempt_id_user_id_question_id" ON public."TestAttemptPostmartem" USING btree ("testAttemptId", "userId", "questionId");
 
 
 --
--- Name: test_attempt_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_attempt_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_attempt_test_id ON RubyActiveAdmin_test."TestAttempt" USING btree ("testId");
+CREATE INDEX test_attempt_test_id ON public."TestAttempt" USING btree ("testId");
 
 
 --
--- Name: test_attempt_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_attempt_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_attempt_user_id ON RubyActiveAdmin_test."TestAttempt" USING btree ("userId");
+CREATE INDEX test_attempt_user_id ON public."TestAttempt" USING btree ("userId");
 
 
 --
--- Name: test_creator_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_creator_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_creator_id ON RubyActiveAdmin_test."Test" USING btree ("creatorId");
+CREATE INDEX test_creator_id ON public."Test" USING btree ("creatorId");
 
 
 --
--- Name: test_leader_board_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_leader_board_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_leader_board_test_id ON RubyActiveAdmin_test."TestLeaderBoard" USING btree ("testId");
+CREATE INDEX test_leader_board_test_id ON public."TestLeaderBoard" USING btree ("testId");
 
 
 --
--- Name: test_leader_board_user_id_test_attempt_id_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_leader_board_user_id_test_attempt_id_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX test_leader_board_user_id_test_attempt_id_test_id ON RubyActiveAdmin_test."TestLeaderBoard" USING btree ("userId", "testId", "testAttemptId");
+CREATE UNIQUE INDEX test_leader_board_user_id_test_attempt_id_test_id ON public."TestLeaderBoard" USING btree ("userId", "testId", "testAttemptId");
 
 
 --
--- Name: test_leader_board_user_id_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_leader_board_user_id_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_leader_board_user_id_test_id ON RubyActiveAdmin_test."TestLeaderBoard" USING btree ("testId", "userId");
+CREATE INDEX test_leader_board_user_id_test_id ON public."TestLeaderBoard" USING btree ("testId", "userId");
 
 
 --
--- Name: test_owner_id_owner_type; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_owner_id_owner_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_owner_id_owner_type ON RubyActiveAdmin_test."Test" USING btree ("ownerId", "ownerType");
+CREATE INDEX test_owner_id_owner_type ON public."Test" USING btree ("ownerId", "ownerType");
 
 
 --
--- Name: test_question_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_question_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_question_question_id ON RubyActiveAdmin_test."TestQuestion" USING btree ("questionId");
+CREATE INDEX test_question_question_id ON public."TestQuestion" USING btree ("questionId");
 
 
 --
--- Name: test_question_test_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test_question_test_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX test_question_test_id ON RubyActiveAdmin_test."TestQuestion" USING btree ("testId");
+CREATE INDEX test_question_test_id ON public."TestQuestion" USING btree ("testId");
 
 
 --
--- Name: topic_asset_asset_id_asset_type; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_asset_asset_id_asset_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX topic_asset_asset_id_asset_type ON RubyActiveAdmin_test."TopicAssetOld" USING btree ("assetId", "assetType");
+CREATE INDEX topic_asset_asset_id_asset_type ON public."TopicAssetOld" USING btree ("assetId", "assetType");
 
 
 --
--- Name: topic_asset_deleted; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_asset_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX topic_asset_deleted ON RubyActiveAdmin_test."TopicAssetOld" USING btree (deleted);
+CREATE INDEX topic_asset_deleted ON public."TopicAssetOld" USING btree (deleted);
 
 
 --
--- Name: topic_asset_owner_id_owner_type; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_asset_owner_id_owner_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX topic_asset_owner_id_owner_type ON RubyActiveAdmin_test."TopicAssetOld" USING btree ("ownerId", "ownerType");
+CREATE INDEX topic_asset_owner_id_owner_type ON public."TopicAssetOld" USING btree ("ownerId", "ownerType");
 
 
 --
--- Name: topic_asset_topic_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_asset_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX topic_asset_topic_id ON RubyActiveAdmin_test."TopicAssetOld" USING btree ("topicId");
+CREATE INDEX topic_asset_topic_id ON public."TopicAssetOld" USING btree ("topicId");
 
 
 --
--- Name: topic_leader_board_topic_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_leader_board_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX topic_leader_board_topic_id ON RubyActiveAdmin_test."TopicLeaderBoard" USING btree ("topicId");
+CREATE INDEX topic_leader_board_topic_id ON public."TopicLeaderBoard" USING btree ("topicId");
 
 
 --
--- Name: topic_leader_board_user_id_topic_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: topic_leader_board_user_id_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX topic_leader_board_user_id_topic_id ON RubyActiveAdmin_test."TopicLeaderBoard" USING btree ("userId", "topicId");
+CREATE UNIQUE INDEX topic_leader_board_user_id_topic_id ON public."TopicLeaderBoard" USING btree ("userId", "topicId");
 
 
 --
--- Name: user_course_invitation_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_course_invitation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_course_invitation_id ON RubyActiveAdmin_test."UserCourse" USING btree ("invitationId");
+CREATE INDEX user_course_invitation_id ON public."UserCourse" USING btree ("invitationId");
 
 
 --
--- Name: user_doubt_stat_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_doubt_stat_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_doubt_stat_id ON RubyActiveAdmin_test."UserDoubtStat" USING btree (id);
+CREATE UNIQUE INDEX user_doubt_stat_id ON public."UserDoubtStat" USING btree (id);
 
 
 --
--- Name: user_email; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_email ON RubyActiveAdmin_test."User" USING btree (email);
+CREATE INDEX user_email ON public."User" USING btree (email);
 
 
 --
--- Name: user_highlighted_note_note_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_highlighted_note_note_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_highlighted_note_note_id ON RubyActiveAdmin_test."UserHighlightedNote" USING btree ("noteId");
+CREATE INDEX user_highlighted_note_note_id ON public."UserHighlightedNote" USING btree ("noteId");
 
 
 --
--- Name: user_highlighted_note_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_highlighted_note_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_highlighted_note_user_id ON RubyActiveAdmin_test."UserHighlightedNote" USING btree ("userId");
+CREATE INDEX user_highlighted_note_user_id ON public."UserHighlightedNote" USING btree ("userId");
 
 
 --
--- Name: user_note_stat_note_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_note_stat_note_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_note_stat_note_id ON RubyActiveAdmin_test."UserNoteStat" USING btree ("noteId");
+CREATE INDEX user_note_stat_note_id ON public."UserNoteStat" USING btree ("noteId");
 
 
 --
--- Name: user_note_stat_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_note_stat_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_note_stat_user_id ON RubyActiveAdmin_test."UserNoteStat" USING btree ("userId");
+CREATE INDEX user_note_stat_user_id ON public."UserNoteStat" USING btree ("userId");
 
 
 --
--- Name: user_phone; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_phone; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_phone ON RubyActiveAdmin_test."User" USING btree (phone);
+CREATE INDEX user_phone ON public."User" USING btree (phone);
 
 
 --
--- Name: user_profile_analytics_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_profile_analytics_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_profile_analytics_user_id ON RubyActiveAdmin_test."UserProfileAnalytic" USING btree ("userId");
+CREATE UNIQUE INDEX user_profile_analytics_user_id ON public."UserProfileAnalytic" USING btree ("userId");
 
 
 --
--- Name: user_profile_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_profile_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_profile_user_id ON RubyActiveAdmin_test."UserProfile" USING btree ("userId");
+CREATE UNIQUE INDEX user_profile_user_id ON public."UserProfile" USING btree ("userId");
 
 
 --
--- Name: user_scheduled_task_scheduled_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_scheduled_task_scheduled_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_scheduled_task_scheduled_task_id ON RubyActiveAdmin_test."UserScheduledTask" USING btree ("scheduledTaskId");
+CREATE INDEX user_scheduled_task_scheduled_task_id ON public."UserScheduledTask" USING btree ("scheduledTaskId");
 
 
 --
--- Name: user_scheduled_task_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_scheduled_task_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_scheduled_task_user_id ON RubyActiveAdmin_test."UserScheduledTask" USING btree ("userId");
+CREATE INDEX user_scheduled_task_user_id ON public."UserScheduledTask" USING btree ("userId");
 
 
 --
--- Name: user_scheduled_task_user_id_scheduled_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_scheduled_task_user_id_scheduled_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_scheduled_task_user_id_scheduled_task_id ON RubyActiveAdmin_test."UserScheduledTask" USING btree ("userId", "scheduledTaskId");
+CREATE UNIQUE INDEX user_scheduled_task_user_id_scheduled_task_id ON public."UserScheduledTask" USING btree ("userId", "scheduledTaskId");
 
 
 --
--- Name: user_task_progress_user_id_schedule_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_task_progress_user_id_schedule_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_task_progress_user_id_schedule_id ON RubyActiveAdmin_test."UserTaskProgress" USING btree ("userId", "scheduleId");
+CREATE UNIQUE INDEX user_task_progress_user_id_schedule_id ON public."UserTaskProgress" USING btree ("userId", "scheduleId");
 
 
 --
--- Name: user_task_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_task_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_task_task_id ON RubyActiveAdmin_test."UserTask" USING btree ("taskId");
+CREATE INDEX user_task_task_id ON public."UserTask" USING btree ("taskId");
 
 
 --
--- Name: user_task_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_task_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_task_user_id ON RubyActiveAdmin_test."UserTask" USING btree ("userId");
+CREATE INDEX user_task_user_id ON public."UserTask" USING btree ("userId");
 
 
 --
--- Name: user_task_user_id_task_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_task_user_id_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX user_task_user_id_task_id ON RubyActiveAdmin_test."UserTask" USING btree ("userId", "taskId");
+CREATE UNIQUE INDEX user_task_user_id_task_id ON public."UserTask" USING btree ("userId", "taskId");
 
 
 --
--- Name: user_video_stat_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_video_stat_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_video_stat_user_id ON RubyActiveAdmin_test."UserVideoStat" USING btree ("userId");
+CREATE INDEX user_video_stat_user_id ON public."UserVideoStat" USING btree ("userId");
 
 
 --
--- Name: user_video_stat_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_video_stat_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_video_stat_video_id ON RubyActiveAdmin_test."UserVideoStat" USING btree ("videoId");
+CREATE INDEX user_video_stat_video_id ON public."UserVideoStat" USING btree ("videoId");
 
 
 --
--- Name: video_link_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_link_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX video_link_video_id ON RubyActiveAdmin_test."VideoLink" USING btree ("videoId");
+CREATE INDEX video_link_video_id ON public."VideoLink" USING btree ("videoId");
 
 
 --
--- Name: video_question_question_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_question_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX video_question_question_id ON RubyActiveAdmin_test."VideoQuestion" USING btree ("questionId");
+CREATE INDEX video_question_question_id ON public."VideoQuestion" USING btree ("questionId");
 
 
 --
--- Name: video_question_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_question_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX video_question_video_id ON RubyActiveAdmin_test."VideoQuestion" USING btree ("videoId");
+CREATE INDEX video_question_video_id ON public."VideoQuestion" USING btree ("videoId");
 
 
 --
--- Name: video_subTopic_subTopic_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_subTopic_subTopic_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "video_subTopic_subTopic_id" ON RubyActiveAdmin_test."VideoSubTopic" USING btree ("subTopicId");
+CREATE INDEX "video_subTopic_subTopic_id" ON public."VideoSubTopic" USING btree ("subTopicId");
 
 
 --
--- Name: video_subTopic_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_subTopic_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "video_subTopic_video_id" ON RubyActiveAdmin_test."VideoSubTopic" USING btree ("videoId");
+CREATE INDEX "video_subTopic_video_id" ON public."VideoSubTopic" USING btree ("videoId");
 
 
 --
--- Name: video_test_test_id_video_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: video_test_test_id_video_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX video_test_test_id_video_id ON RubyActiveAdmin_test."VideoTest" USING btree ("testId", "videoId");
+CREATE INDEX video_test_test_id_video_id ON public."VideoTest" USING btree ("testId", "videoId");
 
 
 --
--- Name: vote_owner_id_owner_type; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: vote_owner_id_owner_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX vote_owner_id_owner_type ON RubyActiveAdmin_test."Vote" USING btree ("ownerId", "ownerType");
+CREATE INDEX vote_owner_id_owner_type ON public."Vote" USING btree ("ownerId", "ownerType");
 
 
 --
--- Name: vote_user_id; Type: INDEX; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: vote_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX vote_user_id ON RubyActiveAdmin_test."Vote" USING btree ("userId");
+CREATE INDEX vote_user_id ON public."Vote" USING btree ("userId");
 
 
 --
--- Name: VideoSubTopicQuestion _RETURN; Type: RULE; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopicQuestion _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
-CREATE OR REPLACE VIEW RubyActiveAdmin_test."VideoSubTopicQuestion" AS
+CREATE OR REPLACE VIEW public."VideoSubTopicQuestion" AS
  SELECT "Question".id,
     "VideoSubTopic"."videoId",
     "Question".id AS "questionId"
-   FROM RubyActiveAdmin_test."Question",
-    RubyActiveAdmin_test."QuestionSubTopic",
-    RubyActiveAdmin_test."VideoSubTopic",
-    RubyActiveAdmin_test."QuestionAnalytics",
-    RubyActiveAdmin_test."ChapterQuestion",
-    RubyActiveAdmin_test."SubTopic",
-    RubyActiveAdmin_test."Topic",
-    RubyActiveAdmin_test."SubjectChapter",
-    RubyActiveAdmin_test."Subject"
-  WHERE (("VideoSubTopic"."subTopicId" = "QuestionSubTopic"."subTopicId") AND ("Question".id = "QuestionSubTopic"."questionId") AND ("Question".id = "QuestionAnalytics".id) AND ("QuestionAnalytics"."difficultyLevel" = 'easy'::text) AND ("Question".deleted = false) AND ("Question".type = ANY (ARRAY['MCQ-SO'::RubyActiveAdmin_test."enum_Question_type", 'MCQ-AR'::RubyActiveAdmin_test."enum_Question_type"])) AND ("QuestionSubTopic"."subTopicId" = "SubTopic".id) AND ("SubTopic"."topicId" = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Topic".id = "ChapterQuestion"."chapterId") AND ("SubjectChapter"."chapterId" = "Topic".id) AND ("Subject".id = "SubjectChapter"."subjectId") AND ("Subject"."courseId" = 8));
+   FROM public."Question",
+    public."QuestionSubTopic",
+    public."VideoSubTopic",
+    public."QuestionAnalytics26",
+    public."ChapterQuestion",
+    public."SubTopic",
+    public."Topic",
+    public."SubjectChapter",
+    public."Subject"
+  WHERE (("VideoSubTopic"."subTopicId" = "QuestionSubTopic"."subTopicId") AND ("Question".id = "QuestionSubTopic"."questionId") AND ("Question".id = "QuestionAnalytics26".id) AND ("QuestionAnalytics26"."difficultyLevel" = 'easy'::text) AND ("Question".deleted = false) AND ("Question".type = ANY (ARRAY['MCQ-SO'::public."enum_Question_type", 'MCQ-AR'::public."enum_Question_type"])) AND ("QuestionSubTopic"."subTopicId" = "SubTopic".id) AND ("SubTopic"."topicId" = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Topic".id = "ChapterQuestion"."chapterId") AND ("SubjectChapter"."chapterId" = "Topic".id) AND ("Subject".id = "SubjectChapter"."subjectId") AND ("Subject"."courseId" = 8));
 
 
 --
--- Name: TestAttempt test_attempt_history_update; Type: TRIGGER; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestAttempt test_attempt_history_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER test_attempt_history_update AFTER UPDATE ON RubyActiveAdmin_test."TestAttempt" FOR EACH ROW EXECUTE PROCEDURE RubyActiveAdmin_test.test_attempt_history_update();
+CREATE TRIGGER test_attempt_history_update AFTER UPDATE ON public."TestAttempt" FOR EACH ROW EXECUTE PROCEDURE public.test_attempt_history_update();
 
 
 --
--- Name: test test_history_delete; Type: TRIGGER; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test test_history_delete; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER test_history_delete AFTER DELETE ON RubyActiveAdmin_test.test FOR EACH ROW EXECUTE PROCEDURE RubyActiveAdmin_test.history_delete();
+CREATE TRIGGER test_history_delete AFTER DELETE ON public.test FOR EACH ROW EXECUTE PROCEDURE public.history_delete();
 
 
 --
--- Name: test test_history_insert; Type: TRIGGER; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test test_history_insert; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER test_history_insert AFTER INSERT ON RubyActiveAdmin_test.test FOR EACH ROW EXECUTE PROCEDURE RubyActiveAdmin_test.history_insert();
+CREATE TRIGGER test_history_insert AFTER INSERT ON public.test FOR EACH ROW EXECUTE PROCEDURE public.history_insert();
 
 
 --
--- Name: test test_history_update; Type: TRIGGER; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: test test_history_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER test_history_update AFTER UPDATE ON RubyActiveAdmin_test.test FOR EACH ROW EXECUTE PROCEDURE RubyActiveAdmin_test.history_update();
+CREATE TRIGGER test_history_update AFTER UPDATE ON public.test FOR EACH ROW EXECUTE PROCEDURE public.history_update();
 
 
 --
--- Name: Answer Answer_questionId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer Answer_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Answer"
-    ADD CONSTRAINT "Answer_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+ALTER TABLE ONLY public."Answer"
+    ADD CONSTRAINT "Answer_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
--- Name: Answer Answer_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Answer Answer_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Answer"
-    ADD CONSTRAINT "Answer_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Answer"
+    ADD CONSTRAINT "Answer_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: ChapterMindmap ChapterMindmap_chapterId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap ChapterMindmap_chapterId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterMindmap"
-    ADD CONSTRAINT "ChapterMindmap_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterMindmap"
+    ADD CONSTRAINT "ChapterMindmap_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterMindmap ChapterMindmap_noteId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterMindmap ChapterMindmap_noteId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterMindmap"
-    ADD CONSTRAINT "ChapterMindmap_noteId_fkey" FOREIGN KEY ("noteId") REFERENCES RubyActiveAdmin_test."Note"(id);
+ALTER TABLE ONLY public."ChapterMindmap"
+    ADD CONSTRAINT "ChapterMindmap_noteId_fkey" FOREIGN KEY ("noteId") REFERENCES public."Note"(id);
 
 
 --
--- Name: Comment Comment_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Comment Comment_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Comment"
-    ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Comment"
+    ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CourseOffer CourseOffer_admin_user_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer CourseOffer_admin_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseOffer"
-    ADD CONSTRAINT "CourseOffer_admin_user_id_fkey" FOREIGN KEY (admin_user_id) REFERENCES RubyActiveAdmin_test.admin_users(id);
+ALTER TABLE ONLY public."CourseOffer"
+    ADD CONSTRAINT "CourseOffer_admin_user_id_fkey" FOREIGN KEY (admin_user_id) REFERENCES public.admin_users(id);
 
 
 --
--- Name: CourseOffer CourseOffer_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseOffer CourseOffer_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseOffer"
-    ADD CONSTRAINT "CourseOffer_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."CourseOffer"
+    ADD CONSTRAINT "CourseOffer_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: CourseTestimonial CourseTestimonial_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTestimonial CourseTestimonial_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTestimonial"
-    ADD CONSTRAINT "CourseTestimonial_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."CourseTestimonial"
+    ADD CONSTRAINT "CourseTestimonial_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: CustomerIssue CustomerIssue_typeId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue CustomerIssue_typeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT "CustomerIssue_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES RubyActiveAdmin_test."CustomerIssueType"(id);
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT "CustomerIssue_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES public."CustomerIssueType"(id);
 
 
 --
--- Name: CustomerIssue CustomerIssue_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue CustomerIssue_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT "CustomerIssue_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT "CustomerIssue_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: DailyUserEvent DailyUserEvent_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent DailyUserEvent_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DailyUserEvent"
-    ADD CONSTRAINT "DailyUserEvent_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."DailyUserEvent"
+    ADD CONSTRAINT "DailyUserEvent_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: DailyUserEvent DailyUserEvent_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DailyUserEvent DailyUserEvent_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DailyUserEvent"
-    ADD CONSTRAINT "DailyUserEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."DailyUserEvent"
+    ADD CONSTRAINT "DailyUserEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: DoubtAnswer DoubtAnswer_doubtId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer DoubtAnswer_doubtId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DoubtAnswer"
-    ADD CONSTRAINT "DoubtAnswer_doubtId_fkey" FOREIGN KEY ("doubtId") REFERENCES RubyActiveAdmin_test."Doubt"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."DoubtAnswer"
+    ADD CONSTRAINT "DoubtAnswer_doubtId_fkey" FOREIGN KEY ("doubtId") REFERENCES public."Doubt"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: DoubtAnswer DoubtAnswer_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: DoubtAnswer DoubtAnswer_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."DoubtAnswer"
-    ADD CONSTRAINT "DoubtAnswer_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."DoubtAnswer"
+    ADD CONSTRAINT "DoubtAnswer_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Doubt Doubt_topicId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt Doubt_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
-    ADD CONSTRAINT "Doubt_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES RubyActiveAdmin_test."Topic"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Doubt"
+    ADD CONSTRAINT "Doubt_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES public."Topic"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Doubt Doubt_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt Doubt_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
-    ADD CONSTRAINT "Doubt_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Doubt"
+    ADD CONSTRAINT "Doubt_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: NCERTQuestion NCERTQuestion_questionId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: NCERTQuestion NCERTQuestion_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."NCERTQuestion"
-    ADD CONSTRAINT "NCERTQuestion_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."NCERTQuestion"
+    ADD CONSTRAINT "NCERTQuestion_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: Payment Payment_courseOfferId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment Payment_courseOfferId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Payment"
-    ADD CONSTRAINT "Payment_courseOfferId_fkey" FOREIGN KEY ("courseOfferId") REFERENCES RubyActiveAdmin_test."CourseOffer"(id);
+ALTER TABLE ONLY public."Payment"
+    ADD CONSTRAINT "Payment_courseOfferId_fkey" FOREIGN KEY ("courseOfferId") REFERENCES public."CourseOffer"(id);
 
 
 --
--- Name: Payment Payment_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Payment Payment_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Payment"
-    ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Payment"
+    ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: QuestionCourse QuestionCourse_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCourse QuestionCourse_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionCourse"
-    ADD CONSTRAINT "QuestionCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."QuestionCourse"
+    ADD CONSTRAINT "QuestionCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: QuestionCourse QuestionCourse_questionId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionCourse QuestionCourse_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionCourse"
-    ADD CONSTRAINT "QuestionCourse_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."QuestionCourse"
+    ADD CONSTRAINT "QuestionCourse_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: QuestionTranslation QuestionTranslation_newQuestionId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation QuestionTranslation_newQuestionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionTranslation"
-    ADD CONSTRAINT "QuestionTranslation_newQuestionId_fkey" FOREIGN KEY ("newQuestionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."QuestionTranslation"
+    ADD CONSTRAINT "QuestionTranslation_newQuestionId_fkey" FOREIGN KEY ("newQuestionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: QuestionTranslation QuestionTranslation_questionId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionTranslation QuestionTranslation_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionTranslation"
-    ADD CONSTRAINT "QuestionTranslation_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."QuestionTranslation"
+    ADD CONSTRAINT "QuestionTranslation_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: Question Question_creatorId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question Question_creatorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Question"
-    ADD CONSTRAINT "Question_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Question"
+    ADD CONSTRAINT "Question_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Question Question_subjectId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Question Question_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Question"
-    ADD CONSTRAINT "Question_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES RubyActiveAdmin_test."Subject"(id);
+ALTER TABLE ONLY public."Question"
+    ADD CONSTRAINT "Question_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES public."Subject"(id);
 
 
 --
--- Name: StudentNote StudentNote_noteId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote StudentNote_noteId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentNote"
-    ADD CONSTRAINT "StudentNote_noteId_fkey" FOREIGN KEY ("noteId") REFERENCES RubyActiveAdmin_test."Note"(id);
+ALTER TABLE ONLY public."StudentNote"
+    ADD CONSTRAINT "StudentNote_noteId_fkey" FOREIGN KEY ("noteId") REFERENCES public."Note"(id);
 
 
 --
--- Name: StudentNote StudentNote_videoId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentNote StudentNote_videoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentNote"
-    ADD CONSTRAINT "StudentNote_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."StudentNote"
+    ADD CONSTRAINT "StudentNote_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
--- Name: Subject Subject_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Subject Subject_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Subject"
-    ADD CONSTRAINT "Subject_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Subject"
+    ADD CONSTRAINT "Subject_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Topic Topic_subjectId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Topic Topic_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Topic"
-    ADD CONSTRAINT "Topic_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES RubyActiveAdmin_test."Subject"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Topic"
+    ADD CONSTRAINT "Topic_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES public."Subject"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: UserClaim UserClaim_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserClaim UserClaim_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserClaim"
-    ADD CONSTRAINT "UserClaim_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserClaim"
+    ADD CONSTRAINT "UserClaim_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: UserCourse UserCourse_courseId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse UserCourse_courseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserCourse"
-    ADD CONSTRAINT "UserCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserCourse"
+    ADD CONSTRAINT "UserCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: UserCourse UserCourse_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse UserCourse_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserCourse"
-    ADD CONSTRAINT "UserCourse_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserCourse"
+    ADD CONSTRAINT "UserCourse_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: UserProfile UserProfile_userId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserProfile UserProfile_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserProfile"
-    ADD CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserProfile"
+    ADD CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: VideoAnnotation VideoAnnotation_videoId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoAnnotation VideoAnnotation_videoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoAnnotation"
-    ADD CONSTRAINT "VideoAnnotation_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."VideoAnnotation"
+    ADD CONSTRAINT "VideoAnnotation_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES public."Video"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: VideoTest VideoTest_testId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest VideoTest_testId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoTest"
-    ADD CONSTRAINT "VideoTest_testId_fkey" FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id);
+ALTER TABLE ONLY public."VideoTest"
+    ADD CONSTRAINT "VideoTest_testId_fkey" FOREIGN KEY ("testId") REFERENCES public."Test"(id);
 
 
 --
--- Name: VideoTest VideoTest_videoId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoTest VideoTest_videoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoTest"
-    ADD CONSTRAINT "VideoTest_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."VideoTest"
+    ADD CONSTRAINT "VideoTest_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
--- Name: Video Video_creatorId_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Video Video_creatorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Video"
-    ADD CONSTRAINT "Video_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Video"
+    ADD CONSTRAINT "Video_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CustomerIssue customer_issue_note_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue customer_issue_note_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT customer_issue_note_id_fkey FOREIGN KEY ("noteId") REFERENCES RubyActiveAdmin_test."Note"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT customer_issue_note_id_fkey FOREIGN KEY ("noteId") REFERENCES public."Note"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CustomerIssue customer_issue_question_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue customer_issue_question_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT customer_issue_question_id_fkey FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT customer_issue_question_id_fkey FOREIGN KEY ("questionId") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CustomerIssue customer_issue_test_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue customer_issue_test_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT customer_issue_test_id_fkey FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT customer_issue_test_id_fkey FOREIGN KEY ("testId") REFERENCES public."Test"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CustomerIssue customer_issue_topic_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue customer_issue_topic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT customer_issue_topic_id_fkey FOREIGN KEY ("topicId") REFERENCES RubyActiveAdmin_test."Topic"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT customer_issue_topic_id_fkey FOREIGN KEY ("topicId") REFERENCES public."Topic"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: CustomerIssue customer_issue_video_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerIssue customer_issue_video_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerIssue"
-    ADD CONSTRAINT customer_issue_video_id_fkey FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT customer_issue_video_id_fkey FOREIGN KEY ("videoId") REFERENCES public."Video"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Doubt doubt_note_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt doubt_note_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
-    ADD CONSTRAINT doubt_note_id_fkey FOREIGN KEY ("noteId") REFERENCES RubyActiveAdmin_test."Note"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Doubt"
+    ADD CONSTRAINT doubt_note_id_fkey FOREIGN KEY ("noteId") REFERENCES public."Note"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Doubt doubt_question_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt doubt_question_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
-    ADD CONSTRAINT doubt_question_id_fkey FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Doubt"
+    ADD CONSTRAINT doubt_question_id_fkey FOREIGN KEY ("questionId") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: Doubt doubt_test_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Doubt doubt_test_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Doubt"
-    ADD CONSTRAINT doubt_test_id_fkey FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Doubt"
+    ADD CONSTRAINT doubt_test_id_fkey FOREIGN KEY ("testId") REFERENCES public."Test"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: FcmToken fcm_token_user_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: FcmToken fcm_token_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."FcmToken"
-    ADD CONSTRAINT fcm_token_user_id_fkey FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."FcmToken"
+    ADD CONSTRAINT fcm_token_user_id_fkey FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: ChapterNote fk_chapter_note_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote fk_chapter_note_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterNote"
-    ADD CONSTRAINT fk_chapter_note_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterNote"
+    ADD CONSTRAINT fk_chapter_note_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterNote fk_chapter_note_noteid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterNote fk_chapter_note_noteid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterNote"
-    ADD CONSTRAINT fk_chapter_note_noteid FOREIGN KEY ("noteId") REFERENCES RubyActiveAdmin_test."Note"(id);
+ALTER TABLE ONLY public."ChapterNote"
+    ADD CONSTRAINT fk_chapter_note_noteid FOREIGN KEY ("noteId") REFERENCES public."Note"(id);
 
 
 --
--- Name: ChapterQuestion fk_chapter_question_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion fk_chapter_question_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestion"
-    ADD CONSTRAINT fk_chapter_question_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterQuestion"
+    ADD CONSTRAINT fk_chapter_question_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterQuestionCopy fk_chapter_question_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestionCopy fk_chapter_question_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestionCopy"
-    ADD CONSTRAINT fk_chapter_question_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterQuestionCopy"
+    ADD CONSTRAINT fk_chapter_question_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterQuestion fk_chapter_question_questionid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestion fk_chapter_question_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestion"
-    ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."ChapterQuestion"
+    ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: ChapterQuestionCopy fk_chapter_question_questionid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterQuestionCopy fk_chapter_question_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterQuestionCopy"
-    ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."ChapterQuestionCopy"
+    ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: ChapterTask fk_chapter_task_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask fk_chapter_task_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTask"
-    ADD CONSTRAINT fk_chapter_task_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterTask"
+    ADD CONSTRAINT fk_chapter_task_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterTask fk_chapter_task_taskid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTask fk_chapter_task_taskid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTask"
-    ADD CONSTRAINT fk_chapter_task_taskid FOREIGN KEY ("taskId") REFERENCES RubyActiveAdmin_test."Task"(id);
+ALTER TABLE ONLY public."ChapterTask"
+    ADD CONSTRAINT fk_chapter_task_taskid FOREIGN KEY ("taskId") REFERENCES public."Task"(id);
 
 
 --
--- Name: ChapterTest fk_chapter_test_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest fk_chapter_test_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTest"
-    ADD CONSTRAINT fk_chapter_test_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterTest"
+    ADD CONSTRAINT fk_chapter_test_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterTest fk_chapter_test_testid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterTest fk_chapter_test_testid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterTest"
-    ADD CONSTRAINT fk_chapter_test_testid FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id);
+ALTER TABLE ONLY public."ChapterTest"
+    ADD CONSTRAINT fk_chapter_test_testid FOREIGN KEY ("testId") REFERENCES public."Test"(id);
 
 
 --
--- Name: ChapterVideo fk_chapter_video_chapterid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo fk_chapter_video_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterVideo"
-    ADD CONSTRAINT fk_chapter_video_chapterid FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterVideo"
+    ADD CONSTRAINT fk_chapter_video_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterVideo fk_chapter_video_videoid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterVideo fk_chapter_video_videoid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterVideo"
-    ADD CONSTRAINT fk_chapter_video_videoid FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."ChapterVideo"
+    ADD CONSTRAINT fk_chapter_video_videoid FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
--- Name: CourseTest fk_course_test_courseid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest fk_course_test_courseid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTest"
-    ADD CONSTRAINT fk_course_test_courseid FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."CourseTest"
+    ADD CONSTRAINT fk_course_test_courseid FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: CourseTest fk_course_test_testid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseTest fk_course_test_testid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseTest"
-    ADD CONSTRAINT fk_course_test_testid FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id);
+ALTER TABLE ONLY public."CourseTest"
+    ADD CONSTRAINT fk_course_test_testid FOREIGN KEY ("testId") REFERENCES public."Test"(id);
 
 
 --
--- Name: QuestionSubTopic fk_question_subtopic_questionid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic fk_question_subtopic_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionSubTopic"
-    ADD CONSTRAINT fk_question_subtopic_questionid FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."QuestionSubTopic"
+    ADD CONSTRAINT fk_question_subtopic_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: QuestionSubTopic fk_question_subtopic_subtopicid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: QuestionSubTopic fk_question_subtopic_subtopicid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."QuestionSubTopic"
-    ADD CONSTRAINT fk_question_subtopic_subtopicid FOREIGN KEY ("subTopicId") REFERENCES RubyActiveAdmin_test."SubTopic"(id);
+ALTER TABLE ONLY public."QuestionSubTopic"
+    ADD CONSTRAINT fk_question_subtopic_subtopicid FOREIGN KEY ("subTopicId") REFERENCES public."SubTopic"(id);
 
 
 --
--- Name: Test fk_rails_016fa67182; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Test fk_rails_016fa67182; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Test"
-    ADD CONSTRAINT fk_rails_016fa67182 FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."Test"
+    ADD CONSTRAINT fk_rails_016fa67182 FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: UserTodo fk_rails_058d2d272e; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo fk_rails_058d2d272e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTodo"
-    ADD CONSTRAINT fk_rails_058d2d272e FOREIGN KEY ("subjectId") REFERENCES RubyActiveAdmin_test."Subject"(id);
+ALTER TABLE ONLY public."UserTodo"
+    ADD CONSTRAINT fk_rails_058d2d272e FOREIGN KEY ("subjectId") REFERENCES public."Subject"(id);
 
 
 --
--- Name: CourseDetail fk_rails_259449bff2; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseDetail fk_rails_259449bff2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseDetail"
-    ADD CONSTRAINT fk_rails_259449bff2 FOREIGN KEY ("courseId") REFERENCES RubyActiveAdmin_test."Course"(id);
+ALTER TABLE ONLY public."CourseDetail"
+    ADD CONSTRAINT fk_rails_259449bff2 FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
--- Name: user_actions fk_rails_2796d61ea0; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: user_actions fk_rails_2796d61ea0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.user_actions
-    ADD CONSTRAINT fk_rails_2796d61ea0 FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public.user_actions
+    ADD CONSTRAINT fk_rails_2796d61ea0 FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: UserTodo fk_rails_2f3b933224; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo fk_rails_2f3b933224; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTodo"
-    ADD CONSTRAINT fk_rails_2f3b933224 FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."UserTodo"
+    ADD CONSTRAINT fk_rails_2f3b933224 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: UserTodo fk_rails_322f64ccd2; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserTodo fk_rails_322f64ccd2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserTodo"
-    ADD CONSTRAINT fk_rails_322f64ccd2 FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."UserTodo"
+    ADD CONSTRAINT fk_rails_322f64ccd2 FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: CustomerSupport fk_rails_334df1fef4; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CustomerSupport fk_rails_334df1fef4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CustomerSupport"
-    ADD CONSTRAINT fk_rails_334df1fef4 FOREIGN KEY ("adminUserId") REFERENCES RubyActiveAdmin_test.admin_users(id);
+ALTER TABLE ONLY public."CustomerSupport"
+    ADD CONSTRAINT fk_rails_334df1fef4 FOREIGN KEY ("adminUserId") REFERENCES public.admin_users(id);
 
 
 --
--- Name: CourseInvitation fk_rails_52b958d86d; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: CourseInvitation fk_rails_52b958d86d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."CourseInvitation"
-    ADD CONSTRAINT fk_rails_52b958d86d FOREIGN KEY (admin_user_id) REFERENCES RubyActiveAdmin_test.admin_users(id);
+ALTER TABLE ONLY public."CourseInvitation"
+    ADD CONSTRAINT fk_rails_52b958d86d FOREIGN KEY (admin_user_id) REFERENCES public.admin_users(id);
 
 
 --
--- Name: StudentOnboardingEvents fk_rails_57a5cd7155; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: StudentOnboardingEvents fk_rails_57a5cd7155; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."StudentOnboardingEvents"
-    ADD CONSTRAINT fk_rails_57a5cd7155 FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."StudentOnboardingEvents"
+    ADD CONSTRAINT fk_rails_57a5cd7155 FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: doubt_chat_doubt_answers fk_rails_5cb473102b; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubt_answers fk_rails_5cb473102b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubt_answers
-    ADD CONSTRAINT fk_rails_5cb473102b FOREIGN KEY (doubt_chat_doubt_id) REFERENCES RubyActiveAdmin_test.doubt_chat_doubts(id);
+ALTER TABLE ONLY public.doubt_chat_doubt_answers
+    ADD CONSTRAINT fk_rails_5cb473102b FOREIGN KEY (doubt_chat_doubt_id) REFERENCES public.doubt_chat_doubts(id);
 
 
 --
--- Name: student_coaches fk_rails_5d22b2e06e; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches fk_rails_5d22b2e06e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.student_coaches
-    ADD CONSTRAINT fk_rails_5d22b2e06e FOREIGN KEY ("studentId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public.student_coaches
+    ADD CONSTRAINT fk_rails_5d22b2e06e FOREIGN KEY ("studentId") REFERENCES public."User"(id);
 
 
 --
--- Name: Section fk_rails_69f13a1696; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Section fk_rails_69f13a1696; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Section"
-    ADD CONSTRAINT fk_rails_69f13a1696 FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."Section"
+    ADD CONSTRAINT fk_rails_69f13a1696 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: student_coaches fk_rails_88f9034dec; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: student_coaches fk_rails_88f9034dec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.student_coaches
-    ADD CONSTRAINT fk_rails_88f9034dec FOREIGN KEY ("coachId") REFERENCES RubyActiveAdmin_test.admin_users(id);
+ALTER TABLE ONLY public.student_coaches
+    ADD CONSTRAINT fk_rails_88f9034dec FOREIGN KEY ("coachId") REFERENCES public.admin_users(id);
 
 
 --
--- Name: ChapterFlashCard fk_rails_9414c57a02; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard fk_rails_9414c57a02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterFlashCard"
-    ADD CONSTRAINT fk_rails_9414c57a02 FOREIGN KEY ("flashCardId") REFERENCES RubyActiveAdmin_test."FlashCard"(id);
+ALTER TABLE ONLY public."ChapterFlashCard"
+    ADD CONSTRAINT fk_rails_9414c57a02 FOREIGN KEY ("flashCardId") REFERENCES public."FlashCard"(id);
 
 
 --
--- Name: ChapterFlashCard fk_rails_951f27dd9a; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterFlashCard fk_rails_951f27dd9a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterFlashCard"
-    ADD CONSTRAINT fk_rails_951f27dd9a FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterFlashCard"
+    ADD CONSTRAINT fk_rails_951f27dd9a FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: UserFlashCard fk_rails_997fa74b62; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard fk_rails_997fa74b62; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserFlashCard"
-    ADD CONSTRAINT fk_rails_997fa74b62 FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."UserFlashCard"
+    ADD CONSTRAINT fk_rails_997fa74b62 FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: ChapterGlossary fk_rails_99bcc2b2ef; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary fk_rails_99bcc2b2ef; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterGlossary"
-    ADD CONSTRAINT fk_rails_99bcc2b2ef FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ChapterGlossary"
+    ADD CONSTRAINT fk_rails_99bcc2b2ef FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: UserFlashCard fk_rails_9a2726adae; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserFlashCard fk_rails_9a2726adae; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserFlashCard"
-    ADD CONSTRAINT fk_rails_9a2726adae FOREIGN KEY ("flashCardId") REFERENCES RubyActiveAdmin_test."FlashCard"(id);
+ALTER TABLE ONLY public."UserFlashCard"
+    ADD CONSTRAINT fk_rails_9a2726adae FOREIGN KEY ("flashCardId") REFERENCES public."FlashCard"(id);
 
 
 --
--- Name: version_associations fk_rails_a20d5f0c08; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: version_associations fk_rails_a20d5f0c08; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.version_associations
-    ADD CONSTRAINT fk_rails_a20d5f0c08 FOREIGN KEY (version_id) REFERENCES RubyActiveAdmin_test.versions(id);
+ALTER TABLE ONLY public.version_associations
+    ADD CONSTRAINT fk_rails_a20d5f0c08 FOREIGN KEY (version_id) REFERENCES public.versions(id);
 
 
 --
--- Name: doubt_admins fk_rails_a317c597bf; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_admins fk_rails_a317c597bf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_admins
-    ADD CONSTRAINT fk_rails_a317c597bf FOREIGN KEY ("doubtId") REFERENCES RubyActiveAdmin_test."Doubt"(id);
+ALTER TABLE ONLY public.doubt_admins
+    ADD CONSTRAINT fk_rails_a317c597bf FOREIGN KEY ("doubtId") REFERENCES public."Doubt"(id);
 
 
 --
--- Name: Target fk_rails_a57307e52b; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: Target fk_rails_a57307e52b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Target"
-    ADD CONSTRAINT fk_rails_a57307e52b FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."Target"
+    ADD CONSTRAINT fk_rails_a57307e52b FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: TargetChapter fk_rails_acd040cb85; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: PaymentConversion fk_rails_ab1bd31480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TargetChapter"
-    ADD CONSTRAINT fk_rails_acd040cb85 FOREIGN KEY ("chapterId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."PaymentConversion"
+    ADD CONSTRAINT fk_rails_ab1bd31480 FOREIGN KEY ("paymentId") REFERENCES public."Payment"(id);
 
 
 --
--- Name: UserResult fk_rails_b38a96ebdf; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter fk_rails_acd040cb85; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserResult"
-    ADD CONSTRAINT fk_rails_b38a96ebdf FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."TargetChapter"
+    ADD CONSTRAINT fk_rails_acd040cb85 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ChapterGlossary fk_rails_b426e0b75b; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserResult fk_rails_b38a96ebdf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ChapterGlossary"
-    ADD CONSTRAINT fk_rails_b426e0b75b FOREIGN KEY ("glossaryId") REFERENCES RubyActiveAdmin_test."Glossary"(id);
+ALTER TABLE ONLY public."UserResult"
+    ADD CONSTRAINT fk_rails_b38a96ebdf FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: doubt_chat_doubts fk_rails_b5b3bf45b3; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ChapterGlossary fk_rails_b426e0b75b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.doubt_chat_doubts
-    ADD CONSTRAINT fk_rails_b5b3bf45b3 FOREIGN KEY (doubt_chat_channel_id) REFERENCES RubyActiveAdmin_test.doubt_chat_channels(id);
+ALTER TABLE ONLY public."ChapterGlossary"
+    ADD CONSTRAINT fk_rails_b426e0b75b FOREIGN KEY ("glossaryId") REFERENCES public."Glossary"(id);
 
 
 --
--- Name: TargetChapter fk_rails_b94a981115; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: doubt_chat_doubts fk_rails_b5b3bf45b3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TargetChapter"
-    ADD CONSTRAINT fk_rails_b94a981115 FOREIGN KEY ("targetId") REFERENCES RubyActiveAdmin_test."Target"(id);
+ALTER TABLE ONLY public.doubt_chat_doubts
+    ADD CONSTRAINT fk_rails_b5b3bf45b3 FOREIGN KEY (doubt_chat_channel_id) REFERENCES public.doubt_chat_channels(id);
 
 
 --
--- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TargetChapter fk_rails_b94a981115; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test.active_storage_attachments
-    ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES RubyActiveAdmin_test.active_storage_blobs(id);
+ALTER TABLE ONLY public."TargetChapter"
+    ADD CONSTRAINT fk_rails_b94a981115 FOREIGN KEY ("targetId") REFERENCES public."Target"(id);
 
 
 --
--- Name: SectionContent fk_rails_ccea17349b; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."SectionContent"
-    ADD CONSTRAINT fk_rails_ccea17349b FOREIGN KEY ("sectionId") REFERENCES RubyActiveAdmin_test."Section"(id);
+ALTER TABLE ONLY public.active_storage_attachments
+    ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
 
 
 --
--- Name: ScheduleItem fk_schedule_item_schedule; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: SectionContent fk_rails_ccea17349b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItem"
-    ADD CONSTRAINT fk_schedule_item_schedule FOREIGN KEY ("scheduleId") REFERENCES RubyActiveAdmin_test."Schedule"(id);
+ALTER TABLE ONLY public."SectionContent"
+    ADD CONSTRAINT fk_rails_ccea17349b FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
 
 
 --
--- Name: ScheduleItem fk_schedule_item_topic; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem fk_schedule_item_schedule; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItem"
-    ADD CONSTRAINT fk_schedule_item_topic FOREIGN KEY ("topicId") REFERENCES RubyActiveAdmin_test."Topic"(id);
+ALTER TABLE ONLY public."ScheduleItem"
+    ADD CONSTRAINT fk_schedule_item_schedule FOREIGN KEY ("scheduleId") REFERENCES public."Schedule"(id);
 
 
 --
--- Name: ScheduleItemUser fk_schedule_item_user_schedule_item; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItem fk_schedule_item_topic; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemUser"
-    ADD CONSTRAINT fk_schedule_item_user_schedule_item FOREIGN KEY ("scheduleItemId") REFERENCES RubyActiveAdmin_test."ScheduleItem"(id);
+ALTER TABLE ONLY public."ScheduleItem"
+    ADD CONSTRAINT fk_schedule_item_topic FOREIGN KEY ("topicId") REFERENCES public."Topic"(id);
 
 
 --
--- Name: ScheduleItemUser fk_schedule_item_user_user; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser fk_schedule_item_user_schedule_item; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."ScheduleItemUser"
-    ADD CONSTRAINT fk_schedule_item_user_user FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."ScheduleItemUser"
+    ADD CONSTRAINT fk_schedule_item_user_schedule_item FOREIGN KEY ("scheduleItemId") REFERENCES public."ScheduleItem"(id);
 
 
 --
--- Name: TestQuestion fk_test_question_questionid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: ScheduleItemUser fk_schedule_item_user_user; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestQuestion"
-    ADD CONSTRAINT fk_test_question_questionid FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."ScheduleItemUser"
+    ADD CONSTRAINT fk_schedule_item_user_user FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: TestQuestion fk_test_question_testid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion fk_test_question_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."TestQuestion"
-    ADD CONSTRAINT fk_test_question_testid FOREIGN KEY ("testId") REFERENCES RubyActiveAdmin_test."Test"(id);
+ALTER TABLE ONLY public."TestQuestion"
+    ADD CONSTRAINT fk_test_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: UserLogin fk_user_login_user; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: TestQuestion fk_test_question_testid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserLogin"
-    ADD CONSTRAINT fk_user_login_user FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id);
+ALTER TABLE ONLY public."TestQuestion"
+    ADD CONSTRAINT fk_test_question_testid FOREIGN KEY ("testId") REFERENCES public."Test"(id);
 
 
 --
--- Name: VideoQuestion fk_video_question_questionid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserLogin fk_user_login_user; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoQuestion"
-    ADD CONSTRAINT fk_video_question_questionid FOREIGN KEY ("questionId") REFERENCES RubyActiveAdmin_test."Question"(id);
+ALTER TABLE ONLY public."UserLogin"
+    ADD CONSTRAINT fk_user_login_user FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
--- Name: VideoQuestion fk_video_question_videoid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion fk_video_question_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoQuestion"
-    ADD CONSTRAINT fk_video_question_videoid FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."VideoQuestion"
+    ADD CONSTRAINT fk_video_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
--- Name: VideoSubTopic fk_video_subtopic_subtopicid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoQuestion fk_video_question_videoid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoSubTopic"
-    ADD CONSTRAINT fk_video_subtopic_subtopicid FOREIGN KEY ("subTopicId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."VideoQuestion"
+    ADD CONSTRAINT fk_video_question_videoid FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
--- Name: VideoSubTopic fk_video_subtopic_videoid; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic fk_video_subtopic_subtopicid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."VideoSubTopic"
-    ADD CONSTRAINT fk_video_subtopic_videoid FOREIGN KEY ("videoId") REFERENCES RubyActiveAdmin_test."Video"(id);
+ALTER TABLE ONLY public."VideoSubTopic"
+    ADD CONSTRAINT fk_video_subtopic_subtopicid FOREIGN KEY ("subTopicId") REFERENCES public."Video"(id);
 
 
 --
--- Name: UserCourse invitationId_fk; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: VideoSubTopic fk_video_subtopic_videoid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."UserCourse"
-    ADD CONSTRAINT "invitationId_fk" FOREIGN KEY ("invitationId") REFERENCES RubyActiveAdmin_test."CourseInvitation"(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public."VideoSubTopic"
+    ADD CONSTRAINT fk_video_subtopic_videoid FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
--- Name: Notification notification_user_id_fkey; Type: FK CONSTRAINT; Schema: RubyActiveAdmin_test; Owner: -
+-- Name: UserCourse invitationId_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY RubyActiveAdmin_test."Notification"
-    ADD CONSTRAINT notification_user_id_fkey FOREIGN KEY ("userId") REFERENCES RubyActiveAdmin_test."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserCourse"
+    ADD CONSTRAINT "invitationId_fk" FOREIGN KEY ("invitationId") REFERENCES public."CourseInvitation"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: Notification notification_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Notification"
+    ADD CONSTRAINT notification_user_id_fkey FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO google_ads,RubyActiveAdmin_test;
+SET search_path TO google_ads,public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20190516080816'),
@@ -11904,6 +12122,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201217100134'),
 ('20201217100135'),
 ('20201221104331'),
-('20201221113137');
+('20201221113137'),
+('20210202095311'),
+('20210202102223');
 
 
