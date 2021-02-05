@@ -9,4 +9,6 @@ class DoubtAnswer < ApplicationRecord
     return self.read_attribute(:imgUrl) if self.read_attribute(:imgUrl).include? "http"
     return "https://www.neetprep.com" + self.read_attribute(:imgUrl)
   end
+
+  scope :masterclass_answers, -> { where(:doubtId => Doubt.all_masterclass_paid_student_doubts.ids)}
 end
