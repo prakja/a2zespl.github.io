@@ -73,6 +73,10 @@ class Question < ApplicationRecord
     joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
   }
 
+  scope :subject_id, ->(subject_id) {
+    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+  }
+
   scope :course_ids, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
     joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})

@@ -154,13 +154,13 @@ class QuestionsController < ApplicationController
     end
 
     if @subject == 'physics' && @topicId
-      @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question.subject_name(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'botany' && @topicId
-      @questions = Question.subject_name(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'zoology' && @topicId
-      @questions = Question.subject_name(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     end
     #
     # if @orderBy == 'desc'
