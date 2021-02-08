@@ -5555,6 +5555,39 @@ CREATE MATERIALIZED VIEW public."UserDoubtStat" AS
 
 
 --
+-- Name: UserDpp; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserDpp" (
+    id bigint NOT NULL,
+    "testId" integer,
+    "userId" integer,
+    "subTopics" jsonb DEFAULT '[]'::jsonb,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: UserDpp_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."UserDpp_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: UserDpp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."UserDpp_id_seq" OWNED BY public."UserDpp".id;
+
+
+--
 -- Name: UserFlashCard; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7689,6 +7722,13 @@ ALTER TABLE ONLY public."UserCourse" ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: UserDpp id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserDpp" ALTER COLUMN id SET DEFAULT nextval('public."UserDpp_id_seq"'::regclass);
+
+
+--
 -- Name: UserFlashCard id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9085,6 +9125,14 @@ ALTER TABLE ONLY public."UserClaim"
 
 ALTER TABLE ONLY public."UserCourse"
     ADD CONSTRAINT "UserCourse_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: UserDpp UserDpp_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserDpp"
+    ADD CONSTRAINT "UserDpp_pkey" PRIMARY KEY (id);
 
 
 --
@@ -11766,6 +11814,14 @@ ALTER TABLE ONLY public."CourseInvitation"
 
 
 --
+-- Name: UserDpp fk_rails_53e1646167; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserDpp"
+    ADD CONSTRAINT fk_rails_53e1646167 FOREIGN KEY ("userId") REFERENCES public."User"(id);
+
+
+--
 -- Name: StudentOnboardingEvents fk_rails_57a5cd7155; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11931,6 +11987,14 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 ALTER TABLE ONLY public."SectionContent"
     ADD CONSTRAINT fk_rails_ccea17349b FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
+
+
+--
+-- Name: UserDpp fk_rails_fc0653ccaa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserDpp"
+    ADD CONSTRAINT fk_rails_fc0653ccaa FOREIGN KEY ("testId") REFERENCES public."Test"(id);
 
 
 --
@@ -12124,6 +12188,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201221104331'),
 ('20201221113137'),
 ('20210202095311'),
-('20210202102223');
+('20210202102223'),
+('20210208071043');
 
 
