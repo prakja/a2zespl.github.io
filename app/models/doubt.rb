@@ -18,6 +18,10 @@ class Doubt < ApplicationRecord
     joins(:topic => :subjects).where(topic: {Subject: {courseId: course_id}})
   }
 
+  scope :image_doubts, -> {
+    where('"content" like \'%img%amazonaws%\' and length(regexp_replace("content", \'<img.*?/>\', \'\')) <= 100').or(where('"imgUrl" is not null')).order('"id" DESC');
+  }
+
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
   }
