@@ -141,8 +141,10 @@ ActiveAdmin.register Topic do
         questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
       )
     rescue ActiveRecord::RecordNotUnique => e
-      next if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
-      raise
+      if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
     end
     ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
     respond_to do |format|
