@@ -8,6 +8,9 @@ ActiveAdmin.register DoubtAnswer do
   filter :doubt_topic_id_eq, as: :select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   preserve_default_filters!
 
+  scope :all, show_count: false, default: true
+  scope :masterclass_answers, show_count: false, default: true
+
   controller do
     def scoped_collection
       super.includes(:doubt, user: :user_profile)

@@ -6,6 +6,11 @@
   };
 </script>
 <h1>Probable duplicates from chapter <%=@topic.name%></h1>
+<% if params[:cutoff].blank? %>
+  <%=link_to 'Find More Duplicates (with relaxed matching criteria)', url_for(cutoff: "0.5")%><br /><br />
+<% else %>
+  <%=link_to 'Apply stricter criteria for duplicates', url_for(cutoff: nil)%><br /><br />
+<% end %>
 <style>
 table {border-collapse:collapse; table-layout:fixed; width:100%;}
 table td {border:solid 1px #fab; width:100px; word-wrap:break-word;}
@@ -14,10 +19,11 @@ table td {border:solid 1px #fab; width:100px; word-wrap:break-word;}
   <table>
     <tr><th><h4>Older Question</h4></th><th><h4>Newer Question (Possible duplicate)</h4></th></tr>
     <% @question_pairs.each do |question_pair| %>
-      <tr>
-        <td style="vertical-align: top;"><a target="_blank" href="/admin/questions/<%=question_pair[0]%>/edit"><b>ID: <%=question_pair[0]%></b></a><b><br /><br />Question:</b> <%=raw(question_pair[1])%><div><b>Answer: <%=question_pair[4].blank? || question_pair[6].blank? ? "" : JSON.parse(question_pair[6])[question_pair[4]]%></b><br /><br /></div><b>Explanation:</b> <%=raw(question_pair[8])%><%=button_to 'Remove Question', {controller: 'admin/topics', action: 'remove_duplicate', delete_question_id: question_pair[0], retain_question_id: question_pair[2]}, method: :post, data: { confirm: 'Delete this question and retain the other one?' }%></td>
-        <td style="vertical-align: top;"><a target="_blank" href="/admin/questions/<%=question_pair[2]%>/edit"><b>ID: <%=question_pair[2]%></b></a><b><br /><br />Question:</b> <%=raw(question_pair[3])%><div><b>Answer: <%=question_pair[5].blank? || question_pair[7].blank? ? "" : JSON.parse(question_pair[7])[question_pair[5]]%></b><br /><br /></div><b>Explanation:</b> <%=raw(question_pair[9])%><%=button_to 'Remove Question', {controller: 'admin/topics', action: 'remove_duplicate', delete_question_id: question_pair[2], retain_question_id: question_pair[0]}, method: :post, data: { confirm: 'Delete this question and retain the other one?' }%></td>
+      <tr id="q_<%=question_pair[0]%>_<%=question_pair[2]%>">
+        <td style="vertical-align: top;"><a target="_blank" href="/admin/questions/<%=question_pair[0]%>/edit"><b>ID: <%=question_pair[0]%></b></a><b><br /><br />Question:</b> <%=raw(question_pair[1])%><div><b>Answer: <%=question_pair[4].blank? || question_pair[6].blank? ? "" : JSON.parse(question_pair[6])[question_pair[4]]%></b><br /><br /></div><b>Explanation:</b> <%=raw(question_pair[8])%><%=button_to 'Remove Question', {controller: 'admin/topics', action: 'remove_duplicate', delete_question_id: question_pair[0], retain_question_id: question_pair[2]}, method: :post, remote: true, data: { confirm: 'Delete this question and retain the other one?' }%></td>
+        <td style="vertical-align: top;"><a target="_blank" href="/admin/questions/<%=question_pair[2]%>/edit"><b>ID: <%=question_pair[2]%></b></a><b><br /><br />Question:</b> <%=raw(question_pair[3])%><div><b>Answer: <%=question_pair[5].blank? || question_pair[7].blank? ? "" : JSON.parse(question_pair[7])[question_pair[5]]%></b><br /><br /></div><b>Explanation:</b> <%=raw(question_pair[9])%><%=button_to 'Remove Question', {controller: 'admin/topics', action: 'remove_duplicate', delete_question_id: question_pair[2], retain_question_id: question_pair[0]}, method: :post, remote: true, data: { confirm: 'Delete this question and retain the other one?' }%></td>
       </tr>
+      <tr id="nd_<%=question_pair[0]%>_<%=question_pair[2]%>"><td colspan="2"><%=button_to 'Mark above questions as not duplicate', {controller: 'admin/topics', action: 'mark_not_duplicate', question_id1: question_pair[0], question_id2: question_pair[2]}, method: :post, remote: true, data: { confirm: 'Confirm that questions are not duplicates to hide this entry?' }%></td></tr>
     <% end %>
   </table>
 </div>

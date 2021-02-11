@@ -6,7 +6,7 @@ ActiveAdmin.register DoubtChatDoubt do
   # Uncomment all parameters which should be permitted for assignment
   #
   permit_params :doubt_chat_user_id, :doubt_chat_channel_id, :content, :upvote_count, :downvote_count, :deleted, :doubt_answers_count, :accepted_doubt_answer_id, :cached_votes_total, :cached_votes_score, :cached_votes_up, :cached_votes_down, :cached_weighted_score, :cached_weighted_total, :cached_weighted_average
-  remove_filter :user, :channel, :answers
+  remove_filter :user, :answers, :accepted_answer
   #
   # or
   #
@@ -15,6 +15,11 @@ ActiveAdmin.register DoubtChatDoubt do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
+
+  filter :channel, as: :searchable_select
+  filter :subject_doubts, as: :select, collection: -> {[["Physics", "Phy"], ["Chemistry", "Chem"], ["Biology", "Bio"]]}
+  filter :chapter_doubts, as: :select, collection: -> { DoubtChatChannel.channel_chapter_name }
+  preserve_default_filters!
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
@@ -46,6 +51,25 @@ ActiveAdmin.register DoubtChatDoubt do
       @bio_doubt = DoubtChatDoubt.joins(:channel).where('"doubt_chat_channels"."name" like \'Bio%\'').where(created_at: @start..@end).order(upvote_count: :DESC).first
     end
   end
+
+  index do
+    selectable_column
+    id_column
+    column :content
+    column :upvote_count
+    column :downvote_count
+    column :channel
+    column (:answers) { |doubt|
+      link_to "Answers", "https://discuss.neetprep.com/channels/" + doubt.doubt_chat_channel_id.to_s + "/doubts/" + doubt.id.to_s, target: "_blank"
+    }
+    actions
+  end
+
+  scope :all, default: true
+  scope :unsoved_older_than_one_day
+  scope :physics_doubts
+  scope :chemistry_doubts
+  scope :biology_doubts
 
   action_item :most_voted_doubts, only: :index do
     link_to 'Top Voted Doubt', '/admin/top_voted_doubt'

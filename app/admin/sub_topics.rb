@@ -36,6 +36,15 @@ ActiveAdmin.register SubTopic do
     actions
   end
 
+  csv do
+    column :id
+    column :name
+    column ("Topic") {|sub_topic| sub_topic.topic.name }
+    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty') and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
+      column :questions_count
+    end
+  end
+
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name

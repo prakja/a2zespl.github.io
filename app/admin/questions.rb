@@ -31,7 +31,7 @@ ActiveAdmin.register Question do
   filter :question_analytic_correctPercentage, as: :numeric, label: "Difficulty Level (0-100)"
   # filter :question_analytic_correctPercentage_lt_eq, as: :numeric, label: "Difficulty Level Lower limit (0-100)"
   filter :id_eq, as: :number, label: "Question ID"
-  filter :subject_id_eq, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
+  filter :course_subject_id, as: :select, collection: -> {Subject.full_course_subject_names}, label: "Subject"
   filter :similar_questions, as: :number, label: "Similar to ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
@@ -45,6 +45,7 @@ ActiveAdmin.register Question do
   scope :unused_in_high_yield_bio, show_count: false
   scope :NEET_Test_Questions, show_count: false
   scope :not_neetprep_course, show_count: false
+  scope :bio_masterclass_course, show_count: false
 
   controller do
     def scoped_collection
@@ -55,12 +56,35 @@ ActiveAdmin.register Question do
       end
     end
 
+    def apply_filtering(chain)
+      if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
+        super(chain)
+      else
+        super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
+      end
+    end
+
     def create_token
       payload = {
         "type": "Question",
         "id": params[:id]
       }
       @token_lambda = JsonWebToken.encode_for_lambda(payload)
+    end
+
+    def create_translation
+      if not current_admin_user
+        redirect_to "/admin/login"
+        return
+      end
+      question_id = params[:id]
+      question = Question.find(question_id)
+      QuestionTranslation.create!({
+        questionId: question_id,
+        question: question.question,
+        explanation: question.explanation,
+        language: 'hindi'
+      })
     end
   end
 
@@ -115,6 +139,7 @@ ActiveAdmin.register Question do
 
   show do
     render partial: 'mathjax'
+    render partial: 'questions_show'
     attributes_table do
       row :id
       row :question do |question|
@@ -140,8 +165,11 @@ ActiveAdmin.register Question do
       row :correctOption do |question|
         question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank?
       end
-      row :topics do |question|
+      row "Question Bank Chapters" do |question|
         question.topics
+      end
+      row "Chapter" do |question|
+        question.topic
       end
       row :subTopics do |question|
         question.subTopics
@@ -156,17 +184,21 @@ ActiveAdmin.register Question do
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
     end
+    active_admin_comments
   end
 
   csv do
     column (:id)
-    column (:chapter_id) {|question| question&.topicId}
+    column (:topicId)
     column (:chapter) {|question| question&.topic&.name}
     column (:subject) {|question| question&.subject&.name}
-    # column (:chapter) {|question| question&.topics&.first&.id}
+    column (:chapter_ids) {|question|
+      DuplicateChapter.where(dupId: question&.topics&.first&.id)&.first&.origId
+    }
+    column (:chapter) {|question| question&.topics&.first&.id}
     column (:subtopic_id) {|question| question&.subTopics&.first&.id}
     column (:subtopic) {|question| question&.subTopics&.first&.name}
-    # column (:subject) {|question| question&.topics&.first&.subject&.name}
+    column (:subject) {|question| question&.topics&.first&.subject&.name}
     column (:question) {|question| question.question && question.question.squish}
     column (:explanation) {|question| question.explanation && question.explanation.squish}
     column :options
@@ -190,6 +222,10 @@ ActiveAdmin.register Question do
 
   action_item :set_image_link, only: :show do
     link_to 'Set Image Link', '#'
+  end
+
+  action_item :set_hindi_translation, only: :show do
+    link_to('Set Hindi Translation', '#', class: 'addTranslation')
   end
 
   action_item :see_physics_difficult_questions, only: :index do
@@ -228,6 +264,10 @@ ActiveAdmin.register Question do
     link_to 'From NCERT Marking', request.params.merge(showNCERT: 'yes')
   end
 
+  action_item :delete_from_question_banks, only: :show, if: proc{ current_admin_user.question_bank_owner? } do
+    link_to 'Delete From Question Banks', '/questions/delete_from_question_banks/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This Question will be deleted from all question banks. It will still be available in tests though.'}
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
@@ -237,13 +277,13 @@ ActiveAdmin.register Question do
       f.input :explanation
       f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
       render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
-      f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject
-      render partial: 'hidden_topic_ids', locals: {topics: f.object.topics}
-      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : []))
+      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
+      f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject, label: "Question Chapter", hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
+      render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
+      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : [])) if current_admin_user.question_bank_owner?
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject
       f.input :lock_version, :as => :hidden
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|

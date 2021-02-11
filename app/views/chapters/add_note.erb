@@ -1,0 +1,57 @@
+<head>
+  <style>
+    .noteData {
+      display: inline-block;
+      border: 1px solid;
+      padding: 15px;
+      width: 50%;
+      height: 300px;
+      overflow: auto;
+    }
+    .noteBox {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw(@chapter.name) %> - <%= raw(@chapter.id)%>
+  </div>
+  <div style="margin: 32px">
+    <div>
+      Note Ids:
+      <textarea placeholder="Paste note ids (Required format : 1,2,3,4,5) ..." id="selectedIds"></textarea>
+    </div>
+    <br/></br>
+    <div style="margin-bottom: 30px; margin-top: 15px">
+      <button style="width: 300px; padding: 15px" onclick="addChapterNotes()">Add Notes</button>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+  <script type="text/javascript">
+
+    function addChapterNotes() {
+      let noteIds = $("#selectedIds").val();
+      var noteIdsArray = noteIds.split(",");
+      let chapterId = '<%= @chapter.id %>';
+      if (noteIds == ""){
+        alert('Notes not added');
+        return
+      }
+      let url = window.location.origin + "/chapters/createChapterNote.json";
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          "noteIds": noteIdsArray,
+          "chapterId": '<%= @chapter.id %>'
+        }
+      }).done (function (data) {
+        alert("Done. Current Note Count - " + data.count + ". Duplicates are not added and that's why note count might be unexpected sometimes");
+      }).fail (function (error){
+        alert("failed: " + JSON.stringify(error));
+      });
+    }
+
+  </script>
+</body>

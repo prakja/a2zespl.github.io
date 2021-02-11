@@ -48,7 +48,11 @@ end
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
-    ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
+    DuplicateQuestion.create!(
+      questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+      questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+    );
+    ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
     redirect_to duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"
   end
 
@@ -134,9 +138,13 @@ action_item :duplicate_questions, only: :show do
   link_to 'Duplicate Questions', duplicate_questions_admin_test_path(resource), target: :_blank
 end
 
+action_item :show_leaderboard, only: :show do
+  link_to 'Scholarship LeaderBoard', resource.id.to_s + "/leader_board"
+end
+
   member_action :duplicate_questions do
     @test = Test.find(resource.id)
-    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "TestQuestion" AS "TestQuestion1" ON "TestQuestion1"."testId" = "TestQuestion"."testId" and "TestQuestion"."questionId" < "TestQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "TestQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "TestQuestion1"."testId" = ' + resource.id.to_s);
+    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "TestQuestion" AS "TestQuestion1" ON "TestQuestion1"."testId" = "TestQuestion"."testId" and "TestQuestion"."questionId" < "TestQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "TestQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "TestQuestion1"."testId" = ' + resource.id.to_s + " limit 5");
   end
 
 form do |f|
@@ -179,9 +187,16 @@ controller do
   def leader_board
     @test_id = params[:id]
     test = Test.find(@test_id)
-    @date_time = params[:last_date] || test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
-    # .where('"finishedAt" < ?', @date_time)
-    @attempts = TestAttempt.where(testId: @test_id, completed: true).where(finishedAt: test.createdAt..@date_time).order("(\"result\"->>'totalMarks')::INTEGER ASC").limit(20)
+    if params[:last_date].nil?
+      @date_time = test&.reviewAt || DateTime.now
+      @display_date_time = test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
+    else
+      @date_time = DateTime.parse(params[:last_date])
+      @display_date_time = params[:last_date]
+    end
+    @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(40)
+    @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
+    @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (287)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(20)
   end
 end
 

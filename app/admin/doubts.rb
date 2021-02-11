@@ -21,8 +21,9 @@ ActiveAdmin.register Doubt do
   scope :botany_paid_student_doubts, show_count: false  
   scope :physics_paid_student_doubts, show_count: false
   scope :zoology_paid_student_doubts, show_count: false
-  scope :masterclass_paid_student_doubts, show_count: false
+  # scope :masterclass_paid_student_doubts, show_count: false
   scope :all, show_count: false
+  scope :image_doubts, show_count: false, if: -> { current_admin_user.image_doubts_access? }
   scope :concept_building_student_doubts, show_count: false
   # if current_admin_user.role == "admin"
   #   scope :all
@@ -50,22 +51,22 @@ ActiveAdmin.register Doubt do
     p assign_to
     admin_user_id = AdminUser.where(email: assign_to).first.id
     ids.each do |id|
-      current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').three_days_pending().count
+      current_unsoved_unassigned_count = Doubt.where(id: DoubtAdmin.where(admin_user_id: admin_user_id).pluck(:doubtId)).solved('no').count
       p "Current count: " + current_unsoved_unassigned_count.to_s
       if current_unsoved_unassigned_count.to_i >= 1
-        p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
-        next
-      end
-      doubt = Doubt.find(id)
-      if not doubt.doubt_admin.blank?
-        next
+        doubt = Doubt.find(id)
+        if doubt.doubt_admin.blank?
+          doubt_admin = DoubtAdmin.new()
+          doubt_admin[:doubtId] = id
+          doubt_admin[:admin_user_id] = admin_user_id
+          doubt_admin[:created_at] = Time.now
+          doubt_admin[:created_at] = Time.now
+          doubt_admin.save!
+        else
+          p "Already assigned!"
+        end
       else
-        doubt_admin = DoubtAdmin.new()
-        doubt_admin[:doubtId] = id
-        doubt_admin[:admin_user_id] = admin_user_id
-        doubt_admin[:created_at] = Time.now
-        doubt_admin[:created_at] = Time.now
-        doubt_admin.save
+        p "not assigning coz not blank or max count reached: " + current_unsoved_unassigned_count.to_s
       end
     end
   end

@@ -82,6 +82,8 @@ ActiveAdmin.register Topic do
       li link_to "Question w/o NCERT", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, scope: 'missing_ncert_reference')
       li link_to "Add Practice Questions", '/chapters/add_question/' + topic.id.to_s
       li link_to "Delete Practice Questions", '/chapters/del_question/' + topic.id.to_s
+      li link_to "Add Notes", '/chapters/add_note/' + topic.id.to_s
+      li link_to "Delete Notes", '/chapters/del_note/' + topic.id.to_s
     end
   end
 
@@ -104,7 +106,19 @@ ActiveAdmin.register Topic do
 
   member_action :duplicate_questions do
     @topic = Topic.find(resource.id)
-    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+    cutoff = params[:cutoff].to_f > 0 ? params[:cutoff] : "0.7"
+    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "Question"."type" = \'MCQ-SO\' and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and "Question1"."type" = \'MCQ-SO\' and not exists (select * from "NotDuplicateQuestion" where "questionId1" = "Question"."id" and "questionId2" = "Question1"."id") and similarity("Question1"."question", "Question"."question") > ' + cutoff + ' and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+  end
+
+  member_action :mark_not_duplicate, method: :post do
+    NotDuplicateQuestion.create!(
+      questionId1: params[:question_id1].to_i,
+      questionId2: params[:question_id2].to_i
+    )
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"}
+      format.js
+    end
   end
 
   member_action :question_issues do
@@ -121,8 +135,22 @@ ActiveAdmin.register Topic do
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
-    ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + 'and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
-    redirect_to duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"
+    begin
+      DuplicateQuestion.create!(
+        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
+    ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "chapterId" having count(*) > 1);')
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Duplicate question removed from chapter questions!"}
+      format.js
+    end
   end
 
   action_item :print_flashcards, only: :show do

@@ -38,6 +38,8 @@ Rails.application.routes.draw do
   post "questions/remove_video_link_hint", to: "questions#remove_video_link_hint"
   get "questions/test_question_pdf/:id/", to: 'questions#test_question_pdf'
   post "questions/sync_course_questions/:id", to: "questions#sync_course_questions"
+  post "questions/delete_from_question_banks/:id", to: "questions#delete_from_question_banks"
+  post "questions/sync_subject_questions/:id", to: "questions#sync_subject_questions"
   get "videos/add_chapter_video/:videoId", to: "videos#add_chapter_video"
   post "videos/getSubjectsList"
   post "videos/getChaptersList"
@@ -50,6 +52,8 @@ Rails.application.routes.draw do
   get "tests/add_question/:testId", to: "tests#add_question"
   get "chapters/add_question/:chapterId", to: "chapters#add_question"
   get "chapters/del_question/:chapterId", to: "chapters#del_question"
+  get "chapters/add_note/:chapterId", to: "chapters#add_note"
+  get "chapters/del_note/:chapterId", to: "chapters#del_note"
   get "tests/crud_question/:testId", to: "tests#crud_question"
   post "tests/remove_test_question", to: "tests#remove_test_question"
   post "tests/update_and_sort", to: "tests#update_and_sort"
@@ -61,6 +65,8 @@ Rails.application.routes.draw do
   post "tests/createTestQuestion"
   post "chapters/createChapterQuestion"
   post "chapters/deleteChapterQuestion"
+  post "chapters/createChapterNote"
+  post "chapters/deleteChapterNote"
   post "tests/addTestQuestionSequence"
   post "tests/createChapterTest"
   get "course_details/booster"
@@ -106,5 +112,7 @@ Rails.application.routes.draw do
     get "/top_voted_doubt", to: "doubt_chat_doubts#most_voted"
 
     get "tests/:id/leader_board", to: "tests#leader_board"
+
+    post "/questions/:id/create_translation", to: "questions#create_translation"
   end
 end

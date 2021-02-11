@@ -33,10 +33,39 @@ class QuestionsController < ApplicationController
   end
 
   def sync_course_questions
+    if not current_admin_user.admin?
+      flash[:error] = "Unauthorized access to sync_course_questions"
+      redirect_to "/admin/courses/" + id.to_s
+      return
+    end
     id = params.require(:id)
     ActiveRecord::Base.connection.execute('SELECT "SyncCourseQuestions" (' + id.to_s + ')')
     flash[:notice] = "Sync Completed!"
     redirect_to "/admin/courses/" + id.to_s
+  end
+
+  def sync_subject_questions
+    if not current_admin_user.admin?
+      flash[:error] = "Unauthorized access to sync_subject_questions"
+      redirect_to "/admin/subjects/" + id.to_s
+      return
+    end
+    id = params.require(:id)
+    ActiveRecord::Base.connection.execute('SELECT "SyncSubjectQuestions" (' + id.to_s + ')')
+    flash[:notice] = "Sync Completed!"
+    redirect_to "/admin/subjects/" + id.to_s
+  end
+
+  def delete_from_question_banks
+    if not current_admin_user.question_bank_owner?
+      flash[:error] = "Unauthorized access to delete_from_question_banks"
+      redirect_to "/admin/questions/" + id.to_s
+      return
+    end
+    id = params.require(:id)
+    ChapterQuestion.where(questionId: id.to_i).destroy_all
+    flash[:notice] = "Deleted this question from all question banks!"
+    redirect_to "/admin/questions/" + id.to_s
   end
 
   def translation_pdf
@@ -61,13 +90,13 @@ class QuestionsController < ApplicationController
     end
 
     if @subject == 'physics' && @topicId
-      @questions = Question. subject_id(55).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question. subject_ids(55).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question. subject_id(54).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question. subject_ids(54).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'botany' && @topicId
-      @questions = Question. subject_id(53).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question. subject_ids(53).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'zoology' && @topicId
-      @questions = Question. subject_id(56).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question. subject_ids(56).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     end
 
     p @questions
@@ -125,13 +154,13 @@ class QuestionsController < ApplicationController
     end
 
     if @subject == 'physics' && @topicId
-      @questions = Question.subject_name(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(55).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question.subject_name(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(54).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'botany' && @topicId
-      @questions = Question.subject_name(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(53).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     elsif @subject == 'zoology' && @topicId
-      @questions = Question.subject_name(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
+      @questions = Question.subject_id(56).topic(@topicId).includes(:question_analytic).where("QuestionAnalytics": {difficultyLevel: @level != nil ? @level : ['easy', 'medium', 'difficult']}).order(correctPercentage: :asc).limit(@limit);
     end
     #
     # if @orderBy == 'desc'

@@ -1,29 +1,78 @@
 .container
   form method='get' action=""
     label for="last_date" Select End Date
-    input type="datetime-local" id="last_date" name="last_date" value="#{@date_time}"
+    input type="datetime-local" id="last_date" name="last_date" value="#{@display_date_time}"
     input type="submit"
 
   div style="margin-top: 32px;"
-    button onclick='exportTableToCSV("#{@test_id + '-leaderboard.csv'}")' Download CSV
-
-  table style="margin-top: 32px;"
-    tr
-      th User
-      th Email
-      th Phone
-      th Score
-    - @attempts.each do |attempt|
+    h3 Paid Students
+    div style="margin-top: 32px;"
+      button onclick='exportTableToCSV("#{@test_id + '-paid-leaderboard.csv'}", "table.paid tr")' Download Paid CSV
+    table.paid style="margin-top: 32px;"
       tr
-        td
-          a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
-        td = attempt.user.email || attempt.user.user_profile.email
-        td = attempt.user.phone || attempt.user.user_profile.phone
-        td = attempt.result["totalMarks"]
+        th User
+        th Email
+        th Phone
+        th Finished At
+        th Duration
+        th Score
+      - @paid_attempts.each do |attempt|
+        tr
+          td
+            a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
+          td = attempt.user.email || attempt.user.user_profile.email
+          td = attempt.user.phone || attempt.user.user_profile.phone
+          td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = raw(((attempt.updatedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.updatedAt.present?
+          td = attempt.result["totalMarks"]
+
+  div style="margin-top: 32px;"
+    h3 Inspire Batch Students
+    div style="margin-top: 32px;"
+      button onclick='exportTableToCSV("#{@test_id + '-inspire-leaderboard.csv'}", "table.inspire tr")' Download Inspire CSV
+    table.inspire style="margin-top: 32px;"
+      tr
+        th User
+        th Email
+        th Phone
+        th Finished At
+        th Duration
+        th Score
+      - @inspire_attempts.each do |attempt|
+        tr
+          td
+            a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
+          td = attempt.user.email || attempt.user.user_profile.email
+          td = attempt.user.phone || attempt.user.user_profile.phone
+          td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = raw(((attempt.updatedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.updatedAt.present?
+          td = attempt.result["totalMarks"]
+
+  div style="margin-top: 32px;"
+    h3 Achiever Batch Students
+    div style="margin-top: 32px;"
+      button onclick='exportTableToCSV("#{@test_id + '-achiever-leaderboard.csv'}", "table.achiever tr")' Download Achiever CSV
+    table.achiever style="margin-top: 32px;"
+      tr
+        th User
+        th Email
+        th Phone
+        th Finished At
+        th Duration
+        th Score
+      - @achiever_attempts.each do |attempt|
+        tr
+          td
+            a target="_blank" href="#{"/admin/users/" + attempt.user.id.to_s}" = attempt.user.name
+          td = attempt.user.email || attempt.user.user_profile.email
+          td = attempt.user.phone || attempt.user.user_profile.phone
+          td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = raw(((attempt.updatedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.updatedAt.present?
+          td = attempt.result["totalMarks"]
 javascript:
-  function exportTableToCSV(filename) {
+  function exportTableToCSV(filename, class_name) {
     var csv = [];
-    var rows = document.querySelectorAll("table tr");
+    var rows = document.querySelectorAll(class_name);
     
     for (var i = 0; i < rows.length; i++) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
