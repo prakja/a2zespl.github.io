@@ -21,5 +21,24 @@ ActiveAdmin.register NcertSentence do
   filter :noteId_eq
   filter :sectionId_eq
   preserve_default_filters!
+
+  form do |f|
+    f.inputs "NCERT Sentence" do
+      f.input :chapter, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
+      f.input :sectionId
+      f.input :noteId
+      f.input :sentence
+    end
+    f.actions
+  end
+
+  controller do
+    def find_by_sentence
+      sentence = params.require(:sentence)
+      ncert_sentence = NcertSentence.where('to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)', sentence.gsub(' ', " & "))
+      print(ncert_sentence.to_json)
+      render json: ncert_sentence.to_json, status: 200
+    end
+  end
   
 end

@@ -1,5 +1,6 @@
 <%= render partial: "tinymce_ext_scripts" %>
 <%= render partial: "tinymce_youtube_plugin" %>
+<%= render partial: "tinymce_ncert_sentence_plugin" %>
 <script>
 tinymce.init({
   selector: '#question_question',
@@ -27,13 +28,13 @@ tinymce.init({
 });
 tinymce.init({
   selector: '#question_explanation',
-  plugins: "link image code paste media youtubeIframe",
+  plugins: "link image code paste media youtubeIframe ncertSentence",
   // TODO: to be added only if secure loading of plugin.js below is not working
   // content_security_policy: "default-src 'self' *.wiris.net *.amazonaws.com *.cloudflare.com; style-src 'self' 'unsafe-inline' *.cloudflare.com; img-src * data:;",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   // TODO: not sure why was this required but language going undefined in wiris editor somehow and gets fixed now
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,youtubeIframe',
+  toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,youtubeIframe,ncertSentence',
   paste_data_images: true,
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better? this is especially added for data image which exist and images_dataimg_filter was anyway getting called for that

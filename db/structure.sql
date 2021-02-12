@@ -10820,6 +10820,13 @@ CREATE UNIQUE INDEX motivation_message_unique ON public."Motivation" USING btree
 
 
 --
+-- Name: ncert_sentence_gin_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_sentence_gin_idx ON public."NcertSentence" USING gin (to_tsvector('english'::regconfig, (sentence)::text));
+
+
+--
 -- Name: ncert_sentence_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12313,6 +12320,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210202102223'),
 ('20210208071043'),
 ('20210211061357'),
-('20210212061637');
+('20210212061637'),
+('20210212084401');
 
 
