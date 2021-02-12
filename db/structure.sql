@@ -4156,8 +4156,8 @@ CREATE TABLE public."QuestionSubTopic" (
     id integer NOT NULL,
     "questionId" integer,
     "subTopicId" integer,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -4286,6 +4286,17 @@ CREATE SEQUENCE public."Quiz_id_seq"
 --
 
 ALTER SEQUENCE public."Quiz_id_seq" OWNED BY public."Quiz".id;
+
+
+--
+-- Name: ReplaceDuplicateQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."ReplaceDuplicateQuestion" AS
+ SELECT "DuplicateQuestion"."questionId1" AS "keepQuestionId",
+    min("DuplicateQuestion"."questionId2") AS "removeQuestionId"
+   FROM public."DuplicateQuestion"
+  GROUP BY "DuplicateQuestion"."questionId1";
 
 
 --
@@ -4699,7 +4710,8 @@ CREATE TABLE public."SubTopic" (
     deleted boolean DEFAULT false,
     "position" integer,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    "videoOnly" boolean DEFAULT false
 );
 
 
@@ -8945,6 +8957,14 @@ ALTER TABLE ONLY public."QuestionSubTopic"
 
 
 --
+-- Name: QuestionSubTopic QuestionSubTopic_questionId_subtopicId_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionSubTopic"
+    ADD CONSTRAINT "QuestionSubTopic_questionId_subtopicId_unique" UNIQUE ("questionId", "subTopicId");
+
+
+--
 -- Name: QuestionTranslation QuestionTranslation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10800,6 +10820,13 @@ CREATE UNIQUE INDEX motivation_message_unique ON public."Motivation" USING btree
 
 
 --
+-- Name: ncert_sentence_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_sentence_idx ON public."NcertSentence" USING btree (sentence);
+
+
+--
 -- Name: notification_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11506,6 +11533,14 @@ ALTER TABLE ONLY public."QuestionTranslation"
 
 ALTER TABLE ONLY public."Question"
     ADD CONSTRAINT "Question_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: Question Question_originalQuestionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Question"
+    ADD CONSTRAINT "Question_originalQuestionId_fkey" FOREIGN KEY ("orignalQuestionId") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -12277,6 +12312,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210202095311'),
 ('20210202102223'),
 ('20210208071043'),
-('20210211061357');
+('20210211061357'),
+('20210212061637');
 
 
