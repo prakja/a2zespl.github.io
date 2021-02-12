@@ -52,7 +52,7 @@ ActiveAdmin.register Question do
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
       else
-        super 
+        super.left_outer_joins(:topic)
       end
     end
 
@@ -108,6 +108,7 @@ ActiveAdmin.register Question do
     column (:question) { |question| raw(question.question)  }
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
+    column ("Question Chapter") {|question| question&.topic&.name}
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
