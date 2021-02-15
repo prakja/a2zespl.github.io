@@ -114,5 +114,6 @@ Rails.application.routes.draw do
     get "tests/:id/leader_board", to: "tests#leader_board"
 
     post "/questions/:id/create_translation", to: "questions#create_translation"
+    post "/ncert_sentences/find", to: "ncert_sentences#find_by_sentence"
   end
 end

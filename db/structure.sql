@@ -3028,7 +3028,8 @@ ALTER SEQUENCE public."DuplicatePost_id_seq" OWNED BY public."DuplicatePost".id;
 CREATE TABLE public."DuplicateQuestion" (
     id integer NOT NULL,
     "questionId1" integer NOT NULL,
-    "questionId2" integer NOT NULL
+    "questionId2" integer NOT NULL,
+    CONSTRAINT "DuplicateQuestion_questionId1_less_than_questionId2" CHECK (("questionId1" < "questionId2"))
 );
 
 
@@ -3481,6 +3482,40 @@ ALTER SEQUENCE public."NEETExamResult_id_seq" OWNED BY public."NEETExamResult".i
 
 
 --
+-- Name: NcertSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."NcertSentence" (
+    id bigint NOT NULL,
+    "noteId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: NcertSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."NcertSentence_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: NcertSentence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."NcertSentence_id_seq" OWNED BY public."NcertSentence".id;
+
+
+--
 -- Name: NewUserVideoStat; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3538,7 +3573,6 @@ CREATE TABLE public."NotDuplicateQuestion" (
     "questionId1" integer NOT NULL,
     "questionId2" integer NOT NULL,
     id integer NOT NULL,
-    CONSTRAINT "DuplicateQuestion_questionId1_less_than_questionId2" CHECK (("questionId1" < "questionId2")),
     CONSTRAINT "NotDuplicateQuestion_questionId1_less_than_questionId2" CHECK (("questionId1" < "questionId2"))
 );
 
@@ -4122,8 +4156,8 @@ CREATE TABLE public."QuestionSubTopic" (
     id integer NOT NULL,
     "questionId" integer,
     "subTopicId" integer,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -4252,6 +4286,17 @@ CREATE SEQUENCE public."Quiz_id_seq"
 --
 
 ALTER SEQUENCE public."Quiz_id_seq" OWNED BY public."Quiz".id;
+
+
+--
+-- Name: ReplaceDuplicateQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."ReplaceDuplicateQuestion" AS
+ SELECT "DuplicateQuestion"."questionId1" AS "keepQuestionId",
+    min("DuplicateQuestion"."questionId2") AS "removeQuestionId"
+   FROM public."DuplicateQuestion"
+  GROUP BY "DuplicateQuestion"."questionId1";
 
 
 --
@@ -4665,7 +4710,8 @@ CREATE TABLE public."SubTopic" (
     deleted boolean DEFAULT false,
     "position" integer,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    "videoOnly" boolean DEFAULT false
 );
 
 
@@ -7428,6 +7474,13 @@ ALTER TABLE ONLY public."NEETExamResult" ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: NcertSentence id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence" ALTER COLUMN id SET DEFAULT nextval('public."NcertSentence_id_seq"'::regclass);
+
+
+--
 -- Name: NksAppVersion id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8768,6 +8821,14 @@ ALTER TABLE ONLY public."NEETExamResult"
 
 
 --
+-- Name: NcertSentence NcertSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence"
+    ADD CONSTRAINT "NcertSentence_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: NksAppVersion NksAppVersion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8893,6 +8954,14 @@ ALTER TABLE ONLY public."QuestionHint"
 
 ALTER TABLE ONLY public."QuestionSubTopic"
     ADD CONSTRAINT "QuestionSubTopic_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: QuestionSubTopic QuestionSubTopic_questionId_subtopicId_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionSubTopic"
+    ADD CONSTRAINT "QuestionSubTopic_questionId_subtopicId_unique" UNIQUE ("questionId", "subTopicId");
 
 
 --
@@ -9747,6 +9816,20 @@ CREATE UNIQUE INDEX "DuplicateChapter_dupId_idx1" ON public."DuplicateChapter" U
 --
 
 CREATE INDEX "DuplicateChapter_origId_idx" ON public."DuplicateChapter" USING btree ("origId");
+
+
+--
+-- Name: DuplicateQuestion_questionId1_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DuplicateQuestion_questionId1_idx" ON public."DuplicateQuestion" USING btree ("questionId1");
+
+
+--
+-- Name: DuplicateQuestion_questionId2_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DuplicateQuestion_questionId2_idx" ON public."DuplicateQuestion" USING btree ("questionId2");
 
 
 --
@@ -10737,6 +10820,20 @@ CREATE UNIQUE INDEX motivation_message_unique ON public."Motivation" USING btree
 
 
 --
+-- Name: ncert_sentence_gin_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_sentence_gin_idx ON public."NcertSentence" USING gin (to_tsvector('english'::regconfig, (sentence)::text));
+
+
+--
+-- Name: ncert_sentence_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_sentence_idx ON public."NcertSentence" USING btree (sentence);
+
+
+--
 -- Name: notification_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11446,6 +11543,14 @@ ALTER TABLE ONLY public."Question"
 
 
 --
+-- Name: Question Question_originalQuestionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Question"
+    ADD CONSTRAINT "Question_originalQuestionId_fkey" FOREIGN KEY ("orignalQuestionId") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
 -- Name: Question Question_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11766,6 +11871,14 @@ ALTER TABLE ONLY public."UserTodo"
 
 
 --
+-- Name: NcertSentence fk_rails_2255827ede; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence"
+    ADD CONSTRAINT fk_rails_2255827ede FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
+
+
+--
 -- Name: CourseDetail fk_rails_259449bff2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11803,6 +11916,14 @@ ALTER TABLE ONLY public."UserTodo"
 
 ALTER TABLE ONLY public."CustomerSupport"
     ADD CONSTRAINT fk_rails_334df1fef4 FOREIGN KEY ("adminUserId") REFERENCES public.admin_users(id);
+
+
+--
+-- Name: NcertSentence fk_rails_47b15e840e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence"
+    ADD CONSTRAINT fk_rails_47b15e840e FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
 
 
 --
@@ -11899,6 +12020,14 @@ ALTER TABLE ONLY public."ChapterGlossary"
 
 ALTER TABLE ONLY public."UserFlashCard"
     ADD CONSTRAINT fk_rails_9a2726adae FOREIGN KEY ("flashCardId") REFERENCES public."FlashCard"(id);
+
+
+--
+-- Name: NcertSentence fk_rails_9d470d60a2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence"
+    ADD CONSTRAINT fk_rails_9d470d60a2 FOREIGN KEY ("noteId") REFERENCES public."Note"(id);
 
 
 --
@@ -12189,6 +12318,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201221113137'),
 ('20210202095311'),
 ('20210202102223'),
-('20210208071043');
+('20210208071043'),
+('20210211061357'),
+('20210212061637'),
+('20210212084401');
 
 

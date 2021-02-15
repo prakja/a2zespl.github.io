@@ -1,0 +1,44 @@
+ActiveAdmin.register NcertSentence do
+
+  # See permitted parameters documentation:
+  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+  #
+  # Uncomment all parameters which should be permitted for assignment
+  #
+  # permit_params :noteId, :chapterId, :sectionId, :sentence, :createdAt, :updatedAt
+  #
+  # or
+  #
+  # permit_params do
+  #   permitted = [:noteId, :chapterId, :sectionId, :sentence, :createdAt, :updatedAt]
+  #   permitted << :other if params[:action] == 'create' && current_user.admin?
+  #   permitted
+  # end
+
+  remove_filter :note, :chapter, :section
+
+  filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+  filter :noteId_eq
+  filter :sectionId_eq
+  preserve_default_filters!
+
+  form do |f|
+    f.inputs "NCERT Sentence" do
+      f.input :chapter, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
+      f.input :sectionId
+      f.input :noteId
+      f.input :sentence
+    end
+    f.actions
+  end
+
+  controller do
+    def find_by_sentence
+      sentence = params.require(:sentence)
+      ncert_sentence = NcertSentence.where('to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)', sentence.gsub(' ', " & "))
+      print(ncert_sentence.to_json)
+      render json: ncert_sentence.to_json, status: 200
+    end
+  end
+  
+end

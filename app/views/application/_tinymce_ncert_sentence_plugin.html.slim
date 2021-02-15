@@ -1,0 +1,73 @@
+css:
+  select option {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
+dialog.select-sentence-dialog style="width:50%;background-color:white;z-index:10;position: fixed;top: 50%;"
+  select.select-sentence style="width: -webkit-fill-available;"
+  button.set-link OK
+  button.cancel Cancel
+javascript:
+  tinymce.PluginManager.add('ncertSentence', function(editor) {
+    // Add a button that opens a window
+    editor.addButton('ncertSentence', {
+      text: 'Link NCERT Sentence',
+      icon: false,
+      onclick: function() {
+        // Open window
+        editor.windowManager.open({
+          title: 'Link NCERT Sentence',
+          body: [
+            {type: 'textbox', name: 'ncertSentence', label: 'NCERT Sentence'}
+          ],
+          onsubmit: function(e) {
+            const sentence = e.data.ncertSentence;
+            $.ajax({
+              url: "/admin/ncert_sentences/find",
+              method: 'POST',
+              data: {
+                sentence: sentence,
+                authenticity_token: $('meta[name="csrf-token"]').attr('content')
+              }
+            }).done (function (data) {
+              console.log(data);
+              $(".select-sentence").html("");
+              $.each(data, function (index, value) {
+                $(".select-sentence").html($(".select-sentence").html() + '<option value="' + value.id + '">' + value.sentence + '</option') 
+              });
+              $(".select-sentence")
+              $(".select-sentence-dialog").show();
+              $(".cancel").click(function (event) {
+                $("dialog").hide();
+                event.preventDefault();
+                $(".select-sentence-dialog").close();
+              });
+              $(".set-link").click(function (event) {
+                $("dialog").hide();
+                event.preventDefault();
+                const selectedId = Number($(".select-sentence").val());
+                console.log(selectedId)
+                selectedSentence = data.filter(d => d.id == selectedId)[0]
+                console.log(selectedSentence)
+                editor.insertContent('<a href="http://local.neetprep.com/section/chapter/' + selectedSentence.chapterId + '?sectionId=' + selectedSentence.sectionId + '#:~:text=' + selectedSentence.sentence + '">See NCERT</p><br>')
+              });
+            }).fail (function (error){
+              alert("failed: " + JSON.stringify(error));
+            });
+            // editor.insertContent('<div class="embed-responsive embed-responsive-16by9"><iframe src="' + youtubeVideoEmbedUrl + '" width="100%" allowfullscreen></iframe></div>');
+          }
+        });
+      }
+    });
+
+    return {
+      getMetadata: function () {
+        return  {
+          name: "Example plugin",
+          url: "http://exampleplugindocsurl.com"
+        };
+      }
+    };
+  });
