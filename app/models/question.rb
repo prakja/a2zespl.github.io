@@ -52,7 +52,7 @@ class Question < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   scope :course_subject_id, ->(subject_id) {
-    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
 
   scope :test_course_id, ->(course_id) {
@@ -60,26 +60,26 @@ class Question < ApplicationRecord
   }
 
   scope :course_id, ->(course_id) {
-    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: course_id}})
   }
 
   scope :course_name, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: flatten_subject_ids}})
   }
 
   scope :subject_id, ->(subject_id) {
-    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
 
   scope :course_ids, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :similar_questions, ->(question_id) {
