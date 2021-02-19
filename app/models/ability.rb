@@ -13,7 +13,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
-      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation]
+      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:duplicate_questions, :remove_duplicate], [Test]
@@ -23,7 +23,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
-      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation]
+      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:duplicate_questions, :remove_duplicate], [Test]
@@ -38,7 +38,7 @@ class Ability
       can :import, [Video, FlashCard]
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:duplicate_questions, :remove_duplicate], [Test]
