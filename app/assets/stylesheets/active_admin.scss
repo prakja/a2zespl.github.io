@@ -11,6 +11,8 @@
 // Active Admin's got SASS!
 $primary-color: #1b5e20;
 
+.label {width: 15% !important}
+body.logged_in.edit .input .select2.select2-container.select2-container--default.select2-container--focus {width: 100% !important}
 @import "active_admin/mixins";
 // @import "active_admin/base";
 @import "arctic_admin/base";

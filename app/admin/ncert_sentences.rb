@@ -15,6 +15,6 @@ ActiveAdmin.register NcertSentence do
   #   permitted
   # end
 
-  remove_filter :note, :chapter, :section
+  remove_filter :note, :chapter, :section, :questions
   
 end

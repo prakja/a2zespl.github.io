@@ -163,6 +163,7 @@ class Question < ApplicationRecord
 
   has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion', dependent: :destroy
   has_many :tests, through: :questionTests, dependent: :destroy
+  has_and_belongs_to_many :ncert_sentences, class_name: 'NcertSentence', join_table: 'QuestionNcertSentence', foreign_key: :questionId, association_foreign_key: :ncertSentenceId
   has_many :systemTests, -> {where userId: nil}, through: :questionTests, dependent: :destroy, source: "test"
 
   has_many :answers, class_name: "Answer", foreign_key: :questionId
