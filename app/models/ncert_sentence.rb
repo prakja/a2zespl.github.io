@@ -16,4 +16,8 @@ class NcertSentence < ApplicationRecord
     self.updatedAt = Time.now
   end
 
+  # used to show actual sentence instead of #id
+  def name
+    return self.sentence
+  end
 end

@@ -184,6 +184,11 @@ ActiveAdmin.register Question do
       row :orignalQuestionId do |question|
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
+      if question.ncert_sentences.length > 0
+        row "NCERT Sentences" do |question|
+          question.ncert_sentences
+        end
+      end
     end
     active_admin_comments
   end
