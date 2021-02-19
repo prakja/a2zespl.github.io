@@ -55,6 +55,10 @@ class Question < ApplicationRecord
     joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
 
+  ransacker :ncertSentences_count do
+    Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
+  end
+
   scope :test_course_id, ->(course_id) {
     joins('INNER JOIN "CourseTestQuestion" ON "CourseTestQuestion"."questionId" = "Question"."id"').where('"courseId" = ' + course_id.to_s)
   }
