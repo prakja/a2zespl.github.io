@@ -32,6 +32,42 @@ ActiveAdmin.register NcertSentence do
     f.actions
   end
 
+  index do
+    selectable_column
+    id_column
+    column ("Note") {|sentence|
+      auto_link(sentence.note)
+    }
+    column ("Section") {|sentence|
+      auto_link(sentence.section)
+    }
+    column ("Chapter") {|sentence|
+      auto_link(sentence.chapter)
+    }
+    column ("Sentence") {|sentence|
+      raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentence + '" target="_blank">' + sentence.sentence + '</a>'
+    }
+    actions
+  end
+
+  show do
+    attributes_table do
+      row :id
+      row :note do |sentence|
+        auto_link(sentence.note)
+      end
+      row :section do |sentence|
+        auto_link(sentence.section)
+      end
+      row :chapter do |sentence|
+        auto_link(sentence.chapter)
+      end
+      row :sentence do |sentence|
+        raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentence + '" target="_blank">' + sentence.sentence + '</a>'
+      end
+    end
+  end
+
   controller do
     def find_by_sentence
       sentence = params.require(:sentence)
