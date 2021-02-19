@@ -59,6 +59,18 @@ class Question < ApplicationRecord
     Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
   end
 
+  ransacker :subTopics_count do
+    Arel.sql('(SELECT COUNT("QuestionSubTopic"."id") FROM "QuestionSubTopic" WHERE "QuestionSubTopic"."questionId" = "Question"."id")')
+  end
+
+  ransacker :topics_count do
+    Arel.sql('(SELECT COUNT("ChapterQuestion"."id") FROM "ChapterQuestion" WHERE "ChapterQuestion"."questionId" = "Question"."id")')
+  end
+
+  ransacker :course_tests_count do
+    Arel.sql('(SELECT COUNT("TestQuestion"."id") FROM "TestQuestion", "Test", "CourseTest" WHERE "TestQuestion"."questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and exists(select "id" from "CourseTest" where "CourseTest"."testId" = "Test"."id"))')
+  end
+
   scope :test_course_id, ->(course_id) {
     joins('INNER JOIN "CourseTestQuestion" ON "CourseTestQuestion"."questionId" = "Question"."id"').where('"courseId" = ' + course_id.to_s)
   }
