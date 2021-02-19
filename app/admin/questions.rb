@@ -290,6 +290,7 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
+      f.input :ncert
       f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
       f.input :lock_version, :as => :hidden
     end
