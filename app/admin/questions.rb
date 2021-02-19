@@ -12,8 +12,8 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version
-  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences
+  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
 
@@ -285,6 +285,7 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
+      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
       f.input :lock_version, :as => :hidden
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|

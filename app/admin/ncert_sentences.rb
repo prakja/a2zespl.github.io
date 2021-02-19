@@ -15,7 +15,7 @@ ActiveAdmin.register NcertSentence do
   #   permitted
   # end
 
-  remove_filter :note, :chapter, :section
+  remove_filter :note, :chapter, :section, :questions
 
   filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"
   filter :noteId_eq
