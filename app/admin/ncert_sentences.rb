@@ -45,7 +45,7 @@ ActiveAdmin.register NcertSentence do
       auto_link(sentence.chapter)
     }
     column ("Sentence") {|sentence|
-      raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentence + '" target="_blank">' + sentence.sentence + '</a>'
+      raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentenceUrl + '" target="_blank">' + sentence.sentence + '</a>'
     }
     actions
   end
@@ -63,7 +63,8 @@ ActiveAdmin.register NcertSentence do
         auto_link(sentence.chapter)
       end
       row :sentence do |sentence|
-        raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentence + '" target="_blank">' + sentence.sentence + '</a>'
+
+        raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentenceUrl + '" target="_blank">' + sentence.sentence + '</a>'
       end
     end
   end

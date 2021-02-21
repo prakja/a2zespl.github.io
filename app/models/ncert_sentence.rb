@@ -12,6 +12,17 @@ class NcertSentence < ApplicationRecord
     self.createdAt = Time.now
   end
 
+  def sentenceUrl
+    ncertSentence = self.sentence
+    sentenceStart = ncertSentence
+    sentenceEnd = nil
+    if ncertSentence.include? ','
+      sentenceStart = ncertSentence[0, ncertSentence.index(',')]
+      sentenceEnd = ncertSentence[(ncertSentence.rindex(',')+1)..]
+    end
+    return (sentenceEnd ? sentenceStart : sentence) + (sentenceEnd ? ',' + sentenceEnd : "");
+  end
+
   def setUpdatedTime
     self.updatedAt = Time.now
   end
