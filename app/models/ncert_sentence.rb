@@ -12,6 +12,10 @@ class NcertSentence < ApplicationRecord
     self.createdAt = Time.now
   end
 
+  def fullSentenceUrl
+    return '<a href="https://www.neetprep.com/notes/' + self.noteId.to_s + '#:~:text=' + self.sentenceUrl + '" target="_blank">' + self.sentence + '</a>'
+  end
+
   def sentenceUrl
     ncertSentence = self.sentence
     sentenceStart = ncertSentence

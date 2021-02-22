@@ -112,15 +112,19 @@ ActiveAdmin.register Question do
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showProofRead] == 'yes'
+    if current_admin_user.question_bank_owner?  and params[:showProofRead] == 'yes'
       toggle_bool_column :proofRead
     end
 
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showNCERT] == 'yes'
+    if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
       toggle_bool_column :ncert
     end
 
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+    if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
+      column ('NCERT Sentence') {|question| raw(question.ncert_sentences.collect(&:fullSentenceUrl).join("<br />"))}
+    end
+
+    if current_admin_user.question_bank_owner? and params[:showNCERT] != 'yes'
       # p params["q"]["questionTopics_chapterId_in"]
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         column ("Doubts Count"), sortable: true do |question|
@@ -234,37 +238,37 @@ ActiveAdmin.register Question do
     link_to('Set Hindi Translation', '#', class: 'addTranslation')
   end
 
-  action_item :see_physics_difficult_questions, only: :index do
-    link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
-  end
+  #action_item :see_physics_difficult_questions, only: :index do
+  #  link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
+  #end
 
-  action_item :see_chemistry_difficult_questions, only: :index do
-    link_to 'Chemistry Difficult Questions', '../../questions/pdf_questions?subject=chemistry'
-  end
+  #action_item :see_chemistry_difficult_questions, only: :index do
+  #  link_to 'Chemistry Difficult Questions', '../../questions/pdf_questions?subject=chemistry'
+  #end
 
-  action_item :see_botany_difficult_questions, only: :index do
-    link_to 'Botany Difficult Questions', '../../questions/pdf_questions?subject=botany'
-  end
+  #action_item :see_botany_difficult_questions, only: :index do
+  #  link_to 'Botany Difficult Questions', '../../questions/pdf_questions?subject=botany'
+  #end
 
-  action_item :see_zoology_difficult_questions, only: :index do
-    link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
-  end
+  #action_item :see_zoology_difficult_questions, only: :index do
+  #  link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
+  #end
 
-  action_item :see_physics_easy_questions, only: :index do
-    link_to 'Physics easy Questions', '../../questions/easy_questions?subject=physics'
-  end
+  #action_item :see_physics_easy_questions, only: :index do
+  #  link_to 'Physics easy Questions', '../../questions/easy_questions?subject=physics'
+  #end
 
-  action_item :see_chemistry_easy_questions, only: :index do
-    link_to 'Chemistry easy Questions', '../../questions/easy_questions?subject=chemistry'
-  end
+  #action_item :see_chemistry_easy_questions, only: :index do
+  #  link_to 'Chemistry easy Questions', '../../questions/easy_questions?subject=chemistry'
+  #end
 
-  action_item :see_botany_easy_questions, only: :index do
-    link_to 'Botany easy Questions', '../../questions/easy_questions?subject=botany'
-  end
+  #action_item :see_botany_easy_questions, only: :index do
+  #  link_to 'Botany easy Questions', '../../questions/easy_questions?subject=botany'
+  #end
 
-  action_item :see_zoology_easy_questions, only: :index do
-    link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
-  end
+  #action_item :see_zoology_easy_questions, only: :index do
+  #  link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
+  #end
 
   action_item :see_ncert_marking, only: :index do
     link_to 'From NCERT Marking', request.params.merge(showNCERT: 'yes')
