@@ -18,6 +18,7 @@ ActiveAdmin.register NcertSentence do
   remove_filter :note, :chapter, :section, :questions
 
   filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
+  permit_params :chapterId, :noteId, :sectionId, :sentence
   filter :noteId_eq
   filter :sectionId_eq
   preserve_default_filters!
@@ -77,5 +78,15 @@ ActiveAdmin.register NcertSentence do
       render json: ncert_sentence.to_json, status: 200
     end
   end
-  
+
+  member_action :mydup do
+    ncert_sentence = NcertSentence.find(params[:id])
+    @ncert_sentence = ncert_sentence.dup
+    render 'active_admin/resource/new.html.arb', layout: false
+  end
+
+  action_item "Clone Ncert Sentence", :only => :show do
+    link_to("Clone", mydup_admin_ncert_sentence_path(id: resource.id))
+  end
+
 end
