@@ -17,7 +17,7 @@ ActiveAdmin.register NcertSentence do
 
   remove_filter :note, :chapter, :section, :questions
 
-  filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject }, label: "Chapter"
+  filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
   filter :noteId_eq
   filter :sectionId_eq
   preserve_default_filters!
