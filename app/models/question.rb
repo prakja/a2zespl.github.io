@@ -55,19 +55,19 @@ class Question < ApplicationRecord
     joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
 
-  ransacker :ncertSentences_count do
+  ransacker :ncertSentences_count, type: :number do
     Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
   end
 
-  ransacker :subTopics_count do
+  ransacker :subTopics_count, type: :number do
     Arel.sql('(SELECT COUNT("QuestionSubTopic"."id") FROM "QuestionSubTopic" WHERE "QuestionSubTopic"."questionId" = "Question"."id")')
   end
 
-  ransacker :topics_count do
+  ransacker :topics_count, type: :number do
     Arel.sql('(SELECT COUNT("ChapterQuestion"."id") FROM "ChapterQuestion" WHERE "ChapterQuestion"."questionId" = "Question"."id")')
   end
 
-  ransacker :course_tests_count do
+  ransacker :course_tests_count, type: :number do
     Arel.sql('(SELECT COUNT("TestQuestion"."id") FROM "TestQuestion", "Test", "CourseTest" WHERE "TestQuestion"."questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and exists(select "id" from "CourseTest" where "CourseTest"."testId" = "Test"."id"))')
   end
 
