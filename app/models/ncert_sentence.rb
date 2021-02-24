@@ -16,6 +16,10 @@ class NcertSentence < ApplicationRecord
     return '<a href="https://www.neetprep.com/notes/' + self.noteId.to_s + '#:~:text=' + self.sentenceUrl + '" target="_blank">' + self.sentence + '</a>'
   end
 
+  ransacker :questions_count do
+    Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."ncertSentenceId" = "NcertSentence"."id")')
+  end
+
   def sentenceUrl
     ncertSentence = self.sentence
     sentenceStart = ncertSentence

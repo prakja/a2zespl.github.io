@@ -15,12 +15,13 @@ ActiveAdmin.register NcertSentence do
   #   permitted
   # end
 
-  remove_filter :note, :chapter, :section, :questions
+  remove_filter :note, :chapter, :section, :questions, :questions_count
 
   filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
   permit_params :chapterId, :noteId, :sectionId, :sentence
   filter :noteId_eq
   filter :sectionId_eq
+  filter :questions_count_eq
   preserve_default_filters!
 
   form do |f|
@@ -76,6 +77,10 @@ ActiveAdmin.register NcertSentence do
       ncert_sentence = NcertSentence.where('to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)', sentence.gsub(' ', " & "))
       print(ncert_sentence.to_json)
       render json: ncert_sentence.to_json, status: 200
+    end
+
+    def scoped_collection
+      super.includes(:chapter, :note, :section)
     end
   end
 
