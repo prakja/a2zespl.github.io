@@ -38,7 +38,7 @@ ActiveAdmin.register NcertSentence do
     selectable_column
     id_column
     column ("Note") {|sentence|
-      auto_link(sentence.note)
+      raw('<a target="_blank" href="/notes/edit_content/' + sentence.noteId.to_s + '">View Note - #' + sentence.noteId.to_s + '</a>')
     }
     column ("Section") {|sentence|
       auto_link(sentence.section)
@@ -56,7 +56,7 @@ ActiveAdmin.register NcertSentence do
     attributes_table do
       row :id
       row :note do |sentence|
-        auto_link(sentence.note)
+        raw('<a target="_blank" href="/notes/edit_content/' + sentence.noteId.to_s + '">View Note - #' + sentence.noteId.to_s + '</a>')
       end
       row :section do |sentence|
         auto_link(sentence.section)
@@ -65,8 +65,10 @@ ActiveAdmin.register NcertSentence do
         auto_link(sentence.chapter)
       end
       row :sentence do |sentence|
-
         raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentenceUrl + '" target="_blank">' + sentence.sentence + '</a>'
+      end
+      row :questions do |sentence|
+        sentence.questions
       end
     end
   end
