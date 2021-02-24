@@ -4,6 +4,7 @@ class Payment < ApplicationRecord
   before_update :before_create_update_set_default_values, :setUpdatedTime
   scope :failed_payments, -> {where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil])}
   scope :failed_payments_10k, -> {where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil]).where("amount > 9999")}
+  scope :failed_payments_5k, -> {where.not(status: 'responseReceivedSuccess').where(paymentMode: ['paytm',nil]).where("amount > 4999")}
   scope :kotak_payments, -> {where(paymentMode: 'kotak')}
   scope :paytm_payments, -> {where(paymentMode: 'paytm')}
   scope :cash_payments, -> {where(paymentMode: 'cash')}
