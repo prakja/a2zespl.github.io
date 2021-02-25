@@ -58,24 +58,24 @@ ActiveAdmin.register CourseInvitation do
     link_to 'Resend Course Invite', resource.id.to_s + '/resendinvite'
   end
 
-  scope "invitations without payments", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
+  scope "invitations without payments", show_count: false, if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
     courseInvitation.invitations_without_payment
   end
 
-  scope "invitations expiring tomorrow", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
-    courseInvitation.invitations_expiring_by_tomorrow
-  end
+  #scope "invitations expiring tomorrow", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
+  #  courseInvitation.invitations_expiring_by_tomorrow
+  #end
 
-  scope "my invitations expiring in 7 days" do |courseInvitation|
-    courseInvitation.my_invitations_expiring_soon(current_admin_user.id.to_s)
-  end
+  #scope "my invitations expiring in 7 days" do |courseInvitation|
+  #  courseInvitation.my_invitations_expiring_soon(current_admin_user.id.to_s)
+  #end
 
-  scope "my invitations expiring tomorrow" do |courseInvitation|
-    courseInvitation.my_invitations_expiring_by_tomorrow(current_admin_user.id.to_s)
-  end
+  #scope "my invitations expiring tomorrow" do |courseInvitation|
+  #  courseInvitation.my_invitations_expiring_by_tomorrow(current_admin_user.id.to_s)
+  #end
 
-  scope :invitation_created_more_than_7days_by_sales
-  scope :dronstudy_leads
+  scope :invitation_created_more_than_7days_by_sales, show_count: false
+  scope :dronstudy_leads, show_count: false
 
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])

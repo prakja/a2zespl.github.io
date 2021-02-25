@@ -66,7 +66,7 @@ class CourseInvitation < ApplicationRecord
    }
 
    scope :dronstudy_leads, -> {
-     where('"courseId" in (8,29,141) and "admin_user_id" is null and "expiryAt" - "createdAt" > interval \'167 hours\' and "expiryAt" - "createdAt" < interval \'169 hours\'')
+     where('"CourseInvitation"."courseId" in (8,29,141) and "CourseInvitation"."admin_user_id" is null and "CourseInvitation"."expiryAt" - "CourseInvitation"."createdAt" > interval \'167 hours\' and "CourseInvitation"."expiryAt" - "CourseInvitation"."createdAt" < interval \'169 hours\'')
    }
 
    scope :invitations_without_payment, -> {
