@@ -75,6 +75,7 @@ ActiveAdmin.register CourseInvitation do
   end
 
   scope :invitation_created_more_than_7days_by_sales
+  scope :dronstudy_leads
 
   member_action :history do
     @courseinvitation = CourseInvitation.find(params[:id])

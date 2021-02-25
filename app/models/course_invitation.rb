@@ -65,6 +65,10 @@ class CourseInvitation < ApplicationRecord
       where('"CourseInvitation"."admin_user_id" in (?) and "CourseInvitation"."expiryAt" > "CourseInvitation"."createdAt" + interval \'7\' day', AdminUser.sales_role);
    }
 
+   scope :dronstudy_leads, -> {
+     where('"courseId" in (8,29,141) and "admin_user_id" is null and "expiryAt" - "createdAt" > interval \'167 hours\' and "expiryAt" - "createdAt" < interval \'169 hours\'')
+   }
+
    scope :invitations_without_payment, -> {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(:createdAt => (Time.now - 7.day)..Time.now);
    }
