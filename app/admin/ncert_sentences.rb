@@ -18,7 +18,7 @@ ActiveAdmin.register NcertSentence do
   remove_filter :note, :chapter, :section, :questions, :questions_count
 
   filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
-  permit_params :chapterId, :noteId, :sectionId, :sentence
+  permit_params :chapterId, :noteId, :sectionId, :sentence, :sentenceHtml
   filter :noteId_eq
   filter :sectionId_eq
   filter :questions_count_eq
@@ -30,6 +30,7 @@ ActiveAdmin.register NcertSentence do
       f.input :sectionId
       f.input :noteId
       f.input :sentence
+      f.input :sentenceHtml
     end
     f.actions
   end
@@ -47,7 +48,7 @@ ActiveAdmin.register NcertSentence do
       auto_link(sentence.chapter)
     }
     column ("Sentence") {|sentence|
-      raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentenceUrl + '" target="_blank">' + sentence.sentence + '</a>'
+      raw sentence.fullSentenceUrl
     }
     actions
   end
@@ -65,7 +66,10 @@ ActiveAdmin.register NcertSentence do
         auto_link(sentence.chapter)
       end
       row :sentence do |sentence|
-        raw '<a href="https://www.neetprep.com/notes/' +  sentence.noteId.to_s + '#:~:text=' + sentence.sentenceUrl + '" target="_blank">' + sentence.sentence + '</a>'
+        sentence.sentence
+      end
+      row :sentenceHtml do |sentence|
+        raw sentence.fullSentenceUrl
       end
       row :questions do |sentence|
         sentence.questions
