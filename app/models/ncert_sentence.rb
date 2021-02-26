@@ -12,8 +12,12 @@ class NcertSentence < ApplicationRecord
     self.createdAt = Time.now
   end
 
+  def sentenceHtml
+    self[:sentenceHtml].blank? ? self.sentence : self[:sentenceHtml]
+  end
+
   def fullSentenceUrl
-    return '<a href="https://www.neetprep.com/notes/' + self.noteId.to_s + '#:~:text=' + self.sentenceUrl + '" target="_blank">' + (self.sentenceHtml.blank? ? self.sentence : self.sentenceHtml) + '</a>'
+    return '<a href="https://www.neetprep.com/notes/' + self.noteId.to_s + '#:~:text=' + self.sentenceUrl + '" target="_blank"><span>' + (self.sentenceHtml) + '</span></a>'
   end
 
   ransacker :questions_count do
