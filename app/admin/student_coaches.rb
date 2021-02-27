@@ -49,18 +49,34 @@ ActiveAdmin.register StudentCoach do
     column "Student" do |student_coach|
       student_coach.student
     end
+    column "Student Email" do |student_coach|
+      student_coach.student.email
+    end
     column "Coach" do |student_coach|
       student_coach.admin_user.email
     end
-    column (:role) { |student_coach| raw(student_coach.role) }
+    #column (:role) { |student_coach| raw(student_coach.role) }
     column :created_at
-    column :updated_at
-    actions
+    #column :updated_at
+    if current_admin_user.admin?
+      actions
+    else
+      column "Links" do |student_coach|
+        raw '<a href="/coach-dashboard-summary?studentId=' + student_coach.studentId.to_s + '" target="_blank">View Summary</a> &amp; <a href="/coach-dashboard?studentId=' + student_coach.studentId.to_s + '" target="_blank">View Overview</a>'
+      end
+    end
   end
 
-  scope "My Students" do |student_coach|
+  controller do
+    def scoped_collection
+      super.preload(student: :user_profile)
+    end
+  end
+
+  scope "My Students", show_count: false, default: true do |student_coach|
     StudentCoach.my_students(current_admin_user.id.to_s)
   end
+  scope :all, show_count: false, if: -> {current_admin_user.admin?}
 
   form do |f|
     f.semantic_errors *f.object.errors.keys

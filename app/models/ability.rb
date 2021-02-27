@@ -6,6 +6,7 @@ class Ability
       can :manage, :all
     elsif user.role == 'coach'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
+      can :read, [StudentCoach]
     elsif user.role == 'hindi_editor'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read, :update], [QuestionTranslation]
