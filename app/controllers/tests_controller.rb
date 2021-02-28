@@ -135,7 +135,7 @@ class TestsController < ApplicationController
 
       @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
       @testQuestions.each do |question|
-        question_ids.push(question.id.to_s)
+        question_ids.push(question.id)
       end
 
       @questionIds = @questionIds.uniq
