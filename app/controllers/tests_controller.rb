@@ -128,7 +128,7 @@ class TestsController < ApplicationController
     begin
       @testId = params[:testId]
       @sequenceId = params[:sequenceId]
-      @questionIds = params[:questionIds]
+      @questionIds = params[:questionIds].map(&:to_i)
       @test = Test.where(id: @testId).first
       @rowsArray = []
       question_ids = []
