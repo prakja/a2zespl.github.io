@@ -287,8 +287,11 @@ ActiveAdmin.register Question do
       f.input :explanation
       # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits
       # If we want to add this back then may be thinking of a way to change version id along with test question edition should be evaluated
-      #f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
-      #render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
+      # On second thought, we can let this be on for new questions for now
+      if f.object.new_record?
+        f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
+        render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
+      end
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
       f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject, label: "Question Chapter", hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
