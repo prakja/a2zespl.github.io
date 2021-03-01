@@ -48,9 +48,22 @@ class Question < ApplicationRecord
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
-  attribute :createdAt, :datetime, default: Time.now
-  attribute :updatedAt, :datetime, default: Time.now
+ # attribute :createdAt, :datetime, default: Time.now
+  #attribute :updatedAt, :datetime, default: Time.now
 
+
+  before_create :setCreatedTime, :setUpdatedTime
+  before_update :setUpdatedTime
+
+  def setCreatedTime
+    self.createdAt = Time.now
+  end
+
+  def setUpdatedTime
+    self.updatedAt = Time.now
+  end
+
+  
   scope :course_subject_id, ->(subject_id) {
     joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
   }
