@@ -26,11 +26,12 @@ ActiveAdmin.register NcertSentence do
 
   form do |f|
     f.inputs "NCERT Sentence" do
+      render partial: 'tinymce'
       f.input :chapter, input_html: { class: "select2" }, :collection => Topic.name_with_subject_hinglish
       f.input :sectionId
       f.input :noteId
       f.input :sentence
-      f.input :sentenceHtml
+      f.input :sentenceHtml , input_html: { id: "ncert_sentence" }
     end
     f.actions
   end
