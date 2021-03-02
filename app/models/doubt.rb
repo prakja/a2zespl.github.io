@@ -19,7 +19,7 @@ class Doubt < ApplicationRecord
   }
 
   scope :image_doubts, -> {
-    where('"content" like \'%img%amazonaws%\' and length(regexp_replace("content", \'<img.*?/>\', \'\')) <= 100').or(where('"imgUrl" is not null')).order('"id" DESC');
+    solved("yes").where('"content" like \'%img%amazonaws%\' and length(regexp_replace("content", \'<img.*?/>\', \'\')) <= 100').or(where('"imgUrl" is not null')).order('"id" DESC');
   }
 
   scope :subject_name, ->(subject_id) {

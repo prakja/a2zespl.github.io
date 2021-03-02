@@ -12,6 +12,7 @@ ActiveAdmin.register Payment do
   scope :direct_payments_test_series, show_count: false
   scope :failed_payments, show_count: false
   scope :failed_payments_10k, show_count: false
+  scope :failed_payments_5k, show_count: false
   scope :paytm_payments, show_count: false
   scope :all, show_count: false
   #scope :cash_payments, show_count: false

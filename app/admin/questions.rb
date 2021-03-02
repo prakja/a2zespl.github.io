@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count, :subTopics_count, :topics_count, :course_tests_count
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -24,7 +24,7 @@ ActiveAdmin.register Question do
   # end
 
   # make a drop down menu
-  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject
+  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
   filter :subTopics_id_eq, as: :searchable_select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :details_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :details_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"
@@ -52,7 +52,7 @@ ActiveAdmin.register Question do
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
       else
-        super 
+        super.left_outer_joins(:topic)
       end
     end
 
@@ -108,18 +108,23 @@ ActiveAdmin.register Question do
     column (:question) { |question| raw(question.question)  }
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
+    column ("Question Chapter") {|question| question&.topic&.name}
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showProofRead] == 'yes'
+    if current_admin_user.question_bank_owner?  and params[:showProofRead] == 'yes'
       toggle_bool_column :proofRead
     end
 
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'superfaculty') and params[:showNCERT] == 'yes'
+    if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
       toggle_bool_column :ncert
     end
 
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty'
+    if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
+      column ('NCERT Sentence') {|question| raw(question.ncert_sentences.collect(&:fullSentenceUrl).join("<br />"))}
+    end
+
+    if current_admin_user.question_bank_owner? and params[:showNCERT] != 'yes'
       # p params["q"]["questionTopics_chapterId_in"]
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         column ("Doubts Count"), sortable: true do |question|
@@ -183,6 +188,11 @@ ActiveAdmin.register Question do
       row :orignalQuestionId do |question|
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
+      if question.ncert_sentences.length > 0
+        row "NCERT Sentences" do |question|
+          question.ncert_sentences
+        end
+      end
     end
     active_admin_comments
   end
@@ -228,37 +238,37 @@ ActiveAdmin.register Question do
     link_to('Set Hindi Translation', '#', class: 'addTranslation')
   end
 
-  action_item :see_physics_difficult_questions, only: :index do
-    link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
-  end
+  #action_item :see_physics_difficult_questions, only: :index do
+  #  link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
+  #end
 
-  action_item :see_chemistry_difficult_questions, only: :index do
-    link_to 'Chemistry Difficult Questions', '../../questions/pdf_questions?subject=chemistry'
-  end
+  #action_item :see_chemistry_difficult_questions, only: :index do
+  #  link_to 'Chemistry Difficult Questions', '../../questions/pdf_questions?subject=chemistry'
+  #end
 
-  action_item :see_botany_difficult_questions, only: :index do
-    link_to 'Botany Difficult Questions', '../../questions/pdf_questions?subject=botany'
-  end
+  #action_item :see_botany_difficult_questions, only: :index do
+  #  link_to 'Botany Difficult Questions', '../../questions/pdf_questions?subject=botany'
+  #end
 
-  action_item :see_zoology_difficult_questions, only: :index do
-    link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
-  end
+  #action_item :see_zoology_difficult_questions, only: :index do
+  #  link_to 'Zoology Difficult Questions', '../../questions/pdf_questions?subject=zoology'
+  #end
 
-  action_item :see_physics_easy_questions, only: :index do
-    link_to 'Physics easy Questions', '../../questions/easy_questions?subject=physics'
-  end
+  #action_item :see_physics_easy_questions, only: :index do
+  #  link_to 'Physics easy Questions', '../../questions/easy_questions?subject=physics'
+  #end
 
-  action_item :see_chemistry_easy_questions, only: :index do
-    link_to 'Chemistry easy Questions', '../../questions/easy_questions?subject=chemistry'
-  end
+  #action_item :see_chemistry_easy_questions, only: :index do
+  #  link_to 'Chemistry easy Questions', '../../questions/easy_questions?subject=chemistry'
+  #end
 
-  action_item :see_botany_easy_questions, only: :index do
-    link_to 'Botany easy Questions', '../../questions/easy_questions?subject=botany'
-  end
+  #action_item :see_botany_easy_questions, only: :index do
+  #  link_to 'Botany easy Questions', '../../questions/easy_questions?subject=botany'
+  #end
 
-  action_item :see_zoology_easy_questions, only: :index do
-    link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
-  end
+  #action_item :see_zoology_easy_questions, only: :index do
+  #  link_to 'Zoology easy Questions', '../../questions/easy_questions?subject=zoology'
+  #end
 
   action_item :see_ncert_marking, only: :index do
     link_to 'From NCERT Marking', request.params.merge(showNCERT: 'yes')
@@ -275,8 +285,13 @@ ActiveAdmin.register Question do
       f.input :question
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
-      f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
-      render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
+      # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits
+      # If we want to add this back then may be thinking of a way to change version id along with test question edition should be evaluated
+      # On second thought, we can let this be on for new questions for now
+      if f.object.new_record?
+        f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
+        render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
+      end
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
       f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject, label: "Question Chapter", hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
@@ -284,6 +299,7 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
+      f.input :ncert
       f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
       f.input :lock_version, :as => :hidden
     end

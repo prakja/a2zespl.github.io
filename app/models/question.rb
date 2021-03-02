@@ -63,34 +63,50 @@ class Question < ApplicationRecord
 
   
   scope :course_subject_id, ->(subject_id) {
-    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
+
+  ransacker :ncertSentences_count do
+    Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
+  end
+
+  ransacker :subTopics_count do
+    Arel.sql('(SELECT COUNT("QuestionSubTopic"."id") FROM "QuestionSubTopic" WHERE "QuestionSubTopic"."questionId" = "Question"."id")')
+  end
+
+  ransacker :topics_count do
+    Arel.sql('(SELECT COUNT("ChapterQuestion"."id") FROM "ChapterQuestion" WHERE "ChapterQuestion"."questionId" = "Question"."id")')
+  end
+
+  ransacker :course_tests_count do
+    Arel.sql('(SELECT COUNT("TestQuestion"."id") FROM "TestQuestion", "Test", "CourseTest" WHERE "TestQuestion"."questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and exists(select "id" from "CourseTest" where "CourseTest"."testId" = "Test"."id"))')
+  end
 
   scope :test_course_id, ->(course_id) {
     joins('INNER JOIN "CourseTestQuestion" ON "CourseTestQuestion"."questionId" = "Question"."id"').where('"courseId" = ' + course_id.to_s)
   }
 
   scope :course_id, ->(course_id) {
-    joins(:topics => :subject).where(topics: {Subject: {courseId: course_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: course_id}})
   }
 
   scope :course_name, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {id: flatten_subject_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: flatten_subject_ids}})
   }
 
   scope :subject_id, ->(subject_id) {
-    joins(:topics => :subject).where(topics: {Subject: {id: subject_id}})
+    joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
 
   scope :course_ids, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
-    joins(:topics => :subject).where(topics: {Subject: {courseId: flatten_course_ids}})
+    joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
   scope :similar_questions, ->(question_id) {

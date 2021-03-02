@@ -20,13 +20,15 @@ ActiveAdmin.register_page "Dashboard" do
           column ("Event") { |v| v.event.underscore.humanize }
           column ("Type") { |v| v.item_type.underscore.humanize }
           column ("Modified at") { |v| v.created_at.to_s :long }
-          column ("Admin") { |v| 
-            if v.whodunnit.blank? then '' 
-            elsif v.whodunnit_type == 'admin'
-              link_to AdminUser.find(v.whodunnit).email, [:admin, AdminUser.find(v.whodunnit)] 
-            else
-              link_to User.find(v.whodunnit).email, [:User, User.find(v.whodunnit)]
-            end 
+          column ("Admin") { |v|
+            if AdminUser.find_by_id(v.whodunnit).present?
+              if v.whodunnit.blank? then ''
+              elsif v.whodunnit_type == 'admin'
+                link_to AdminUser.find(v.whodunnit).email, [:admin, AdminUser.find(v.whodunnit)]
+              else
+                raw('<a href="/admin/admin_users/' + v.whodunnit.to_s + '">' + AdminUser.find(v.whodunnit).email + '</a>')
+              end
+            end
           }
         end
       end

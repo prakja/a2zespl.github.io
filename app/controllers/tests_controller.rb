@@ -128,14 +128,14 @@ class TestsController < ApplicationController
     begin
       @testId = params[:testId]
       @sequenceId = params[:sequenceId]
-      @questionIds = params[:questionIds]
+      @questionIds = params[:questionIds].map(&:to_i)
       @test = Test.where(id: @testId).first
       @rowsArray = []
       question_ids = []
 
       @testQuestions = @test.questions.order(seqNum: :asc, id: :asc)
       @testQuestions.each do |question|
-        question_ids.push(question.id.to_s)
+        question_ids.push(question.id)
       end
 
       @questionIds = @questionIds.uniq
