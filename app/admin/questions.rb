@@ -51,6 +51,8 @@ ActiveAdmin.register Question do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
+      elsif params["q"]["similar_questions"].present?
+        super
       else
         super.left_outer_joins(:topic)
       end

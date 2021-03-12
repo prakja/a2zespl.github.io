@@ -105,7 +105,15 @@ class Question < ApplicationRecord
   }
 
   scope :similar_questions, ->(question_id) {
-    neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.4 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" = (SELECT "topicId" from "Question" cq2 where cq2."id" = ?))', question_id, question_id);
+    question = Question.where('"topicId" is not null').find(question_id)
+    if question.nil?
+      raise "can't find duplicate for question with null topic id"
+    end
+    where('"Question"."id" in (SELECT distinct("id") from "Question" q1 where q1."topicId" = ? and q1."id" != ?) and similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.7', question.topicId, question_id, question_id);
+  }
+
+  scope :multiple_youtube, ->() {
+    where('"explanation" like \'%youtu%youtu%\'')
   }
 
   scope :image_question, -> {
@@ -202,7 +210,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id]
+    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id, :multiple_youtube]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end
