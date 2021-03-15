@@ -6,7 +6,7 @@ class CourseInvitation < ApplicationRecord
    before_create :setCreatedTime, :setUpdatedTime
    after_commit :after_create_update_course_invitation, on: [:create, :update]
    before_update :before_update_course_invitation, :setUpdatedTime
-   after_validation  :mobileValidate, unless: :skip_callback
+   after_validation  :mobileValidate, :emailValidate, unless: :skip_callback
 
    validates_presence_of :course, :displayName, :email, :phone, :role, :expiryAt
 
@@ -33,6 +33,11 @@ class CourseInvitation < ApplicationRecord
      errors.add(:phone, 'length can not be less than 10') if phone.length < 10
      errors.add(:phone, 'length can not be more than 15') if phone.length > 15
      errors.add(:phone, 'can only end with a digit. Check if any other character is at the end of phone number') if not phone.match(/[0-9]\s?$/)
+   end
+
+   def emailValidate
+     errors.add(:email, 'email has gamil instead of gmail') if email.downcase.include?('gamil.com')
+     errors.add(:email, 'email @ incorrectly placed') if email.downcase.include?('@') and not email.downcase.include?('@gmail.com') and email.downcase.include?('gmail.com')
    end
 
    def self.recent_course_invitations
