@@ -50,7 +50,7 @@ ActiveAdmin.register Question do
     batch_action_collection.find(ids).each do |question|
       question.set_image_link!
     end
-    redirect_to collection_path, alert: "The question images have been updated."
+    redirect_back fallback_location: collection_path, notice: "The question images have been updated."
   end
 
   controller do
