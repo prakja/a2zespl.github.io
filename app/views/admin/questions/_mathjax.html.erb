@@ -1,1 +1,14 @@
+<script>
+  $( document ).ready(function() {
+    $($(".action_item").find('a[href="#"]')[0]).click(callLambdaFunction)
+  });
+  function callLambdaFunction() {
+    var token = "<%= @token_lambda %>";
+    var url = "<%= Rails.application.config.create_image_url %>"
+    $.post( url + "?query=" + token)
+    .done(function( data ) {
+      location.reload(true);
+    });
+  }
+</script>
 <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
