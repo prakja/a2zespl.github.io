@@ -45,6 +45,15 @@ class Question < ApplicationRecord
     })
   end
 
+  def set_image_link!
+    payload = {
+      "type": "Question",
+      "id": self.id
+    }
+    token_lambda = JsonWebToken.encode_for_lambda(payload)
+    HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
+  end
+
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}

@@ -1,7 +1,6 @@
 ActiveAdmin.register Question do
   # config.sort_order = 'sequenceId_asc_and_id_asc'
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+  # See permitted parameters documentation: # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   # permit_params :list, :of, :attributes, :on, :model
   #
@@ -47,6 +46,13 @@ ActiveAdmin.register Question do
   scope :not_neetprep_course, show_count: false
   scope :bio_masterclass_course, show_count: false
 
+  batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.set_image_link!
+    end
+    redirect_to collection_path, alert: "The question images have been updated."
+  end
+
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
@@ -72,6 +78,7 @@ ActiveAdmin.register Question do
         "id": params[:id]
       }
       @token_lambda = JsonWebToken.encode_for_lambda(payload)
+      @url = Rails.application.config.create_image_url
     end
 
     def create_translation
@@ -106,6 +113,9 @@ ActiveAdmin.register Question do
     #       end
     # end
 
+    if current_admin_user.admin?
+      selectable_column
+    end
     id_column
     column (:question) { |question| raw(question.question)  }
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
@@ -233,7 +243,7 @@ ActiveAdmin.register Question do
   end
 
   action_item :set_image_link, only: :show do
-    link_to 'Set Image Link', '#'
+    link_to 'Set Image Link', '#', class: 'setImageLink'
   end
 
   action_item :set_hindi_translation, only: :show do
