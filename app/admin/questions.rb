@@ -233,7 +233,7 @@ ActiveAdmin.register Question do
   end
 
   action_item :set_image_link, only: :show do
-    link_to 'Set Image Link', '#'
+    link_to 'Set Image Link', '#', class: 'setImageLink'
   end
 
   action_item :set_hindi_translation, only: :show do
