@@ -15,6 +15,10 @@ class Topic < ApplicationRecord
   scope :neetprep_english_course, -> {joins(:subject).where(Subject: {courseId: Rails.configuration.english_full_course_id}).includes(:subject)}
   has_many :topicQuestions, foreign_key: :chapterId, class_name: 'ChapterQuestion'
   has_many :questions, through: :topicQuestions
+
+  has_many :ncertQuestions, foreign_key: :chapterId, class_name: 'NcertChapterQuestion'
+  has_many :questions, through: :ncertQuestions
+
   belongs_to :subject, foreign_key: 'subjectId', class_name: 'Subject'
 
   has_many :topicVideos, foreign_key: :chapterId, class_name: 'ChapterVideo'

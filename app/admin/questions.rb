@@ -103,7 +103,7 @@ ActiveAdmin.register Question do
     #           @index +=1
     #       end
     # end
-
+    selectable_column
     id_column
     column (:question) { |question| raw(question.question)  }
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
