@@ -1,10 +1,4 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-<script>
-  window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    reset();
-  };
-</script>
+<%= render 'mathjax' %>
 <h1>Probable duplicates from chapter <%=@test.name%></h1>
 <style>
 table {border-collapse:collapse; table-layout:fixed; width:100%;}
