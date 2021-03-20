@@ -1,17 +1,19 @@
 desc "Extract question and expalnation from content column of Note table and put it in Question table"
-task :copynote => :environment do
+task :copynote, [:chapterId] => :environment do |task, args|
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.connection.execute("SET statement_timeout = '5min';")
     end
-    Note.where("content like '%NEETprep Answer%'").find_each(batch_size:5) do |note|
-      htmlContent = Nokogiri::HTML(note.content)
+    # This command accept a chapter id as input and use that to find notes of that chapter. 
+    Section.select(%("Section".id,"Section"."chapterId" AS chapterId,"Note"."content" AS content)).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "Note"."content" like '%NEETprep Answer%'),args[:chapterId]).find_each(batch_size:5) do |chapterNote|
+      htmlContent = Nokogiri::HTML(chapterNote.content)
       explanation =  htmlContent.xpath("//div[@class='ncert-exercise-answer']")
-      question = note.content.scan(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)  
+      question = chapterNote.content.scan(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)  
       if question.length == explanation.length-1
         question.insert(0,"")
       end
       if question.length == explanation.length
         for i in 1..question.length-1
+          # Here we taken the range [-6..35]  because  when extracting the question by regex in the starting </div> and in end <div class="ncert-exercise-answer Are not part of Question itself so we are leaving that part of regex
           Question.create(question: question.at(i)[6..-35],explanation:explanation.at(i),type:"SUBJECTIVE",ncert:true)
         end
       end
