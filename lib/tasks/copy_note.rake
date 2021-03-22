@@ -17,7 +17,7 @@ task :copynote, [:chapterId] => :environment do |task, args|
           # Here we taken the range [-6..35]  because  when extracting the question by regex in the starting </div> and in end <div class="ncert-exercise-answer are not part of Question itself so we are leaving that part of regex
           qs = Question.create(question: question.at(i)[6..-35],explanation:explanation.at(i),type:"SUBJECTIVE",ncert:true)
           # Here we will get the id of this quesion from qs.id and replace the explanation in the content of Note from the url https://neetprep.com/ncert/question/qs.id
-          url = "https://neetprep.com/ncert-question/" + qs.id.to_s
+          url = "/ncert-question/" + qs.id.to_s
           explanation.at(i).name = 'a'
           explanation.at(i)['href'] = url
           explanation.at(i)['target'] = '_blank'
