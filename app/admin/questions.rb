@@ -45,6 +45,9 @@ ActiveAdmin.register Question do
   scope :NEET_Test_Questions, show_count: false
   scope :not_neetprep_course, show_count: false
   scope :bio_masterclass_course, show_count: false
+  scope :easyLevel, show_count: false
+  scope :mediumLevel, show_count: false
+  scope :difficultLevel, show_count: false
 
   batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
     batch_action_collection.find(ids).each do |question|
