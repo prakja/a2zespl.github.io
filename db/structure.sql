@@ -110,6 +110,18 @@ CREATE TYPE public."enum_Message_type" AS ENUM (
 
 
 --
+-- Name: enum_Ncert_question_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public."enum_Ncert_question_type" AS ENUM (
+    'Solved_Example',
+    'Exercises',
+    'In-Text_Questions',
+    'Exampler_Question'
+);
+
+
+--
 -- Name: enum_Payment_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -530,6 +542,20 @@ $_$;
 
 
 --
+-- Name: compute_similarity(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.compute_similarity() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+    select similarity((select "question" from "Question" where "id" = NEW."questionId1"), (select "question" from "Question" where "id" = NEW."questionId2")) into NEW."similarity";
+    RETURN NEW;
+END
+$$;
+
+
+--
 -- Name: duplicateChapterQuestions(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -680,6 +706,24 @@ $$;
 --
 
 COMMENT ON FUNCTION public.jsonb_delete_left(a jsonb, b text) IS 'delete key in second argument from first argument';
+
+
+--
+-- Name: rand(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.rand() RETURNS double precision
+    LANGUAGE sql
+    AS $$SELECT random();$$;
+
+
+--
+-- Name: substring_index(text, text, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.substring_index(text, text, integer) RETURNS text
+    LANGUAGE sql
+    AS $_$SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);$_$;
 
 
 --
@@ -1380,6 +1424,17 @@ ALTER SEQUENCE public."ChapterMindmap_id_seq" OWNED BY public."ChapterMindmap".i
 
 
 --
+-- Name: ChapterName; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterName" (
+    name text,
+    "chapterId" integer,
+    "subjectId" integer
+);
+
+
+--
 -- Name: ChapterNote; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1455,6 +1510,32 @@ CREATE TABLE public."ChapterQuestion20200929" (
 --
 
 CREATE TABLE public."ChapterQuestion20201005" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
+-- Name: ChapterQuestion20210129; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion20210129" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
+-- Name: ChapterQuestion20210215; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion20210215" (
     id integer,
     "chapterId" integer,
     "questionId" integer,
@@ -2370,7 +2451,9 @@ CREATE TABLE public."Course" (
     "shortDescription" character varying,
     "seqId" integer,
     "showPayment" boolean DEFAULT false NOT NULL,
-    "feeDesc" text
+    "feeDesc" text,
+    "feeTitle" text,
+    "hideCourseFee" boolean DEFAULT false
 );
 
 
@@ -3029,6 +3112,7 @@ CREATE TABLE public."DuplicateQuestion" (
     id integer NOT NULL,
     "questionId1" integer NOT NULL,
     "questionId2" integer NOT NULL,
+    similarity numeric(5,4),
     CONSTRAINT "DuplicateQuestion_questionId1_less_than_questionId2" CHECK (("questionId1" < "questionId2"))
 );
 
@@ -3482,6 +3566,42 @@ ALTER SEQUENCE public."NEETExamResult_id_seq" OWNED BY public."NEETExamResult".i
 
 
 --
+-- Name: NcertChapterQuestion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."NcertChapterQuestion" (
+    id integer NOT NULL,
+    "chapterId" integer NOT NULL,
+    "questionId" integer NOT NULL,
+    "questionTitle" character varying(255),
+    "seqNum" integer DEFAULT 0 NOT NULL,
+    "NcertQuestionType" public."enum_Ncert_question_type" DEFAULT 'Exercises'::public."enum_Ncert_question_type" NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: NcertChapterQuestion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."NcertChapterQuestion_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: NcertChapterQuestion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."NcertChapterQuestion_id_seq" OWNED BY public."NcertChapterQuestion".id;
+
+
+--
 -- Name: NcertSentence; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3492,7 +3612,8 @@ CREATE TABLE public."NcertSentence" (
     "sectionId" integer,
     sentence character varying,
     "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
+    "updatedAt" timestamp without time zone NOT NULL,
+    "sentenceHtml" text
 );
 
 
@@ -4007,6 +4128,88 @@ CREATE TABLE public."Question20203011" (
 
 
 --
+-- Name: Question20210211; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Question20210211" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
+-- Name: Question20210313; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Question20210313" (
+    id integer NOT NULL,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean DEFAULT false NOT NULL,
+    type public."enum_Question_type" DEFAULT 'MCQ-SO'::public."enum_Question_type" NOT NULL,
+    "paidAccess" boolean DEFAULT false,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean DEFAULT false,
+    "sequenceId" integer DEFAULT 0,
+    "proofRead" boolean DEFAULT false,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer DEFAULT 0 NOT NULL,
+    ncert boolean
+);
+
+
+--
+-- Name: Question20210313_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."Question20210313_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Question20210313_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."Question20210313_id_seq" OWNED BY public."Question20210313".id;
+
+
+--
 -- Name: QuestionCopy; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -4146,6 +4349,39 @@ CREATE SEQUENCE public."QuestionHint_id_seq"
 --
 
 ALTER SEQUENCE public."QuestionHint_id_seq" OWNED BY public."QuestionHint".id;
+
+
+--
+-- Name: QuestionNcertSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."QuestionNcertSentence" (
+    id integer NOT NULL,
+    "questionId" integer NOT NULL,
+    "ncertSentenceId" integer NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: QuestionNcertSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."QuestionNcertSentence_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: QuestionNcertSentence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."QuestionNcertSentence_id_seq" OWNED BY public."QuestionNcertSentence".id;
 
 
 --
@@ -4709,8 +4945,8 @@ CREATE TABLE public."SubTopic" (
     name character varying(255),
     deleted boolean DEFAULT false,
     "position" integer,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "videoOnly" boolean DEFAULT false
 );
 
@@ -5039,6 +5275,19 @@ CREATE TABLE public."TestAttemptBackup506173" (
 
 
 --
+-- Name: TestAttemptCorrectQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."TestAttemptCorrectQuestion" AS
+ SELECT (json_each_text.key)::integer AS "questionId",
+    "TestAttempt".id AS "testAttemptId"
+   FROM public."TestAttempt",
+    public."Question",
+    LATERAL json_each_text("TestAttempt"."userAnswers") json_each_text(key, value)
+  WHERE (("Question".id = (json_each_text.key)::integer) AND ((json_each_text.value)::integer = "Question"."correctOptionIndex"));
+
+
+--
 -- Name: TestAttemptDetail; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -5059,6 +5308,32 @@ CREATE TABLE public."TestAttemptHistory" (
     "testId" integer,
     "changedAnswers" jsonb
 );
+
+
+--
+-- Name: TestAttemptInCorrectQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."TestAttemptInCorrectQuestion" AS
+ SELECT (json_each_text.key)::integer AS "questionId",
+    "TestAttempt".id AS "testAttemptId"
+   FROM public."TestAttempt",
+    public."Question",
+    LATERAL json_each_text("TestAttempt"."userAnswers") json_each_text(key, value)
+  WHERE (("Question".id = (json_each_text.key)::integer) AND ((json_each_text.value)::integer <> "Question"."correctOptionIndex"));
+
+
+--
+-- Name: TestAttemptIncorrectQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."TestAttemptIncorrectQuestion" AS
+ SELECT (json_each_text.key)::integer AS "questionId",
+    "TestAttempt".id AS "testAttemptId"
+   FROM public."TestAttempt",
+    public."Question",
+    LATERAL json_each_text("TestAttempt"."userAnswers") json_each_text(key, value)
+  WHERE (("Question".id = (json_each_text.key)::integer) AND ((json_each_text.value)::integer <> "Question"."correctOptionIndex"));
 
 
 --
@@ -5095,6 +5370,32 @@ CREATE SEQUENCE public."TestAttemptPostmartem_id_seq"
 --
 
 ALTER SEQUENCE public."TestAttemptPostmartem_id_seq" OWNED BY public."TestAttemptPostmartem".id;
+
+
+--
+-- Name: TestAttemptUnAttemptedQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."TestAttemptUnAttemptedQuestion" AS
+ SELECT "TestQuestion"."questionId",
+    "TestAttempt".id AS "testAttemptId"
+   FROM public."TestQuestion",
+    public."TestAttempt"
+  WHERE (("TestAttempt"."testId" = "TestQuestion"."testId") AND (NOT ("TestQuestion"."questionId" IN ( SELECT ("UserAnswers".key)::integer AS key
+           FROM json_each_text("TestAttempt"."userAnswers") "UserAnswers"(key, value)))));
+
+
+--
+-- Name: TestAttemptUnattemptedQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."TestAttemptUnattemptedQuestion" AS
+ SELECT "TestQuestion"."questionId",
+    "TestAttempt".id AS "testAttemptId"
+   FROM public."TestQuestion",
+    public."TestAttempt"
+  WHERE (("TestAttempt"."testId" = "TestQuestion"."testId") AND (NOT ("TestQuestion"."questionId" IN ( SELECT ("UserAnswers".key)::integer AS key
+           FROM json_each_text("TestAttempt"."userAnswers") "UserAnswers"(key, value)))));
 
 
 --
@@ -6382,6 +6683,42 @@ ALTER SEQUENCE public."VideoQuestion_id_seq" OWNED BY public."VideoQuestion".id;
 
 
 --
+-- Name: VideoSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."VideoSentence" (
+    id bigint NOT NULL,
+    "videoId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "timestampStart" double precision,
+    "timestampEnd" double precision,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: VideoSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."VideoSentence_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: VideoSentence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."VideoSentence_id_seq" OWNED BY public."VideoSentence".id;
+
+
+--
 -- Name: VideoSubTopic; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7474,6 +7811,13 @@ ALTER TABLE ONLY public."NEETExamResult" ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: NcertChapterQuestion id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertChapterQuestion" ALTER COLUMN id SET DEFAULT nextval('public."NcertChapterQuestion_id_seq"'::regclass);
+
+
+--
 -- Name: NcertSentence id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7551,6 +7895,13 @@ ALTER TABLE ONLY public."Question" ALTER COLUMN id SET DEFAULT nextval('public."
 
 
 --
+-- Name: Question20210313 id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Question20210313" ALTER COLUMN id SET DEFAULT nextval('public."Question20210313_id_seq"'::regclass);
+
+
+--
 -- Name: QuestionDetail id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7569,6 +7920,13 @@ ALTER TABLE ONLY public."QuestionExplanation" ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public."QuestionHint" ALTER COLUMN id SET DEFAULT nextval('public."QuestionHint_id_seq"'::regclass);
+
+
+--
+-- Name: QuestionNcertSentence id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionNcertSentence" ALTER COLUMN id SET DEFAULT nextval('public."QuestionNcertSentence_id_seq"'::regclass);
 
 
 --
@@ -7884,6 +8242,13 @@ ALTER TABLE ONLY public."VideoLink" ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public."VideoQuestion" ALTER COLUMN id SET DEFAULT nextval('public."VideoQuestion_id_seq"'::regclass);
+
+
+--
+-- Name: VideoSentence id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence" ALTER COLUMN id SET DEFAULT nextval('public."VideoSentence_id_seq"'::regclass);
 
 
 --
@@ -8501,6 +8866,14 @@ ALTER TABLE ONLY public."ChapterMindmap"
 
 
 --
+-- Name: ChapterName ChapterName_name_subjectId_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterName"
+    ADD CONSTRAINT "ChapterName_name_subjectId_key" UNIQUE (name, "subjectId");
+
+
+--
 -- Name: ChapterNote ChapterNote_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8821,6 +9194,22 @@ ALTER TABLE ONLY public."NEETExamResult"
 
 
 --
+-- Name: NcertChapterQuestion NcertChapterQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertChapterQuestion"
+    ADD CONSTRAINT "NcertChapterQuestion_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: NcertSentence NcertSentence_noteId_sentence_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertSentence"
+    ADD CONSTRAINT "NcertSentence_noteId_sentence_unique" UNIQUE ("noteId", sentence);
+
+
+--
 -- Name: NcertSentence NcertSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8917,6 +9306,14 @@ ALTER TABLE ONLY public."Post"
 
 
 --
+-- Name: Question20210313 Question20210313_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Question20210313"
+    ADD CONSTRAINT "Question20210313_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: QuestionCourse QuestionCourse_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8933,6 +9330,14 @@ ALTER TABLE ONLY public."QuestionDetail"
 
 
 --
+-- Name: QuestionDetail QuestionDetail_questionId_year_exam_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionDetail"
+    ADD CONSTRAINT "QuestionDetail_questionId_year_exam_unique" UNIQUE ("questionId", year, exam);
+
+
+--
 -- Name: QuestionExplanation QuestionExplanation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8946,6 +9351,22 @@ ALTER TABLE ONLY public."QuestionExplanation"
 
 ALTER TABLE ONLY public."QuestionHint"
     ADD CONSTRAINT "QuestionHint_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: QuestionNcertSentence QuestionNcertSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionNcertSentence"
+    ADD CONSTRAINT "QuestionNcertSentence_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: QuestionNcertSentence QuestionNcertSentence_questionId_ncertSentenceId_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionNcertSentence"
+    ADD CONSTRAINT "QuestionNcertSentence_questionId_ncertSentenceId_key" UNIQUE ("questionId", "ncertSentenceId");
 
 
 --
@@ -9090,6 +9511,14 @@ ALTER TABLE ONLY public."StudentOnboardingEvents"
 
 ALTER TABLE ONLY public."SubTopic"
     ADD CONSTRAINT "SubTopic_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: SubTopic SubTopic_topicId_name_deleted_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."SubTopic"
+    ADD CONSTRAINT "SubTopic_topicId_name_deleted_unique" UNIQUE ("topicId", name, deleted);
 
 
 --
@@ -9341,6 +9770,14 @@ ALTER TABLE ONLY public."VideoQuestion"
 
 
 --
+-- Name: VideoSentence VideoSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT "VideoSentence_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: VideoSubTopic VideoSubTopic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9490,6 +9927,14 @@ ALTER TABLE ONLY public.doubt_chat_doubt_answers
 
 ALTER TABLE ONLY public.doubt_chat_doubts
     ADD CONSTRAINT doubt_chat_doubts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: NcertChapterQuestion ncert_chapterquestion_chapter_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertChapterQuestion"
+    ADD CONSTRAINT ncert_chapterquestion_chapter_id_question_id UNIQUE ("chapterId", "questionId");
 
 
 --
@@ -9833,6 +10278,13 @@ CREATE INDEX "DuplicateQuestion_questionId2_idx" ON public."DuplicateQuestion" U
 
 
 --
+-- Name: DuplicateQuestion_similarity_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DuplicateQuestion_similarity_idx" ON public."DuplicateQuestion" USING btree (similarity);
+
+
+--
 -- Name: FcmToken_platform_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9851,6 +10303,20 @@ CREATE INDEX "FcmToken_userId_idx" ON public."FcmToken" USING btree ("userId");
 --
 
 CREATE UNIQUE INDEX "NCERTQuestion_questionId_idx1" ON public."NCERTQuestion" USING btree ("questionId");
+
+
+--
+-- Name: NcertSentence_chapterId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "NcertSentence_chapterId_idx" ON public."NcertSentence" USING btree ("chapterId");
+
+
+--
+-- Name: NcertSentence_sentence_gin_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "NcertSentence_sentence_gin_index" ON public."NcertSentence" USING gin (sentence public.gin_trgm_ops);
 
 
 --
@@ -10085,6 +10551,13 @@ CREATE INDEX "QuestionDetail_questionId" ON public."QuestionDetail" USING btree 
 
 
 --
+-- Name: QuestionDetail_questionId_year_exam_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "QuestionDetail_questionId_year_exam_idx" ON public."QuestionDetail" USING btree ("questionId", year, exam);
+
+
+--
 -- Name: QuestionExplanation_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10110,6 +10583,20 @@ CREATE INDEX "QuestionHint_courseId_idx" ON public."QuestionHint" USING btree ("
 --
 
 CREATE INDEX "QuestionHint_questionId_idx" ON public."QuestionHint" USING btree ("questionId");
+
+
+--
+-- Name: QuestionNcertSentence_ncertSentenceId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "QuestionNcertSentence_ncertSentenceId_idx" ON public."QuestionNcertSentence" USING btree ("ncertSentenceId");
+
+
+--
+-- Name: QuestionNcertSentence_questionId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "QuestionNcertSentence_questionId_idx" ON public."QuestionNcertSentence" USING btree ("questionId");
 
 
 --
@@ -10218,10 +10705,31 @@ CREATE INDEX "StudentNote_userId_questionId_idx" ON public."StudentNote" USING b
 
 
 --
+-- Name: SubTopic_deleted_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "SubTopic_deleted_idx" ON public."SubTopic" USING btree (deleted);
+
+
+--
 -- Name: SubTopic_topicId; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX "SubTopic_topicId" ON public."SubTopic" USING btree ("topicId");
+
+
+--
+-- Name: SubTopic_topicId_name_deleted_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "SubTopic_topicId_name_deleted_idx1" ON public."SubTopic" USING btree ("topicId", name, deleted);
+
+
+--
+-- Name: SubTopic_videoOnly_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "SubTopic_videoOnly_idx" ON public."SubTopic" USING btree ("videoOnly");
 
 
 --
@@ -10355,6 +10863,20 @@ CREATE INDEX "UserCourse_startedAt_idx" ON public."UserCourse" USING btree ("sta
 --
 
 CREATE INDEX "UserCourse_userId" ON public."UserCourse" USING btree ("userId");
+
+
+--
+-- Name: UserDpp_testId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "UserDpp_testId_idx" ON public."UserDpp" USING btree ("testId");
+
+
+--
+-- Name: UserDpp_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "UserDpp_userId_idx" ON public."UserDpp" USING btree ("userId");
 
 
 --
@@ -10817,6 +11339,20 @@ CREATE INDEX index_votes_on_voter_type_and_voter_id ON public.votes USING btree 
 --
 
 CREATE UNIQUE INDEX motivation_message_unique ON public."Motivation" USING btree (message);
+
+
+--
+-- Name: ncert_chapter_question_chapter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_chapter_question_chapter_id ON public."NcertChapterQuestion" USING btree ("chapterId");
+
+
+--
+-- Name: ncert_chapter_question_question_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ncert_chapter_question_question_id ON public."NcertChapterQuestion" USING btree ("questionId");
 
 
 --
@@ -11323,6 +11859,13 @@ CREATE OR REPLACE VIEW public."VideoSubTopicQuestion" AS
 
 
 --
+-- Name: DuplicateQuestion question_similarity; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER question_similarity BEFORE INSERT OR UPDATE ON public."DuplicateQuestion" FOR EACH ROW EXECUTE PROCEDURE public.compute_similarity();
+
+
+--
 -- Name: TestAttempt test_attempt_history_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11479,11 +12022,43 @@ ALTER TABLE ONLY public."Doubt"
 
 
 --
+-- Name: DuplicateQuestion DuplicateQuestion_questionId1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."DuplicateQuestion"
+    ADD CONSTRAINT "DuplicateQuestion_questionId1_fkey" FOREIGN KEY ("questionId1") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: DuplicateQuestion DuplicateQuestion_questionId2_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."DuplicateQuestion"
+    ADD CONSTRAINT "DuplicateQuestion_questionId2_fkey" FOREIGN KEY ("questionId2") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: NCERTQuestion NCERTQuestion_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."NCERTQuestion"
     ADD CONSTRAINT "NCERTQuestion_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
+-- Name: NotDuplicateQuestion NotDuplicateQuestion_questionId1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NotDuplicateQuestion"
+    ADD CONSTRAINT "NotDuplicateQuestion_questionId1_fkey" FOREIGN KEY ("questionId1") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: NotDuplicateQuestion NotDuplicateQuestion_questionId2_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NotDuplicateQuestion"
+    ADD CONSTRAINT "NotDuplicateQuestion_questionId2_fkey" FOREIGN KEY ("questionId2") REFERENCES public."Question"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -11516,6 +12091,22 @@ ALTER TABLE ONLY public."QuestionCourse"
 
 ALTER TABLE ONLY public."QuestionCourse"
     ADD CONSTRAINT "QuestionCourse_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
+-- Name: QuestionNcertSentence QuestionNcertSentence_ncertSentenceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionNcertSentence"
+    ADD CONSTRAINT "QuestionNcertSentence_ncertSentenceId_fkey" FOREIGN KEY ("ncertSentenceId") REFERENCES public."NcertSentence"(id);
+
+
+--
+-- Name: QuestionNcertSentence QuestionNcertSentence_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionNcertSentence"
+    ADD CONSTRAINT "QuestionNcertSentence_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
@@ -11572,6 +12163,14 @@ ALTER TABLE ONLY public."StudentNote"
 
 ALTER TABLE ONLY public."StudentNote"
     ADD CONSTRAINT "StudentNote_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
+
+
+--
+-- Name: SubTopic SubTopic_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."SubTopic"
+    ADD CONSTRAINT "SubTopic_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES public."Topic"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -11839,6 +12438,22 @@ ALTER TABLE ONLY public."CourseTest"
 
 
 --
+-- Name: NcertChapterQuestion fk_ncert_chapter_question_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertChapterQuestion"
+    ADD CONSTRAINT fk_ncert_chapter_question_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
+-- Name: NcertChapterQuestion fk_ncert_chapter_question_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NcertChapterQuestion"
+    ADD CONSTRAINT fk_ncert_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
 -- Name: QuestionSubTopic fk_question_subtopic_questionid; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11983,6 +12598,14 @@ ALTER TABLE ONLY public.student_coaches
 
 
 --
+-- Name: VideoSentence fk_rails_907af9df59; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_907af9df59 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
 -- Name: ChapterFlashCard fk_rails_9414c57a02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12103,11 +12726,27 @@ ALTER TABLE ONLY public."TargetChapter"
 
 
 --
+-- Name: VideoSentence fk_rails_bfb381278a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_bfb381278a FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
+
+
+--
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: VideoSentence fk_rails_c95acbd4c7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_c95acbd4c7 FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
 
 
 --
@@ -12316,11 +12955,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201217100135'),
 ('20201221104331'),
 ('20201221113137'),
-('20210202095311'),
 ('20210202102223'),
 ('20210208071043'),
 ('20210211061357'),
 ('20210212061637'),
-('20210212084401');
+('20210212084401'),
+('20210313143122'),
+('20210315042743'),
+('20210316123522');
 
 
