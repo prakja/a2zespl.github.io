@@ -1,5 +1,5 @@
 ActiveAdmin.register NcertChapterQuestion do
-  remove_filter :topic, :question, :versions
+  remove_filter :ncertQuestion
 
   active_admin_import validate: true,
     timestamps: false,
@@ -20,16 +20,16 @@ ActiveAdmin.register NcertChapterQuestion do
     selectable_column
     id_column
     column ("Question") { |cv|
-      auto_link(cv.question)
+      auto_link(cv.ncertQuestion)
     }
     column ("Chapter") {|cv|
-      auto_link(cv.topic)
+      auto_link(cv.chapter)
     }
   end
 
   controller do
     def scoped_collection
-      super.includes(:question, :topic)
+      super.includes(:ncertQuestion, :chapter)
     end
   end
 

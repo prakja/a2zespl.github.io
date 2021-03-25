@@ -1,5 +1,4 @@
 class NcertChapterQuestion < ApplicationRecord
-  has_paper_trail
   self.table_name = "NcertChapterQuestion"
 
   before_create :setCreatedTime, :setUpdatedTime
