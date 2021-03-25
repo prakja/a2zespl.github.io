@@ -16,8 +16,8 @@ class Topic < ApplicationRecord
   has_many :topicQuestions, foreign_key: :chapterId, class_name: 'ChapterQuestion'
   has_many :questions, through: :topicQuestions
 
-  has_many :ncertQuestions, foreign_key: :chapterId, class_name: 'NcertChapterQuestion'
-  has_many :questions, through: :ncertQuestions
+  has_many :ncertChapterQuestions, foreign_key: :chapterId, class_name: 'NcertChapterQuestion'
+  has_many :ncertQuestions, through: :ncertChapterQuestions
 
   belongs_to :subject, foreign_key: 'subjectId', class_name: 'Subject'
 
