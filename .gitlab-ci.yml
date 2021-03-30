@@ -23,7 +23,7 @@ deploy:
   script:
     - apk add --update ca-certificates
     - apk add --update -t deps curl
-    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.46.0/doctl-1.46.0-linux-amd64.tar.gz | tar -xzv
+    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.57.0/doctl-1.57.0-linux-amd64.tar.gz | tar -xzv
     - mv doctl /usr/local/bin
     - export DIGITALOCEAN_ACCESS_TOKEN=4a240bab15de2821ec413c852d58512a5c94ac130b2911b9883a23e2a7275329
     - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster
@@ -61,7 +61,7 @@ deploy-develop:
     - echo $TAG
     - apk add --update ca-certificates
     - apk add --update -t deps curl
-    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.46.0/doctl-1.46.0-linux-amd64.tar.gz | tar -xzv
+    - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.57.0/doctl-1.57.0-linux-amd64.tar.gz | tar -xzv
     - mv doctl /usr/local/bin
     - export DIGITALOCEAN_ACCESS_TOKEN=4a240bab15de2821ec413c852d58512a5c94ac130b2911b9883a23e2a7275329
     - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster

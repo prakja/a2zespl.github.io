@@ -67,7 +67,7 @@ ActiveAdmin.register SubTopic do
     (SubTopic.column_names - columns_to_exclude).each do |c|
       column c.to_sym
     end
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty') and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
+    if (current_admin_user.role == 'admin' or current_admin_user.question_bank_owner?) and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
       column :questions_count, sortable: true
       column ("Duplicate Questions") { |subtopic|
         link_to "Duplicate Questions", duplicate_questions_admin_sub_topic_path(id: subtopic.id)
@@ -80,7 +80,7 @@ ActiveAdmin.register SubTopic do
     column :id
     column :name
     column ("Topic") {|sub_topic| sub_topic.topic.name }
-    if (current_admin_user.role == 'admin' or current_admin_user.role == 'faculty') and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
+    if (current_admin_user.role == 'admin' or current_admin_user.question_bank_owner?) and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
       column :questions_count
     end
   end

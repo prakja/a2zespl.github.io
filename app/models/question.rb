@@ -45,23 +45,27 @@ class Question < ApplicationRecord
     })
   end
 
+  def set_image_link!
+    payload = {
+      "type": "Question",
+      "id": self.id
+    }
+    token_lambda = JsonWebToken.encode_for_lambda(payload)
+    HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
+  end
+
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
- attribute :createdAt, :datetime, default: -> { Time.now }
-  attribute :updatedAt, :datetime, default:-> { Time.now }
+  attribute :createdAt, :datetime, default: -> { Time.now }
+  attribute :updatedAt, :datetime, default: -> { Time.now }
 
-
-  
   before_update :setUpdatedTime
-
-
 
   def setUpdatedTime
    self.updatedAt = Time.now
   end
 
-  
   scope :course_subject_id, ->(subject_id) {
     joins(:topics => :subjects).where(topics: {Subject: {id: subject_id}})
   }
@@ -110,7 +114,15 @@ class Question < ApplicationRecord
   }
 
   scope :similar_questions, ->(question_id) {
-    neetprep_course.where('similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.4 and "Question"."id" in (SELECT distinct("questionId") from "ChapterQuestion" cq where cq."chapterId" = (SELECT "topicId" from "Question" cq2 where cq2."id" = ?))', question_id, question_id);
+    question = Question.where('"topicId" is not null').find(question_id)
+    if question.nil?
+      raise "can't find duplicate for question with null topic id"
+    end
+    where('"Question"."id" in (SELECT distinct("id") from "Question" q1 where q1."topicId" = ? and q1."id" != ?) and similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.7', question.topicId, question_id, question_id);
+  }
+
+  scope :multiple_youtube, ->() {
+    where('"explanation" like \'%youtu%youtu%\'')
   }
 
   scope :image_question, -> {
@@ -143,6 +155,18 @@ class Question < ApplicationRecord
 
   scope :easy, -> {
     joins(:question_analytic).where("\"QuestionAnalytics\".\"correctPercentage\" >= 60")
+  }
+
+  scope :easyLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'easy'")
+  }
+
+  scope :mediumLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'medium'")
+  }
+
+  scope :difficultLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'difficult'")
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
@@ -207,7 +231,7 @@ class Question < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id]
+    [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id, :multiple_youtube]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
 end
