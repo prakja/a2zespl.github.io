@@ -319,6 +319,9 @@ ActiveAdmin.register Question do
       end
       f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
       f.input :lock_version, :as => :hidden
+      if current_admin_user.question_bank_owner?
+        f.input :deleted
+      end
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
       detail.inputs "Details" do
