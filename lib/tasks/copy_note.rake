@@ -3,30 +3,60 @@ task :copynote, [:chapterId] => :environment do |task, args|
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.connection.execute("SET statement_timeout = '5min';")
     end
-    # Here we accept a chapter id as input and use that to find notes of that chapter. 
-     Section.select(%("Section".id,"Section"."chapterId" AS chapterId,"Note"."content" AS content)).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "Note"."content" like '%NEETprep Answer%'),args[:chapterId]).find_each(batch_size:5) do |chapterNote|
-      htmlContent = Nokogiri::HTML(chapterNote.content)
-      explanation =  htmlContent.xpath("//div[@class='ncert-exercise-answer']")
+    p args[:chapterId]
+    # Here we accept a chapter id as input and use that to find notes of that chapter.
+    Section.select(%("Section".*, "Note"."content" AS content, "Note"."id" as "noteId")).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "SectionContent"."contentType" = 'Note' AND "Note"."content" like '%ncert-exercise-answer%'),args[:chapterId]).find_each(batch_size:5) do |chapterNote|
+      #p chapterNote.chapterId
+      #p chapterNote.noteId
+      #byebug
+      #htmlContent = Nokogiri::HTML(chapterNote.content)
+      #explanation =  htmlContent.xpath("//div[@class='ncert-exercise-answer']")
       question = chapterNote.content.scan(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)  
-      if question.length == explanation.length-1
-        question.insert(0,"")
+      explanations = chapterNote.content.split(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)
+      firstQuestion = chapterNote.content[/(question|exercise).+?\s*<p.+?<div class="ncert-exercise-answer"/im]
+      q1 = firstQuestion[/<p.*<\/p>/m]
+      firstExplanation = explanations.at(0)[/<div class="ncert-exercise-answer".*/m]
+      startIndex = 0
+      if firstExplanation.nil?
+        startIndex = 1
+      else
+        e1 = firstExplanation + "</div>"
       end
-      if question.length == explanation.length
-        nt = Note.find_by(content: chapterNote.content)
-        for i in 1..question.length-1
+      #if question.length == explanation.length-1
+      #  #question.insert(0,"")
+      #end
+      #p question.length
+      #p explanation.length
+      #p explanations.length
+      if question.length + 1 == explanations.length
+        nt = Note.find_by(id: chapterNote.noteId)
+        for i in startIndex..explanations.length-1
           # Here we taken the range [-6..35]  because  when extracting the question by regex in the starting </div> and in end <div class="ncert-exercise-answer are not part of Question itself so we are leaving that part of regex
-          qs = Question.create(question: question.at(i)[6..-35],explanation:explanation.at(i),type:"SUBJECTIVE",ncert:true)
+          if i == 0
+            q = q1
+            e = e1
+          else
+            q = question.at(i-1)[6..-35]
+            if i == explanations.length - 1
+              e = '<div class="ncert-exercise-answer"' + explanations.at(i)
+            else
+              e = '<div class="ncert-exercise-answer"' + explanations.at(i) + '</div>'
+            end
+          end
+          qs = Question.create(question: q,explanation:e,type:"SUBJECTIVE",ncert:true,topicId: chapterNote.chapterId)
           # Here we will get the id of this quesion from qs.id and replace the explanation in the content of Note from the url https://neetprep.com/ncert/question/qs.id
           url = "/ncert-question/" + qs.id.to_s
-          explanation.at(i).name = 'a'
-          explanation.at(i)['href'] = url
-          explanation.at(i)['target'] = '_blank'
-          explanation.at(i).content = 'NEETprep Answer'
+          completeUrl = '<a target="_blank" href="' + url + '">NEETprep Answer</a>'
+          chapterNote.content.gsub!(e, completeUrl)
+          #explanation.at(i).name = 'a'
+          #explanation.at(i)['href'] = url
+          #explanation.at(i)['target'] = '_blank'
+          #explanation.at(i).content = 'NEETprep Answer'
 
           #Here we insert the chapterId and questionId to the NcertChapterQuestion table
           NcertChapterQuestion.create(chapterId: args[:chapterId] , questionId:qs.id)
         end
-        nt.content = htmlContent.to_html
+        nt.content = chapterNote.content
         nt.save!
       end
     end
