@@ -22,6 +22,9 @@ ActiveAdmin.register Note do
   end
 
   index do
+    if current_admin_user.admin?
+      selectable_column
+    end
     id_column
     column :name
     column "Content" do |note|

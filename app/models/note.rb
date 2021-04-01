@@ -9,6 +9,7 @@ class Note < ApplicationRecord
 
   has_one :video_annotation,  -> { where(annotationType: "Note") }, class_name: "VideoAnnotation", foreign_key: "annotationId"
   has_one :video, through: :video_annotation
+  has_many :sectionContents,  -> { where(contentType: "Note") }, foreign_key: :contentId, class_name: 'SectionContent'
 
   def set_image_link!
     payload = {
