@@ -1,6 +1,25 @@
 ActiveAdmin.register Note do
   remove_filter :video_annotation, :video, :noteTopics, :topics, :versions
   permit_params :name, :content, :description, :externalURL, :epubURL, :epubContent, :createdAt, :updatedAt
+  before_action :create_token, only: [:show]
+
+  controller do
+    def create_token
+      payload = {
+        "type": "Note",
+        "id": params[:id]
+      }
+      @token_lambda = JsonWebToken.encode_for_lambda(payload)
+      @url = Rails.application.config.create_image_url
+    end
+  end
+
+  batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |note|
+      note.set_image_link!
+    end
+    redirect_back fallback_location: collection_path, notice: "The note images have been updated."
+  end
 
   index do
     id_column
@@ -20,7 +39,13 @@ ActiveAdmin.register Note do
     actions
   end
 
+  action_item :set_image_link, only: :show do
+    link_to 'Set Image Link', '#', class: 'setImageLink'
+  end
+
   show do
+    render partial: 'mathjax'
+    render partial: 'notes_show'
     attributes_table do
       row :id
       row :name do |note|
@@ -37,6 +62,9 @@ ActiveAdmin.register Note do
       end
       row :epubContent do |note|
         truncate(note.epubContent, omision: "...", length: 100)
+      end
+      row :content do |note|
+        raw(note.content)
       end
       row :createdAt do |note|
         note.createdAt

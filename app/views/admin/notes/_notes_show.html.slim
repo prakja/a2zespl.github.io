@@ -1,0 +1,12 @@
+javascript:
+  $( document ).ready(function() {
+    $('a.setImageLink').click(callLambdaFunction)
+  });
+  function callLambdaFunction() {
+    var token = "#{@token_lambda}";
+    var url = "#{@url}"
+    $.post( url + "?query=" + token)
+    .done(function( data ) {
+      location.reload(true);
+    });
+  }
