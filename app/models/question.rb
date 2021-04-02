@@ -157,6 +157,18 @@ class Question < ApplicationRecord
     joins(:question_analytic).where("\"QuestionAnalytics\".\"correctPercentage\" >= 60")
   }
 
+  scope :easyLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'easy'")
+  }
+
+  scope :mediumLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'medium'")
+  }
+
+  scope :difficultLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'difficult'")
+  }
+
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}
   scope :not_neetprep_course, -> {left_outer_joins(:topics => :subject).where(topics: {Subject: {courseId: nil}})}
   scope :bio_masterclass_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.bio_masterclass_course_id}})}

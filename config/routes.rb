@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   get "chapters/del_question/:chapterId", to: "chapters#del_question"
   get "chapters/add_note/:chapterId", to: "chapters#add_note"
   get "chapters/del_note/:chapterId", to: "chapters#del_note"
+  get "chapters/get_subtopics/:chapterId", to: "chapters#get_subtopics"
   get "tests/crud_question/:testId", to: "tests#crud_question"
   post "tests/remove_test_question", to: "tests#remove_test_question"
   post "tests/update_and_sort", to: "tests#update_and_sort"

@@ -1,5 +1,11 @@
-<%= render 'mathjax' %>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
+<script>
+  window.onload = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    reset();
+  };
+</script>
 
 <style>
   .loader {
