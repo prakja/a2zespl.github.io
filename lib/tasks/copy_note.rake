@@ -5,7 +5,7 @@ task :copynote, [:chapterId] => :environment do |task, args|
     end
     p args[:chapterId]
     # Here we accept a chapter id as input and use that to find notes of that chapter.
-    Section.select(%("Section".*, "Note"."content" AS content, "Note"."id" as "noteId")).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "SectionContent"."contentType" = 'Note' AND "Note"."content" like '%ncert-exercise-answer%'),args[:chapterId]).find_each(batch_size:5) do |chapterNote|
+    Section.select(%("Note"."content" AS content, "Note"."id" as "noteId")).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "SectionContent"."contentType" = 'Note' AND "Note"."content" like '%ncert-exercise-answer%'),args[:chapterId]).each do |chapterNote|
       #p chapterNote.chapterId
       #p chapterNote.noteId
       #byebug
@@ -43,7 +43,7 @@ task :copynote, [:chapterId] => :environment do |task, args|
               e = '<div class="ncert-exercise-answer"' + explanations.at(i) + '</div>'
             end
           end
-          qs = Question.create(question: q,explanation:e,type:"SUBJECTIVE",ncert:true,topicId: chapterNote.chapterId)
+          qs = Question.create(question: q,explanation:e,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
           # Here we will get the id of this quesion from qs.id and replace the explanation in the content of Note from the url https://neetprep.com/ncert/question/qs.id
           url = "/ncert-question/" + qs.id.to_s
           completeUrl = '<a target="_blank" href="' + url + '">NEETprep Answer</a>'

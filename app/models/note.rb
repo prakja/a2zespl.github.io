@@ -4,6 +4,12 @@ class Note < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
+  before_update :setUpdatedTime
+
+  def setUpdatedTime
+    self.updatedAt = Time.now
+  end
+
   has_many :noteTopics, foreign_key: :noteId, class_name: 'ChapterNote', dependent: :destroy
   has_many :topics, through: :noteTopics
 
