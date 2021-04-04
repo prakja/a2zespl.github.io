@@ -1,5 +1,5 @@
 ActiveAdmin.register Note do
-  remove_filter :video_annotation, :video, :noteTopics, :topics, :versions
+  remove_filter :video_annotation, :video, :noteTopics, :topics, :versions, :sectionContents
   permit_params :name, :content, :description, :externalURL, :epubURL, :epubContent, :createdAt, :updatedAt
   before_action :create_token, only: [:show]
 
