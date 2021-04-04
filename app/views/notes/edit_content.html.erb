@@ -1,16 +1,16 @@
 <div style="margin: 32px; margin-top: 4px;">
-  <div id="view_note">
-    <div style="background: white;"><%=raw(@content)%></div>
-    <div style="text-align: center">
-      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>&nbsp;
-      <button name="duplicate_button" id="duplicate_button" type="button">DUPLICATE NOTE</button>
-    </div>
-  </div>
   <div id="edit_note" style="display: none;">
     <h4>Edit Note</h4>
     <%= raw("<textarea id='note_content'>" + @content + "</textarea>") %>
     <div style="text-align: center">
       <button name="update_button" id="update_button" type="button">UPDATE NOTE</button>
+    </div>
+  </div>
+  <div id="view_note">
+    <div style="background: white;"><%=raw(@content)%></div>
+    <div style="text-align: center">
+      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>&nbsp;
+      <button name="duplicate_button" id="duplicate_button" type="button">DUPLICATE NOTE</button>
     </div>
   </div>
 </div>
