@@ -107,6 +107,8 @@ Rails.application.routes.draw do
 
   get "/coach-dashboard", to: "coaches#show"
   get "/coach-dashboard-summary", to: "coaches#summary"
+  #ncert_question_explanation
+  get "/ncert-question/:id", to: "admin/questions#show"
 
   namespace :admin do
     get "/topics/:id/print_flashcards", to: "topics#print_flashcards"
