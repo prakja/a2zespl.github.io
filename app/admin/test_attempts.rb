@@ -11,7 +11,7 @@ ActiveAdmin.register TestAttempt do
   scope :inspire_batch, show_count: false
   controller do
     def scoped_collection
-      super.includes(:test, user: :user_profile)
+      super.preload(:test, user: :user_profile).select('*, cast("result"#>>\'{sections,2,totalMarks}\' as integer) as "physics_score", cast("result"#>>\'{sections,1,totalMarks}\' as integer) as "chemistry_score", cast("result"#>>\'{sections,0,totalMarks}\' as integer) as "biology_score"')
     end
   end
 
@@ -26,17 +26,17 @@ ActiveAdmin.register TestAttempt do
         testAttempt.result['totalMarks']
       end
     end
-    column "Physics Score" do |testAttempt|
+    column "Physics Score", sortable: "physics_score" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][2].present?
         testAttempt.result['sections'][2]['totalMarks']
       end
     end
-    column "Chemistry Score" do |testAttempt|
+    column "Chemistry Score", sortable: "chemistry_score" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][1].present?
         testAttempt.result['sections'][1]['totalMarks']
       end
     end
-    column "Biology Score" do |testAttempt|
+    column "Biology Score", sortable: "biology_score" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['sections'].present? and testAttempt.result['sections'][0].present?
         testAttempt.result['sections'][0]['totalMarks']
       end

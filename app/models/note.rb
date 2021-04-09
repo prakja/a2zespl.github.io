@@ -4,11 +4,27 @@ class Note < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
+  before_update :setUpdatedTime
+
+  def setUpdatedTime
+    self.updatedAt = Time.now
+  end
+
   has_many :noteTopics, foreign_key: :noteId, class_name: 'ChapterNote', dependent: :destroy
   has_many :topics, through: :noteTopics
 
   has_one :video_annotation,  -> { where(annotationType: "Note") }, class_name: "VideoAnnotation", foreign_key: "annotationId"
   has_one :video, through: :video_annotation
+  has_many :sectionContents,  -> { where(contentType: "Note") }, foreign_key: :contentId, class_name: 'SectionContent'
+
+  def set_image_link!
+    payload = {
+      "type": "Note",
+      "id": self.id
+    }
+    token_lambda = JsonWebToken.encode_for_lambda(payload)
+    HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
+  end
 
   def githubEpubContent
     if(self.epubURL != nil)

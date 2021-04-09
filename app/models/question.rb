@@ -45,6 +45,15 @@ class Question < ApplicationRecord
     })
   end
 
+  def set_image_link!
+    payload = {
+      "type": "Question",
+      "id": self.id
+    }
+    token_lambda = JsonWebToken.encode_for_lambda(payload)
+    HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
+  end
+
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
@@ -146,6 +155,18 @@ class Question < ApplicationRecord
 
   scope :easy, -> {
     joins(:question_analytic).where("\"QuestionAnalytics\".\"correctPercentage\" >= 60")
+  }
+
+  scope :easyLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'easy'")
+  }
+
+  scope :mediumLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'medium'")
+  }
+
+  scope :difficultLevel, -> {
+    joins(:question_analytic).where("\"QuestionAnalytics\".\"difficultyLevel\" = 'difficult'")
   }
 
   scope :neetprep_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.hinglish_full_course_id}})}

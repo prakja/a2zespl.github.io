@@ -1,10 +1,4 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-<script>
-  window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    reset();
-  };
-</script>
+<%= render 'mathjax' %>
 <h1>Probable duplicates from chapter <%=@subTopic.name%></h1>
 <% if params[:cutoff].blank? %>
   <%=link_to 'Find More Duplicates (with relaxed matching criteria)', url_for(cutoff: "0.5")%><br /><br />

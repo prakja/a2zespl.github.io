@@ -13,7 +13,7 @@ class Ability
     elsif user.role == 'faculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
-      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
+      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
       can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
@@ -24,7 +24,7 @@ class Ability
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
-      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
+      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
       can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
@@ -40,7 +40,7 @@ class Ability
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note]
       can :import, [Video, FlashCard]
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
-      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion]
+      can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
       can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User, NcertSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
@@ -51,7 +51,7 @@ class Ability
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
-      can :read, [UserCourse, UserProfile, CustomerIssueType]
+      can :read, [UserCourse, UserProfile, CustomerIssueType, TestAttempt]
       can [:read, :update], [CustomerIssue, QuestionTranslation, User]
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note]
       can :import, [Video, FlashCard]

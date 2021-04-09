@@ -1,10 +1,4 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-
-<script>
-  window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-  };
-</script>
+<%= render 'mathjax' %>
 
 <div style="margin: 32px">
   <% @questions.each do |question| %>
@@ -14,14 +8,14 @@
       <h3 style="margin-top: -2px"><%= raw(question.question) %></h3>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h4><b><%= raw('Explanation:') %></b></h4>
-        <h3 style="margin-top: -2px"><%= raw(question.explanation) %></h3>
+        <h3 style="margin-top: -2px"><%= raw(question.explanation.gsub(/<iframe.*youtu.*><\/iframe>/, '')) %></h3>
       </div>
       <p>Translation</p>
       <a href="<%= "/admin/question_translations/" + question.translated_id.to_s + "/edit" %>"><%= "Edit translation" %></a>
       <h3 style="margin-top: -2px"><%= raw(question.translated_question) %></h3>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h4><b><%= raw('Explanation:') %></b></h4>
-        <h3 style="margin-top: -2px"><%= raw(question.translated_explanation) %></h3>
+        <h3 style="margin-top: -2px"><%= raw(question.translated_explanation.gsub(/<iframe.*youtu.*><\/iframe>/, '')) %></h3>
       </div>
     </div>
   <% end %>

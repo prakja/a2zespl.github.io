@@ -2,6 +2,11 @@ class ChaptersController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  def get_subtopics
+    @subtopics = SubTopic.topic_sub_topics(params[:chapterId])
+    render json: {data: @subtopics}, status: 200
+  end
+
   def crud_video
     if not current_admin_user
       redirect_to "/admin/login"

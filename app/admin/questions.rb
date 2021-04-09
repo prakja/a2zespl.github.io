@@ -1,7 +1,6 @@
 ActiveAdmin.register Question do
   # config.sort_order = 'sequenceId_asc_and_id_asc'
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+  # See permitted parameters documentation: # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   # permit_params :list, :of, :attributes, :on, :model
   #
@@ -46,6 +45,16 @@ ActiveAdmin.register Question do
   scope :NEET_Test_Questions, show_count: false
   scope :not_neetprep_course, show_count: false
   scope :bio_masterclass_course, show_count: false
+  scope :easyLevel, show_count: false
+  scope :mediumLevel, show_count: false
+  scope :difficultLevel, show_count: false
+
+  batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.set_image_link!
+    end
+    redirect_back fallback_location: collection_path, notice: "The question images have been updated."
+  end
 
   controller do
     def scoped_collection
@@ -72,6 +81,7 @@ ActiveAdmin.register Question do
         "id": params[:id]
       }
       @token_lambda = JsonWebToken.encode_for_lambda(payload)
+      @url = Rails.application.config.create_image_url
     end
 
     def create_translation
@@ -106,6 +116,9 @@ ActiveAdmin.register Question do
     #       end
     # end
 
+    if current_admin_user.admin?
+      selectable_column
+    end
     id_column
     column (:question) { |question| raw(question.question)  }
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
@@ -233,7 +246,7 @@ ActiveAdmin.register Question do
   end
 
   action_item :set_image_link, only: :show do
-    link_to 'Set Image Link', '#'
+    link_to 'Set Image Link', '#', class: 'setImageLink'
   end
 
   action_item :set_hindi_translation, only: :show do
@@ -295,9 +308,32 @@ ActiveAdmin.register Question do
         render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
       end
       f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
-      f.input :topic, include_hidden: false, input_html: { class: "select2" }, :collection => Topic.main_course_topic_name_with_subject, label: "Question Chapter", hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
+      
+      f.input :topic, include_hidden: false, :input_html => { 
+        class: "select2", 
+        :onchange => "
+          var $option = $(this);
+          const chapterId = $option.find(':selected').val();
+          const url = `${window.location.origin}/chapters/get_subtopics/${chapterId}/`;
+
+          $.ajax({
+            type: 'GET',
+            url: url,
+          }).done (function (data) {
+            $('#question_subTopic_ids').empty();
+            const subtopics = data.data;
+            subtopics.forEach((item, _) => $('#question_subTopic_ids').append(`<option value=${item.id}>${item.name}</option>`));
+          });
+        "
+        }, :collection => Topic.main_course_topic_name_with_subject, 
+        label: "Question Chapter",
+        hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
-      f.input :subTopics, input_html: { class: "select2" }, as: :select, :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : [])) if current_admin_user.question_bank_owner?
+
+      f.input :subTopics, input_html: { class: "select1" }, as: :select,
+        :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : [])),
+        hint: "Hold Ctrl to select" if current_admin_user.question_bank_owner?
+
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
@@ -306,6 +342,9 @@ ActiveAdmin.register Question do
       end
       f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
       f.input :lock_version, :as => :hidden
+      if current_admin_user.question_bank_owner?
+        f.input :deleted
+      end
     end
     f.has_many :details, new_record: true, allow_destroy: true do |detail|
       detail.inputs "Details" do

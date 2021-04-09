@@ -1,11 +1,4 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-
-<script>
-  window.onload = function() {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-  };
-</script>
-
+<%= render 'mathjax' %>
 <div style="margin: 32px">
   <h3 style="margin-top: -2px"><%= raw("Total Questions : " + @questions_data.length.to_s) %></h3>
 </div>

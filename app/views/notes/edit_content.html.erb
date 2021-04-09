@@ -1,11 +1,4 @@
 <div style="margin: 32px; margin-top: 4px;">
-  <div id="view_note">
-    <div style="background: white;"><%=raw(@content)%></div>
-    <div style="text-align: center">
-      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>&nbsp;
-      <button name="duplicate_button" id="duplicate_button" type="button">DUPLICATE NOTE</button>
-    </div>
-  </div>
   <div id="edit_note" style="display: none;">
     <h4>Edit Note</h4>
     <%= raw("<textarea id='note_content'>" + @content + "</textarea>") %>
@@ -13,11 +6,18 @@
       <button name="update_button" id="update_button" type="button">UPDATE NOTE</button>
     </div>
   </div>
+  <div id="view_note">
+    <div style="background: white;"><%=raw(@content)%></div>
+    <div style="text-align: center">
+      <button name="edit_button" id="edit_button" onclick="$('#view_note').hide();$('#edit_note').show();" type="button">EDIT NOTE</button>&nbsp;
+      <button name="duplicate_button" id="duplicate_button" type="button">DUPLICATE NOTE</button>
+    </div>
+  </div>
 </div>
 <%= render partial: "tinymce_ext_scripts" %>
 <%= render partial: "tinymce_yt_async_plugin" %>
 <%= render partial: "tinymce_que_plugin" %>
-<%= render partial: "mathjax" %>
+<%= render "mathjax" %>
 <%= render partial: "tinymce_ncert_div_box" %>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
 <script>
@@ -34,7 +34,7 @@ tinymce.init({
   language: 'en',
   toolbar: 'code,|,bold,italic,underline,|,cut,copy,paste,|,search,|,template,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,questionIframe,|,youtubeIframeAsync,|,ncertBlueBox',
   paste_data_images: true,
-  extended_valid_elements : 'a[id|class|style|width|height|onclick|href],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset],audio[controlslist|controls|preload]',
+  extended_valid_elements : 'a[id|class|style|width|height|onclick|href|target],div[id|class|style|width|height|onclick|data-url],script[src|async|defer|type|charset],audio[controlslist|controls|preload]',
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
   editorObject: {'id': 'note_content'},
   templates: [
