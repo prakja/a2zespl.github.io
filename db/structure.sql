@@ -6683,6 +6683,42 @@ ALTER SEQUENCE public."VideoQuestion_id_seq" OWNED BY public."VideoQuestion".id;
 
 
 --
+-- Name: VideoSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."VideoSentence" (
+    id bigint NOT NULL,
+    "videoId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "timestampStart" double precision,
+    "timestampEnd" double precision,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: VideoSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."VideoSentence_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: VideoSentence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."VideoSentence_id_seq" OWNED BY public."VideoSentence".id;
+
+
+--
 -- Name: VideoSubTopic; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8209,6 +8245,13 @@ ALTER TABLE ONLY public."VideoQuestion" ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: VideoSentence id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence" ALTER COLUMN id SET DEFAULT nextval('public."VideoSentence_id_seq"'::regclass);
+
+
+--
 -- Name: VideoSubTopic id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9724,6 +9767,14 @@ ALTER TABLE ONLY public."VideoLink"
 
 ALTER TABLE ONLY public."VideoQuestion"
     ADD CONSTRAINT "VideoQuestion_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: VideoSentence VideoSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT "VideoSentence_pkey" PRIMARY KEY (id);
 
 
 --
@@ -12547,6 +12598,14 @@ ALTER TABLE ONLY public.student_coaches
 
 
 --
+-- Name: VideoSentence fk_rails_907af9df59; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_907af9df59 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
 -- Name: ChapterFlashCard fk_rails_9414c57a02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12667,11 +12726,27 @@ ALTER TABLE ONLY public."TargetChapter"
 
 
 --
+-- Name: VideoSentence fk_rails_bfb381278a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_bfb381278a FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
+
+
+--
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: VideoSentence fk_rails_c95acbd4c7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT fk_rails_c95acbd4c7 FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
 
 
 --
@@ -12800,3 +12875,91 @@ ALTER TABLE ONLY public."Notification"
 
 SET search_path TO google_ads,public;
 
+INSERT INTO "schema_migrations" (version) VALUES
+('20190516080816'),
+('20190516081813'),
+('20190523054853'),
+('20190527055752'),
+('20190703122841'),
+('20190712115059'),
+('20190820114330'),
+('20190911070437'),
+('20190920100046'),
+('20191017085922'),
+('20191017094016'),
+('20191017114507'),
+('20191021115016'),
+('20191107103200'),
+('20191118061437'),
+('20191202121739'),
+('20191216134552'),
+('20191220125601'),
+('20191223131103'),
+('20191227074525'),
+('20200103044530'),
+('20200103052947'),
+('20200120065055'),
+('20200120101941'),
+('20200121082410'),
+('20200121110528'),
+('20200123085448'),
+('20200124120957'),
+('20200131070012'),
+('20200207121248'),
+('20200210051222'),
+('20200210053638'),
+('20200210055726'),
+('20200212095316'),
+('20200302051557'),
+('20200302051918'),
+('20200302052953'),
+('20200325081700'),
+('20200401120355'),
+('20200401124825'),
+('20200402111747'),
+('20200403101324'),
+('20200506111147'),
+('20200507080927'),
+('20200507131123'),
+('20200525092930'),
+('20200525094704'),
+('20200605124449'),
+('20200609072958'),
+('20200609072959'),
+('20200715130504'),
+('20200716115340'),
+('20200818085233'),
+('20200918024216'),
+('20200919055744'),
+('20200928131142'),
+('20201005072637'),
+('20201008171001'),
+('20201028114527'),
+('20201029051147'),
+('20201029051148'),
+('20201029082755'),
+('20201102122835'),
+('20201102124603'),
+('20201103054100'),
+('20201103105101'),
+('20201110102717'),
+('20201110113505'),
+('20201112141620'),
+('20201112141621'),
+('20201112141622'),
+('20201112141623'),
+('20201112141624'),
+('20201124045410'),
+('20201130082410'),
+('20201217100134'),
+('20201217100135'),
+('20201221104331'),
+('20201221113137'),
+('20210202102223'),
+('20210208071043'),
+('20210211061357'),
+('20210212061637'),
+('20210212084401'),
+('20210313143122'),
+('20210315042743'),
+('20210316123522');
