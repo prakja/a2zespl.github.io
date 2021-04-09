@@ -5,16 +5,17 @@ task :copynote, [:chapterId] => :environment do |task, args|
     end
     p args[:chapterId]
     # Here we accept a chapter id as input and use that to find notes of that chapter.
-    Section.select(%("Note"."content" AS content, "Note"."id" as "noteId")).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "SectionContent"."contentType" = 'Note' AND "Note"."content" like '%ncert-exercise-answer%'),args[:chapterId]).each do |chapterNote|
+    Section.select(%("Section".*, "Note"."content" AS content, "Note"."id" as "noteId")).joins(%(INNER JOIN "SectionContent" ON "Section".id = "SectionContent"."sectionId" INNER JOIN "Note" ON "SectionContent"."contentId" = "Note".id)).where(%("Section"."chapterId" = ? AND "SectionContent"."contentType" = 'Note' AND "Note"."content" like '%<div class="ncert-exercise-answer"%'),args[:chapterId]).each do |chapterNote|
       #p chapterNote.chapterId
       #p chapterNote.noteId
       #byebug
       #htmlContent = Nokogiri::HTML(chapterNote.content)
       #explanation =  htmlContent.xpath("//div[@class='ncert-exercise-answer']")
+      #TODO: this currently doesn't take care of the fact that <br /> can't come after </div> and whitespace
       question = chapterNote.content.scan(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)  
       explanations = chapterNote.content.split(/<\/div>\s*<p.+?<div class="ncert-exercise-answer"/m)
-      firstQuestion = chapterNote.content[/(question|exercise).+?\s*<p.+?<div class="ncert-exercise-answer"/im]
-      q1 = firstQuestion[/<p.*<\/p>/m]
+      firstQuestion = chapterNote.content[/(question|exercise|problem|execises).+?\s*(<p|<div).+?<div class="ncert-exercise-answer"/im]
+      q1 = firstQuestion[/<p.*<\/p>/m] || firstQuestion[/<div.*<\/div>/m]
       firstExplanation = explanations.at(0)[/<div class="ncert-exercise-answer".*/m]
       startIndex = 0
       if firstExplanation.nil?
