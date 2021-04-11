@@ -234,4 +234,5 @@ class Question < ApplicationRecord
     [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id, :multiple_youtube]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
+  accepts_nested_attributes_for :questionSubTopics, allow_destroy: true
 end
