@@ -68,7 +68,9 @@ ActiveAdmin.register SubTopic do
       column c.to_sym
     end
     if (current_admin_user.role == 'admin' or current_admin_user.question_bank_owner?) and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
-      column :questions_count, sortable: true
+      column ("Questions Count"), sortable: true do |subTopic|
+        link_to subTopic.questions_count, admin_questions_path(q: {subTopics_id_eq: subTopic.id})
+      end
       column ("Duplicate Questions") { |subtopic|
         link_to "Duplicate Questions", duplicate_questions_admin_sub_topic_path(id: subtopic.id)
       }
