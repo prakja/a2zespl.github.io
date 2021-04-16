@@ -307,7 +307,45 @@ ActiveAdmin.register Question do
         f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
         render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
       end
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
+
+      f.input :topics, :input_html => { 
+        class: "select2",
+        :onchange => "
+          const $option = $(this);
+          const questionBankChapterIds = [];
+
+          $option.find(':selected').each((index, selectedOption) => {
+            questionBankChapterIds.push(parseInt(selectedOption.value));
+          });
+
+          if (!questionBankChapterIds.length) {
+            return;
+          }
+
+          const chapterIds = questionBankChapterIds.join(',');
+          const url = `${window.location.origin}/chapters/populate_question_chapter_subtopic?question_bank_ids=${chapterIds}`;
+
+          // get the topic & subtopic
+          $.ajax({
+            type: 'GET',
+            url: url,
+          }).done(function(data){
+            console.log(data);
+            const {topic, subtopics} = data.data;
+
+            if(!!topic) {
+              $('#select2-question_topicId-container').empty();
+              $('#select2-question_topicId-container').append(`<option value=${topic.id} selected>${topic.name}</option>`)
+
+              // append subtopics
+              $('#question_subTopic_ids').empty();
+              subtopics.forEach((item, _) => $('#question_subTopic_ids').append(`<option value=${item.id}>${item.name}</option>`));
+            }
+          });
+        "
+      }, 
+      :collection => Topic.name_with_subject, label: "Question Bank Chapters",
+      hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
       
       f.input :topic, include_hidden: false, :input_html => { 
         class: "select2", 
