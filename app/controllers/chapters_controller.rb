@@ -19,25 +19,17 @@ class ChaptersController < ApplicationController
     unless hinglishChapters.empty?
       # some of the selected question bank chapter's are hinglish so give
       # preference to those and consider first
-      topic = Topic.find(hinglishChapters.first)
+      topicId = hinglishChapters.first
     else
       # all the selected question bank chapter's are english so
       # get the alternative chapter from DuplicateChapter
       unless questionBankChapterIds.empty?
         firstEnglishChapterId = questionBankChapterIds.first
         topicId = DuplicateChapter.where(:dupId => firstEnglishChapterId).first.origId
-        topic = Topic.find(topicId)
-        puts topic
       end
     end
 
-    topic = (not questionBankChapterIds.empty?) ? topic : nil
-    subtopics = topic ? SubTopic.topic_sub_topics(topic.id) : []
-
-    render json: {data: {
-        topic: topic,
-        subtopics: subtopics
-      }
+    render json: {data: {topicId: topicId}
     }, status: 200
   end
 

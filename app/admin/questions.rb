@@ -330,16 +330,11 @@ ActiveAdmin.register Question do
             type: 'GET',
             url: url,
           }).done(function(data){
-            console.log(data);
-            const {topic, subtopics} = data.data;
+            const {topicId} = data.data;
 
-            if(!!topic) {
-              $('#select2-question_topicId-container').empty();
-              $('#select2-question_topicId-container').append(`<option value=${topic.id} selected>${topic.name}</option>`)
-
-              // append subtopics
-              $('#question_subTopic_ids').empty();
-              subtopics.forEach((item, _) => $('#question_subTopic_ids').append(`<option value=${item.id}>${item.name}</option>`));
+            if(!!topicId) {
+              // set the new topic
+              $('#question_topicId').val(`${topicId}`).change();
             }
           });
         "
@@ -347,11 +342,17 @@ ActiveAdmin.register Question do
       :collection => Topic.name_with_subject, label: "Question Bank Chapters",
       hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
       
-      f.input :topic, include_hidden: false, :input_html => { 
-        class: "select2", 
+      f.input :topic, :input_html => {  
+        :class => "select2",
         :onchange => "
-          var $option = $(this);
+          const $option = $(this);
           const chapterId = $option.find(':selected').val();
+
+          // if falsy value then return
+          if (! (!!chapterId)){
+            return;
+          }
+
           const url = `${window.location.origin}/chapters/get_subtopics/${chapterId}/`;
 
           $.ajax({
@@ -366,6 +367,7 @@ ActiveAdmin.register Question do
         }, :collection => Topic.main_course_topic_name_with_subject, 
         label: "Question Chapter",
         hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
+
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
 
       f.input :subTopics, input_html: { class: "select1" }, as: :select,
@@ -378,7 +380,11 @@ ActiveAdmin.register Question do
       if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
         f.input :ncert
       end
-      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+
+      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, 
+        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?
         f.input :deleted
