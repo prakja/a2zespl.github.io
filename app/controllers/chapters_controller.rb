@@ -7,6 +7,32 @@ class ChaptersController < ApplicationController
     render json: {data: @subtopics}, status: 200
   end
 
+  def populate_question_chapter_subtopic
+    questionBankChapterIds = params[:question_bank_ids].split(',').map(&:to_i) || []
+
+    # chapterQuestion will only contain chapters for hinglish course
+    chapterQuestion = Topic.neetprep_course_id_filter([Rails.configuration.hinglish_full_course_id])
+      .pluck(:id)
+
+    hinglishChapters = chapterQuestion & questionBankChapterIds
+    
+    unless hinglishChapters.empty?
+      # some of the selected question bank chapter's are hinglish so give
+      # preference to those and consider first
+      topicId = hinglishChapters.first
+    else
+      # all the selected question bank chapter's are english so
+      # get the alternative chapter from DuplicateChapter
+      unless questionBankChapterIds.empty?
+        firstEnglishChapterId = questionBankChapterIds.first
+        topicId = DuplicateChapter.where(:dupId => firstEnglishChapterId).first.origId
+      end
+    end
+
+    render json: {data: {topicId: topicId}
+    }, status: 200
+  end
+
   def crud_video
     if not current_admin_user
       redirect_to "/admin/login"
