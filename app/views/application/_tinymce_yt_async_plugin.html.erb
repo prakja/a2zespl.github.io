@@ -24,7 +24,7 @@ tinymce.PluginManager.add('youtubeIframeAsync', function(editor) {
         
           var youtubeVideoEmbedUrl = e.data.IframeURL;
           var videoId = extractVideoID(youtubeVideoEmbedUrl);
-          editor.insertContent('<div> <iframe style="min-height:400px;width:100%;" src="' + youtubeVideoEmbedUrl + '" srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href="' + youtubeVideoEmbedUrl + '"><img src=https://img.youtube.com/vi/"'+videoId+'"/hqdefault.jpg ><span>▶</span></a>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe> </div>')
+          editor.insertContent('<div class="embed-responsive embed-responsive-16by9"> <iframe style="min-height:400px;width:100%;" src="' + youtubeVideoEmbedUrl + '" srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href="' + youtubeVideoEmbedUrl + '"><img src=https://img.youtube.com/vi/"'+videoId+'"/hqdefault.jpg ><span>▶</span></a>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe> </div>')
         }
       });
     }
