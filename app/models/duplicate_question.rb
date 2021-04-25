@@ -2,6 +2,17 @@ class DuplicateQuestion < ApplicationRecord
   has_paper_trail
   self.table_name = "DuplicateQuestion"
 
+  scope :question_bank_duplicates, -> {
+    joins(', "ChapterQuestion" cq1, "ChapterQuestion" cq2, "Question" q1, "Question" q2').where('cq1."questionId" = "DuplicateQuestion"."questionId1" and cq2."questionId" = "DuplicateQuestion"."questionId2" and cq1."chapterId" = cq2."chapterId" and "DuplicateQuestion"."questionId1" = q1."id" and q1."deleted" = false and "DuplicateQuestion"."questionId2" = q2."id" and q2."deleted" = false').distinct
+  }
+
+  def question_bank_chapter_id
+    q1Chapters = ChapterQuestion.joins(:question).where(questionId: self.questionId1)
+    q2Chapters = ChapterQuestion.joins(:question).where(questionId: self.questionId2)
+    chapters = q1Chapters.map(&:chapterId) & q2Chapters.map(&:chapterId)
+    return chapters&.first
+  end
+
   belongs_to :question1, foreign_key: 'questionId1', class_name: "Question"
   belongs_to :question2, foreign_key: 'questionId2', class_name: "Question"
 end
