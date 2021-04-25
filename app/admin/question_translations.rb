@@ -23,6 +23,12 @@ ActiveAdmin.register QuestionTranslation do
     actions
   end
 
+  member_action :history do
+    @question_translation = QuestionTranslation.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'QuestionTranslation', item_id: @question_translation.id)
+    render "layouts/history"
+  end
+
   show do
     render partial: 'mathjax'
     attributes_table do
