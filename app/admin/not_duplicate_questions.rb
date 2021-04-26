@@ -3,19 +3,19 @@ ActiveAdmin.register NotDuplicateQuestion do
 
   scope :marked_duplicate, show_count: false
   scope :botany_marked_duplicates, show_count: false do |ndqs|
-    ndqs.subject_marked_duplicate(53)
+    ndqs.subject_marked_duplicates(53)
   end
   scope :chemistry_marked_duplicates, show_count: false do |ndqs|
-    ndqs.subject_marked_duplicate(54)
+    ndqs.subject_marked_duplicates(54)
   end
   scope :physics_marked_duplicates, show_count: false do |ndqs|
-    ndqs.subject_marked_duplicate(55)
+    ndqs.subject_marked_duplicates(55)
   end
   scope :zoology_marked_duplicates, show_count: false do |ndqs|
-    ndqs.subject_marked_duplicate(56)
+    ndqs.subject_marked_duplicates(56)
   end
   scope :unknown_subject_marked_duplicates, show_count: false do |ndqs|
-    ndqs.subject_marked_duplicate
+    ndqs.subject_marked_duplicates
   end
 
   index do
