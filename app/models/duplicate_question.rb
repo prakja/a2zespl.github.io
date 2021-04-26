@@ -22,10 +22,10 @@ class DuplicateQuestion < ApplicationRecord
   end
 
   after_create do |dq|
-    NotDuplicateQuestion.destroy_by(
+    NotDuplicateQuestion.where(
       questionId1: dq.questionId1,
       questionId2: dq.questionId2
-    )
+    ).destroy_all
   end
 
   belongs_to :question1, foreign_key: 'questionId1', class_name: "Question"
