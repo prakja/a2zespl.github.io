@@ -38,7 +38,7 @@ ActiveAdmin.register VideoSentence do
         auto_link(videoSentence.chapter)
       end
       row :sentence do |videoSentence|
-        raw("<a target='_blank' href='#{videoSentence.videoUrl}'> #{videoSentence.sentence} </a>")
+        raw("<a target='_blank' href='#{videoSentence.playableUrlWithTimestamp}'> #{videoSentence.sentence} </a>")
       end
       row ("Timestamp start") do |videoSentence|
         videoSentence.timestampStart

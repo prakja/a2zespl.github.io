@@ -26,7 +26,7 @@ class VideoSentence < ApplicationRecord
       self.sentence
     end
 
-    def videoUrl
+    def playableUrlWithTimestamp
       chapter, video = self.chapter, self.video
 
       url = "/video-class/#{self.videoId}--#{seoUrl(video.name)}"
