@@ -25,7 +25,14 @@ class DuplicateQuestion < ApplicationRecord
     NotDuplicateQuestion.where(
       questionId1: dq.questionId1,
       questionId2: dq.questionId2
-    ).destroy_all
+    ).delete_all
+  end
+
+  before_destroy do |dq|
+    NotDuplicateQuestion.where(
+      questionId1: dq.questionId1,
+      questionId2: dq.questionId2
+    ).first_or_create
   end
 
   belongs_to :question1, foreign_key: 'questionId1', class_name: "Question"
