@@ -115,10 +115,17 @@ ActiveAdmin.register Topic do
   end
 
   member_action :mark_not_duplicate, method: :post do
-    NotDuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i,
-      questionId2: params[:question_id2].to_i
-    )
+    begin
+      NotDuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i,
+        questionId2: params[:question_id2].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"}
       format.js
@@ -141,8 +148,8 @@ ActiveAdmin.register Topic do
   member_action :remove_duplicate, method: :post do
     begin
       DuplicateQuestion.create!(
-        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
-        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id].to_i : params[:retain_question_id].to_i,
+        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id].to_i : params[:delete_question_id].to_i
       )
     rescue ActiveRecord::RecordNotUnique => e
       if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)

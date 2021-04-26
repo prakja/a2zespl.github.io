@@ -30,10 +30,17 @@ ActiveAdmin.register SubTopic do
   end
 
   member_action :mark_not_duplicate, method: :post do
-    NotDuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i,
-      questionId2: params[:question_id2].to_i
-    )
+    begin
+      NotDuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i,
+        questionId2: params[:question_id2].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_questions_admin_sub_topic_path(resource), notice: "Marked questions as not duplicate!"}
       format.js

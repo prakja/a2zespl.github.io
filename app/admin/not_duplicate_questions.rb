@@ -2,6 +2,22 @@ ActiveAdmin.register NotDuplicateQuestion do
   remove_filter :question1, :question2, :versions
 
   scope :marked_duplicate, show_count: false
+  scope :botany_marked_duplicates, show_count: false do |ndqs|
+    ndqs.subject_marked_duplicate(53)
+  end
+  scope :chemistry_marked_duplicates, show_count: false do |ndqs|
+    ndqs.subject_marked_duplicate(54)
+  end
+  scope :physics_marked_duplicates, show_count: false do |ndqs|
+    ndqs.subject_marked_duplicate(55)
+  end
+  scope :zoology_marked_duplicates, show_count: false do |ndqs|
+    ndqs.subject_marked_duplicate(56)
+  end
+  scope :unknown_subject_marked_duplicates, show_count: false do |ndqs|
+    ndqs.subject_marked_duplicate
+  end
+
   index do
     render partial: 'mathjax'
     if current_admin_user.admin?

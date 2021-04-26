@@ -2,6 +2,21 @@ ActiveAdmin.register DuplicateQuestion do
   remove_filter :question1, :question2, :versions
 
   scope :question_bank_duplicates, show_count: false
+  scope :botany_question_bank_duplicates, show_count: false do |dqs|
+    dqs.subject_question_bank_duplicates(53)
+  end
+  scope :chemistry_question_bank_duplicates, show_count: false do |dqs|
+    dqs.subject_question_bank_duplicates(54)
+  end
+  scope :physics_question_bank_duplicates, show_count: false do |dqs|
+    dqs.subject_question_bank_duplicates(55)
+  end
+  scope :zoology_question_bank_duplicates, show_count: false do |dqs|
+    dqs.subject_question_bank_duplicates(56)
+  end
+  scope :unknown_subject_question_bank_duplicates, show_count: false do |dqs|
+    dqs.subject_question_bank_duplicates
+  end
 
   index do
     render partial: 'mathjax'
