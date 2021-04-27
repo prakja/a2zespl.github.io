@@ -107,14 +107,25 @@ ActiveAdmin.register Topic do
   member_action :duplicate_questions do
     @topic = Topic.find(resource.id)
     cutoff = params[:cutoff].to_f > 0 ? params[:cutoff] : "0.7"
-    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "Question"."type" = \'MCQ-SO\' and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and "Question1"."type" = \'MCQ-SO\' and not exists (select * from "NotDuplicateQuestion" where "questionId1" = "Question"."id" and "questionId2" = "Question1"."id") and similarity("Question1"."question", "Question"."question") > ' + cutoff + ' and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+    if params[:questionId1].blank? and params[:questionId2].blank?
+      @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "ChapterQuestion" INNER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" and "Question"."deleted" = false and "Question"."type" = \'MCQ-SO\' and "ChapterQuestion"."chapterId" = ' + resource.id.to_s + ' INNER JOIN "ChapterQuestion" AS "ChapterQuestion1" ON "ChapterQuestion1"."chapterId" = "ChapterQuestion"."chapterId" and "ChapterQuestion"."questionId" < "ChapterQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion1"."questionId" and "Question1"."deleted" = false and "Question1"."type" = \'MCQ-SO\' and not exists (select * from "NotDuplicateQuestion" where "questionId1" = "Question"."id" and "questionId2" = "Question1"."id") and similarity("Question1"."question", "Question"."question") > ' + cutoff + ' and "ChapterQuestion1"."chapterId" = ' + resource.id.to_s);
+    else
+      @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "Question", "Question" AS "Question1" where "Question"."id" = ' + params[:questionId1] + ' and "Question1"."id" = ' + params[:questionId2]);
+    end
   end
 
   member_action :mark_not_duplicate, method: :post do
-    NotDuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i,
-      questionId2: params[:question_id2].to_i
-    )
+    begin
+      NotDuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i,
+        questionId2: params[:question_id2].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_questions_admin_topic_path(resource), notice: "Marked questions as not duplicate!"}
       format.js
@@ -137,8 +148,8 @@ ActiveAdmin.register Topic do
   member_action :remove_duplicate, method: :post do
     begin
       DuplicateQuestion.create!(
-        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
-        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id].to_i : params[:retain_question_id].to_i,
+        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id].to_i : params[:delete_question_id].to_i
       )
     rescue ActiveRecord::RecordNotUnique => e
       if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)

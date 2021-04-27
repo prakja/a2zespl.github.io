@@ -12,5 +12,5 @@ class Task < ApplicationRecord
 
   belongs_to :topic, class_name: "Topic", foreign_key: "topicId", optional: true
 
-  has_many :UserTasks, class_name: "UserTask", foreign_key: "taskId"
+  has_many :userTasks, class_name: "UserTask", foreign_key: "taskId"
 end
