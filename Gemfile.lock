@@ -134,6 +134,9 @@ GEM
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
     bcrypt (3.1.13)
+    best_in_place (3.1.1)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     bindex (0.8.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
@@ -390,6 +393,7 @@ DEPENDENCIES
   acts_as_list
   arctic_admin
   aws-sdk-s3 (~> 1)
+  best_in_place
   bootsnap (>= 1.1.0)
   byebug
   cancancan
@@ -430,4 +434,4 @@ RUBY VERSION
    ruby 2.6.5p114
 
 BUNDLED WITH
-   2.2.11
+   2.2.15
