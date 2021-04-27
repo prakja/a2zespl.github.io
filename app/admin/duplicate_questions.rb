@@ -18,6 +18,13 @@ ActiveAdmin.register DuplicateQuestion do
     dqs.subject_question_bank_duplicates
   end
 
+  batch_action :remove_duplicates_from_question_bank, if: proc{current_admin_user.admin?} do |ids|
+    batch_action_collection.find(ids).each do |dq|
+      dq.remove_duplicate_from_question_bank
+    end
+    redirect_back fallback_location: collection_path, notice: "Duplicates removed from question banks."
+  end
+
   index do
     render partial: 'mathjax'
     if current_admin_user.admin?
