@@ -15,19 +15,9 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
+  remove_filter :video, :chapter, :section
   preserve_default_filters!
-  filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
 
-  show do
-    attributes_table do
-      row 
-      row "Play Video" do |video|
-        
-      end
-    end
-    default_main_content
-  end
-  
   show do
     attributes_table do
       row :id
