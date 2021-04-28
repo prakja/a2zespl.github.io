@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/spohlenz/tinymce-rails.git
-  revision: 79707b544576a6469167739be45bf88a3a4162a5
+  revision: 213db17d672b3f0da46d4aaa0982045129f29705
   branch: tinymce-4
   specs:
-    tinymce-rails (4.9.6)
+    tinymce-rails (4.9.11)
       railties (>= 3.1.1)
 
 GIT
