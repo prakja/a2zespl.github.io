@@ -40,6 +40,11 @@ ActiveAdmin.register VideoSentence do
   end
 
   controller do
+
+    def scoped_collection
+      super.hinglish.addDetail
+    end
+
     def find_by_sentence
       sentence = params.require(:sentence)
       query = 'to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)'

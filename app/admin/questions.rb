@@ -393,7 +393,7 @@ ActiveAdmin.register Question do
 
       f.input :video_sentence_ids, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+        fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
 
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?
