@@ -16,7 +16,7 @@
 </style>
 <div width="100%">
   <video id="my_video_1" class="video-js vjs-default-skin vjs-fluid vjs-16-9" controls preload="auto" data-setup='{"controls": true}'>
-    <source src="https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8" type="application/x-mpegURL">
+    <source src="<%=@video.url%>" type="application/x-mpegURL">
   </video>
   </br>
   <div id="subtitle" style="margin: auto; position: relative; bottom: 120px; width: 80%; text-align: center; font-size: 30px; color: white; background: black">
