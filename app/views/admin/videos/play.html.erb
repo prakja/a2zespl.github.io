@@ -53,7 +53,7 @@
         $('#subtitle').hide();
       if (current_sentence != null && current_sentence.length > 0) 
         $('#subtitle').show();
-      if (current_sentence != null && current_sentence.length > 0 && current_sentence[0].timestampEnd > current_time)
+      if (current_sentence != null && current_sentence.length > 0 && current_sentence[0].timestampStart <= current_time && current_sentence[0].timestampEnd > current_time)
         return;
       current_sentence = video_sentences.filter(function(vs) {return (vs.timestampStart < current_time && vs.timestampEnd > current_time)});
       $('#sentence').html(current_sentence.length > 0 ? current_sentence[0].sentence : '');
