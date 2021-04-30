@@ -48,7 +48,7 @@ ActiveAdmin.register VideoSentence do
         best_in_place videoSentence, :sentence, as: :input, url: [:admin, videoSentence]
       end
       row ("Timestamp start") do |videoSentence|
-        raw("<a target='_blank' href='#{videoSentence.playableUrlWithTimestamp}'> #{videoSentence.timestampStart} </a>")
+        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} </a>")
       end
       row ("Timestamp end") do |videoSentence|
         videoSentence.timestampEnd
