@@ -32,12 +32,14 @@
       $('#updateSentence').show();
     });
   $('#updateSentence').on('click', function(){
+    var new_sentence = $('#sentence').text();
+    current_sentence[0].sentence = new_sentence; 
     $.ajax({
       type: "PUT",
       url: '/admin/video_sentences/' + current_sentence[0].id,
       beforeSend: function(xhr){xhr.setRequestHeader('X-CSRF-Token', token);},
       data: {
-        "video_sentence": {"sentence": $('#sentence').text()}
+        "video_sentence": {"sentence": new_sentence}
       }
     }).done (function (data){
       videojs('my_video_1').play();
