@@ -99,6 +99,14 @@ class Question < ApplicationRecord
     joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
   }
 
+  scope :has_ncert_sentences, ->() {
+    Question.ransack({ncertSentences_count_gt: 0}).result
+  }
+
+  scope :no_ncert_sentences, ->() {
+    Question.ransack({ncertSentences_count_eq: 0}).result
+  }
+
   scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
     joins(:topics => :subjects).where(topics: {Subject: {id: flatten_subject_ids}})

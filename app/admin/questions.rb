@@ -48,6 +48,8 @@ ActiveAdmin.register Question do
   scope :easyLevel, show_count: false
   scope :mediumLevel, show_count: false
   scope :difficultLevel, show_count: false
+  scope :has_ncert_sentences, show_count: false
+  scope :no_ncert_sentences, show_count: false
 
   batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
     batch_action_collection.find(ids).each do |question|
