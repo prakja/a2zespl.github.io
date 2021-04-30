@@ -3,6 +3,7 @@
 <link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet"></link>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css"></link>
 <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
+<script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
 <style>
 .video-js .vjs-current-time, .vjs-no-flex .vjs-current-time {
   display: block !important;
@@ -48,16 +49,31 @@
     }) 
   });
   $('#my_video_1').on('timeupdate', function(){
-      if (this.paused == false)
-        $('#updateSentence').hide();
-      var current_time = this.currentTime;
-      if (current_sentence != null && current_sentence.length == 0) 
-        $('#subtitle').hide();
-      if (current_sentence != null && current_sentence.length > 0) 
-        $('#subtitle').show();
-      if (current_sentence != null && current_sentence.length > 0 && current_sentence[0].timestampStart <= current_time && current_sentence[0].timestampEnd > current_time)
-        return;
-      current_sentence = video_sentences.filter(function(vs) {return (vs.timestampStart < current_time && vs.timestampEnd > current_time)});
-      $('#sentence').html(current_sentence.length > 0 ? current_sentence[0].sentence : '');
-    });
+    if (this.paused == false)
+      $('#updateSentence').hide();
+    var current_time = this.currentTime;
+    if (current_sentence != null && current_sentence.length == 0) 
+      $('#subtitle').hide();
+    if (current_sentence != null && current_sentence.length > 0) 
+      $('#subtitle').show();
+    if (current_sentence != null && current_sentence.length > 0 && current_sentence[0].timestampStart <= current_time && current_sentence[0].timestampEnd > current_time)
+      return;
+    current_sentence = video_sentences.filter(function(vs) {return (vs.timestampStart < current_time && vs.timestampEnd > current_time)});
+    $('#sentence').html(current_sentence.length > 0 ? current_sentence[0].sentence : '');
+  });
+  var player = videojs('my_video_1', {
+    playbackRates: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+  });
+  player.seekButtons({
+    forward: 3,
+    back: 3
+  });
+  player.hotkeys({
+    volumeStep: 0.1,
+    seekStep: 3,
+    enableModifiersForNumbers: false
+  });
+  <% if params[:start_time].present? %>
+    player.currentTime(<%=params[:start_time].to_i - 1%>)
+  <% end %>
 </script>
