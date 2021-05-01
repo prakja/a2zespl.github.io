@@ -196,11 +196,6 @@ ActiveAdmin.register Question do
       row :subTopics do |question|
         question.subTopics
       end
-      if question.video_sentences.length > 0
-        row "Video Sentences" do |question|
-          question.video_sentences
-        end
-      end
       row :tests do |question|
         question.systemTests
       end
@@ -213,6 +208,11 @@ ActiveAdmin.register Question do
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
           question.ncert_sentences
+        end
+      end
+      if question.video_sentences.length > 0
+        row "Video Sentences" do |question|
+          question.video_sentences
         end
       end
     end
