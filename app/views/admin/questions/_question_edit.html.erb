@@ -3,8 +3,10 @@
     var selected_items = $('#question_ncert_sentence_ids_selected_values .selected-item');    
     var selected_item_inputs = selected_items.find('input');    
     selected_items.each(function(index){
-      var link = ' <a href="/admin/ncert_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
-      $(this).append(link);
+      if ($(this).children().last().is("a") == false) {
+        var link = ' <a href="/admin/ncert_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
+        $(this).append(link);
+      }
     });
   }
 
@@ -12,8 +14,10 @@
     var selected_items = $('#question_video_sentence_ids_selected_values .selected-item');    
     var selected_item_inputs = selected_items.find('input');    
     selected_items.each(function(index){
-      var link = ' <a href="/admin/video_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
-      $(this).append(link);
+      if ($(this).children().last().is("a") == false) {
+        var link = ' <a href="/admin/video_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
+        $(this).append(link);
+      }
     });
   }
 
