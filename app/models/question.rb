@@ -54,6 +54,17 @@ class Question < ApplicationRecord
     HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
   end
 
+  def change_option_index!
+    if(self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/).nil?) && (self.question=~/.*?\s*.*?1\..*?\s*.*?2\..*?\s*.*?3\..*?\s*.*?4\..*/).nil?)  
+      self.question.gsub!('(a)', '1.')
+      self.question.gsub!('(b)', '2.')
+      self.question.gsub!('(c)', '3.')
+      self.question.gsub!('(d)', '4.')
+     # p self.question
+      self.save!
+    end
+  end
+  
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
