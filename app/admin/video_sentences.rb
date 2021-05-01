@@ -15,7 +15,7 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
-  remove_filter :video, :chapter, :section
+  remove_filter :video, :chapter, :section, :versions
   permit_params :sentence
   preserve_default_filters!
 
