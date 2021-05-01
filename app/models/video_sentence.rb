@@ -2,6 +2,7 @@ class VideoSentence < ApplicationRecord
   include SEOHelper
 
   self.table_name = "VideoSentence"
+  has_paper_trail
   belongs_to :video, class_name: "Video", foreign_key: "videoId"
   belongs_to :chapter, class_name: "Topic", foreign_key: "chapterId"
   belongs_to :section, class_name: "Section", foreign_key: "sectionId", optional: true
