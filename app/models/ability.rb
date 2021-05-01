@@ -14,7 +14,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
-      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
+      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence, VideoSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
@@ -25,7 +25,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
-      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence]
+      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence, VideoSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
@@ -41,7 +41,7 @@ class Ability
       can :import, [Video, FlashCard]
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt]
-      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User, NcertSentence]
+      can [:read, :update], [Doubt, DoubtAnswer, Question, Video, Test, CustomerIssue, Note, QuestionTranslation, User, NcertSentence, VideoSentence]
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
