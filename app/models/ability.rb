@@ -21,6 +21,7 @@ class Ability
       can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
+      can [:play], [Video]
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
@@ -32,6 +33,7 @@ class Ability
       can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
+      can [:play], [Video]
     elsif user.role == 'supportAndFaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
@@ -48,13 +50,15 @@ class Ability
       can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue]
       can [:create, :read], [ActiveAdmin::Comment]
+      can [:play], [Video]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
       can :read, [UserCourse, UserProfile, CustomerIssueType, TestAttempt]
-      can [:read, :update], [CustomerIssue, QuestionTranslation, User]
+      can [:read, :update], [CustomerIssue, QuestionTranslation, User, VideoSentence]
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note]
       can :import, [Video, FlashCard]
+      can [:play], [Video]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]
