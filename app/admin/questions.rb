@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -50,6 +50,8 @@ ActiveAdmin.register Question do
   scope :difficultLevel, show_count: false
   scope :has_ncert_sentences, show_count: false
   scope :no_ncert_sentences, show_count: false
+  scope :has_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :no_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
 
   batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
     batch_action_collection.find(ids).each do |question|

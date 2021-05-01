@@ -74,6 +74,10 @@ class Question < ApplicationRecord
     Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
   end
 
+  ransacker :videoSentences_count do
+    Arel.sql('(SELECT COUNT("QuestionVideoSentence"."id") FROM "QuestionVideoSentence" WHERE "QuestionVideoSentence"."questionId" = "Question"."id")')
+  end
+
   ransacker :subTopics_count do
     Arel.sql('(SELECT COUNT("QuestionSubTopic"."id") FROM "QuestionSubTopic" WHERE "QuestionSubTopic"."questionId" = "Question"."id")')
   end
@@ -105,6 +109,14 @@ class Question < ApplicationRecord
 
   scope :no_ncert_sentences, ->() {
     Question.ransack({ncertSentences_count_eq: 0}).result
+  }
+
+  scope :has_video_sentences, ->() {
+    Question.ransack({videoSentences_count_gt: 0}).result
+  }
+
+  scope :no_video_sentences, ->() {
+    Question.ransack({videoSentences_count_eq: 0}).result
   }
 
   scope :subject_ids, ->(*subject_ids) {
