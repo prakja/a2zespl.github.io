@@ -37,6 +37,7 @@ ActiveAdmin.register DuplicateQuestion do
     column "Question2" do |dq|
       raw('<a href=' + edit_admin_question_path(dq.question2) + " target='_blank'>#{dq.question2.id}</a><br />" + dq.question2.question)
     end
+    column :similarity
     actions
   end
 
