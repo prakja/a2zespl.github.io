@@ -20,7 +20,7 @@ ActiveAdmin.register NotDuplicateQuestion do
 
   index do
     render partial: 'mathjax'
-    if current_admin_user.admin?
+    if current_admin_user.question_bank_owner?
       selectable_column
     end
     id_column
