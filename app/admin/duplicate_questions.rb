@@ -26,7 +26,10 @@ ActiveAdmin.register DuplicateQuestion do
   end
 
   batch_action :destroy, if: proc{current_admin_user.admin?} do |ids|
-    super
+    batch_action_collection.find(ids).each do |dq|
+      dq.destroy
+    end
+    redirect_back fallback_location: collection_path, notice: "Duplicates removed from question banks."
   end
 
   index do
