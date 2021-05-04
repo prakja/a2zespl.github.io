@@ -22,7 +22,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:destroy], [NotDuplicateQuestion]
+      can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
@@ -35,7 +35,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:destroy], [NotDuplicateQuestion]
+      can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'supportAndFaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
@@ -53,7 +53,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:destroy], [NotDuplicateQuestion]
+      can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]

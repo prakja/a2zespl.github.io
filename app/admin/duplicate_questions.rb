@@ -25,6 +25,10 @@ ActiveAdmin.register DuplicateQuestion do
     redirect_back fallback_location: collection_path, notice: "Duplicates removed from question banks."
   end
 
+  batch_action :destroy, if: proc{current_admin_user.admin?} do |ids|
+    super
+  end
+
   index do
     render partial: 'mathjax'
     if current_admin_user.question_bank_owner?
