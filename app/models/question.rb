@@ -54,10 +54,18 @@ class Question < ApplicationRecord
     HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
   end
 
+  def abcd_options?
+    return self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/i).nil?) && (self.question=~/.*?\s*.*?\(?1\)?\.?.*?\s*.*?\(?2\)?\.?.*?\s*.*?\(?3\)?\.?.*?\s*.*?\(?4\)?\.?.*/).nil?
+  end
+
+  def convert_num_options
+    self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1) ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2) ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3) ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4) ')
+  end
+
   def change_option_index!
     # rigour checks to ensure that we are very unlikely to do incorrect modification
-    if self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/i).nil?) && (self.question=~/.*?\s*.*?1\..*?\s*.*?2\..*?\s*.*?3\..*?\s*.*?4\..*/).nil?
-      if self.question.sub!(/>\s*?\(a\)\s*?/i, '>1. ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>2. ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>3. ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>4. ')
+    if self.abcd_options?
+      if self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1) ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2) ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3) ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4) ')
         self.options = ["(1)", "(2)", "(3)", "(4)"]
         self.save!
       end
@@ -207,6 +215,9 @@ class Question < ApplicationRecord
   scope :NEET_Test_Questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."exam" in (\'NEET\', \'AIPMT\'))')}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   scope :unused_in_high_yield_bio, -> {where('"id" in (select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" = 270) and "seqNum" = 0 except select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" in (148,452)))')}
+
+  scope :abcd_options, -> {where('"type" = \'MCQ-SO\' and "question" ~* \'.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*\' and "question" !~* \'.*?\s*.*?\(?1\)?\.?.*?\s*.*?\(?2\)?\.?.*?\s*.*?\(?3\)?\.?.*?\s*.*?\(?4\)?\.?.*\'')}
+
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
   has_many :translations, class_name: "QuestionTranslation", foreign_key: "questionId"
