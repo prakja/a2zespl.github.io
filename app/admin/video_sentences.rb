@@ -15,8 +15,25 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
-  remove_filter :video, :chapter, :section
+  remove_filter :video, :chapter, :section, :versions
+  permit_params :sentence
   preserve_default_filters!
+
+  index do
+    selectable_column
+    id_column
+    column ("Video") {|vs|
+      auto_link(vs.video)
+    }
+    column ("Chapter") {|vs|
+      auto_link(vs.chapter)
+    }
+    column (:sentence) { |vs|
+      best_in_place vs, :sentence, url: [:admin, vs]
+    }
+    column (:timestampStart) {|vs| vs.timestampStart}
+    column (:timestampEnd) {|vs| vs.timestampEnd}
+  end
 
   show do
     attributes_table do
@@ -28,10 +45,10 @@ ActiveAdmin.register VideoSentence do
         auto_link(videoSentence.chapter)
       end
       row :sentence do |videoSentence|
-        raw("<a target='_blank' href='#{videoSentence.playableUrlWithTimestamp}'> #{videoSentence.sentence} </a>")
+        best_in_place videoSentence, :sentence, as: :input, url: [:admin, videoSentence]
       end
       row ("Timestamp start") do |videoSentence|
-        videoSentence.timestampStart
+        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} </a>")
       end
       row ("Timestamp end") do |videoSentence|
         videoSentence.timestampEnd

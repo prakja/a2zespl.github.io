@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -206,11 +206,6 @@ ActiveAdmin.register Question do
       row :subTopics do |question|
         question.subTopics
       end
-      if question.video_sentences.length > 0
-        row "Video Sentences" do |question|
-          question.video_sentences
-        end
-      end
       row :tests do |question|
         question.systemTests
       end
@@ -223,6 +218,11 @@ ActiveAdmin.register Question do
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
           question.ncert_sentences
+        end
+      end
+      if question.video_sentences.length > 0
+        row "Video Sentences" do |question|
+          question.video_sentences
         end
       end
     end
@@ -408,14 +408,15 @@ ActiveAdmin.register Question do
         f.input :ncert
       end
 
-      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, 
+      f.input :ncert_sentence_ids, input_html: {id: "question_ncert_sentences_select2"}, label: "NCERT Sentence", as: :selected_list, 
         url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
 
-      f.input :video_sentence_ids, label: "Video Sentence", as: :selected_list,
+      f.input :video_sentence_ids, input_html: {id: "question_video_sentences_select2"}, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
 
+      render partial: 'question_edit'
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?
         f.input :deleted
