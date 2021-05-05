@@ -60,6 +60,13 @@ ActiveAdmin.register Question do
     redirect_back fallback_location: collection_path, notice: "The question images have been updated."
   end
 
+  batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.change_option_index!
+    end
+    redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
+  end
+
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
@@ -256,6 +263,15 @@ ActiveAdmin.register Question do
 
   action_item :set_image_link, only: :show do
     link_to 'Set Image Link', '#', class: 'setImageLink'
+  end
+
+  member_action :change_option_index, method: :post do
+    resource.change_option_index!
+    redirect_to admin_question_path, notice: "Question options fixed!"
+  end
+
+  action_item :change_option_index, only: :show do
+    link_to 'Change Option Index', change_option_index_admin_question_path(resource), method: :post
   end
 
   action_item :set_hindi_translation, only: :show do
