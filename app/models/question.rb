@@ -55,13 +55,12 @@ class Question < ApplicationRecord
   end
 
   def change_option_index!
-    if(self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/).nil?) && (self.question=~/.*?\s*.*?1\..*?\s*.*?2\..*?\s*.*?3\..*?\s*.*?4\..*/).nil?)  
-      self.question.gsub!('(a)', '1.')
-      self.question.gsub!('(b)', '2.')
-      self.question.gsub!('(c)', '3.')
-      self.question.gsub!('(d)', '4.')
-     # p self.question
-      self.save!
+    # rigour checks to ensure that we are very unlikely to do incorrect modification
+    if self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/i).nil?) && (self.question=~/.*?\s*.*?1\..*?\s*.*?2\..*?\s*.*?3\..*?\s*.*?4\..*/).nil?
+      if self.question.sub!(/>\s*?\(a\)\s*?/i, '>1. ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>2. ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>3. ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>4. ')
+        self.options = ["(1)", "(2)", "(3)", "(4)"]
+        self.save!
+      end
     end
   end
   

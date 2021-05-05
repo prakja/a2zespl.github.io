@@ -261,8 +261,13 @@ ActiveAdmin.register Question do
     link_to 'Set Image Link', '#', class: 'setImageLink'
   end
 
+  member_action :change_option_index, method: :post do
+    resource.change_option_index!
+    redirect_to admin_question_path, notice: "Question options fixed!"
+  end
+
   action_item :change_option_index, only: :show do
-    link_to 'Change Option Index', '#', class: 'changeOptionIndex'
+    link_to 'Change Option Index', change_option_index_admin_question_path(resource), method: :post
   end
 
   action_item :set_hindi_translation, only: :show do
