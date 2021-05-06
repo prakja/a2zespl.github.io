@@ -55,19 +55,27 @@ class Question < ApplicationRecord
   end
 
   def abcd_options?
-    return self.type=='MCQ-SO' && !((self.question=~/.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*/i).nil?) && (self.question=~/.*?\s*.*?\(?1\)?\.?.*?\s*.*?\(?2\)?\.?.*?\s*.*?\(?3\)?\.?.*?\s*.*?\(?4\)?\.?.*/).nil?
+    return self.type=='MCQ-SO' && !((self.question=~/.*\(a\).*\(b\).*\(c\).*\(d\).*/im).nil?) && (self.question=~/.*1.*2.*3.*4.*/m).nil?
+  end
+
+  def num_options?
+    return self.type=='MCQ-SO' && (self.question=~/.*\(a\).*\(b\).*\(c\).*\(d\).*/im).nil? && !((self.question=~/.*\(1\).*\(2\).*\(3\).*\(4\).*/m).nil?)
   end
 
   def convert_num_options
-    self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1) ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2) ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3) ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4) ')
+    self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1)') and (self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2)') or self.question.sub!(/\s*?\(b\)\s*?/i, '</p><p>(2)')) and (self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3)') or self.question.sub!(/\s*?\(c\)\s*?/i, '</p><p>(3)')) and (self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4)') or self.question.sub!(/\s*?\(d\)\s*?/i, '</p><p>(4)'))
   end
 
   def change_option_index!
     # rigour checks to ensure that we are very unlikely to do incorrect modification
+    self.restore_attributes
     if self.abcd_options?
-      if self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1) ') and self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2) ') and self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3) ') and self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4) ')
-        self.options = ["(1)", "(2)", "(3)", "(4)"]
-        self.save!
+      if self.convert_num_options
+        if self.num_options?
+          self.options = ["(1)", "(2)", "(3)", "(4)"]
+          self.explanation.sub!(/^<p>\((a|b|c|d)\)\.?/i, '<p>')
+          self.save!
+        end
       end
     end
   end
