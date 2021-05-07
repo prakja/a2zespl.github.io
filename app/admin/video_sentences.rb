@@ -15,7 +15,7 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
-  remove_filter :video, :chapter, :section, :versions, :detail
+  remove_filter :video, :chapter, :section, :versions, :detail, :questions
   permit_params :sentence
   preserve_default_filters!
 
@@ -52,6 +52,9 @@ ActiveAdmin.register VideoSentence do
       end
       row ("Timestamp end") do |videoSentence|
         videoSentence.timestampEnd
+      end
+      row :questions do |videoSentence|
+        videoSentence.questions
       end
     end
   end

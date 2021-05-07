@@ -7,7 +7,7 @@ class VideoSentence < ApplicationRecord
   belongs_to :chapter, class_name: "Topic", foreign_key: "chapterId"
   belongs_to :section, class_name: "Section", foreign_key: "sectionId", optional: true
   has_one :detail, class_name: "VideoSentenceDetail", foreign_key: "videoSentenceId"
-  # has_and_belongs_to_many :questions, class_name: 'Question', join_table: 'QuestionNcertSentence', foreign_key: :ncertSentenceId, association_foreign_key: :questionId
+  has_and_belongs_to_many :questions, class_name: 'Question', join_table: 'QuestionVideoSentence', foreign_key: :videoSentenceId, association_foreign_key: :questionId
 
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
@@ -45,7 +45,7 @@ class VideoSentence < ApplicationRecord
   end
 
   def sentenceContext
-    '[ ' + self.detail.videoName + ' ]' + self.prevSentence  + " (" + self.sentence + ") " + self.nextSentence
+    '[ ' + self.detail.videoName + ' ]' + self.prevSentence.to_s  + " (" + self.sentence + ") " + self.nextSentence.to_s
   end
 
   def playableUrlWithTimestamp

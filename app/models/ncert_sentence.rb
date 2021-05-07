@@ -4,9 +4,14 @@ class NcertSentence < ApplicationRecord
   belongs_to :chapter, class_name: "Topic", foreign_key: "chapterId"
   belongs_to :section, class_name: "Section", foreign_key: "sectionId"
   has_and_belongs_to_many :questions, class_name: 'Question', join_table: 'QuestionNcertSentence', foreign_key: :ncertSentenceId, association_foreign_key: :questionId
+  has_one :detail, class_name: "NcertSentenceDetail", foreign_key: "ncertSentenceId"
 
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
+
+  scope :addDetail, ->() {
+    select('"NcertSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :note, :section)
+  }
 
   def setCreatedTime
     self.createdAt = Time.now
@@ -33,6 +38,18 @@ class NcertSentence < ApplicationRecord
       sentenceEnd = ncertSentence[(ncertSentence.rindex(',')+1)..]
     end
     return (sentenceEnd ? sentenceStart : sentence) + (sentenceEnd ? ',' + sentenceEnd : "");
+  end
+
+  def prevSentence
+    return self.detail.prevSentence
+  end
+
+  def nextSentence
+    return self.detail.nextSentence
+  end
+
+  def sentenceContext
+    self.prevSentence.to_s  + " (" + self.sentence + ") " + self.nextSentence.to_s
   end
 
   def setUpdatedTime
