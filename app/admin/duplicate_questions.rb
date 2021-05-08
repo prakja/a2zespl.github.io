@@ -32,6 +32,16 @@ ActiveAdmin.register DuplicateQuestion do
     redirect_back fallback_location: collection_path, notice: "Removed selected entries."
   end
 
+  member_action :remove_duplicate_from_question_bank, method: :post do
+    resource.remove_duplicate_from_question_bank
+    redirect_back fallback_location: collection_path, notice: "Duplicate removed from question banks."
+  end
+
+  member_action :destroy, method: :delete do
+    resource.destroy
+    redirect_back fallback_location: collection_path, notice: "Removed the entry."
+  end
+
   index do
     render partial: 'mathjax'
     if current_admin_user.question_bank_owner?
@@ -45,7 +55,9 @@ ActiveAdmin.register DuplicateQuestion do
       raw('<a href=' + edit_admin_question_path(dq.question2) + " target='_blank'>#{dq.question2.id}</a><br />" + dq.question2.question)
     end
     column :similarity
-    actions
+    actions defaults: true do |dq|
+      item 'Dedupe QB', remove_duplicate_from_question_bank_admin_duplicate_question_path(dq), class: 'member_link', method: :post, data: {confirm: "Please confirm that these questions are duplicate and 1 of them can be removed from question bank"}
+    end
   end
 
   show do
