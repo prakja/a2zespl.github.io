@@ -18,18 +18,18 @@ ActiveAdmin.register DuplicateQuestion do
     dqs.subject_question_bank_duplicates
   end
 
-  batch_action :remove_duplicates_from_question_bank, if: proc{current_admin_user.question_bank_owner?} do |ids|
+  batch_action :remove_duplicates_from_question_bank, confirm: "Are you sure to remove questions from question banks??", if: proc{current_admin_user.question_bank_owner?} do |ids|
     batch_action_collection.find(ids).each do |dq|
       dq.remove_duplicate_from_question_bank
     end
     redirect_back fallback_location: collection_path, notice: "Duplicates removed from question banks."
   end
 
-  batch_action :destroy, if: proc{current_admin_user.admin?} do |ids|
+  batch_action :destroy, confirm: "Are you sure to delete these entries??", if: proc{current_admin_user.admin?} do |ids|
     batch_action_collection.find(ids).each do |dq|
       dq.destroy
     end
-    redirect_back fallback_location: collection_path, notice: "Duplicates removed from question banks."
+    redirect_back fallback_location: collection_path, notice: "Removed selected entries."
   end
 
   index do
