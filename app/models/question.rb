@@ -287,4 +287,12 @@ class Question < ApplicationRecord
   end
   accepts_nested_attributes_for :details, allow_destroy: true
   accepts_nested_attributes_for :questionSubTopics, allow_destroy: true
+
+
+  # virtual fields for chapter selection for ncert sentences
+  def use_chapter
+  end
+
+  def use_chapter=(attr)
+  end
 end
