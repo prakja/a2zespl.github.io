@@ -434,6 +434,7 @@ ActiveAdmin.register Question do
 
       render partial: 'cross_chapter'
       render partial: 'question_edit'
+
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?
         f.input :deleted
