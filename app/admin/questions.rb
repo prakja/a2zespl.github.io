@@ -418,7 +418,7 @@ ActiveAdmin.register Question do
         "
         }, :collection => Topic.main_course_topic_name_with_subject, 
         label: "Alternative NCERT sentence chapter",
-        hint: "Select some chapter other than \"#{f.object.topic.name}\" to search ncert sentences in"
+        hint: "Select some chapter other than \"#{f.object.topic.name}\" to search ncert or video sentences in"
 
       f.input :ncert_sentence_ids, 
         input_html: {id: "question_ncert_sentences_select2"}, 
