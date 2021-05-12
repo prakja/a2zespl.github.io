@@ -408,14 +408,31 @@ ActiveAdmin.register Question do
         f.input :ncert
       end
 
-      f.input :ncert_sentence_ids, input_html: {id: "question_ncert_sentences_select2"}, label: "NCERT Sentence", as: :selected_list, 
+      f.input :use_chapter, :input_html => {  
+        :class => "select2",
+        :value => "",
+        :onchange => "
+          const $option = $(this);
+          const chapterId = $option.find(':selected').val();
+          sessionStorage.setItem(`cross_chapterId`, chapterId);
+        "
+        }, :collection => Topic.main_course_topic_name_with_subject, 
+        label: "Alternative NCERT sentence chapter",
+        hint: "Select some chapter other than \"#{f.object.topic.name}\" to search ncert sentences in"
+
+      f.input :ncert_sentence_ids, 
+        input_html: {id: "question_ncert_sentences_select2"}, 
+        label: "NCERT Sentence", as: :selected_list, 
         url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
+        fields: [:sentence], 
+        display_name: 'sentenceContext', 
+        minimum_input_length: 5 if f.object.topicId.present?
 
       f.input :video_sentence_ids, input_html: {id: "question_video_sentences_select2"}, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
 
+      render partial: 'cross_chapter'
       render partial: 'question_edit'
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?

@@ -1,0 +1,22 @@
+<script>
+    $(document).ready(function() {
+        sessionStorage.clear('cross_chapterId');
+    });
+
+    $.ajaxSetup({
+        beforeSend: function (xhr,settings) {
+            const crossChapterId = sessionStorage.getItem('cross_chapterId');
+            const {url} = settings;
+            // intercept requests for finding ncert sentences if chapterId is given
+            if (!!crossChapterId && url.startsWith('/admin/ncert_sentences')) {
+                const updatedUrl = new URL(window.location.host + url);
+                updatedUrl.searchParams.set('q[chapterId_eq]', crossChapterId);
+
+                // get relative url
+                const updatedRelativeUrl = updatedUrl.toString().split(window.location.host).pop();
+                settings.url = updatedRelativeUrl;
+            }
+        }
+    });
+
+</script>
