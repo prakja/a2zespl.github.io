@@ -33,6 +33,8 @@ deploy:
     - rm /var/cache/apk/*
     - kubectl get pods
     - kubectl set image deployments/prod-admin neetprepadmin=$CI_REGISTRY/learner.in/neetprepadmin/master
+  dependencies:
+    - build
 
 build-develop:
   only:
