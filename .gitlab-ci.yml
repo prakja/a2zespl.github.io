@@ -26,7 +26,8 @@ deploy:
     - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.57.0/doctl-1.57.0-linux-amd64.tar.gz | tar -xzv
     - mv doctl /usr/local/bin
     - export DIGITALOCEAN_ACCESS_TOKEN=4e5500c5f622ab1486adf108d6fa1e79f5085b49a9f676920639aa1e53965cfc
-    - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster
+    - cat ~/.config/doctl/config.yaml
+    - doctl kubernetes cluster kubeconfig save neetprep-proxy-cluster -c ~/.config/doctl/config.yaml 
     - curl -L https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
     - chmod +x /usr/local/bin/kubectl
     - apk del --purge deps
