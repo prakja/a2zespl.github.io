@@ -15,7 +15,7 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
-  remove_filter :video, :chapter, :section
+  remove_filter :video, :chapter, :section, :versions, :detail, :questions
   permit_params :sentence
   preserve_default_filters!
 
@@ -48,15 +48,23 @@ ActiveAdmin.register VideoSentence do
         best_in_place videoSentence, :sentence, as: :input, url: [:admin, videoSentence]
       end
       row ("Timestamp start") do |videoSentence|
-        raw("<a target='_blank' href='#{videoSentence.playableUrlWithTimestamp}'> #{videoSentence.timestampStart} </a>")
+        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} </a>")
       end
       row ("Timestamp end") do |videoSentence|
         videoSentence.timestampEnd
+      end
+      row :questions do |videoSentence|
+        videoSentence.questions
       end
     end
   end
 
   controller do
+
+    def scoped_collection
+      super.hinglish.addDetail
+    end
+
     def find_by_sentence
       sentence = params.require(:sentence)
       query = 'to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)'

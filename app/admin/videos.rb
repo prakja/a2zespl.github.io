@@ -79,6 +79,10 @@ ActiveAdmin.register Video do
     link_to 'Add Video Link', '../../admin/video_links/new?video_link[videoId]=' + resource.id.to_s
   end
 
+  member_action :play do
+    @video = Video.includes(:sentences).find(resource.id)
+  end
+
   index do
     id_column
     column :name

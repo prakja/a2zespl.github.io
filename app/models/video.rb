@@ -19,6 +19,8 @@ class Video < ApplicationRecord
   has_many :notes, through: :video_annotations
   has_many :user_video_stats, class_name: "UserVideoStat", foreign_key: "videoId"
 
+  has_many :sentences, -> {order(timestampStart: :asc)}, foreign_key: "videoId", class_name: "VideoSentence"
+
   scope :botany, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [53, 478, 495]}})}
   scope :chemistry, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [54, 477, 494]}})}
   scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}

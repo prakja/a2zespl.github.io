@@ -90,20 +90,14 @@ class QuestionsController < ApplicationController
     end
 
     if @subject == 'physics' && @topicId
-      @questions = Question. subject_ids(55).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question.subject_ids(55).topic(@topicId).joins(:completed_reviewed_translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'chemistry'  && @topicId
-      @questions = Question. subject_ids(54).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question.subject_ids(54).topic(@topicId).joins(:completed_reviewed_translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'botany' && @topicId
-      @questions = Question. subject_ids(53).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question.subject_ids(53).topic(@topicId).joins(:completed_reviewed_translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     elsif @subject == 'zoology' && @topicId
-      @questions = Question. subject_ids(56).topic(@topicId).joins(:translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
+      @questions = Question.subject_ids(56).topic(@topicId).joins(:completed_reviewed_translations).select('"Question"."id", "Question"."question", "Question"."explanation", "QuestionTranslation"."id" as translated_id, "QuestionTranslation"."question" as translated_question, "QuestionTranslation"."explanation" as translated_explanation')
     end
-
-    p @questions
-
-    # @questions.each do |question|
-    #   @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage, question.correctOptionIndex]
-    # end
   end
 
   def test_translation

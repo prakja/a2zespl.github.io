@@ -15,7 +15,7 @@ ActiveAdmin.register NcertSentence do
   #   permitted
   # end
 
-  remove_filter :note, :chapter, :section, :questions, :questions_count
+  remove_filter :note, :chapter, :section, :questions, :detail, :questions_count
 
   filter :chapterId_eq, as: :searchable_select, collection: -> { Topic.name_with_subject_hinglish }, label: "Chapter"
   permit_params :chapterId, :noteId, :sectionId, :sentence, :sentenceHtml
@@ -55,6 +55,7 @@ ActiveAdmin.register NcertSentence do
   end
 
   show do
+    render partial: 'mathjax'
     attributes_table do
       row :id
       row :note do |sentence|
@@ -72,6 +73,9 @@ ActiveAdmin.register NcertSentence do
       row :sentenceHtml do |sentence|
         raw sentence.fullSentenceUrl
       end
+      row :note do |sentence|
+        raw sentence.note.content
+      end
       row :questions do |sentence|
         sentence.questions
       end
@@ -87,7 +91,7 @@ ActiveAdmin.register NcertSentence do
     end
 
     def scoped_collection
-      super.includes(:chapter, :note, :section)
+      super.addDetail
     end
   end
 
