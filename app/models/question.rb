@@ -249,6 +249,7 @@ class Question < ApplicationRecord
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
   has_many :translations, class_name: "QuestionTranslation", foreign_key: "questionId"
+  has_many :completed_reviewed_translations, -> {where completed: true, reviewed: true}, class_name: "QuestionTranslation", foreign_key: "questionId"
   has_many :hints, class_name: "QuestionHint", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
   has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
