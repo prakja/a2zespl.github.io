@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -48,12 +48,24 @@ ActiveAdmin.register Question do
   scope :easyLevel, show_count: false
   scope :mediumLevel, show_count: false
   scope :difficultLevel, show_count: false
+  scope :has_ncert_sentences, show_count: false
+  scope :no_ncert_sentences, show_count: false
+  scope :has_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :no_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
 
   batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
     batch_action_collection.find(ids).each do |question|
       question.set_image_link!
     end
     redirect_back fallback_location: collection_path, notice: "The question images have been updated."
+  end
+
+  batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.change_option_index!
+    end
+    redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
   end
 
   controller do
@@ -194,11 +206,6 @@ ActiveAdmin.register Question do
       row :subTopics do |question|
         question.subTopics
       end
-      if question.video_sentences.length > 0
-        row "Video Sentences" do |question|
-          question.video_sentences
-        end
-      end
       row :tests do |question|
         question.systemTests
       end
@@ -211,6 +218,11 @@ ActiveAdmin.register Question do
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
           question.ncert_sentences
+        end
+      end
+      if question.video_sentences.length > 0
+        row "Video Sentences" do |question|
+          question.video_sentences
         end
       end
     end
@@ -252,6 +264,15 @@ ActiveAdmin.register Question do
 
   action_item :set_image_link, only: :show do
     link_to 'Set Image Link', '#', class: 'setImageLink'
+  end
+
+  member_action :change_option_index, method: :post do
+    resource.change_option_index!
+    redirect_to admin_question_path, notice: "Question options fixed!"
+  end
+
+  action_item :change_option_index, only: :show do
+    link_to 'Change Option Index', change_option_index_admin_question_path(resource), method: :post
   end
 
   action_item :set_hindi_translation, only: :show do
@@ -387,13 +408,32 @@ ActiveAdmin.register Question do
         f.input :ncert
       end
 
-      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, 
-        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+      f.input :use_chapter, :input_html => {  
+        :class => "select2",
+        :value => "",
+        :onchange => "
+          const $option = $(this);
+          const chapterId = $option.find(':selected').val();
+          sessionStorage.setItem(`cross_chapterId`, chapterId);
+        "
+        }, :collection => Topic.main_course_topic_name_with_subject, 
+        label: "Alternative NCERT sentence chapter",
+        hint: "Select some chapter other than \"#{f.object&.topic&.name}\" to search ncert or video sentences in" if f.object.topicId.present?
 
-      f.input :video_sentence_ids, label: "Video Sentence", as: :selected_list,
+      f.input :ncert_sentence_ids, 
+        input_html: {id: "question_ncert_sentences_select2"}, 
+        label: "NCERT Sentence", as: :selected_list, 
+        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        fields: [:sentence], 
+        display_name: 'sentenceContext', 
+        minimum_input_length: 5 if f.object.topicId.present?
+
+      f.input :video_sentence_ids, input_html: {id: "question_video_sentences_select2"}, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+        fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
+
+      render partial: 'cross_chapter'
+      render partial: 'question_edit'
 
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?

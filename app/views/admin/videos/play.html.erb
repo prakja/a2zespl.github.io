@@ -1,0 +1,79 @@
+<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@1.2.4/dist/videojs-http-streaming.min.js"></script>
+<link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet"></link>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css"></link>
+<script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
+<script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
+<style>
+.video-js .vjs-current-time, .vjs-no-flex .vjs-current-time {
+  display: block !important;
+}
+            .vjs-time-divider {
+              display: block !important;
+            }
+            .video-js .vjs-duration, .vjs-no-flex .vjs-duration {
+              display: block !important;
+            }
+</style>
+<div width="100%">
+  <video id="my_video_1" class="video-js vjs-default-skin vjs-fluid vjs-16-9" controls preload="auto" data-setup='{"controls": true}'>
+    <source src="<%=@video.url%>" type="application/x-mpegURL">
+  </video>
+  </br>
+  <div id="subtitle" style="margin: auto; position: relative; bottom: 120px; width: 80%; text-align: center; font-size: 30px; color: white; background: black">
+    <span contenteditable="true" id="sentence"></span><button id="updateSentence" style="font-size: 30px; position: absolute; top: 0px; right: -120px; display: none;">Update</button>
+  </div>
+</div>
+<script>
+  var video_sentences = <%=@video.sentences.to_json.html_safe%>;
+  var current_sentence = [];
+  var token = document.querySelector('meta[name="csrf-token"]').content
+  $('#sentence').on('click', function(){
+      videojs('my_video_1').pause();
+      $('#updateSentence').show();
+    });
+  $('#updateSentence').on('click', function(){
+    var new_sentence = $('#sentence').text();
+    current_sentence[0].sentence = new_sentence; 
+    $.ajax({
+      type: "PUT",
+      url: '/admin/video_sentences/' + current_sentence[0].id,
+      beforeSend: function(xhr){xhr.setRequestHeader('X-CSRF-Token', token);},
+      data: {
+        "video_sentence": {"sentence": new_sentence}
+      }
+    }).done (function (data){
+      videojs('my_video_1').play();
+    }).fail (function (error){
+      alert("failed: " + JSON.stringify(error));
+    }) 
+  });
+  $('#my_video_1').on('timeupdate', function(){
+    if (this.paused == false)
+      $('#updateSentence').hide();
+    var current_time = this.currentTime;
+    if (current_sentence != null && current_sentence.length == 0) 
+      $('#subtitle').hide();
+    if (current_sentence != null && current_sentence.length > 0) 
+      $('#subtitle').show();
+    if (current_sentence != null && current_sentence.length > 0 && current_sentence[0].timestampStart <= current_time && current_sentence[0].timestampEnd > current_time)
+      return;
+    current_sentence = video_sentences.filter(function(vs) {return (vs.timestampStart < current_time && vs.timestampEnd > current_time)});
+    $('#sentence').html(current_sentence.length > 0 ? current_sentence[0].sentence : '');
+  });
+  var player = videojs('my_video_1', {
+    playbackRates: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+  });
+  player.seekButtons({
+    forward: 3,
+    back: 3
+  });
+  player.hotkeys({
+    volumeStep: 0.1,
+    seekStep: 3,
+    enableModifiersForNumbers: false
+  });
+  <% if params[:start_time].present? %>
+    player.currentTime(<%=params[:start_time].to_i - 1%>)
+  <% end %>
+</script>

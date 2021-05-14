@@ -54,6 +54,32 @@ class Question < ApplicationRecord
     HTTParty.post(Rails.application.config.create_image_url + '?query=' + token_lambda)
   end
 
+  def abcd_options?
+    return self.type=='MCQ-SO' && !((self.question=~/.*\(a\).*\(b\).*\(c\).*\(d\).*/im).nil?) && (self.question=~/.*1.*2.*3.*4.*/m).nil?
+  end
+
+  def num_options?
+    return self.type=='MCQ-SO' && (self.question=~/.*\(a\).*\(b\).*\(c\).*\(d\).*/im).nil? && !((self.question=~/.*\(1\).*\(2\).*\(3\).*\(4\).*/m).nil?)
+  end
+
+  def convert_num_options
+    self.question.sub!(/>\s*?\(a\)\s*?/i, '>(1)') and (self.question.sub!(/>\s*?\(b\)\s*?/i, '>(2)') or self.question.sub!(/\s*?\(b\)\s*?/i, '</p><p>(2)')) and (self.question.sub!(/>\s*?\(c\)\s*?/i, '>(3)') or self.question.sub!(/\s*?\(c\)\s*?/i, '</p><p>(3)')) and (self.question.sub!(/>\s*?\(d\)\s*?/i, '>(4)') or self.question.sub!(/\s*?\(d\)\s*?/i, '</p><p>(4)'))
+  end
+
+  def change_option_index!
+    # rigour checks to ensure that we are very unlikely to do incorrect modification
+    self.restore_attributes
+    if self.abcd_options?
+      if self.convert_num_options
+        if self.num_options?
+          self.options = ["(1)", "(2)", "(3)", "(4)"]
+          self.explanation.sub!(/^<p>\((a|b|c|d)\)\.?/i, '<p>')
+          self.save!
+        end
+      end
+    end
+  end
+  
   self.table_name = "Question"
   self.inheritance_column = "QWERTY"
   default_scope {where(deleted: false)}
@@ -72,6 +98,10 @@ class Question < ApplicationRecord
 
   ransacker :ncertSentences_count do
     Arel.sql('(SELECT COUNT("QuestionNcertSentence"."id") FROM "QuestionNcertSentence" WHERE "QuestionNcertSentence"."questionId" = "Question"."id")')
+  end
+
+  ransacker :videoSentences_count do
+    Arel.sql('(SELECT COUNT("QuestionVideoSentence"."id") FROM "QuestionVideoSentence" WHERE "QuestionVideoSentence"."questionId" = "Question"."id")')
   end
 
   ransacker :subTopics_count do
@@ -97,6 +127,22 @@ class Question < ApplicationRecord
   scope :course_name, ->(*course_ids) {
     flatten_course_ids = course_ids.flatten
     joins(:topics => :subjects).where(topics: {Subject: {courseId: flatten_course_ids}})
+  }
+
+  scope :has_ncert_sentences, ->() {
+    Question.ransack({ncertSentences_count_gt: 0}).result
+  }
+
+  scope :no_ncert_sentences, ->() {
+    Question.ransack({ncertSentences_count_eq: 0}).result
+  }
+
+  scope :has_video_sentences, ->() {
+    Question.ransack({videoSentences_count_gt: 0}).result
+  }
+
+  scope :no_video_sentences, ->() {
+    Question.ransack({videoSentences_count_eq: 0}).result
   }
 
   scope :subject_ids, ->(*subject_ids) {
@@ -197,9 +243,13 @@ class Question < ApplicationRecord
   scope :NEET_Test_Questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."exam" in (\'NEET\', \'AIPMT\'))')}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   scope :unused_in_high_yield_bio, -> {where('"id" in (select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" = 270) and "seqNum" = 0 except select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" in (148,452)))')}
+
+  scope :abcd_options, -> {where('"type" = \'MCQ-SO\' and "question" ~* \'.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*\' and "question" !~* \'.*?\s*.*?\(?1\)?\.?.*?\s*.*?\(?2\)?\.?.*?\s*.*?\(?3\)?\.?.*?\s*.*?\(?4\)?\.?.*\'')}
+
   has_many :details, class_name: "QuestionDetail", foreign_key: "questionId"
   has_many :explanations, class_name: "QuestionExplanation", foreign_key: "questionId"
   has_many :translations, class_name: "QuestionTranslation", foreign_key: "questionId"
+  has_many :completed_reviewed_translations, -> {where completed: true, reviewed: true}, class_name: "QuestionTranslation", foreign_key: "questionId"
   has_many :hints, class_name: "QuestionHint", foreign_key: "questionId"
   has_one :question_analytic, foreign_key: "id"
   has_many :questionTopics, foreign_key: :questionId, class_name: 'ChapterQuestion'
@@ -238,4 +288,12 @@ class Question < ApplicationRecord
   end
   accepts_nested_attributes_for :details, allow_destroy: true
   accepts_nested_attributes_for :questionSubTopics, allow_destroy: true
+
+
+  # virtual fields for chapter selection for ncert sentences
+  def use_chapter
+  end
+
+  def use_chapter=(attr)
+  end
 end
