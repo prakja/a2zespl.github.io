@@ -286,6 +286,34 @@ $$;
 
 
 --
+-- Name: InsertTasks(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."InsertTasks"() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  counter integer;
+  rec RECORD;
+BEGIN 
+  FOR rec IN 
+    SELECT distinct "chapterId" from "ChapterName"
+  LOOP
+    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'Videos&Notes');
+    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'NCERT Reading');
+    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'Question Practice');
+  END LOOP;
+  FOR counter in 1..20
+  LOOP
+    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Revision Done');
+    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Mock Test Time');
+    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Post Mortem Time');    
+  END LOOP;
+END
+$$;
+
+
+--
 -- Name: LongRunningQueries(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1144,8 +1172,8 @@ CREATE TABLE public."BookmarkQuestion" (
     id integer NOT NULL,
     "questionId" integer NOT NULL,
     "userId" integer NOT NULL,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -1584,38 +1612,6 @@ CREATE TABLE public."ChapterQuestion20211801_2" (
 
 
 --
--- Name: ChapterTask; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."ChapterTask" (
-    id integer NOT NULL,
-    "chapterId" integer,
-    "taskId" integer,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
-);
-
-
---
--- Name: ChapterTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."ChapterTask_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: ChapterTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."ChapterTask_id_seq" OWNED BY public."ChapterTask".id;
-
-
---
 -- Name: ChapterTest; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1634,8 +1630,8 @@ CREATE TABLE public."ChapterTest" (
 
 CREATE TABLE public."SubjectChapter" (
     id integer NOT NULL,
-    "subjectId" integer,
-    "chapterId" integer,
+    "subjectId" integer NOT NULL,
+    "chapterId" integer NOT NULL,
     deleted boolean DEFAULT false,
     "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT now() NOT NULL
@@ -2630,7 +2626,7 @@ CREATE VIEW public."CourseQuestion" AS
     public."SubjectChapter",
     public."ChapterQuestion",
     public."Question"
-  WHERE (("SubjectChapter"."subjectId" = "Subject".id) AND ("SubjectChapter"."chapterId" = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Question".deleted = false));
+  WHERE (("SubjectChapter"."subjectId" = "Subject".id) AND ("SubjectChapter"."chapterId" = "ChapterQuestion"."chapterId") AND ("ChapterQuestion"."questionId" = "Question".id) AND ("Question".deleted = false) AND ("SubjectChapter".deleted = false));
 
 
 --
@@ -3776,6 +3772,37 @@ CREATE TABLE public."Note20201026" (
 
 
 --
+-- Name: Note20210313; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Note20210313" (
+    id integer NOT NULL,
+    name character varying(255),
+    content text
+);
+
+
+--
+-- Name: Note20210313_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."Note20210313_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Note20210313_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."Note20210313_id_seq" OWNED BY public."Note20210313".id;
+
+
+--
 -- Name: Note_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -4037,6 +4064,16 @@ CREATE SEQUENCE public."Post_id_seq"
 --
 
 ALTER SEQUENCE public."Post_id_seq" OWNED BY public."Post".id;
+
+
+--
+-- Name: ProgressTracker; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ProgressTracker" (
+    "topicId" integer,
+    "userId" integer
+);
 
 
 --
@@ -4390,8 +4427,8 @@ ALTER SEQUENCE public."QuestionNcertSentence_id_seq" OWNED BY public."QuestionNc
 
 CREATE TABLE public."QuestionSubTopic" (
     id integer NOT NULL,
-    "questionId" integer,
-    "subTopicId" integer,
+    "questionId" integer NOT NULL,
+    "subTopicId" integer NOT NULL,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -4469,6 +4506,36 @@ CREATE SEQUENCE public."QuestionTranslation_id_seq"
 --
 
 ALTER SEQUENCE public."QuestionTranslation_id_seq" OWNED BY public."QuestionTranslation".id;
+
+
+--
+-- Name: QuestionVideoSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."QuestionVideoSentence" (
+    id bigint NOT NULL,
+    "questionId" integer,
+    "videoSentenceId" integer
+);
+
+
+--
+-- Name: QuestionVideoSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."QuestionVideoSentence_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: QuestionVideoSentence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."QuestionVideoSentence_id_seq" OWNED BY public."QuestionVideoSentence".id;
 
 
 --
@@ -4880,7 +4947,9 @@ CREATE TABLE public."StudentNote" (
     "noteId" integer,
     details jsonb,
     "noteRange" int4range,
-    "videoId" integer
+    "videoId" integer,
+    "videoTimeStampImgUri" text,
+    "studentAttachImgUri" text
 );
 
 
@@ -5154,21 +5223,11 @@ ALTER SEQUENCE public."Target_id_seq" OWNED BY public."Target".id;
 
 CREATE TABLE public."Task" (
     id integer NOT NULL,
-    "parentId" integer,
-    "courseId" integer,
-    "seqId" integer,
-    title text,
-    link text,
-    "desc" text,
-    duration numeric(5,2),
-    year integer,
-    "scheduledAt" timestamp with time zone,
-    "expiredAt" timestamp with time zone,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL,
-    "liveSeqId2019" integer,
-    "liveSeqId2020" integer,
-    level integer
+    "chapterId" integer,
+    name character varying(255),
+    "mockTestSeq" integer,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -5177,6 +5236,7 @@ CREATE TABLE public."Task" (
 --
 
 CREATE SEQUENCE public."Task_id_seq"
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6131,7 +6191,9 @@ CREATE TABLE public."UserProfile" (
     "utmCampaignName" text,
     "campaignInfo" json,
     "allowVideoDownload" boolean DEFAULT false NOT NULL,
-    "allowDeprecatedNcert" boolean DEFAULT false NOT NULL
+    "allowDeprecatedNcert" boolean DEFAULT false NOT NULL,
+    "playerQuality" character varying,
+    "playerSpeed" character varying
 );
 
 
@@ -6338,14 +6400,12 @@ ALTER SEQUENCE public."UserSectionStat_id_seq" OWNED BY public."UserSectionStat"
 
 CREATE TABLE public."UserTask" (
     id integer NOT NULL,
-    "userId" integer,
     "taskId" integer,
-    duration numeric(5,2),
-    "userDuration" numeric(5,2),
-    completed boolean DEFAULT false,
-    started boolean DEFAULT false,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "userId" integer,
+    "mockTestDate" timestamp with time zone,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    hours integer DEFAULT 0
 );
 
 
@@ -6386,6 +6446,7 @@ CREATE MATERIALIZED VIEW public."UserTaskProgress" AS
 --
 
 CREATE SEQUENCE public."UserTask_id_seq"
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7452,6 +7513,40 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
+-- Name: video_time_stamp_imgs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.video_time_stamp_imgs (
+    id bigint NOT NULL,
+    "videoId" integer,
+    "timestamp" character varying NOT NULL,
+    "urlArg" character varying NOT NULL,
+    img character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: video_time_stamp_imgs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.video_time_stamp_imgs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_time_stamp_imgs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.video_time_stamp_imgs_id_seq OWNED BY public.video_time_stamp_imgs.id;
+
+
+--
 -- Name: votes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7563,13 +7658,6 @@ ALTER TABLE ONLY public."ChapterNote" ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public."ChapterQuestionCopy" ALTER COLUMN id SET DEFAULT nextval('public."ChapterQuestion_id_seq"'::regclass);
-
-
---
--- Name: ChapterTask id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."ChapterTask" ALTER COLUMN id SET DEFAULT nextval('public."ChapterTask_id_seq"'::regclass);
 
 
 --
@@ -7846,6 +7934,13 @@ ALTER TABLE ONLY public."Note" ALTER COLUMN id SET DEFAULT nextval('public."Note
 
 
 --
+-- Name: Note20210313 id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Note20210313" ALTER COLUMN id SET DEFAULT nextval('public."Note20210313_id_seq"'::regclass);
+
+
+--
 -- Name: Notification id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7941,6 +8036,13 @@ ALTER TABLE ONLY public."QuestionSubTopic" ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public."QuestionTranslation" ALTER COLUMN id SET DEFAULT nextval('public."QuestionTranslation_id_seq"'::regclass);
+
+
+--
+-- Name: QuestionVideoSentence id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVideoSentence" ALTER COLUMN id SET DEFAULT nextval('public."QuestionVideoSentence_id_seq"'::regclass);
 
 
 --
@@ -8354,6 +8456,13 @@ ALTER TABLE ONLY public.version_associations ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
+
+
+--
+-- Name: video_time_stamp_imgs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.video_time_stamp_imgs ALTER COLUMN id SET DEFAULT nextval('public.video_time_stamp_imgs_id_seq'::regclass);
 
 
 --
@@ -8890,14 +8999,6 @@ ALTER TABLE ONLY public."ChapterQuestion"
 
 
 --
--- Name: ChapterTask ChapterTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."ChapterTask"
-    ADD CONSTRAINT "ChapterTask_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: ChapterTest ChapterTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9242,6 +9343,14 @@ ALTER TABLE ONLY public."NotDuplicateQuestion"
 
 
 --
+-- Name: Note20210313 Note20210313_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Note20210313"
+    ADD CONSTRAINT "Note20210313_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: Note Note_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9399,6 +9508,14 @@ ALTER TABLE ONLY public."QuestionTranslation"
 
 ALTER TABLE ONLY public."QuestionTranslation"
     ADD CONSTRAINT "QuestionTranslation_questionId_language_key" UNIQUE ("questionId", language);
+
+
+--
+-- Name: QuestionVideoSentence QuestionVideoSentence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVideoSentence"
+    ADD CONSTRAINT "QuestionVideoSentence_pkey" PRIMARY KEY (id);
 
 
 --
@@ -10071,6 +10188,14 @@ ALTER TABLE ONLY public.version_associations
 
 ALTER TABLE ONLY public.versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: video_time_stamp_imgs video_time_stamp_imgs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.video_time_stamp_imgs
+    ADD CONSTRAINT video_time_stamp_imgs_pkey PRIMARY KEY (id);
 
 
 --
@@ -10978,20 +11103,6 @@ CREATE INDEX chapter_question_question_id ON public."ChapterQuestion" USING btre
 
 
 --
--- Name: chapter_task_chapter_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX chapter_task_chapter_id ON public."ChapterTask" USING btree ("chapterId");
-
-
---
--- Name: chapter_task_task_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX chapter_task_task_id ON public."ChapterTask" USING btree ("taskId");
-
-
---
 -- Name: chapter_test_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11503,41 +11614,6 @@ CREATE INDEX "tagExist10" ON public."QuestionAnalytics25" USING btree ("tagExist
 
 
 --
--- Name: task_course_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX task_course_id ON public."Task" USING btree ("courseId");
-
-
---
--- Name: task_expired_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX task_expired_at ON public."Task" USING btree ("expiredAt");
-
-
---
--- Name: task_parent_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX task_parent_id ON public."Task" USING btree ("parentId");
-
-
---
--- Name: task_scheduled_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX task_scheduled_at ON public."Task" USING btree ("scheduledAt");
-
-
---
--- Name: task_year; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX task_year ON public."Task" USING btree (year);
-
-
---
 -- Name: testAttempt_postmartem_testAttempt_id_user_id_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11745,27 +11821,6 @@ CREATE UNIQUE INDEX user_scheduled_task_user_id_scheduled_task_id ON public."Use
 --
 
 CREATE UNIQUE INDEX user_task_progress_user_id_schedule_id ON public."UserTaskProgress" USING btree ("userId", "scheduleId");
-
-
---
--- Name: user_task_task_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_task_task_id ON public."UserTask" USING btree ("taskId");
-
-
---
--- Name: user_task_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_task_user_id ON public."UserTask" USING btree ("userId");
-
-
---
--- Name: user_task_user_id_task_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX user_task_user_id_task_id ON public."UserTask" USING btree ("userId", "taskId");
 
 
 --
@@ -12182,6 +12237,14 @@ ALTER TABLE ONLY public."Subject"
 
 
 --
+-- Name: Task Task_chapterId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Task"
+    ADD CONSTRAINT "Task_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
 -- Name: Topic Topic_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12219,6 +12282,22 @@ ALTER TABLE ONLY public."UserCourse"
 
 ALTER TABLE ONLY public."UserProfile"
     ADD CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: UserTask UserTask_taskId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserTask"
+    ADD CONSTRAINT "UserTask_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES public."Task"(id);
+
+
+--
+-- Name: UserTask UserTask_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserTask"
+    ADD CONSTRAINT "UserTask_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
@@ -12371,22 +12450,6 @@ ALTER TABLE ONLY public."ChapterQuestion"
 
 ALTER TABLE ONLY public."ChapterQuestionCopy"
     ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
-
-
---
--- Name: ChapterTask fk_chapter_task_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."ChapterTask"
-    ADD CONSTRAINT fk_chapter_task_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
-
-
---
--- Name: ChapterTask fk_chapter_task_taskid; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."ChapterTask"
-    ADD CONSTRAINT fk_chapter_task_taskid FOREIGN KEY ("taskId") REFERENCES public."Task"(id);
 
 
 --
@@ -12590,6 +12653,22 @@ ALTER TABLE ONLY public."Section"
 
 
 --
+-- Name: video_time_stamp_imgs fk_rails_7fbbd02688; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.video_time_stamp_imgs
+    ADD CONSTRAINT fk_rails_7fbbd02688 FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
+
+
+--
+-- Name: QuestionVideoSentence fk_rails_8593383ffd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVideoSentence"
+    ADD CONSTRAINT fk_rails_8593383ffd FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
 -- Name: student_coaches fk_rails_88f9034dec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12755,6 +12834,14 @@ ALTER TABLE ONLY public."VideoSentence"
 
 ALTER TABLE ONLY public."SectionContent"
     ADD CONSTRAINT fk_rails_ccea17349b FOREIGN KEY ("sectionId") REFERENCES public."Section"(id);
+
+
+--
+-- Name: QuestionVideoSentence fk_rails_ced843e9fe; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVideoSentence"
+    ADD CONSTRAINT fk_rails_ced843e9fe FOREIGN KEY ("videoSentenceId") REFERENCES public."VideoSentence"(id);
 
 
 --
@@ -12962,4 +13049,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210212084401'),
 ('20210313143122'),
 ('20210315042743'),
-('20210316123522');
+('20210316123522'),
+('20210415123928'),
+('20210420054010'),
+('20210421065723'),
+('20210426103243');
+
+

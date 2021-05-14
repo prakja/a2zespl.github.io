@@ -1,8 +1,10 @@
 class VideoSentence < ApplicationRecord
+    include SEOHelper
+
     self.table_name = "VideoSentence"
     belongs_to :video, class_name: "Video", foreign_key: "videoId"
     belongs_to :chapter, class_name: "Topic", foreign_key: "chapterId"
-    belongs_to :section, class_name: "Section", foreign_key: "sectionId"
+    belongs_to :section, class_name: "Section", foreign_key: "sectionId", optional: true
     # has_and_belongs_to_many :questions, class_name: 'Question', join_table: 'QuestionNcertSentence', foreign_key: :ncertSentenceId, association_foreign_key: :questionId
   
     before_create :setCreatedTime, :setUpdatedTime
@@ -19,7 +21,19 @@ class VideoSentence < ApplicationRecord
     def setUpdatedTime
       self.updatedAt = Time.now
     end
-  
-  
+
+    def name
+      self.sentence
+    end
+
+    def playableUrlWithTimestamp
+      chapter, video = self.chapter, self.video
+
+      url = "/video-class/#{self.videoId}--#{seoUrl(video.name)}"
+      domain = Rails.env == 'production' ? 'neetprep.com' : 'dev.neetprep.com'
+      queryParams = "subjectId=#{chapter.subjectId}&chapterId=#{chapter.id}&currentTimeStamp=#{self.timestampStart.to_i}"
+
+      return "https://#{domain}#{url}?#{queryParams}"
+    end
   end
   

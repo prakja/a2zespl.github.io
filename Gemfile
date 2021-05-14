@@ -94,3 +94,4 @@ gem "nilify_blanks"
 gem 'activeadmin_json_editor', '~> 0.0.7'
 gem 'paper_trail-association_tracking'
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+gem 'best_in_place'

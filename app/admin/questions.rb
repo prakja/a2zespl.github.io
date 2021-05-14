@@ -11,8 +11,8 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count, :subTopics_count, :topics_count, :course_tests_count
-  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count
+  permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
 
@@ -194,6 +194,11 @@ ActiveAdmin.register Question do
       row :subTopics do |question|
         question.subTopics
       end
+      if question.video_sentences.length > 0
+        row "Video Sentences" do |question|
+          question.video_sentences
+        end
+      end
       row :tests do |question|
         question.systemTests
       end
@@ -307,13 +312,52 @@ ActiveAdmin.register Question do
         f.input :systemTests, include_hidden: false, input_html: { class: "select2" }, :collection => Test.where(userId: nil).order(createdAt: :desc).limit(100)
         render partial: 'hidden_test_ids', locals: {tests: f.object.systemTests}
       end
-      f.input :topics, input_html: { class: "select2" }, :collection => Topic.name_with_subject, label: "Question Bank Chapters", hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
-      
-      f.input :topic, include_hidden: false, :input_html => { 
-        class: "select2", 
+
+      f.input :topics, :input_html => { 
+        class: "select2",
         :onchange => "
-          var $option = $(this);
+          const $option = $(this);
+          const questionBankChapterIds = [];
+
+          $option.find(':selected').each((index, selectedOption) => {
+            questionBankChapterIds.push(parseInt(selectedOption.value));
+          });
+
+          if (!questionBankChapterIds.length) {
+            return;
+          }
+
+          const chapterIds = questionBankChapterIds.join(',');
+          const url = `${window.location.origin}/chapters/populate_question_chapter_subtopic?question_bank_ids=${chapterIds}`;
+
+          // get the topic & subtopic
+          $.ajax({
+            type: 'GET',
+            url: url,
+          }).done(function(data){
+            const {topicId} = data.data;
+
+            if(!!topicId) {
+              // set the new topic
+              $('#question_topicId').val(`${topicId}`).change();
+            }
+          });
+        "
+      }, 
+      :collection => Topic.name_with_subject, label: "Question Bank Chapters",
+      hint: "Controls whether a question will appear in a chapter question bank for student or not" if current_admin_user.question_bank_owner?
+      
+      f.input :topic, :input_html => {  
+        :class => "select2",
+        :onchange => "
+          const $option = $(this);
           const chapterId = $option.find(':selected').val();
+
+          // if falsy value then return
+          if (! (!!chapterId)){
+            return;
+          }
+
           const url = `${window.location.origin}/chapters/get_subtopics/${chapterId}/`;
 
           $.ajax({
@@ -328,6 +372,7 @@ ActiveAdmin.register Question do
         }, :collection => Topic.main_course_topic_name_with_subject, 
         label: "Question Chapter",
         hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
+
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
 
       f.input :subTopics, input_html: { class: "select1" }, as: :select,
@@ -337,10 +382,19 @@ ActiveAdmin.register Question do
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
+
       if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
         f.input :ncert
       end
-      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+
+      f.input :ncert_sentence_ids, label: "NCERT Sentence", as: :selected_list, 
+        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+
+      f.input :video_sentence_ids, label: "Video Sentence", as: :selected_list,
+        url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        fields: [:sentence], display_name: 'sentence', minimum_input_length: 5 if f.object.topicId.present?
+
       f.input :lock_version, :as => :hidden
       if current_admin_user.question_bank_owner?
         f.input :deleted

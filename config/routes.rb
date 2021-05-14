@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   get "chapters/add_note/:chapterId", to: "chapters#add_note"
   get "chapters/del_note/:chapterId", to: "chapters#del_note"
   get "chapters/get_subtopics/:chapterId", to: "chapters#get_subtopics"
+  get "chapters/populate_question_chapter_subtopic", to: "chapters#populate_question_chapter_subtopic"
   get "tests/crud_question/:testId", to: "tests#crud_question"
   post "tests/remove_test_question", to: "tests#remove_test_question"
   post "tests/update_and_sort", to: "tests#update_and_sort"
@@ -118,5 +119,6 @@ Rails.application.routes.draw do
 
     post "/questions/:id/create_translation", to: "questions#create_translation"
     post "/ncert_sentences/find", to: "ncert_sentences#find_by_sentence"
+    post "/video_sentences/find", to: "video_sentences#find_by_sentence"
   end
 end

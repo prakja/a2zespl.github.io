@@ -1,5 +1,5 @@
 ActiveAdmin.register NcertChapterQuestion do
-  remove_filter :ncertQuestion
+  remove_filter :ncertQuestion, :chapter
 
   active_admin_import validate: true,
     timestamps: false,

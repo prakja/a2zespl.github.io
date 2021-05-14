@@ -159,6 +159,7 @@ ActiveAdmin.register Video do
   csv do
     column :id
     column :name
+    column (:chapter) {|video| video&.topics&.first&.name}
     column (:url) {|video| video.videoUrl}
   end
 

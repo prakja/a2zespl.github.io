@@ -30,10 +30,17 @@ ActiveAdmin.register SubTopic do
   end
 
   member_action :mark_not_duplicate, method: :post do
-    NotDuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i,
-      questionId2: params[:question_id2].to_i
-    )
+    begin
+      NotDuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i,
+        questionId2: params[:question_id2].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_questions_admin_sub_topic_path(resource), notice: "Marked questions as not duplicate!"}
       format.js
@@ -68,7 +75,9 @@ ActiveAdmin.register SubTopic do
       column c.to_sym
     end
     if (current_admin_user.role == 'admin' or current_admin_user.question_bank_owner?) and (params["scope"].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?)))
-      column :questions_count, sortable: true
+      column ("Questions Count"), sortable: true do |subTopic|
+        link_to subTopic.questions_count, admin_questions_path(q: {subTopics_id_eq: subTopic.id})
+      end
       column ("Duplicate Questions") { |subtopic|
         link_to "Duplicate Questions", duplicate_questions_admin_sub_topic_path(id: subtopic.id)
       }

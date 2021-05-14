@@ -214,13 +214,16 @@ class Question < ApplicationRecord
 
   has_many :questionTests, foreign_key: :questionId, class_name: 'TestQuestion', dependent: :destroy
   has_many :tests, through: :questionTests, dependent: :destroy
-  has_and_belongs_to_many :ncert_sentences, class_name: 'NcertSentence', join_table: 'QuestionNcertSentence', foreign_key: :questionId, association_foreign_key: :ncertSentenceId
+
   has_many :systemTests, -> {where userId: nil}, through: :questionTests, dependent: :destroy, source: "test"
 
   has_many :answers, class_name: "Answer", foreign_key: :questionId
 
   belongs_to :topic, foreign_key: "topicId", class_name: "Topic", optional: true
   belongs_to :subject, foreign_key: "subjectId", class_name: "Subject", optional: true
+
+  has_and_belongs_to_many :video_sentences, class_name: :VideoSentence, join_table: :QuestionVideoSentence, foreign_key: :questionId, association_foreign_key: :videoSentenceId
+  has_and_belongs_to_many :ncert_sentences, class_name: 'NcertSentence', join_table: 'QuestionNcertSentence', foreign_key: :questionId, association_foreign_key: :ncertSentenceId
 
   def self.distinct_type
     Question.connection.select_all("select distinct \"type\" from \"Question\"")
@@ -234,4 +237,5 @@ class Question < ApplicationRecord
     [:course_subject_id, :similar_questions, :course_name, :subject_ids, :course_id, :course_ids, :test_course_id, :multiple_youtube]
   end
   accepts_nested_attributes_for :details, allow_destroy: true
+  accepts_nested_attributes_for :questionSubTopics, allow_destroy: true
 end
