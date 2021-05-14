@@ -6,7 +6,7 @@ build:
   only:
     - master
   stage: build
-  image: docker:19.03.13
+  image: docker:latest
   services:
     - docker:dind
   script:
