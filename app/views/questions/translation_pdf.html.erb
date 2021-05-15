@@ -12,6 +12,10 @@
   <label for="hide_audio"> Hide Audio Tags</label><br>
 </div>
 
+<div style="margin: 32px;">
+  <b>Total Questions: <%=@questions.length%></b>
+</div>
+
 <div style="margin: 32px">
   <% @questions.each do |question| %>
     <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
