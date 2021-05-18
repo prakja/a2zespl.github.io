@@ -58,13 +58,13 @@
   </div>
   <% if (not @doubt.admin_user.nil? and @doubt.admin_user.id == current_admin_user.id) or (current_admin_user.role == 'admin' or current_admin_user.role == 'superfaculty') %>
     <div>
-      <div class="mark-as-solved" style="margin: 32px">
-        <% if not @doubt.doubtSolved %>
-          <h4>Mark solved: <span style="background-color: yellow">This will permanently close a doubt and further replies from student will be ignored. Please use only when a student has replied and doesn't expect any further reply from us. For example: 'Thank you' in the reply.</span></h4>
-          <button onclick="markAsSolved()">Mark as Solved</button>
-        <% else %>
-          <h4>Doubt is marked solved</h4>
-        <% end %>
+      <div class="mark-as-solved" style="margin: 32px;<%=@doubt.doubtSolved ? 'display: none;' : ''%>">
+        <h4>Mark solved: <span style="background-color: yellow">This will permanently close a doubt and further replies from student will be ignored. Please use only when a student has replied and doesn't expect any further reply from us. For example: 'Thank you' in the reply.</span></h4>
+        <button onclick="markAsSolved()">Mark as Solved</button>
+      </div>
+      <div class="remove-mark-as-solved" style="margin: 32px;<%=@doubt.doubtSolved ? '' : 'display: none;'%>">
+        <h4>Doubt is marked solved. <span style="background-color: yellow">If you expect further replies from student, please remove solved marking using below button. This will allow doubt to become open when a student replies.</span></h4>
+        <button onclick="markAsSolved()">Remove Mark as Solved</button>
       </div>
       <div style="margin: 32px; margin-top: 4px;">
         <h4>Add your Answer:</h4>
@@ -295,7 +295,13 @@ function markAsSolved() {
       "doubtId": "<%= @doubt_id %>"
     }
   }).done (function (data) {
-    $(".mark-as-solved").hide();
+    if (data.doubtSolved == true) {
+      $(".mark-as-solved").hide();
+      $(".remove-mark-as-solved").show();
+    } else {
+      $(".mark-as-solved").show();
+      $(".remove-mark-as-solved").hide();
+    }
   });
 }
 

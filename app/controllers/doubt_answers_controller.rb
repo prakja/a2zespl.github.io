@@ -42,11 +42,16 @@ class DoubtAnswersController < ApplicationController
     else
       p "Admin user, bypass assign check"
     end
-    doubt.doubtSolved = true
+    if doubt.doubtSolved == false or doubt.doubtSolved.blank?
+      doubt.doubtSolved = true
+    else
+      doubt.doubtSolved = false
+    end
     doubt.save
 
     response = {
-      :status => 'ok'
+      :status => 'ok',
+      :doubtSolved => doubt.doubtSolved
     }
     render json: response, :status => 200
   rescue => exception
