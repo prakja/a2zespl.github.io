@@ -60,7 +60,7 @@
     <div>
       <div class="mark-as-solved" style="margin: 32px">
         <% if not @doubt.doubtSolved %>
-          <h4>Mark solved:</h4>
+          <h4>Mark solved: <span style="background-color: yellow">To be used ONLY when student has replied but reply is <b>NOT</b> a doubt. For example: 'Thank you' in reply. Please don't use otherwise as faculty reply closes the doubt anyway.</span></h4>
           <button onclick="markAsSolved()">Mark as Solved</button>
         <% else %>
           <h4>Doubt is marked solved</h4>
