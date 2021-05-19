@@ -72,11 +72,15 @@ ActiveAdmin.register Video do
 
   action_item :add_annotation, only: :show do
     # video_annotation[videoId]=450&video_annotation[annotationType]=Note
-    link_to 'Add Annotation', '../../admin/video_annotations/new?video_annotation[annotationType]=Note&video_annotation[videoId]=' + resource.id.to_s
+    link_to 'Add Annotation', '/admin/video_annotations/new?video_annotation[annotationType]=Note&video_annotation[videoId]=' + resource.id.to_s
   end
 
   action_item :add_link, only: :show do
-    link_to 'Add Video Link', '../../admin/video_links/new?video_link[videoId]=' + resource.id.to_s
+    link_to 'Add Video Link', '/admin/video_links/new?video_link[videoId]=' + resource.id.to_s
+  end
+
+  action_item :fix_subtitles, only: :show do
+    link_to 'Fix Subtitles', '/admin/videos/' + resource.id.to_s + '/play'
   end
 
   member_action :play do
