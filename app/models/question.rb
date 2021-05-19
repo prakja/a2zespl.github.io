@@ -1,5 +1,7 @@
 class Question < ApplicationRecord
+  include ActiveModel::Dirty
   before_save :default_values
+  after_save :update_question_bank_chapters
   def default_values
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
     self.level = nil if self.level.blank?
@@ -27,6 +29,19 @@ class Question < ApplicationRecord
     else
      return nil
     end
+  end
+
+  def update_question_bank_chapters
+    if self.saved_change_to_topicId?
+      self.update_chapter_questions!
+    end
+  end
+
+  def update_chapter_questions!
+    self.questionTopics.each do |chapter_question|
+      chapter_question.update_chapter!(self.topicId)
+    end
+    ChapterQuestion.main_course_chapter_update!(self.id, self.topicId)
   end
 
   def test_addition_validation

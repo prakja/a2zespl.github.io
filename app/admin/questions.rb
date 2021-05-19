@@ -68,6 +68,11 @@ ActiveAdmin.register Question do
     redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
   end
 
+  member_action :update_chapter_questions, method: :post do
+    resource.update_chapter_questions!
+    redirect_to admin_question_path, notice: "Question chapter banks fixed!"
+  end
+
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
@@ -273,6 +278,10 @@ ActiveAdmin.register Question do
 
   action_item :change_option_index, only: :show do
     link_to 'Change Option Index', change_option_index_admin_question_path(resource), method: :post
+  end
+
+  action_item :update_chapter_questions, only: :show do
+    link_to 'Update Question Bank Chapter', update_chapter_questions_admin_question_path(resource), method: :post
   end
 
   action_item :set_hindi_translation, only: :show do
