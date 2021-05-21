@@ -3,7 +3,7 @@ Ransack.configure do |config|
     # What non-compound ARel predicate will it use? (eq, matches, etc)
     arel_predicate: 'matches_regexp',
     # Format incoming values as you see fit. (Default: Don't do formatting)
-    formatter: proc { |v| "#{v}" },
+    formatter: proc { |v| "(?i)#{v}" },
     # Validate a value. An "invalid" value won't be used in a search.
     # Below is default.
     validator: proc { |v| v.present? },
