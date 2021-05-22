@@ -215,8 +215,7 @@ ActiveAdmin.register Question do
         question.systemTests
       end
       row :type
-      row :level
-      row :sequenceId
+      row :ncert
       row :orignalQuestionId do |question|
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
@@ -413,7 +412,7 @@ ActiveAdmin.register Question do
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
 
-      if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
+      if current_admin_user.question_bank_owner?
         f.input :ncert
       end
 
