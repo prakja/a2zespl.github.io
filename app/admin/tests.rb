@@ -1,5 +1,5 @@
 ActiveAdmin.register Test do
-permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :discussionEnd, :ownerType, :ownerId, course_ids: [], topic_ids: []
+permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :discussionEnd, :ownerType, :ownerId, :scholarship, course_ids: [], topic_ids: []
 remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests, :test_attempts, :target, :question_ids
 
 filter :id_eq, as: :number, label: "Test ID"
