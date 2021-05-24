@@ -363,12 +363,14 @@ ActiveAdmin.register Question do
           $.ajax({
             type: 'GET',
             url: url,
-          }).done(function(data){
+          }).done((data) => {
             const {topicId} = data.data;
-
             if(!!topicId) {
-              // set the new topic
-              $('#question_topicId').val(`${topicId}`).change();
+              const currentTopicId = parseInt($('#question_topicId').val());
+              if(currentTopicId !== topicId) {
+                // only fire the change event when the topicId is different
+                $('#question_topicId').val(`${topicId}`).change();
+              }
             }
           });
         "
