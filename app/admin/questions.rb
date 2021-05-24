@@ -68,6 +68,11 @@ ActiveAdmin.register Question do
     redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
   end
 
+  member_action :update_chapter_questions, method: :post do
+    resource.update_chapter_questions!
+    redirect_to admin_question_path, notice: "Question chapter banks fixed!"
+  end
+
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
@@ -210,8 +215,7 @@ ActiveAdmin.register Question do
         question.systemTests
       end
       row :type
-      row :level
-      row :sequenceId
+      row :ncert
       row :orignalQuestionId do |question|
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
@@ -273,6 +277,10 @@ ActiveAdmin.register Question do
 
   action_item :change_option_index, only: :show do
     link_to 'Change Option Index', change_option_index_admin_question_path(resource), method: :post
+  end
+
+  action_item :update_chapter_questions, only: :show do
+    link_to 'Update Question Bank Chapter', update_chapter_questions_admin_question_path(resource), method: :post
   end
 
   action_item :set_hindi_translation, only: :show do
@@ -404,7 +412,7 @@ ActiveAdmin.register Question do
       f.input :level, as: :select, :collection => ["BASIC-NCERT", "MASTER-NCERT"]
       f.input :paidAccess
 
-      if current_admin_user.question_bank_owner? and params[:showNCERT] == 'yes'
+      if current_admin_user.question_bank_owner?
         f.input :ncert
       end
 
@@ -426,11 +434,12 @@ ActiveAdmin.register Question do
         url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], 
         display_name: 'sentenceContext', 
+        predicate: 'matches_regexp',
         minimum_input_length: 5 if f.object.topicId.present?
 
       f.input :video_sentence_ids, input_html: {id: "question_video_sentences_select2"}, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentenceContext', minimum_input_length: 5 if f.object.topicId.present?
+        fields: [:sentence], display_name: 'sentenceContext', predicate: 'matches_regexp', minimum_input_length: 5 if f.object.topicId.present?
 
       render partial: 'cross_chapter'
       render partial: 'question_edit'
