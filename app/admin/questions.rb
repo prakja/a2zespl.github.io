@@ -171,7 +171,26 @@ ActiveAdmin.register Question do
         raw('<a target="_blank" href="/questions/add_hint/' + question.id.to_s + '">' + "Add Hint" + '</a>')
       }
     end
-    actions
+    actions defaults: true do |question|
+      if params[:q].present? and params[:q][:similar_questions].present?
+        main_question_id = params[:q][:similar_questions].to_i
+        if params[:q][:similar_questions].to_i != question.id
+          item 'Copy Explanation', copy_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be copied from Question ID: #{params[:q][:similar_questions]}"}
+          item 'Merge Explanation', merge_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be merged from Question ID: #{params[:q][:similar_questions]}"}
+          item 'Copy NCERT', copy_ncert_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that ncert and sentences should be copied from Question ID: #{params[:q][:similar_questions]}"}
+          if not DuplicateQuestion.existing_duplicate?(question.id, main_question_id)
+            item 'Mark Duplicate', add_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please Question ID: #{main_question_id} as duplicate of #{question.id}"}
+            item 'Mark Not Duplicate', add_not_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please Question ID: #{main_question_id} is not duplicate of #{question.id}"}
+          else
+            item 'Remove Duplicate marking', del_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please remove duplicate marking of: #{main_question_id} and #{question.id}"}
+          end
+          item 'Set Main Question', admin_questions_path(q: {similar_questions: question.id}) 
+        else
+          "This is the main Question"
+        end
+      else
+      end
+    end
   end
 
   show do
@@ -273,6 +292,56 @@ ActiveAdmin.register Question do
   member_action :change_option_index, method: :post do
     resource.change_option_index!
     redirect_to admin_question_path, notice: "Question options fixed!"
+  end
+
+  member_action :copy_explanation, method: :post do
+    resource.update_column('explanation', Question.find(params[:origId]).explanation) 
+    redirect_back fallback_location: collection_path, notice: "copied explanation from main question"
+  end
+
+  member_action :merge_explanation, method: :post do
+    resource.update_column('explanation', resource.explanation + '<br>' + Question.find(params[:origId]).explanation) 
+    redirect_back fallback_location: collection_path, notice: "merged explanation from main question"
+  end
+
+  member_action :copy_ncert, method: :post do
+    resource.update_column('ncert', Question.find(params[:origId]).ncert) 
+    if resource.ncert 
+      ncert_sentences = Question.find(params[:origId]).ncert_sentences  
+      if ncert_sentences.length > 0
+        resource.ncert_sentences = ncert_sentences
+        resource.save!
+      end
+    end
+    redirect_back fallback_location: collection_path, notice: "copied ncert and related sentences, if any, from main question"
+  end
+
+  member_action :add_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      DuplicateQuestion.create!(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      DuplicateQuestion.create!(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    redirect_back fallback_location: collection_path, notice: "added duplicate with main question"
+  end
+
+  member_action :add_not_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      NotDuplicateQuestion.create!(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      NotDuplicateQuestion.create!(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    redirect_back fallback_location: collection_path, notice: "added not duplicate with main question"
+  end
+
+  member_action :del_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      dq = DuplicateQuestion.find_by(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      dq = DuplicateQuestion.find_by(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    dq.destroy
+    redirect_back fallback_location: collection_path, notice: "deleted duplicate with main question"
   end
 
   action_item :change_option_index, only: :show do
