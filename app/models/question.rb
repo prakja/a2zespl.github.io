@@ -179,7 +179,7 @@ class Question < ApplicationRecord
     if question.nil?
       raise "can't find duplicate for question with null topic id"
     end
-    where('"Question"."id" in (SELECT distinct("id") from "Question" q1 where q1."topicId" = ? and q1."id" != ?) and similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.7', question.topicId, question_id, question_id);
+    where('"Question"."topicId" = ? and "Question"."id" != ? and similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.5', question.topicId, question_id, question_id);
   }
 
   scope :multiple_youtube, ->() {
