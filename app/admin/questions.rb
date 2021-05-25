@@ -502,7 +502,8 @@ ActiveAdmin.register Question do
       f.input :ncert_sentence_ids, 
         input_html: {id: "question_ncert_sentences_select2"}, 
         label: "NCERT Sentence", as: :selected_list, 
-        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        # special handing for 'Mathematical Tools' chapter as that sentences in many other chapters of physics ncert book
+        url: admin_ncert_sentences_path(q: f.object.topicId == 676 ? {noteId_in: [2796, 2800, 2802, 2803, 2804, 2805, 2806, 2843, 2877]} : {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], 
         display_name: 'sentenceContext', 
         predicate: 'matches_regexp',
