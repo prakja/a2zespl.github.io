@@ -80,7 +80,7 @@ ActiveAdmin.register Video do
   end
 
   action_item :fix_subtitles, only: :show do
-    link_to 'Fix Subtitles', '/admin/videos/' + resource.id.to_s + '/play'
+    link_to 'Play / Fix Subtitles', '/admin/videos/' + resource.id.to_s + '/play'
   end
 
   member_action :play do
