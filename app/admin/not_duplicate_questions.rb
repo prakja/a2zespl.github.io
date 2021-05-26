@@ -1,5 +1,6 @@
 ActiveAdmin.register NotDuplicateQuestion do
   remove_filter :question1, :question2, :versions
+  permit_params :questionId1, :questionId2
 
   scope :marked_duplicate, show_count: false
   scope :botany_marked_duplicates, show_count: false do |ndqs|
@@ -52,6 +53,15 @@ ActiveAdmin.register NotDuplicateQuestion do
       end
     end
     active_admin_comments
+  end
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+    f.inputs "Not Duplicate Question" do 
+      f.input :questionId1, as: :number
+      f.input :questionId2, as: :number
+    end
+    f.actions
   end
 
   controller do
