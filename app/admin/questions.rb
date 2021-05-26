@@ -240,12 +240,12 @@ ActiveAdmin.register Question do
       end
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
-          question.ncert_sentences
+          raw question.ncert_sentences.collect{|sentence| "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
       if question.video_sentences.length > 0
         row "Video Sentences" do |question|
-          question.video_sentences
+          raw question.video_sentences.collect{|sentence| "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
     end
