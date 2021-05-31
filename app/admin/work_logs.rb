@@ -29,7 +29,7 @@ ActiveAdmin.register WorkLog do
   end
 
   show do
-    render 'can_edit', { diableEdit: (work_log.admin_user_id == current_admin_user.id), selecter: '.action_items'} # an ugly hack to hide Edit button on show page if another admin user views the log
+    render 'can_edit', { diableEdit: (work_log.admin_user_id != current_admin_user.id), selecter: '.action_items'} # an ugly hack to hide Edit button on show page if another admin user views the log
     attributes_table do
       row ('start_time') {|c| c.start_time.strftime("%I:%M%p")}
       row ('end_time') {|c| c.end_time.strftime("%I:%M%p") }
@@ -56,6 +56,9 @@ ActiveAdmin.register WorkLog do
       f.input :content
     end
     f.actions
-    render 'can_edit', { diableEdit: (work_log.admin_user_id == current_admin_user.id), selecter: '#work_log_submit_action'}
+    render 'can_edit', { 
+      diableEdit: f.object.new_record? ? false: (work_log.admin_user_id != current_admin_user.id), 
+      selecter: '#work_log_submit_action'
+    }
   end
 end
