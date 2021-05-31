@@ -1,7 +1,7 @@
 <script>
 
-    const isSameAdminUser = <%= isSame %>;
+    const isSameAdminUser = <%= diableEdit %>;
     if (!isSameAdminUser) {
-        $('.action_items').hide();
+        $('<%= selecter %>').hide();
     }
 </script>
