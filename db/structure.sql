@@ -11719,6 +11719,13 @@ CREATE INDEX index_votes_on_voter_type_and_voter_id ON public.votes USING btree 
 
 
 --
+-- Name: index_work_logs_on_date_and_admin_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_work_logs_on_date_and_admin_user_id ON public.work_logs USING btree (date, admin_user_id);
+
+
+--
 -- Name: motivation_message_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13340,6 +13347,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210525081004'),
 ('20210526062304'),
 ('20210526122358'),
-('20210531062211');
+('20210531062211'),
+('20210531124523');
 
 
