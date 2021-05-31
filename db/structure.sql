@@ -737,6 +737,28 @@ COMMENT ON FUNCTION public.jsonb_delete_left(a jsonb, b text) IS 'delete key in 
 
 
 --
+-- Name: newDuplicateChapter(integer, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."newDuplicateChapter"("oldDuplicateChapter" integer, "newOriginalChapter" integer) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE "returnId" integer; 
+BEGIN
+Select "NewDuplicateChapter"."dupId" FROM "DuplicateChapter", "DuplicateChapter" as "NewDuplicateChapter", "Topic", "Topic" as "NewTopic", "Subject", "Subject" as "NewSubject"
+where "Topic"."subjectId" = "Subject"."id"
+and "NewTopic"."subjectId" = "NewSubject"."id"
+and "Subject"."courseId" = "NewSubject"."courseId"
+and "NewDuplicateChapter"."origId" = "newOriginalChapter"
+and "DuplicateChapter"."dupId" = "oldDuplicateChapter"
+and "DuplicateChapter"."dupId" = "Topic"."id"
+and "NewDuplicateChapter"."dupId" = "NewTopic"."id" into "returnId";
+return "returnId";
+END
+$$;
+
+
+--
 -- Name: rand(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2403,13 +2425,34 @@ CREATE VIEW public."CorrectAnswerVideo" AS
 --
 
 CREATE TABLE public."Coupon" (
-    id integer,
-    code character varying(255),
-    description text,
-    quantity integer DEFAULT '-1'::integer NOT NULL,
-    discount numeric(10,2) DEFAULT 0 NOT NULL,
-    "discountType" public."enum_Coupon_discountType" DEFAULT 'absolute'::public."enum_Coupon_discountType"
+    id bigint NOT NULL,
+    code character varying,
+    description character varying,
+    "discountType" character varying NOT NULL,
+    discount double precision NOT NULL,
+    deactivated boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: Coupon_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."Coupon_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Coupon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."Coupon_id_seq" OWNED BY public."Coupon".id;
 
 
 --
@@ -2574,7 +2617,7 @@ CREATE TABLE public."CourseOffer" (
     id integer NOT NULL,
     title character varying(255),
     description text,
-    "courseId" integer NOT NULL,
+    "courseId" integer,
     fee numeric(10,2) NOT NULL,
     "discountedFee" numeric(10,2),
     email character varying(255),
@@ -2589,7 +2632,9 @@ CREATE TABLE public."CourseOffer" (
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "actualCourseId" integer,
-    accepted boolean DEFAULT false
+    accepted boolean DEFAULT false,
+    "couponId" integer,
+    "isCouponAvailed" boolean DEFAULT false
 );
 
 
@@ -2650,7 +2695,8 @@ CREATE VIEW public."CourseTestQuestion" AS
  SELECT "CourseTest"."courseId",
     "TestQuestion"."questionId",
     "Question"."topicId" AS "chapterId",
-    "Question"."subjectId"
+    "Question"."subjectId",
+    "CourseTest"."testId"
    FROM public."CourseTest",
     public."TestQuestion",
     public."Question"
@@ -3614,6 +3660,41 @@ CREATE TABLE public."NcertSentence" (
 
 
 --
+-- Name: Note; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Note" (
+    id integer NOT NULL,
+    name character varying(255),
+    content text,
+    description text,
+    "creatorId" integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "externalURL" text,
+    "epubURL" text,
+    "epubContent" text,
+    lock_version integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: NcertSentenceDetail; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."NcertSentenceDetail" AS
+ SELECT "NcertSentence".id,
+    "NcertSentence".id AS "ncertSentenceId",
+    "NcertSentence".sentence,
+    lead("NcertSentence".sentence, 1) OVER (PARTITION BY "NcertSentence"."noteId" ORDER BY "NcertSentence".id) AS "nextSentence",
+    lag("NcertSentence".sentence, 1) OVER (PARTITION BY "NcertSentence"."noteId" ORDER BY "NcertSentence".id) AS "prevSentence",
+    "Note".name AS "noteName"
+   FROM public."NcertSentence",
+    public."Note"
+  WHERE ("NcertSentence"."noteId" = "Note".id);
+
+
+--
 -- Name: NcertSentence_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3712,25 +3793,6 @@ CREATE SEQUENCE public."NotDuplicateQuestion_id_seq"
 --
 
 ALTER SEQUENCE public."NotDuplicateQuestion_id_seq" OWNED BY public."NotDuplicateQuestion".id;
-
-
---
--- Name: Note; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."Note" (
-    id integer NOT NULL,
-    name character varying(255),
-    content text,
-    description text,
-    "creatorId" integer,
-    "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL,
-    "externalURL" text,
-    "epubURL" text,
-    "epubContent" text,
-    lock_version integer DEFAULT 0 NOT NULL
-);
 
 
 --
@@ -4515,7 +4577,9 @@ ALTER SEQUENCE public."QuestionTranslation_id_seq" OWNED BY public."QuestionTran
 CREATE TABLE public."QuestionVideoSentence" (
     id bigint NOT NULL,
     "questionId" integer,
-    "videoSentenceId" integer
+    "videoSentenceId" integer,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -5917,6 +5981,39 @@ CREATE TABLE public."UserCourse177174" (
 
 
 --
+-- Name: UserCourseCoupon; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourseCoupon" (
+    id bigint NOT NULL,
+    "userId" integer,
+    "couponId" integer,
+    "courseId" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: UserCourseCoupon_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."UserCourseCoupon_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: UserCourseCoupon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."UserCourseCoupon_id_seq" OWNED BY public."UserCourseCoupon".id;
+
+
+--
 -- Name: UserCourse_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6193,7 +6290,8 @@ CREATE TABLE public."UserProfile" (
     "allowVideoDownload" boolean DEFAULT false NOT NULL,
     "allowDeprecatedNcert" boolean DEFAULT false NOT NULL,
     "playerQuality" character varying,
-    "playerSpeed" character varying
+    "playerSpeed" character varying,
+    state character varying
 );
 
 
@@ -6758,6 +6856,39 @@ CREATE TABLE public."VideoSentence" (
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: VideoSentence20210428; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."VideoSentence20210428" (
+    id bigint,
+    "videoId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "timestampStart" double precision,
+    "timestampEnd" double precision,
+    "createdAt" timestamp without time zone,
+    "updatedAt" timestamp without time zone
+);
+
+
+--
+-- Name: VideoSentenceDetail; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."VideoSentenceDetail" AS
+ SELECT "VideoSentence".id,
+    "VideoSentence".id AS "videoSentenceId",
+    "VideoSentence".sentence,
+    lead("VideoSentence".sentence, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "nextSentence",
+    lag("VideoSentence".sentence, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "prevSentence",
+    "Video".name AS "videoName"
+   FROM public."VideoSentence",
+    public."Video"
+  WHERE ("VideoSentence"."videoId" = "Video".id);
 
 
 --
@@ -7584,6 +7715,42 @@ ALTER SEQUENCE public.votes_id_seq OWNED BY public.votes.id;
 
 
 --
+-- Name: work_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.work_logs (
+    id bigint NOT NULL,
+    start_time time without time zone,
+    end_time time without time zone,
+    date date,
+    total_hours integer,
+    content text,
+    admin_user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: work_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.work_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: work_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.work_logs_id_seq OWNED BY public.work_logs.id;
+
+
+--
 -- Name: ActiveFlashCardChapter id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7714,6 +7881,13 @@ ALTER TABLE ONLY public."CopyAnswer" ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public."CopyTestAttempt" ALTER COLUMN id SET DEFAULT nextval('public."CopyTestAttempt_id_seq"'::regclass);
+
+
+--
+-- Name: Coupon id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Coupon" ALTER COLUMN id SET DEFAULT nextval('public."Coupon_id_seq"'::regclass);
 
 
 --
@@ -8235,6 +8409,13 @@ ALTER TABLE ONLY public."UserCourse" ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: UserCourseCoupon id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserCourseCoupon" ALTER COLUMN id SET DEFAULT nextval('public."UserCourseCoupon_id_seq"'::regclass);
+
+
+--
 -- Name: UserDpp id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8470,6 +8651,13 @@ ALTER TABLE ONLY public.video_time_stamp_imgs ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.votes ALTER COLUMN id SET DEFAULT nextval('public.votes_id_seq'::regclass);
+
+
+--
+-- Name: work_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work_logs ALTER COLUMN id SET DEFAULT nextval('public.work_logs_id_seq'::regclass);
 
 
 --
@@ -8857,40 +9045,58 @@ ALTER TABLE ONLY public."TestAttempt"
 
 
 --
+-- Name: Test Test_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Test"
+    ADD CONSTRAINT "Test_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: TestLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
 CREATE MATERIALIZED VIEW public."TestLeaderBoard" AS
  SELECT "TestLeaderBoardDataWithRank".id,
     "TestLeaderBoardDataWithRank".rank,
+    "TestLeaderBoardDataWithRank"."stateRank",
     "TestLeaderBoardDataWithRank"."testAttemptNo",
     "TestLeaderBoardDataWithRank"."userId",
     "TestLeaderBoardDataWithRank"."testId",
     "TestLeaderBoardDataWithRank"."testAttemptId",
     "TestLeaderBoardDataWithRank".score,
+    "TestLeaderBoardDataWithRank"."userState",
     "TestLeaderBoardDataWithRank"."correctAnswerCount",
     "TestLeaderBoardDataWithRank"."incorrectAnswerCount"
    FROM ( SELECT "TestLeaderBoardData"."testAttemptId" AS id,
             rank() OVER (PARTITION BY "TestLeaderBoardData"."testId" ORDER BY "TestLeaderBoardData".score DESC) AS rank,
+            rank() OVER (PARTITION BY "TestLeaderBoardData"."testId", "TestLeaderBoardData"."userState" ORDER BY "TestLeaderBoardData".score DESC) AS "stateRank",
             "TestLeaderBoardData"."testAttemptNo",
             "TestLeaderBoardData"."userId",
             "TestLeaderBoardData"."testId",
             "TestLeaderBoardData"."testAttemptId",
             "TestLeaderBoardData".score,
+            "TestLeaderBoardData"."userState",
             "TestLeaderBoardData"."correctAnswerCount",
             "TestLeaderBoardData"."incorrectAnswerCount"
-           FROM ( SELECT "TestAttempt"."userId",
+           FROM ( SELECT "User".id AS "userId",
+                    "Test"."userId" AS "testUserId",
+                    "UserProfile".state AS "userState",
                     "TestAttempt"."testId",
                     "TestAttempt".id AS "testAttemptId",
                     ("TestAttempt".result -> 'correctAnswerCount'::text) AS "correctAnswerCount",
                     ("TestAttempt".result -> 'incorrectAnswerCount'::text) AS "incorrectAnswerCount",
-                    row_number() OVER (PARTITION BY "TestAttempt"."userId", "TestAttempt"."testId" ORDER BY "TestAttempt".id) AS "testAttemptNo",
+                    row_number() OVER (PARTITION BY "User".id, "TestAttempt"."testId" ORDER BY "TestAttempt".id) AS "testAttemptNo",
                     (("TestAttempt".result ->> 'totalMarks'::text))::integer AS score
-                   FROM public."TestAttempt",
-                    public."Test"
-                  WHERE (("TestAttempt"."testId" = "Test".id) AND ("Test"."userId" IS NULL) AND ("Test"."showAnswer" = true) AND ("TestAttempt".result IS NOT NULL) AND ("TestAttempt".completed = true))
-                  GROUP BY "TestAttempt"."userId", "TestAttempt"."testId", "TestAttempt".id) "TestLeaderBoardData"
-          WHERE ("TestLeaderBoardData"."testAttemptNo" = 1)) "TestLeaderBoardDataWithRank"
+                   FROM public."User",
+                    public."UserProfile",
+                    public."TestAttempt",
+                    public."Question",
+                    public."Test",
+                    public."TestQuestion"
+                  WHERE (("TestAttempt"."testId" = "Test".id) AND ("TestQuestion"."questionId" = "Question".id) AND ("TestQuestion"."testId" = "TestAttempt"."testId") AND ("Test"."showAnswer" = true) AND ("User".id = "TestAttempt"."userId") AND ("UserProfile"."userId" = "User".id) AND ("TestAttempt".result IS NOT NULL) AND (("TestAttempt"."createdAt" >= (now() - '3 mons'::interval)) AND ("TestAttempt"."createdAt" <= now())))
+                  GROUP BY "User".id, "UserProfile".state, "TestAttempt"."testId", "Test".id, "TestAttempt".id) "TestLeaderBoardData"
+          WHERE (("TestLeaderBoardData"."testAttemptNo" = 1) AND ("TestLeaderBoardData"."testUserId" IS NULL))) "TestLeaderBoardDataWithRank"
   WITH NO DATA;
 
 
@@ -9060,6 +9266,14 @@ ALTER TABLE ONLY public."Constant"
 
 ALTER TABLE ONLY public."CopyTestAttempt"
     ADD CONSTRAINT "CopyTestAttempt_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Coupon Coupon_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Coupon"
+    ADD CONSTRAINT "Coupon_pkey" PRIMARY KEY (id);
 
 
 --
@@ -9519,6 +9733,14 @@ ALTER TABLE ONLY public."QuestionVideoSentence"
 
 
 --
+-- Name: QuestionVideoSentence QuestionVideoSentence_questionId_videoSentenceId_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVideoSentence"
+    ADD CONSTRAINT "QuestionVideoSentence_questionId_videoSentenceId_key" UNIQUE ("videoSentenceId", "questionId");
+
+
+--
 -- Name: Quiz Quiz_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9695,14 +9917,6 @@ ALTER TABLE ONLY public."TestQuestion"
 
 
 --
--- Name: Test Test_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Test"
-    ADD CONSTRAINT "Test_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: TopicAssetOld TopicAsset_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9732,6 +9946,14 @@ ALTER TABLE ONLY public."UserChapterStat"
 
 ALTER TABLE ONLY public."UserClaim"
     ADD CONSTRAINT "UserClaim_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: UserCourseCoupon UserCourseCoupon_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserCourseCoupon"
+    ADD CONSTRAINT "UserCourseCoupon_pkey" PRIMARY KEY (id);
 
 
 --
@@ -9884,6 +10106,14 @@ ALTER TABLE ONLY public."VideoLink"
 
 ALTER TABLE ONLY public."VideoQuestion"
     ADD CONSTRAINT "VideoQuestion_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: VideoSentence VideoSentenceNoOverlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT "VideoSentenceNoOverlap" EXCLUDE USING gist ("videoId" WITH =, numrange(("timestampStart")::numeric, ("timestampEnd")::numeric, '[)'::text) WITH &&);
 
 
 --
@@ -10204,6 +10434,14 @@ ALTER TABLE ONLY public.video_time_stamp_imgs
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: work_logs work_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.work_logs
+    ADD CONSTRAINT work_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -10732,6 +10970,27 @@ CREATE UNIQUE INDEX "QuestionTranslation_questionId_language_idx" ON public."Que
 
 
 --
+-- Name: QuestionVideoSentence_questionId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "QuestionVideoSentence_questionId_idx" ON public."QuestionVideoSentence" USING btree ("questionId");
+
+
+--
+-- Name: QuestionVideoSentence_questionId_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "QuestionVideoSentence_questionId_idx1" ON public."QuestionVideoSentence" USING btree ("questionId");
+
+
+--
+-- Name: QuestionVideoSentence_videoSentenceId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "QuestionVideoSentence_videoSentenceId_idx" ON public."QuestionVideoSentence" USING btree ("videoSentenceId");
+
+
+--
 -- Name: Question_ncert_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11023,6 +11282,20 @@ CREATE UNIQUE INDEX "UserFlashCard_userId_flashCardId_idx" ON public."UserFlashC
 --
 
 CREATE INDEX "UserFlashCard_userId_idx" ON public."UserFlashCard" USING btree ("userId");
+
+
+--
+-- Name: VideoSentence_videoId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "VideoSentence_videoId_idx" ON public."VideoSentence" USING btree ("videoId");
+
+
+--
+-- Name: VideoSentence_videoId_timestampStart_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "VideoSentence_videoId_timestampStart_idx" ON public."VideoSentence" USING btree ("videoId", "timestampStart");
 
 
 --
@@ -12653,6 +12926,14 @@ ALTER TABLE ONLY public."Section"
 
 
 --
+-- Name: CourseOffer fk_rails_7205069e9d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseOffer"
+    ADD CONSTRAINT fk_rails_7205069e9d FOREIGN KEY ("couponId") REFERENCES public."Coupon"(id);
+
+
+--
 -- Name: video_time_stamp_imgs fk_rails_7fbbd02688; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12960,7 +13241,7 @@ ALTER TABLE ONLY public."Notification"
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO google_ads,public;
+SET search_path TO public,google_ads;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20190516080816'),
@@ -13053,6 +13334,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210415123928'),
 ('20210420054010'),
 ('20210421065723'),
-('20210426103243');
+('20210426103243'),
+('20210517135957'),
+('20210525073404'),
+('20210525081004'),
+('20210526062304'),
+('20210526122358'),
+('20210531062211');
 
 

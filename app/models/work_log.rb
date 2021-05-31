@@ -1,0 +1,10 @@
+class WorkLog < ApplicationRecord
+    include ActiveModel::Validations
+
+    has_paper_trail
+
+    validates_presence_of :start_time, :end_time, :content, :total_hours
+
+    scope :my_logs, -> (current_admin_user) {self.where(:admin_user_id => current_admin_user.id)}
+    belongs_to :created_by, class_name: :AdminUser, foreign_key: :admin_user_id
+end
