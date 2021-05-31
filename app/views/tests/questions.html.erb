@@ -123,7 +123,7 @@
     <div id="printDiv" class="noprint"><button id='printBtn'>Print</button></div>
     <div id="newsletterContent" style="display:none;">
       <% @test_questions.each_with_index do |question, index| %>
-        <div class="question"><span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %></div>
+        <div class="dontsplit question"><span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %></div>
         <% if index + 1 == @test_questions.length %>
           <div>
             <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet</h2>

@@ -11,7 +11,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count, :completed_reviewed_translations
   permit_params :question, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -171,7 +171,26 @@ ActiveAdmin.register Question do
         raw('<a target="_blank" href="/questions/add_hint/' + question.id.to_s + '">' + "Add Hint" + '</a>')
       }
     end
-    actions
+    actions defaults: true do |question|
+      if params[:q].present? and params[:q][:similar_questions].present?
+        main_question_id = params[:q][:similar_questions].to_i
+        if params[:q][:similar_questions].to_i != question.id
+          item 'Copy Explanation', copy_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be copied from Question ID: #{params[:q][:similar_questions]}"}
+          item 'Merge Explanation', merge_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be merged from Question ID: #{params[:q][:similar_questions]}"}
+          item 'Copy NCERT', copy_ncert_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that ncert and sentences should be copied from Question ID: #{params[:q][:similar_questions]}"}
+          if not DuplicateQuestion.existing_duplicate?(question.id, main_question_id)
+            item 'Mark Duplicate', add_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please Question ID: #{main_question_id} as duplicate of #{question.id}"}
+            item 'Mark Not Duplicate', add_not_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please Question ID: #{main_question_id} is not duplicate of #{question.id}"}
+          else
+            item 'Remove Duplicate marking', del_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please remove duplicate marking of: #{main_question_id} and #{question.id}"}
+          end
+          item 'Set Main Question', admin_questions_path(q: {similar_questions: question.id}) 
+        else
+          "This is the main Question"
+        end
+      else
+      end
+    end
   end
 
   show do
@@ -221,12 +240,12 @@ ActiveAdmin.register Question do
       end
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
-          question.ncert_sentences
+          raw question.ncert_sentences.collect{|sentence| "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
       if question.video_sentences.length > 0
         row "Video Sentences" do |question|
-          question.video_sentences
+          raw question.video_sentences.collect{|sentence| "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
     end
@@ -273,6 +292,56 @@ ActiveAdmin.register Question do
   member_action :change_option_index, method: :post do
     resource.change_option_index!
     redirect_to admin_question_path, notice: "Question options fixed!"
+  end
+
+  member_action :copy_explanation, method: :post do
+    resource.update_column('explanation', Question.find(params[:origId]).explanation) 
+    redirect_back fallback_location: collection_path, notice: "copied explanation from main question"
+  end
+
+  member_action :merge_explanation, method: :post do
+    resource.update_column('explanation', resource.explanation + '<br>' + Question.find(params[:origId]).explanation) 
+    redirect_back fallback_location: collection_path, notice: "merged explanation from main question"
+  end
+
+  member_action :copy_ncert, method: :post do
+    resource.update_column('ncert', Question.find(params[:origId]).ncert) 
+    if resource.ncert 
+      ncert_sentences = Question.find(params[:origId]).ncert_sentences  
+      if ncert_sentences.length > 0
+        resource.ncert_sentences = ncert_sentences
+        resource.save!
+      end
+    end
+    redirect_back fallback_location: collection_path, notice: "copied ncert and related sentences, if any, from main question"
+  end
+
+  member_action :add_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      DuplicateQuestion.create!(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      DuplicateQuestion.create!(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    redirect_back fallback_location: collection_path, notice: "added duplicate with main question"
+  end
+
+  member_action :add_not_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      NotDuplicateQuestion.create!(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      NotDuplicateQuestion.create!(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    redirect_back fallback_location: collection_path, notice: "added not duplicate with main question"
+  end
+
+  member_action :del_dup, method: :post do
+    if resource.id < params[:origId].to_i
+      dq = DuplicateQuestion.find_by(questionId1: resource.id, questionId2: params[:origId].to_i)
+    else
+      dq = DuplicateQuestion.find_by(questionId2: resource.id, questionId1: params[:origId].to_i)
+    end
+    dq.destroy
+    redirect_back fallback_location: collection_path, notice: "deleted duplicate with main question"
   end
 
   action_item :change_option_index, only: :show do
@@ -433,7 +502,8 @@ ActiveAdmin.register Question do
       f.input :ncert_sentence_ids, 
         input_html: {id: "question_ncert_sentences_select2"}, 
         label: "NCERT Sentence", as: :selected_list, 
-        url: admin_ncert_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        # special handing for 'Mathematical Tools' chapter as that sentences in many other chapters of physics ncert book
+        url: admin_ncert_sentences_path(q: f.object.topicId == 676 ? {noteId_in: [2796, 2800, 2802, 2803, 2804, 2805, 2806, 2843, 2877]} : {chapterId_eq: f.object.topicId}), 
         fields: [:sentence], 
         display_name: 'sentenceContext', 
         predicate: 'matches_regexp',
@@ -441,7 +511,7 @@ ActiveAdmin.register Question do
 
       f.input :video_sentence_ids, input_html: {id: "question_video_sentences_select2"}, label: "Video Sentence", as: :selected_list,
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence], display_name: 'sentenceContext', predicate: 'matches_regexp', minimum_input_length: 5 if f.object.topicId.present?
+        fields: [:sentence], display_name: 'sentenceContext', predicate: 'matches_regexp', minimum_input_length: 5, hint: raw("<a href='#{admin_videos_path(order: 'seqId_asc_and_id_asc', q: {videoTopics_chapterId_eq: f.object.topicId, language_eq: 'hinglish'})}' target='_blank'>Chapter Videos</a> List used for linking") if f.object.topicId.present?
 
       render partial: 'cross_chapter'
       render partial: 'question_edit'

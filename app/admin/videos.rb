@@ -80,7 +80,7 @@ ActiveAdmin.register Video do
   end
 
   action_item :fix_subtitles, only: :show do
-    link_to 'Fix Subtitles', '/admin/videos/' + resource.id.to_s + '/play'
+    link_to 'Play / Fix Subtitles', '/admin/videos/' + resource.id.to_s + '/play'
   end
 
   member_action :play do
@@ -99,7 +99,8 @@ ActiveAdmin.register Video do
       raw(hours.to_s.rjust(2, '0') + ":" + minutes.to_s.rjust(2, '0') + ":" + seconds.to_s.rjust(2, '0'))
     end
     column :language
-    column ("Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">View on NEETprep</a>')}
+    column ("Admin Link") {|video| raw("<a target='_blank' href='#{play_admin_video_path(video)}'>Play</a>")}
+    column ("NEETprep Link") {|video| raw('<a target="_blank" href="https://www.neetprep.com/video-class/' + (video.id).to_s + '-admin">Play</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
     column ("History") {|video| raw('<a target="_blank" href="/admin/videos/' + (video.id).to_s + '/history">View History</a>')}
     actions

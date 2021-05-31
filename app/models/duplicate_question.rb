@@ -19,6 +19,14 @@ class DuplicateQuestion < ApplicationRecord
     ActiveRecord::Base.connection.query('delete from "ChapterQuestion" where "questionId" = ' + self.questionId2.to_s + ' and "chapterId" in (select "chapterId" from "ChapterQuestion" where "questionId" in  (' + self.questionId2.to_s + ', ' + self.questionId1.to_s + ') group by "chapterId" having count(*) > 1);')
   end
 
+  def self.existing_duplicate?(id1, id2)
+    if id1.to_i < id2.to_i
+      return DuplicateQuestion.find_by(questionId1: id1.to_i, questionId2: id2.to_i).present?
+    else
+      return DuplicateQuestion.find_by(questionId2: id1.to_i, questionId1: id2.to_i).present?
+    end
+  end
+
   def question_bank_chapter_id
     q1Chapters = ChapterQuestion.joins(:question).where(questionId: self.questionId1)
     q2Chapters = ChapterQuestion.joins(:question).where(questionId: self.questionId2)
