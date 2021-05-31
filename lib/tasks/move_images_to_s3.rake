@@ -1,13 +1,16 @@
-desc "Download the images from external sources and upload them to neetprep s3 bucket and replace their links in notes. # rake move_images_to_s3[startId, endId]"
-task :move_images_to_s3, [:start, :stop] => :environment do |task, args|
+desc "Download the images from external sources and upload them to neetprep s3 bucket and replace their links. # rake move_images_to_s3[start, end, column, table, external_link]"
+task :move_images_to_s3, [:start, :stop, :column, :table, :ext_link] => :environment do |task, args|
   ActiveRecord::Base.connection.execute("SET statement_timeout = '5min';")
-  Note.where(%(id BETWEEN ? AND ? AND content like '%<img src="http%'), args[:start],args[:stop]).each do |note|
-      p note.id
-      content = Nokogiri::HTML(note.content)
-      img = content.xpath("//img")
+  query = %(id BETWEEN ? AND ? AND ) +  args[:column] + %( like '%<img src=") + args[:ext_link] + "%'"
+  p query
+  table = args[:table].constantize
+  table.where(query, args[:start],args[:stop]).each do |row|
+      p row.id  
+      column = Nokogiri::HTML(row[args[:column]])
+      img = column.xpath("//img")
       img.each do |i|
-          p i["src"]
-          if(!i["src"].start_with?("https://learner-users.s3.ap-south-1.amazonaws.com"))
+          if i["src"].start_with?(args[:ext_link])
+              p i["src"]  
               url = i["src"]
               filename = "./tmp/my_file." + i["src"].split(".")[-1]
               File.open(filename, "wb") do |file|
@@ -24,7 +27,7 @@ task :move_images_to_s3, [:start, :stop] => :environment do |task, args|
               i["src"] = s["location"]
           end
       end
-      note.content = content.to_s
-      note.save! 
+      row[args[:column]] = column.to_s 
+      row.save! 
   end
 end
