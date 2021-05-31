@@ -47,7 +47,7 @@ tinymce.init({
     }
     var input = document.createElement('input');
     input.setAttribute('type', 'file');
-    input.setAttribute('accept', '*/*');
+    input.setAttribute('accept', '*/*'); /**/
 
     input.onchange = function() {
       const data = new FormData();
@@ -70,7 +70,6 @@ tinymce.init({
     editor.on('blur', function (e) {
       document.getElementById('question_explanation').value = editor.getContent();
     });
-    // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
     editor.settings.images_dataimg_filter = function () {return true;};
   }
 });

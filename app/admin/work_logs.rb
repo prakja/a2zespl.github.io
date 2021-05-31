@@ -49,11 +49,11 @@ ActiveAdmin.register WorkLog do
     f.object.date = Date.today.to_s
     f.inputs "Work Log" do
       render partial: 'tinymce', :locals => {new: f.object.new_record?}
-      f.input :date, input_html: { readonly: true, disabled: true  }, as: :string
-      f.input :start_time, :as => :time_select, :placeholder => "HH:MM", :step => :thirty_minutes, input_html: {required: true}
-      f.input :end_time, :as => :time_select, :placeholder => "HH:MM", :step => :thirty_minutes, input_html: {required: true}
-      f.input :total_hours, :as => :select, :collection => (0..12).to_a
-      f.input :content
+      f.input :date, as: :date_picker, :input_html => { :placeholder => "DD-MM-YYYY", :min => Date.today - 15.days, :max => Date.today} 
+      f.input :start_time, :as => :time_picker, :step => 900, :placeholder => "HH:MM", input_html: {required: true, min: "06:00", max: "14:00", step: 900}
+      f.input :end_time, :as => :time_picker, :step => 900, :placeholder => "HH:MM", input_html: {required: true, min: "12:00", step: 900}
+      f.input :total_hours, :as => :select, :collection => (3..12).to_a
+      f.input :content, :label => "Add Work Log Image", :hint => raw('Kindly follow the <a href="https://docs.google.com/document/d/1FpQ9bvLlfdglCg35A9CBFjK7gRqYyyYtfHU_lXu9U4E/edit?usp=sharing" target="_blank">template</a> here to create your work log. Drag and drop image of the work log here')
     end
     f.actions
     render 'can_edit', { 
