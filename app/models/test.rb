@@ -158,7 +158,7 @@ class Test < ApplicationRecord
       qs = qs.where(Question: {:ncert => true})
 
       if preference_previous_year
-        qs = qs.where('"Question"."exam" IN (?)', ['NEET', 'AIPMT'])
+        qs = qs.where('"Test"."exam" IN (?)', ['NEET', 'AIPMT'])
       end
 
       if preference_video_audio_solution
