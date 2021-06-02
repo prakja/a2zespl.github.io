@@ -177,6 +177,7 @@ ActiveAdmin.register Question do
         if params[:q][:similar_questions].to_i != question.id
           item 'Copy Explanation', copy_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be copied from Question ID: #{params[:q][:similar_questions]}"}
           item 'Merge Explanation', merge_explanation_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that explanation should be merged from Question ID: #{params[:q][:similar_questions]}"}
+          item 'Copy Video Solution', copy_video_solution_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that video solution should be copied from Question ID: #{main_question_id}"} 
           item 'Copy NCERT', copy_ncert_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please confirm that ncert and sentences should be copied from Question ID: #{params[:q][:similar_questions]}"}
           if not DuplicateQuestion.existing_duplicate?(question.id, main_question_id)
             item 'Mark Duplicate', add_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please Question ID: #{main_question_id} as duplicate of #{question.id}"}
@@ -302,6 +303,16 @@ ActiveAdmin.register Question do
   member_action :merge_explanation, method: :post do
     resource.update_column('explanation', resource.explanation + '<br>' + Question.find(params[:origId]).explanation) 
     redirect_back fallback_location: collection_path, notice: "merged explanation from main question"
+  end
+
+  member_action :copy_video_solution, method: :post do
+    q = Question.find(params[:origId])
+    if md = q.has_video_solution
+      resource.update_column('explanation', resource.explanation + '<br>' + '<div class="embed-responsive embed-responsive-16by9">' + md[0] + '</div>') 
+      redirect_back fallback_location: collection_path, notice: "copied video solution from main question"
+    else
+      redirect_back fallback_location: collection_path, error: "no video solution in source question!"
+    end
   end
 
   member_action :copy_ncert, method: :post do

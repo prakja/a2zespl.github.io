@@ -22,6 +22,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
@@ -35,6 +36,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'supportAndFaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
@@ -53,6 +55,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
@@ -62,6 +65,7 @@ class Ability
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note, WorkLog]
       can :import, [Video, FlashCard]
       can [:play], [Video]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]

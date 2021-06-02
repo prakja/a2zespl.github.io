@@ -31,6 +31,10 @@ class Question < ApplicationRecord
     end
   end
 
+  def has_video_solution
+    self.explanation.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
+  end
+
   def update_question_bank_chapters
     if self.saved_change_to_topicId?
       self.update_chapter_questions!
