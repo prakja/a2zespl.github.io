@@ -108,7 +108,6 @@
         url: `/admin/tests/${chapterId}/subtopics_detail`, 
         success: (result) => {
           const subtopics = result;
-          let questionCount = parseInt($('#question_count').val());
 
           $("#question_selection_table").show();
           const selectionTable = $("#question_selection_table tbody");
@@ -124,17 +123,33 @@
             </tr>
           `);
 
+          let questionCount = parseInt($('#question_count').val());
           const questionCountIdCollection = [];
-
           const totalSubtopics = subtopics.length;
 
-          subtopics.forEach(s => {
+          const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
+
+          if (totalSubtopics <= questionCount){
+            subtopics.map((sub, index) => {
+              subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
+              questionCount = questionCount - subtopicQuestionCount[index];
+              console.log(questionCount);
+            });
+
+            // add randomly to any subtopic
+            if (questionCount > 0) {
+              const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
+              randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
+            }
+          }
+
+          subtopics.map((s, index) => {
             questionCountIdCollection.push(s.subTopicId);
             selectionTable.append(`
             <tr>
               <td>${s.subTopicName}</td>
               <td>${s.ncertQuestionCount}</td>
-              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}' onkeyup="updateRemainingQuestionCount()"></td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${subtopicQuestionCount[index]}' onkeyup="updateRemainingQuestionCount()"></td>
             </tr>
             `)
           });
