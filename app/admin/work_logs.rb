@@ -1,6 +1,6 @@
 ActiveAdmin.register WorkLog do
   actions :all, :except => [:destroy]
-  permit_params :start_time, :end_time, :total_hours, :content
+  permit_params :start_time, :end_time, :total_hours, :content, :date
   remove_filter :start_time, :end_time, :total_hours, :content, :versions
 
   scope :my_logs, show_count: false do |log|
