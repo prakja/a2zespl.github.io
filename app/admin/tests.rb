@@ -217,15 +217,15 @@ end
 
       chapterId = params.require(:chapterId)
       subtopic_wise_question_count = params.require(:subtopicWiseQuestionCount)
-      preference_video_audio_solution = params[:videoAudioSolution] || false
-      preference_previous_year = params[:previousYearQuestion] || false
+      preference_video_audio_solution = params[:videoAudioSolution] == "true"
+      preference_previous_year = params[:previousYearQuestion] == "true"
 
       questionIdList = Test.question_selection chapterId: chapterId,
         subtopic_id_wise_question_count: subtopic_wise_question_count,
         preference_previous_year: preference_previous_year,
         preference_video_audio_solution: preference_video_audio_solution
 
-      test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
+      #test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
 
       render json: questionIdList, status: 200
     end
