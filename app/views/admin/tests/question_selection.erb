@@ -3,16 +3,24 @@
     .select2-container {
       min-width: 300px !important;
     }
+    table {
+    width: 716px; /* 140px * 5 column + 16px scrollbar width */
+    border-spacing: 0;
+}
+
+  tbody, thead tr { display: block; }
+
+  tbody {
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
   </style>
 </head>
 <body>
   <div style="margin: 32px">
-    <%= raw(@test.name) %>
-  </div>
-
-  <div style="margin: 32px">
     <label for="question-count">Question Count :</label>
-    <input name="question-count" type="text" id="question_count" value="0">
+    <input name="question-count" type="text" id="question_count" value="0" onkeyup="updateRemainingQuestionCount()">
 
     <label>Chapter :</label>
 
@@ -23,9 +31,12 @@
       <% end %>
     </select>
 
+    <label for="required-question-coun"> Required Questions :</label>
+    <span name="required-question-count" id="remaining_question_count"> </span>
+
     <br/><br/>
 
-    <table id="question_selection_table" style="width: 100%;">
+    <table id="question_selection_table">
       <tbody>
       </tbody>
     </table> 
@@ -47,14 +58,13 @@
     $(function () { 
       $("select").select2();
       $("#question_selection_table").hide();
-      $("#get_question").hide();
+      $("#get_question").prop('disabled', true);
       $("#checkbox").hide();
     });
 
     const testId =  <%= raw(@test.id) %>;
 
     const enableGetQuestion = () => {
-      $("#get_question").show();
       $("#checkbox").show();
     };
   
@@ -106,13 +116,15 @@
 
           const questionCountIdCollection = [];
 
+          const totalSubtopics = subtopics.length;
+
           subtopics.forEach(s => {
             questionCountIdCollection.push(s.subTopicId);
             selectionTable.append(`
             <tr>
               <td>${s.subTopicName}</td>
               <td>${s.ncertQuestionCount}</td>
-              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}'></td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}' onkeyup="updateRemainingQuestionCount()"></td>
             </tr>
             `)
           });
@@ -123,6 +135,32 @@
         }
       });
     });
+
+    const updateRemainingQuestionCount = () => {
+      let currentQuestionCount = 0;
+      const questionCount = parseInt($('#question_count').val());
+      const questionCountIdCollection = window.questionCountIdCollection || [];
+
+      questionCountIdCollection.forEach((subTopicId) => {
+        const tmp = parseInt($(`#${subTopicId}_question_count`).val())
+        currentQuestionCount += !!tmp ? tmp : 0;
+      })
+
+      
+      if (!!questionCountIdCollection.length){
+        const remainginQuestionCount = questionCount - currentQuestionCount;
+
+        const msg = remainginQuestionCount >= 0 ? remainginQuestionCount : 'Invalid';
+        document.getElementById('remaining_question_count').innerHTML = `<strong> ${msg} </strong>`
+
+        if(remainginQuestionCount === 0) {
+          $("#get_question").prop('disabled', false);
+        }else{
+          $("#get_question").prop('disabled', true);
+        }
+      }
+
+    }
 
   </script>
 </body>

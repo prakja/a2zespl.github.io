@@ -223,7 +223,7 @@ end
         preference_previous_year: preference_previous_year,
         preference_video_audio_solution: preference_video_audio_solution
 
-      render json: :ok, status: 200
+      render json: questionId, status: 200
     end
 
     def question_selection

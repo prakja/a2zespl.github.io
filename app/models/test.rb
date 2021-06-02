@@ -145,6 +145,7 @@ class Test < ApplicationRecord
 
     # get questions per subtopics
     subtopic_id_wise_question_count.each do |subtopicId, limit|
+      subtopicId, limit = subtopicId.to_i, limit.to_i
 
       # base query
       qs = Question.joins(:questionSubTopics, :details, :explanations)
@@ -165,11 +166,12 @@ class Test < ApplicationRecord
         .order('random()').limit(limit)
         .pluck(:'Question.id').uniq
 
-      remiaing = limit - questionIds.length 
+      puts questionIds
+      remaining = limit - questionIds.length 
 
       # get extra questions if some pending
-      if remiaing > 0
-        questionIds += self.get_remaining_ncert_question(subtopicId: subtopicId, limit: remiaing, ignore: questionIds)
+      if remaining > 0
+        questionIds += self.get_remaining_ncert_question(subtopicId: subtopicId, limit: remaining, ignore: questionIds)
       end
 
       test_question_ids += questionIds
