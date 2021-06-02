@@ -69,9 +69,8 @@
     const recalculateQuestionCount = () => {
       const subtopics =  window.subtopic_data;
 
-      if (subtopics == null) {
-        return;
-      }
+      if (!(!!subtopics)) return;
+
       let questionCount = parseInt($('#question_count').val());
       const totalSubtopics = subtopics.length;
 
@@ -80,7 +79,6 @@
       subtopics.map((sub, index) => {
         subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
         questionCount = questionCount - subtopicQuestionCount[index];
-        console.log(questionCount);
       });
 
       // add randomly to any subtopic
@@ -93,7 +91,7 @@
 
       questionCountIdCollection.map((id, index) => {
         $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
-      })
+      });
     };
 
     const enableGetQuestion = () => {
@@ -161,33 +159,20 @@
           const questionCountIdCollection = [];
           const totalSubtopics = subtopics.length;
 
-          const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
-
-          subtopics.map((sub, index) => {
-            subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
-            questionCount = questionCount - subtopicQuestionCount[index];
-            console.log(questionCount);
-          });
-
-          // add randomly to any subtopic
-          if (questionCount > 0) {
-            const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,questionCount)
-            randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
-          }
-
           subtopics.map((s, index) => {
             questionCountIdCollection.push(s.subTopicId);
             selectionTable.append(`
             <tr>
               <td>${s.subTopicName}</td>
               <td>${s.ncertQuestionCount}</td>
-              <td><input id="${s.subTopicId}_question_count" type="text" value='${subtopicQuestionCount[index]}'></td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}'></td>
             </tr>
             `)
           });
 
           window.questionCountIdCollection = questionCountIdCollection;
 
+          recalculateQuestionCount();
           enableGetQuestion();
         }
       });
