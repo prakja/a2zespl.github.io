@@ -120,7 +120,9 @@ class Test < ApplicationRecord
       qs = qs.where('"QuestionSubTopic"."questionId" NOT IN (?)', ignore)
     end
 
-    qs.order('random()').limit(limit).pluck(:'Question.id').uniq
+    qs.select('DISTINCT("Question"."id")')
+      .order('random()').limit(limit)
+      .pluck(:'Question.id').uniq
   end
 
   def self.question_selection(
