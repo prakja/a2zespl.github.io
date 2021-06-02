@@ -25,7 +25,7 @@
     <label>Chapter :</label>
 
     <select name="chapters" id="chapter_list">
-      <option value='' selected>Select Course</option>
+      <option value='' selected>Select Chapter</option>
       <% @chapters.each do |chapter|%>
         <%= raw("<option value='#{chapter.id.to_s}'> #{chapter.name} </option>") %>
       <% end %>
