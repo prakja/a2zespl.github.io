@@ -166,12 +166,12 @@ class Test < ApplicationRecord
         .order('random()').limit(limit)
         .pluck(:'Question.id').uniq
 
-      puts questionIds
       remaining = limit - questionIds.length 
 
       # get extra questions if some pending
       if remaining > 0
-        questionIds += self.get_remaining_ncert_question(subtopicId: subtopicId, limit: remaining, ignore: questionIds)
+        questionIds += self.get_remaining_ncert_question subtopicId: subtopicId, 
+          limit: remaining, ignore: questionIds
       end
 
       test_question_ids += questionIds
