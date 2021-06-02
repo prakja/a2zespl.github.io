@@ -130,7 +130,7 @@ class Test < ApplicationRecord
     preference_previous_year:false, preference_video_audio_solution:false
   )
 
-    # remove entries where count is 0
+    # remove entries where limit is 0
     subtopic_id_wise_question_count = subtopic_id_wise_question_count.delete_if { |id, limit| limit.to_i == 0}
 
     # get the subject for the given chapterId
@@ -150,7 +150,7 @@ class Test < ApplicationRecord
       subtopicId, limit = subtopicId.to_i, limit.to_i
 
       # base query
-      qs = Question.joins(:questionSubTopics, :details, :explanations)
+      qs = Question.joins(:questionSubTopics, :details)
         .where(QuestionSubTopic: {:subTopicId => subtopicId})
 
       if preference_previous_year
@@ -160,8 +160,8 @@ class Test < ApplicationRecord
       end
 
       if preference_video_audio_solution
-        like_q = (subject == 'bio') ? '%<audio%>%' : '%<iframe%>%'
-        qs = qs.where('"QuestionExplanation"."explanation" like ?', like_q)
+        like_q = (subject == 'bio') ? '%<audio%>%' : '%<iframe%>'
+        qs = qs.where('"Question"."explanation" like ?', like_q)
       end
 
       questionIds = qs
