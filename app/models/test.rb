@@ -112,4 +112,99 @@ class Test < ApplicationRecord
   scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
   scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
 
+  def get_remaining_ncert_question(subtopicId:, limit:, ignore: [])
+    qs = Question.joins(:questionSubTopics)
+      .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
+      .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
+      .where(QuestionSubTopic: {:subTopicId => subtopicId})
+      .where('"TestQuestion"."id" is null')
+
+    unless ignore.empty?
+      qs = qs.where('"QuestionSubTopic"."questionId" NOT IN (?)', ignore)
+    end
+
+    Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
+  end
+
+  def question_selection(
+    chapterId:, subtopic_id_wise_question_count:, 
+    preference_previous_year:false, preference_video_audio_solution:false
+  )
+
+    # remove entries where limit is 0
+    subtopic_id_wise_question_count = subtopic_id_wise_question_count.delete_if { |id, limit| limit.to_i == 0}
+
+    # get the subject for the given chapterId
+    chapter = Topic.find chapterId
+
+    if [53, 56].include? chapter.subjectId 
+      subject = 'bio'
+    end 
+
+    subject = 'phy' if chapter.subjectId == 55
+    subject = 'chem' if chapter.subjectId == 54
+
+    test_question_ids = []
+
+    # get questions per subtopics
+    subtopic_id_wise_question_count.each do |subtopicId, limit|
+      subtopicId, limit = subtopicId.to_i, limit.to_i
+
+      # base query
+      qs = Question.joins(:questionSubTopics, :tests)
+        .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
+        .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
+        .where(QuestionSubTopic: {:subTopicId => subtopicId})
+        .where('"TestQuestion"."id" is null')
+
+      qs = qs.where(Question: {:ncert => true})
+
+      if preference_previous_year
+        qs = qs.where('"Test"."exam" IN (?)', ['NEET', 'AIPMT'])
+      end
+
+      if preference_video_audio_solution
+        like_q = (subject == 'bio') ? '%<audio%>%' : '%<iframe%>'
+        qs = qs.where('"Question"."explanation" like ?', like_q)
+      end
+
+      questionIds = Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
+
+      remaining = limit - questionIds.length
+
+      # get extra questions if some pending
+      if remaining > 0
+        questionIds += self.get_remaining_ncert_question subtopicId: subtopicId, 
+          limit: remaining, ignore: questionIds
+      end
+
+      test_question_ids += questionIds
+    end
+
+    return test_question_ids
+  end
+
+  def add_questions_of_same_chapter(questionIdList:, chapterId:)
+    chapter = Topic.find chapterId.to_i
+
+    if [53, 56].include? chapter.subjectId 
+      seqNum = 1
+    elsif chapter.subjectId == 54
+      seqNum = 2
+    elsif chapter.subjectId == 55
+      seqNum = 3
+    else
+      seqNum = 0
+    end
+
+    test_questions, last_test_question = [], TestQuestion.last.id
+
+    questionIdList.each do |questionId|
+      last_test_question += 1
+      test_questions << TestQuestion.new(:id => last_test_question, 
+        :testId => self.id, :questionId => questionId, :seqNum => seqNum)
+    end
+
+    TestQuestion.import test_questions
+  end
 end

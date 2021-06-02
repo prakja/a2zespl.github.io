@@ -1,0 +1,207 @@
+<head>
+  <style>
+    .select2-container {
+      min-width: 300px !important;
+    }
+    table {
+    width: 716px; /* 140px * 5 column + 16px scrollbar width */
+    border-spacing: 0;
+}
+
+  tbody, thead tr { display: block; }
+
+  tbody {
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .submit {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <label for="question-count">Required Questions Count :</label>
+    <input name="question-count" type="integer" id="question_count" value="0" onkeyup="recalculateQuestionCount()">
+    <br><br>
+    <label>Chapter: </label>
+
+    <select name="chapters" id="chapter_list">
+      <option value='' selected>Select Chapter</option>
+      <% @chapters.each do |name, id|%>
+        <%= raw("<option value='#{id}'> #{name} </option>") %>
+      <% end %>
+    </select>
+
+    <br/><br/>
+
+    <table id="question_selection_table">
+      <tbody>
+      </tbody>
+    </table> 
+
+    <div id="checkbox">
+      <input id="video_audio_solution_question" type="checkbox" id="vehicle1" name="video-solution">
+      <label for="video-solution">Prefer audio & video solutions</label>
+      <br>
+      <input id="previous_year_question" type="checkbox" id="vehicle1" name="previous-year">
+      <label for="previous-year"> Prefer previous year questions from AIPMT and NEET</label>
+    </div>
+
+  <button id="get_question" class="submit">Get Questions</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+
+  <script type="text/javascript">
+    $(function () { 
+      $("select").select2();
+      $("#question_selection_table").hide();
+      $("#get_question").prop('disabled', true);
+      $("#checkbox").hide();
+      $("#question_count").val(0);
+    });
+
+    const testId =  <%= raw(@test.id) %>;
+
+
+    const recalculateQuestionCount = () => {
+      const subtopics =  window.subtopic_data;
+
+      if (!(!!subtopics)) return;
+
+      let questionCount = parseInt($('#question_count').val());
+      const totalSubtopics = subtopics.length;
+
+      const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
+
+      subtopics.map((sub, index) => {
+        subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
+        questionCount = questionCount - subtopicQuestionCount[index];
+      });
+
+      // add randomly to any subtopic
+      if (questionCount > 0) {
+        const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,questionCount)
+        randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
+      }
+
+      const questionCountIdCollection = window.questionCountIdCollection || [];
+
+      questionCountIdCollection.map((id, index) => {
+        $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
+      });
+    };
+
+    const enableGetQuestion = () => {
+      $("#checkbox").show();
+      $("#get_question").prop('disabled', false);
+    };
+  
+    $('#get_question').on('click', () => {
+      const questionCountIdCollection = window.questionCountIdCollection || [];
+      const data = {};
+
+      questionCountIdCollection.forEach((subTopicId) => {
+        data[parseInt(subTopicId)] = parseInt($(`#${subTopicId}_question_count`).val());
+      })
+
+      const token = document.querySelector('meta[name="csrf-token"]').content
+
+      $.ajax({
+        url: `/admin/tests/${testId}/add_questions_to_test_with_question_selection`,
+        method: 'POST',
+        beforeSend: function(xhr){xhr.setRequestHeader('X-CSRF-Token', token);},
+        dataType: 'json',
+        data: {
+          'subtopicWiseQuestionCount': data,
+          'chapterId': parseInt($('#chapter_list').val()),
+          'videoAudioSolution': $('#video_audio_solution_question').is(':checked'),
+          'previousYearQuestion': $('#previous_year_question').is(':checked'),
+        },
+        success: (result) => {
+          alert('Questions Added to test successfully!');
+          const c = window.location.href.split('/');
+          window.location = c.slice(0, c.length-1).join('/');
+        },
+        failure: (err) => {
+          alert('Something went wrong!');
+          console.error(err);
+        }
+      });
+    });
+
+    $('#chapter_list').on('change', (e) => {
+      const chapterId = e.target.value;
+      $.ajax({
+        url: `/admin/tests/${chapterId}/subtopics_detail`, 
+        success: (result) => {
+          const subtopics = result;
+
+          $("#question_selection_table").show();
+          const selectionTable = $("#question_selection_table tbody");
+
+          // remove table of if it existed
+          $("#question_selection_table tbody").children().remove();
+
+          window.subtopic_data = subtopics;
+
+          selectionTable.append(`
+            <tr>
+              <th>Subtopic</th>
+              <th>Ncert Question Count</th>
+              <th>Required Question</th>
+            </tr>
+          `);
+
+          let questionCount = parseInt($('#question_count').val());
+          const questionCountIdCollection = [];
+          const totalSubtopics = subtopics.length;
+
+          subtopics.map((s, index) => {
+            questionCountIdCollection.push(s.subTopicId);
+            selectionTable.append(`
+            <tr>
+              <td>${s.subTopicName}</td>
+              <td>${s.ncertQuestionCount}</td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}'></td>
+            </tr>
+            `)
+          });
+
+          window.questionCountIdCollection = questionCountIdCollection;
+
+          recalculateQuestionCount();
+          enableGetQuestion();
+        }
+      });
+    });
+
+    function shuffle(array) {
+      var currentIndex = array.length,  randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    }
+
+  </script>
+</body>

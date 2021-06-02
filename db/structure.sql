@@ -1634,6 +1634,20 @@ CREATE TABLE public."ChapterQuestion20211801_2" (
 
 
 --
+-- Name: ChapterSubTopicWeightage; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."ChapterSubTopicWeightage" AS
+SELECT
+    NULL::integer AS "subTopicId",
+    NULL::character varying(255) AS "subTopicName",
+    NULL::integer AS "chapterId",
+    NULL::bigint AS "ncertQuestionCount",
+    NULL::numeric AS "chapterCount",
+    NULL::numeric AS weightage;
+
+
+--
 -- Name: ChapterTest; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5989,6 +6003,8 @@ CREATE TABLE public."UserCourseCoupon" (
     "userId" integer,
     "couponId" integer,
     "courseId" integer,
+    "courseOfferId" integer,
+    "isPaymentMade" boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -12194,6 +12210,25 @@ CREATE OR REPLACE VIEW public."VideoSubTopicQuestion" AS
 
 
 --
+-- Name: ChapterSubTopicWeightage _RETURN; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE OR REPLACE VIEW public."ChapterSubTopicWeightage" AS
+ SELECT "SubTopic".id AS "subTopicId",
+    "SubTopic".name AS "subTopicName",
+    "SubTopic"."topicId" AS "chapterId",
+    count(DISTINCT "Question".id) AS "ncertQuestionCount",
+    sum(count(DISTINCT "Question".id)) OVER (PARTITION BY "SubTopic"."topicId") AS "chapterCount",
+    ((count(DISTINCT "Question".id))::numeric / sum(count(DISTINCT "Question".id)) OVER (PARTITION BY "SubTopic"."topicId")) AS weightage
+   FROM public."CourseChapter",
+    public."Question",
+    public."QuestionSubTopic",
+    public."SubTopic"
+  WHERE (("QuestionSubTopic"."subTopicId" = "SubTopic".id) AND ("CourseChapter"."chapterId" = "SubTopic"."topicId") AND ("CourseChapter"."courseId" = 8) AND ("SubTopic"."videoOnly" = false) AND ("Question".id = "QuestionSubTopic"."questionId") AND ("Question".deleted = false) AND ("SubTopic".deleted = false) AND ("Question".ncert = true))
+  GROUP BY "SubTopic".id, "SubTopic"."topicId";
+
+
+--
 -- Name: DuplicateQuestion question_similarity; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -13348,6 +13383,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210526062304'),
 ('20210526122358'),
 ('20210531062211'),
-('20210531124523');
+('20210531124523'),
+('20210602041533');
 
 
