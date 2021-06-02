@@ -231,9 +231,8 @@ end
     end
 
     def question_selection
-      course_id = 8
       @test = Test.find params[:testId].to_i
-      @chapters = Topic.neetprep_course_id_filter course_id
+      @chapters = Topic.main_course_topic_name_with_subject
     end
   end
 end
