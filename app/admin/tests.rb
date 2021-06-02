@@ -225,7 +225,7 @@ end
         preference_previous_year: preference_previous_year,
         preference_video_audio_solution: preference_video_audio_solution
 
-      #test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
+      test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
 
       render json: questionIdList, status: 200
     end
