@@ -112,20 +112,21 @@ class Test < ApplicationRecord
   scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
   scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
 
-  def self.get_remaining_ncert_question(subtopicId:, limit:, ignore: [])
+  def get_remaining_ncert_question(subtopicId:, limit:, ignore: [])
     qs = Question.joins(:questionSubTopics)
+      .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
+      .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
       .where(QuestionSubTopic: {:subTopicId => subtopicId})
+      .where('"TestQuestion"."id" is null')
 
     unless ignore.empty?
       qs = qs.where('"QuestionSubTopic"."questionId" NOT IN (?)', ignore)
     end
 
-    qs.select('DISTINCT("Question"."id")')
-      .order('random()').limit(limit)
-      .pluck(:'Question.id').uniq
+    Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
   end
 
-  def self.question_selection(
+  def question_selection(
     chapterId:, subtopic_id_wise_question_count:, 
     preference_previous_year:false, preference_video_audio_solution:false
   )
@@ -151,9 +152,10 @@ class Test < ApplicationRecord
 
       # base query
       qs = Question.joins(:questionSubTopics, :tests)
-        .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."keepQuestionId" = "Question"."id"')
-        .where('"ReplaceDuplicateQuestion"."keepQuestionId" = "Question"."id"')
+        .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
+        .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
         .where(QuestionSubTopic: {:subTopicId => subtopicId})
+        .where('"TestQuestion"."id" is null')
 
       qs = qs.where(Question: {:ncert => true})
 
@@ -166,11 +168,9 @@ class Test < ApplicationRecord
         qs = qs.where('"Question"."explanation" like ?', like_q)
       end
 
-      questionIds = qs
-        .order('random()').limit(limit)
-        .pluck(:'Question.id').uniq
+      questionIds = Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
 
-      remaining = limit - questionIds.length 
+      remaining = limit - questionIds.length
 
       # get extra questions if some pending
       if remaining > 0

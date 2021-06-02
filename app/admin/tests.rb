@@ -220,7 +220,7 @@ end
       preference_video_audio_solution = params[:videoAudioSolution] == "true"
       preference_previous_year = params[:previousYearQuestion] == "true"
 
-      questionIdList = Test.question_selection chapterId: chapterId,
+      questionIdList = test.question_selection chapterId: chapterId,
         subtopic_id_wise_question_count: subtopic_wise_question_count,
         preference_previous_year: preference_previous_year,
         preference_video_audio_solution: preference_video_audio_solution

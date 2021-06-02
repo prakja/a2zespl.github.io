@@ -69,31 +69,31 @@
     const recalculateQuestionCount = () => {
       const subtopics =  window.subtopic_data;
 
+      if (subtopics == null) {
+        return;
+      }
       let questionCount = parseInt($('#question_count').val());
-      const questionCountIdCollection = [];
       const totalSubtopics = subtopics.length;
 
       const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
 
-      if (totalSubtopics <= questionCount){
-        subtopics.map((sub, index) => {
-          subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
-          questionCount = questionCount - subtopicQuestionCount[index];
-          console.log(questionCount);
-        });
+      subtopics.map((sub, index) => {
+        subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
+        questionCount = questionCount - subtopicQuestionCount[index];
+        console.log(questionCount);
+      });
 
-        // add randomly to any subtopic
-        if (questionCount > 0) {
-          const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
-          randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
-        }
-
-        const questionCountIdCollection = window.questionCountIdCollection || [];
-
-        questionCountIdCollection.map((id, index) => {
-          $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
-        })
+      // add randomly to any subtopic
+      if (questionCount > 0) {
+        const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,questionCount)
+        randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
       }
+
+      const questionCountIdCollection = window.questionCountIdCollection || [];
+
+      questionCountIdCollection.map((id, index) => {
+        $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
+      })
     };
 
     const enableGetQuestion = () => {
@@ -119,8 +119,8 @@
         data: {
           'subtopicWiseQuestionCount': data,
           'chapterId': parseInt($('#chapter_list').val()),
-          'videoAudioSolution': $('#video_audio_solution_question').is(':checked') == 'true',
-          'previousYearQuestion': $('#previous_year_question').is(':checked') == 'true',
+          'videoAudioSolution': $('#video_audio_solution_question').is(':checked'),
+          'previousYearQuestion': $('#previous_year_question').is(':checked'),
         },
         success: (result) => {
           alert('Questions Added to test successfully!');
@@ -163,18 +163,16 @@
 
           const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
 
-          if (totalSubtopics <= questionCount){
-            subtopics.map((sub, index) => {
-              subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
-              questionCount = questionCount - subtopicQuestionCount[index];
-              console.log(questionCount);
-            });
+          subtopics.map((sub, index) => {
+            subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
+            questionCount = questionCount - subtopicQuestionCount[index];
+            console.log(questionCount);
+          });
 
-            // add randomly to any subtopic
-            if (questionCount > 0) {
-              const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
-              randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
-            }
+          // add randomly to any subtopic
+          if (questionCount > 0) {
+            const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,questionCount)
+            randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
           }
 
           subtopics.map((s, index) => {
@@ -194,6 +192,24 @@
         }
       });
     });
+
+    function shuffle(array) {
+      var currentIndex = array.length,  randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    }
 
   </script>
 </body>
