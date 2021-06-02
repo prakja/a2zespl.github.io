@@ -181,4 +181,28 @@ class Test < ApplicationRecord
 
     return test_question_ids
   end
+
+  def add_questions_of_same_chapter(questionIdList:, chapterId:)
+    chapter = Topic.find chapterId.to_i
+
+    if [53, 56].include? chapter.subjectId 
+      seqNum = 1
+    elsif chapter.subjectId == 54
+      seqNum = 2
+    elsif chapter.subjectId == 55
+      seqNum = 3
+    else
+      seqNum = 0
+    end
+
+    test_questions, last_test_question = [], TestQuestion.last.id
+
+    questionIdList.each do |questionId|
+      last_test_question += 1
+      test_questions << TestQuestion.new(:id => last_test_question, 
+        :testId => self.id, :questionId => questionId, :seqNum => seqNum)
+    end
+
+    TestQuestion.import test_questions
+  end
 end

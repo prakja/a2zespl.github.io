@@ -60,6 +60,7 @@
       $("#question_selection_table").hide();
       $("#get_question").prop('disabled', true);
       $("#checkbox").hide();
+      $("#question_count").val(0);
     });
 
     const testId =  <%= raw(@test.id) %>;
@@ -88,6 +89,15 @@
           'chapterId': parseInt($('#chapter_list').val()),
           'videoAudioSolution': $('#video_audio_solution_question').is(':checked') == 'true',
           'previousYearQuestion': $('#previous_year_question').is(':checked') == 'true',
+        },
+        success: (result) => {
+          alert('Questions Added to test successfully!');
+          const c = window.location.href.split('/');
+          window.location = c.slice(0, c.length-1).join('/');
+        },
+        failure: (err) => {
+          alert('Something went wrong!');
+          console.error(err);
         }
       });
     });

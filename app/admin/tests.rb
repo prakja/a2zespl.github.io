@@ -213,17 +213,21 @@ end
     end
 
     def add_questions_to_test_with_question_selection
+      test = Test.find params[:testId]
+
       chapterId = params.require(:chapterId)
       subtopic_wise_question_count = params.require(:subtopicWiseQuestionCount)
       preference_video_audio_solution = params[:videoAudioSolution] || false
       preference_previous_year = params[:previousYearQuestion] || false
 
-      questionId = Test.question_selection chapterId: chapterId,
+      questionIdList = Test.question_selection chapterId: chapterId,
         subtopic_id_wise_question_count: subtopic_wise_question_count,
         preference_previous_year: preference_previous_year,
         preference_video_audio_solution: preference_video_audio_solution
 
-      render json: questionId, status: 200
+      test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
+
+      render json: questionIdList, status: 200
     end
 
     def question_selection
