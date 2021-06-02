@@ -287,6 +287,8 @@ class Question < ApplicationRecord
   belongs_to :topic, foreign_key: "topicId", class_name: "Topic", optional: true
   belongs_to :subject, foreign_key: "subjectId", class_name: "Subject", optional: true
 
+  has_many :question_ncert_sentences, class_name: 'QuestionNcertSentence', foreign_key: :questionId, dependent: :destroy
+  has_many :question_video_sentences, class_name: 'QuestionVideoSentence', foreign_key: :questionId, dependent: :destroy
   has_and_belongs_to_many :video_sentences, class_name: :VideoSentence, join_table: :QuestionVideoSentence, foreign_key: :questionId, association_foreign_key: :videoSentenceId
   has_and_belongs_to_many :ncert_sentences, class_name: 'NcertSentence', join_table: 'QuestionNcertSentence', foreign_key: :questionId, association_foreign_key: :ncertSentenceId
 

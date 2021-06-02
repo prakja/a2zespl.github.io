@@ -1,4 +1,5 @@
 desc "Download the images from external sources and upload them to neetprep s3 bucket and replace their links. # rake move_images_to_s3[start, end, column, table, external_link]"
+# bundle exec rake 'move_images_to_s3[30000, 90000, explanation, '"Question"', https://gradeup-question-images.grdp.co/]'
 task :move_images_to_s3, [:start, :stop, :column, :table, :ext_link] => :environment do |task, args|
   ActiveRecord::Base.connection.execute("SET statement_timeout = '5min';")
   query = %(id BETWEEN ? AND ? AND ) +  args[:column] + %( like '%<img src=") + args[:ext_link] + "%'"
