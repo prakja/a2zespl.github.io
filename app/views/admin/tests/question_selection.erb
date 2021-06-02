@@ -20,7 +20,7 @@
 <body>
   <div style="margin: 32px">
     <label for="question-count">Question Count :</label>
-    <input name="question-count" type="text" id="question_count" value="0" onkeyup="updateRemainingQuestionCount()">
+    <input name="question-count" type="text" id="question_count" value="0" onkeyup="recalculateQuestionCount()">
 
     <label>Chapter :</label>
 
@@ -65,8 +65,40 @@
 
     const testId =  <%= raw(@test.id) %>;
 
+
+    const recalculateQuestionCount = () => {
+      const subtopics =  window.subtopic_data;
+
+      let questionCount = parseInt($('#question_count').val());
+      const questionCountIdCollection = [];
+      const totalSubtopics = subtopics.length;
+
+      const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
+
+      if (totalSubtopics <= questionCount){
+        subtopics.map((sub, index) => {
+          subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
+          questionCount = questionCount - subtopicQuestionCount[index];
+          console.log(questionCount);
+        });
+
+        // add randomly to any subtopic
+        if (questionCount > 0) {
+          const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
+          randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
+        }
+
+        const questionCountIdCollection = window.questionCountIdCollection || [];
+
+        questionCountIdCollection.map((id, index) => {
+          $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
+        })
+      }
+    };
+
     const enableGetQuestion = () => {
       $("#checkbox").show();
+      $("#get_question").prop('disabled', false);
     };
   
     $('#get_question').on('click', () => {
@@ -108,13 +140,14 @@
         url: `/admin/tests/${chapterId}/subtopics_detail`, 
         success: (result) => {
           const subtopics = result;
-          let questionCount = parseInt($('#question_count').val());
 
           $("#question_selection_table").show();
           const selectionTable = $("#question_selection_table tbody");
 
           // remove table of if it existed
           $("#question_selection_table tbody").children().remove();
+
+          window.subtopic_data = subtopics;
 
           selectionTable.append(`
             <tr>
@@ -124,17 +157,33 @@
             </tr>
           `);
 
+          let questionCount = parseInt($('#question_count').val());
           const questionCountIdCollection = [];
-
           const totalSubtopics = subtopics.length;
 
-          subtopics.forEach(s => {
+          const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
+
+          if (totalSubtopics <= questionCount){
+            subtopics.map((sub, index) => {
+              subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
+              questionCount = questionCount - subtopicQuestionCount[index];
+              console.log(questionCount);
+            });
+
+            // add randomly to any subtopic
+            if (questionCount > 0) {
+              const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
+              randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
+            }
+          }
+
+          subtopics.map((s, index) => {
             questionCountIdCollection.push(s.subTopicId);
             selectionTable.append(`
             <tr>
               <td>${s.subTopicName}</td>
               <td>${s.ncertQuestionCount}</td>
-              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}' onkeyup="updateRemainingQuestionCount()"></td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${subtopicQuestionCount[index]}'></td>
             </tr>
             `)
           });
@@ -145,32 +194,6 @@
         }
       });
     });
-
-    const updateRemainingQuestionCount = () => {
-      let currentQuestionCount = 0;
-      const questionCount = parseInt($('#question_count').val());
-      const questionCountIdCollection = window.questionCountIdCollection || [];
-
-      questionCountIdCollection.forEach((subTopicId) => {
-        const tmp = parseInt($(`#${subTopicId}_question_count`).val())
-        currentQuestionCount += !!tmp ? tmp : 0;
-      })
-
-      
-      if (!!questionCountIdCollection.length){
-        const remainginQuestionCount = questionCount - currentQuestionCount;
-
-        const msg = remainginQuestionCount >= 0 ? remainginQuestionCount : 'Invalid';
-        document.getElementById('remaining_question_count').innerHTML = `<strong> ${msg} </strong>`
-
-        if(remainginQuestionCount === 0) {
-          $("#get_question").prop('disabled', false);
-        }else{
-          $("#get_question").prop('disabled', true);
-        }
-      }
-
-    }
 
   </script>
 </body>

@@ -150,13 +150,15 @@ class Test < ApplicationRecord
       subtopicId, limit = subtopicId.to_i, limit.to_i
 
       # base query
-      qs = Question.joins(:questionSubTopics, :details)
+      qs = Question.joins(:questionSubTopics, :tests)
+        .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."keepQuestionId" = "Question"."id"')
+        .where('"ReplaceDuplicateQuestion"."keepQuestionId" = "Question"."id"')
         .where(QuestionSubTopic: {:subTopicId => subtopicId})
 
+      qs = qs.where(Question: {:ncert => true})
+
       if preference_previous_year
-        qs = qs.where('"QuestionDetail"."exam" IN (?)', ['NEET', 'AIPMT'])
-      else
-        qs = qs.where(Question: {:ncert => true})
+        qs = qs.where('"Test"."exam" IN (?)', ['NEET', 'AIPMT'])
       end
 
       if preference_video_audio_solution
