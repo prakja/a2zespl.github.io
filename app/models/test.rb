@@ -112,4 +112,69 @@ class Test < ApplicationRecord
   scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
   scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
 
+  def self.get_remaining_ncert_question(subtopicId:, limit:, ignore: [])
+    qs = Question.joins(:questionSubTopics)
+      .where(QuestionSubTopic: {:subTopicId => subtopicId})
+
+    unless ignore.empty?
+      qs = qs.where('"QuestionSubTopic"."questionId" NOT IN (?)', ignore)
+    end
+
+    qs.order('random()').limit(limit).pluck(:'Question.id').uniq
+  end
+
+  def self.question_selection(
+    chapterId:, subtopic_id_wise_question_count:, 
+    preference_previous_year:false, preference_video_audio_solution:false
+  )
+
+    # remove entries where count is 0
+    subtopic_id_wise_question_count = subtopic_id_wise_question_count.delete_if { |id, limit| limit.to_i == 0}
+
+    # get the subject for the given chapterId
+    chapter = Topic.find chapterId
+
+    if [53, 56].include? chapter.subjectId 
+      subject = 'bio'
+    end 
+
+    subject = 'phy' if chapter.subjectId == 55
+    subject = 'chem' if chapter.subjectId == 54
+
+    test_question_ids = []
+
+    # get questions per subtopics
+    subtopic_id_wise_question_count.each do |subtopicId, limit|
+
+      # base query
+      qs = Question.joins(:questionSubTopics, :details, :explanations)
+        .where(QuestionSubTopic: {:subTopicId => subtopicId})
+
+      if preference_previous_year
+        qs = qs.where('"QuestionDetail"."exam" IN (?)', ['NEET', 'AIPMT'])
+      else
+        qs = qs.where(Question: {:ncert => true})
+      end
+
+      if preference_video_audio_solution
+        like_q = (subject == 'bio') ? '%<audio%>%' : '%<iframe%>%'
+        qs = qs.where('"QuestionExplanation"."explanation" like ?', like_q)
+      end
+
+      questionIds = qs
+        .order('random()').limit(limit)
+        .pluck(:'Question.id').uniq
+
+      remiaing = limit - questionIds.length 
+
+      # get extra questions if some pending
+      if remiaing > 0
+        questionIds += self.get_remaining_ncert_question(subtopicId: subtopicId, limit: remiaing, ignore: questionIds)
+      end
+
+      test_question_ids += questionIds
+    end
+
+    return test_question_ids
+  end
 end

@@ -142,10 +142,14 @@ action_item :show_leaderboard, only: :show do
   link_to 'Scholarship LeaderBoard', resource.id.to_s + "/leader_board"
 end
 
-  member_action :duplicate_questions do
-    @test = Test.find(resource.id)
-    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "TestQuestion" AS "TestQuestion1" ON "TestQuestion1"."testId" = "TestQuestion"."testId" and "TestQuestion"."questionId" < "TestQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "TestQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "TestQuestion1"."testId" = ' + resource.id.to_s + " limit 5");
-  end
+action_item :question_selection, only: :show do
+  link_to 'Question Selection', resource.id.to_s + "/question_selection_test"
+end
+
+member_action :duplicate_questions do
+  @test = Test.find(resource.id)
+  @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "TestQuestion" AS "TestQuestion1" ON "TestQuestion1"."testId" = "TestQuestion"."testId" and "TestQuestion"."questionId" < "TestQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "TestQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "TestQuestion1"."testId" = ' + resource.id.to_s + " limit 5");
+end
 
 form do |f|
   f.object.positiveMarks = 4
@@ -183,22 +187,49 @@ form do |f|
   f.actions
 end
 
-controller do
-  def leader_board
-    @test_id = params[:id]
-    test = Test.find(@test_id)
-    if params[:last_date].nil?
-      @date_time = test&.reviewAt || DateTime.now
-      @display_date_time = test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
-    else
-      @date_time = DateTime.parse(params[:last_date])
-      @display_date_time = params[:last_date]
+  controller do
+    def leader_board
+      @test_id = params[:id]
+      test = Test.find(@test_id)
+      if params[:last_date].nil?
+        @date_time = test&.reviewAt || DateTime.now
+        @display_date_time = test&.reviewAt&.strftime("%Y-%m-%dT%H:%M") || DateTime.now.strftime("%Y-%m-%dT%H:%M") 
+      else
+        @date_time = DateTime.parse(params[:last_date])
+        @display_date_time = params[:last_date]
+      end
+      @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(100)
+      @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
+      @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (287)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
     end
-    @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(100)
-    @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
-    @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (287)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
+
+    def get_subtopics_with_detail
+      topic_id = params[:chapterId]
+      question_count = params[:questionCount] 
+
+      subtopics = ChapterSubtopicWeightage.where(:chapterId => topic_id).order(weightage: :desc)
+      subtopics = subtopics.uniq { |s| s.subTopicId}
+      render json: subtopics.to_json, status: 200
+    end
+
+    def add_questions_to_test_with_question_selection
+      chapterId = params.require(:chapterId)
+      subtopic_wise_question_count = params.require(:subtopicWiseQuestionCount)
+      preference_video_audio_solution = params[:videoAudioSolution] || false
+      preference_previous_year = params[:previousYearQuestion] || false
+
+      questionId = Test.question_selection chapterId: chapterId,
+        subtopic_id_wise_question_count: subtopic_wise_question_count,
+        preference_previous_year: preference_previous_year,
+        preference_video_audio_solution: preference_video_audio_solution
+
+      render json: :ok, status: 200
+    end
+
+    def question_selection
+      course_id = 8
+      @test = Test.find params[:testId].to_i
+      @chapters = Topic.neetprep_course_id_filter course_id
+    end
   end
-end
-
-
 end

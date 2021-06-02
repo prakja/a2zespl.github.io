@@ -1,0 +1,128 @@
+<head>
+  <style>
+    .select2-container {
+      min-width: 300px !important;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 32px">
+    <%= raw(@test.name) %>
+  </div>
+
+  <div style="margin: 32px">
+    <label for="question-count">Question Count :</label>
+    <input name="question-count" type="text" id="question_count" value="0">
+
+    <label>Chapter :</label>
+
+    <select name="chapters" id="chapter_list">
+      <option value='' selected>Select Course</option>
+      <% @chapters.each do |chapter|%>
+        <%= raw("<option value='#{chapter.id.to_s}'> #{chapter.name} </option>") %>
+      <% end %>
+    </select>
+
+    <br/><br/>
+
+    <table id="question_selection_table" style="width: 100%;">
+      <tbody>
+      </tbody>
+    </table> 
+
+    <div id="checkbox">
+      <input id="video_audio_solution_question" type="checkbox" id="vehicle1" name="video-solution">
+      <label for="video-solution">Prefer video solutions and audio solutions for biology</label>
+      <br>
+      <input id="previous_year_question" type="checkbox" id="vehicle1" name="previous-year">
+      <label for="previous-year"> Prefer previous year questions from AIPMT and NEET</label>
+    </div>
+
+  </div>
+
+  <button id="get_question">Get Questions</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+
+  <script type="text/javascript">
+    $(function () { 
+      $("select").select2();
+      $("#question_selection_table").hide();
+      $("#get_question").hide();
+      $("#checkbox").hide();
+    });
+
+    const testId =  <%= raw(@test.id) %>;
+
+    const enableGetQuestion = () => {
+      $("#get_question").show();
+      $("#checkbox").show();
+    };
+  
+    $('#get_question').on('click', () => {
+      const questionCountIdCollection = window.questionCountIdCollection || [];
+      const data = {};
+
+      questionCountIdCollection.forEach((subTopicId) => {
+        data[parseInt(subTopicId)] = parseInt($(`#${subTopicId}_question_count`).val());
+      })
+
+      const token = document.querySelector('meta[name="csrf-token"]').content
+
+      $.ajax({
+        url: `/admin/tests/${testId}/add_questions_to_test_with_question_selection`,
+        method: 'POST',
+        beforeSend: function(xhr){xhr.setRequestHeader('X-CSRF-Token', token);},
+        dataType: 'json',
+        data: {
+          'subtopicWiseQuestionCount': data,
+          'chapterId': parseInt($('#chapter_list').val()),
+          'videoAudioSolution': $('#video_audio_solution_question').is(':checked') == 'true',
+          'previousYearQuestion': $('#previous_year_question').is(':checked') == 'true',
+        }
+      });
+    });
+
+    $('#chapter_list').on('change', (e) => {
+      const chapterId = e.target.value;
+      $.ajax({
+        url: `/admin/tests/${chapterId}/subtopics_detail`, 
+        success: (result) => {
+          const subtopics = result;
+          let questionCount = parseInt($('#question_count').val());
+
+          $("#question_selection_table").show();
+          const selectionTable = $("#question_selection_table tbody");
+
+          // remove table of if it existed
+          $("#question_selection_table tbody").children().remove();
+
+          selectionTable.append(`
+            <tr>
+              <th>Subtopic</th>
+              <th>Ncert Question Count</th>
+              <th>Required Question</th>
+            </tr>
+          `);
+
+          const questionCountIdCollection = [];
+
+          subtopics.forEach(s => {
+            questionCountIdCollection.push(s.subTopicId);
+            selectionTable.append(`
+            <tr>
+              <td>${s.subTopicName}</td>
+              <td>${s.ncertQuestionCount}</td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}'></td>
+            </tr>
+            `)
+          });
+
+          window.questionCountIdCollection = questionCountIdCollection;
+
+          enableGetQuestion();
+        }
+      });
+    });
+
+  </script>
+</body>

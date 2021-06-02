@@ -116,6 +116,9 @@ Rails.application.routes.draw do
     get "/top_voted_doubt", to: "doubt_chat_doubts#most_voted"
 
     get "tests/:id/leader_board", to: "tests#leader_board"
+    get "tests/:testId/question_selection_test", to: "tests#question_selection"
+    get "tests/:chapterId/subtopics_detail", to: "tests#get_subtopics_with_detail"
+    post "tests/:testId/add_questions_to_test_with_question_selection", to: "tests#add_questions_to_test_with_question_selection"
 
     post "/questions/:id/create_translation", to: "questions#create_translation"
     post "/ncert_sentences/find", to: "ncert_sentences#find_by_sentence"
