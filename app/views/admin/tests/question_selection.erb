@@ -69,6 +69,8 @@
     const recalculateQuestionCount = () => {
       const subtopics =  window.subtopic_data;
 
+      if (!(!!subtopics)) return;
+
       let questionCount = parseInt($('#question_count').val());
       const questionCountIdCollection = [];
       const totalSubtopics = subtopics.length;
@@ -76,10 +78,9 @@
       const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
 
       if (totalSubtopics <= questionCount){
-        subtopics.map((sub, index) => {
+          subtopics.map((sub, index) => {
           subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
           questionCount = questionCount - subtopicQuestionCount[index];
-          console.log(questionCount);
         });
 
         // add randomly to any subtopic
@@ -89,11 +90,11 @@
         }
 
         const questionCountIdCollection = window.questionCountIdCollection || [];
-
         questionCountIdCollection.map((id, index) => {
           $(`#${id}_question_count`).val(subtopicQuestionCount[index]);
-        })
+        });
       }
+
     };
 
     const enableGetQuestion = () => {
@@ -161,35 +162,20 @@
           const questionCountIdCollection = [];
           const totalSubtopics = subtopics.length;
 
-          const subtopicQuestionCount = [...Array(totalSubtopics).keys()].map(a => 0);
-
-          if (totalSubtopics <= questionCount){
-            subtopics.map((sub, index) => {
-              subtopicQuestionCount[index] = Math.ceil(questionCount * sub.weightage);
-              questionCount = questionCount - subtopicQuestionCount[index];
-              console.log(questionCount);
-            });
-
-            // add randomly to any subtopic
-            if (questionCount > 0) {
-              const randomArr = [...Array(questionCount).keys()].map(_ => (Math.floor(Math.random() * (totalSubtopics -1 - 0 + 1))))
-              randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
-            }
-          }
-
           subtopics.map((s, index) => {
             questionCountIdCollection.push(s.subTopicId);
             selectionTable.append(`
             <tr>
               <td>${s.subTopicName}</td>
               <td>${s.ncertQuestionCount}</td>
-              <td><input id="${s.subTopicId}_question_count" type="text" value='${subtopicQuestionCount[index]}'></td>
+              <td><input id="${s.subTopicId}_question_count" type="text" value='${0}'></td>
             </tr>
             `)
           });
 
           window.questionCountIdCollection = questionCountIdCollection;
 
+          recalculateQuestionCount();
           enableGetQuestion();
         }
       });
