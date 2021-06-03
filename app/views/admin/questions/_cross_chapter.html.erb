@@ -15,7 +15,7 @@
             if (!!crossChapterId && findBySentenceUrl) {
                 const updatedUrl = new URL(window.location.origin + url);
                 updatedUrl.searchParams.set('q[chapterId_eq]', crossChapterId);
-                updatedUrl.searchParams.set('q[noteId_in][]', null);
+                updatedUrl.searchParams.delete('q[noteId_in][]');
 
                 // get relative url
                 const updatedRelativeUrl = updatedUrl.toString().split(window.location.host).pop();
