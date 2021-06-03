@@ -219,11 +219,13 @@ end
       subtopic_wise_question_count = params.require(:subtopicWiseQuestionCount)
       preference_video_audio_solution = params[:videoAudioSolution] == "true"
       preference_previous_year = params[:previousYearQuestion] == "true"
+      easy_medium_level = params[:easyMediumLevel] == "true"
 
       questionIdList = test.question_selection chapterId: chapterId,
         subtopic_id_wise_question_count: subtopic_wise_question_count,
         preference_previous_year: preference_previous_year,
-        preference_video_audio_solution: preference_video_audio_solution
+        preference_video_audio_solution: preference_video_audio_solution,
+        easy_medium_level: easy_medium_level
 
       test.add_questions_of_same_chapter chapterId:  chapterId, questionIdList: questionIdList
 

@@ -112,15 +112,23 @@ class Test < ApplicationRecord
   scope :physics, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [55, 476, 493]}})}
   scope :zoology, -> {joins(:topics => :subject).where(topics: {Subject: {id:  [56, 479, 496]}})}
 
-  def get_remaining_ncert_question(subtopicId:, limit:, ignore: [])
+  def get_remaining_ncert_question(subtopicId:, easy_medium_level:, limit:, ignore: [])
     qs = Question.joins(:questionSubTopics)
+      .left_outer_joins(:question_analytic)
       .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
       .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
       .where(QuestionSubTopic: {:subTopicId => subtopicId})
       .where('"TestQuestion"."id" is null')
+      .where('"QuestionAnalytics"."correctPercentage" >= 50')
+
+    qs = qs.where(Question: {:ncert => true, type: 'MCQ-SO'})
 
     unless ignore.empty?
       qs = qs.where('"QuestionSubTopic"."questionId" NOT IN (?)', ignore)
+    end
+
+    if easy_medium_level
+      qs = qs.where('"QuestionAnalytics"."correctPercentage" >= 50')
     end
 
     Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
@@ -128,7 +136,8 @@ class Test < ApplicationRecord
 
   def question_selection(
     chapterId:, subtopic_id_wise_question_count:, 
-    preference_previous_year:false, preference_video_audio_solution:false
+    preference_previous_year:false, preference_video_audio_solution:false,
+    easy_medium_level: false
   )
 
     # remove entries where limit is 0
@@ -152,12 +161,13 @@ class Test < ApplicationRecord
 
       # base query
       qs = Question.joins(:questionSubTopics, :tests)
+        .left_outer_joins(:question_analytic)
         .joins('LEFT OUTER JOIN "ReplaceDuplicateQuestion" ON "ReplaceDuplicateQuestion"."removeQuestionId" = "Question"."id"')
         .joins('LEFT OUTER JOIN "TestQuestion" ON "TestQuestion"."questionId" = "Question"."id" and "TestQuestion"."testId" = ' + self.id.to_s)
         .where(QuestionSubTopic: {:subTopicId => subtopicId})
         .where('"TestQuestion"."id" is null')
 
-      qs = qs.where(Question: {:ncert => true})
+      qs = qs.where(Question: {:ncert => true, type: 'MCQ-SO'})
 
       if preference_previous_year
         qs = qs.where('"Test"."exam" IN (?)', ['NEET', 'AIPMT'])
@@ -168,6 +178,10 @@ class Test < ApplicationRecord
         qs = qs.where('"Question"."explanation" like ?', like_q)
       end
 
+      if easy_medium_level
+        qs = qs.where('"QuestionAnalytics"."correctPercentage" >= 50')
+      end
+
       questionIds = Question.where(id: qs.pluck('DISTINCT(COALESCE("keepQuestionId", "Question"."id")) as "qId"')).order('random()').limit(limit).pluck(:id)
 
       remaining = limit - questionIds.length
@@ -175,7 +189,7 @@ class Test < ApplicationRecord
       # get extra questions if some pending
       if remaining > 0
         questionIds += self.get_remaining_ncert_question subtopicId: subtopicId, 
-          limit: remaining, ignore: questionIds
+          easy_medium_level: easy_medium_level, limit: remaining, ignore: questionIds
       end
 
       test_question_ids += questionIds
@@ -188,21 +202,23 @@ class Test < ApplicationRecord
     chapter = Topic.find chapterId.to_i
 
     if [53, 56].include? chapter.subjectId 
-      seqNum = 1
+      # assume seqNum >= 10000 
+      seqNum = 10000 + self.questions.count
     elsif chapter.subjectId == 54
-      seqNum = 2
+      # assume seqNum >= 20000 
+      seqNum = 20000 + self.questions.count
     elsif chapter.subjectId == 55
-      seqNum = 3
+      # assume seqNum >= 30000
+      seqNum = 30000 + self.questions.count
     else
       seqNum = 0
     end
 
-    test_questions, last_test_question = [], TestQuestion.last.id
+    test_questions = []
 
     questionIdList.each do |questionId|
-      last_test_question += 1
-      test_questions << TestQuestion.new(:id => last_test_question, 
-        :testId => self.id, :questionId => questionId, :seqNum => seqNum)
+      seqNum += 1
+      test_questions << TestQuestion.new(:testId => self.id, :questionId => questionId, :seqNum => seqNum)
     end
 
     TestQuestion.import test_questions

@@ -49,11 +49,14 @@
     </table> 
 
     <div id="checkbox">
-      <input id="video_audio_solution_question" type="checkbox" id="vehicle1" name="video-solution">
+      <input id="video_audio_solution_question" type="checkbox" name="video-solution">
       <label for="video-solution">Prefer audio & video solutions</label>
       <br>
-      <input id="previous_year_question" type="checkbox" id="vehicle1" name="previous-year">
+      <input id="previous_year_question" type="checkbox" name="previous-year">
       <label for="previous-year"> Prefer previous year questions from AIPMT and NEET</label>
+      <br>
+      <input id="easy_and_medium_level" type="checkbox" name="easy-and-medium-level">
+      <label for="easy-and-medium-level"> Only easy and medium level questions</label>
     </div>
 
   <button id="get_question" class="submit">Get Questions</button>
@@ -85,12 +88,12 @@
 
       subtopics.map((sub, index) => {
         subtopicQuestionCount[index] = Math.floor(questionCount * sub.weightage);
-        questionCount = questionCount - subtopicQuestionCount[index];
       });
 
+      let remainingQuestionCount = questionCount - subtopicQuestionCount.reduce((count, sum) => count + sum, 0);
       // add randomly to any subtopic
-      if (questionCount > 0) {
-        const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,questionCount)
+      if (remainingQuestionCount > 0) {
+        const randomArr = shuffle([...Array(totalSubtopics).keys()]).slice(0,remainingQuestionCount)
         randomArr.forEach((randomIndex) => ++subtopicQuestionCount[randomIndex]);
       }
 
@@ -126,6 +129,7 @@
           'chapterId': parseInt($('#chapter_list').val()),
           'videoAudioSolution': $('#video_audio_solution_question').is(':checked'),
           'previousYearQuestion': $('#previous_year_question').is(':checked'),
+          'easyMediumLevel': $('#easy_and_medium_level').is(':checked')
         },
         success: (result) => {
           alert('Questions Added to test successfully!');
