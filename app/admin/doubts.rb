@@ -24,7 +24,8 @@ ActiveAdmin.register Doubt do
   # scope :masterclass_paid_student_doubts, show_count: false
   scope :all, show_count: false
   scope :image_doubts, show_count: false, if: -> { current_admin_user.image_doubts_access? }
-  scope :concept_building_student_doubts, show_count: false
+  #scope :concept_building_student_doubts, show_count: false
+  scope :unpaid_student_solved_doubts, show_count: false
   # if current_admin_user.role == "admin"
   #   scope :all
   # end
