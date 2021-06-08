@@ -35,6 +35,10 @@ class AdminUser < ApplicationRecord
     return (self.role == 'admin' or self.role = 'support' or self.role =='supportAndFaculty')
   end
 
+  def doubt_management_access?
+    return (self.role == 'admin' or self.role == 'superfaculty')
+  end
+
   def self.sales_role
     AdminUser.where(role: 'sales').pluck("id")
   end

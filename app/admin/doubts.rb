@@ -18,7 +18,7 @@ ActiveAdmin.register Doubt do
   preserve_default_filters!
 
   scope :chemistry_paid_student_doubts, show_count: false, default: true
-  scope :botany_paid_student_doubts, show_count: false  
+  scope :botany_paid_student_doubts, show_count: false
   scope :physics_paid_student_doubts, show_count: false
   scope :zoology_paid_student_doubts, show_count: false
   # scope :masterclass_paid_student_doubts, show_count: false
@@ -26,6 +26,10 @@ ActiveAdmin.register Doubt do
   scope :image_doubts, show_count: false, if: -> { current_admin_user.image_doubts_access? }
   #scope :concept_building_student_doubts, show_count: false
   scope :unpaid_student_solved_doubts, show_count: false
+  scope :botany_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
+  scope :zoology_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
+  scope :physics_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
+  scope :chemistry_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
   # if current_admin_user.role == "admin"
   #   scope :all
   # end
