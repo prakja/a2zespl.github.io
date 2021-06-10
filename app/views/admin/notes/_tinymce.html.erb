@@ -48,7 +48,7 @@ tinymce.init({
       document.getElementById('post_epubContent').value = editor.getContent();
     });
     // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better?
-    editor.settings.images_dataimg_filter = function () {return undefined;};
+    editor.settings.images_dataimg_filter = function () {return true;};
   }
 });
 </script>

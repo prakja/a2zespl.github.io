@@ -275,6 +275,7 @@ ActiveAdmin.register Question do
   scope :NEET_AIPMT_PMT_Questions, label: "NEET AIPMT PMT Questions", show_count: false
   scope :AIIMS_Questions, show_count: false
   scope :empty_explanation, show_count: false
+  scope :short_explanation, show_count: false
   scope :missing_subTopics, show_count: false
   scope :missing_audio_explanation, show_count: false
   scope :missing_ncert_reference, show_count: false

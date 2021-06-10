@@ -18,6 +18,14 @@ class Doubt < ApplicationRecord
     joins(:topic => :subjects).where(topic: {Subject: {courseId: course_id}})
   }
 
+  scope :question_audio_answers, -> {
+    where(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" AND "DoubtAnswer"."userId" != "Doubt"."userId" and "Doubt"."questionId" is not null AND "DoubtAnswer"."content" ~ \'<audio.*\'').exists)
+  }
+
+  scope :question_image_answers, -> {
+    where(DoubtAnswer.where('"DoubtAnswer"."doubtId" = "Doubt"."id" AND "DoubtAnswer"."userId" != "Doubt"."userId" and "Doubt"."questionId" is not null AND "DoubtAnswer"."content" ~ \'<img.*src.*\'').exists)
+  }
+
   scope :image_doubts, -> {
     solved("yes").where('"content" like \'%img%amazonaws%\' and length(regexp_replace("content", \'<img.*?/>\', \'\')) <= 100').or(where('"imgUrl" is not null')).order('"id" DESC');
   }

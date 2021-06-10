@@ -253,6 +253,7 @@ class Question < ApplicationRecord
     subject_id(56).topic(topic_id).difficult
   }
   scope :empty_explanation, -> {where('LENGTH("Question"."explanation") < 30')}
+  scope :short_explanation, -> {where('LENGTH("Question"."explanation") < 200 and LENGTH("Question"."explanation") >= 30')}
   scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
   scope :botany_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 53}})}
   scope :zoology_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 56}})}

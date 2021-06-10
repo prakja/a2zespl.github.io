@@ -30,6 +30,8 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
   scope :physics_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
   scope :chemistry_paid_student_solved_doubts, show_count: false, if: -> {current_admin_user.doubt_management_access?}
+  scope :question_audio_answers, show_count: false, if: -> {current_admin_user.doubt_management_access?}
+  scope :question_image_answers, show_count: false, if: -> {current_admin_user.doubt_management_access?}
   # if current_admin_user.role == "admin"
   #   scope :all
   # end
