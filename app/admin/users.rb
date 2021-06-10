@@ -88,7 +88,7 @@ csv do
 end
 
 index do
-  # id_column
+  id_column
   column :name
   column :email
   column :phone
