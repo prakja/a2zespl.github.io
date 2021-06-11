@@ -323,6 +323,6 @@ class Question < ApplicationRecord
     enable
     include_association :ncert_sentences
     include_association :video_sentences
-    include_association :subTopics
+    include_association :questionSubTopics
   end
 end
