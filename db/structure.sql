@@ -895,6 +895,80 @@ CREATE OPERATOR public.- (
 COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
 
 
+--
+-- Name: ncert_dict; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: -
+--
+
+CREATE TEXT SEARCH DICTIONARY public.ncert_dict (
+    TEMPLATE = pg_catalog.simple,
+    stopwords = 'english' );
+
+
+--
+-- Name: ncert_dict; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: -
+--
+
+CREATE TEXT SEARCH CONFIGURATION public.ncert_dict (
+    PARSER = pg_catalog."default" );
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR asciiword WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR word WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR numword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR email WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR url WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR host WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR sfloat WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR version WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR hword_numpart WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR hword_part WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR hword_asciipart WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR numhword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR asciihword WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR hword WITH public.ncert_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR url_path WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR file WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR "float" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR "int" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+    ADD MAPPING FOR uint WITH simple;
+
+
 SET default_tablespace = '';
 
 --
@@ -3688,7 +3762,8 @@ CREATE TABLE public."Note" (
     "externalURL" text,
     "epubURL" text,
     "epubContent" text,
-    lock_version integer DEFAULT 0 NOT NULL
+    lock_version integer DEFAULT 0 NOT NULL,
+    "noteType" character varying(15)
 );
 
 
@@ -11028,6 +11103,13 @@ CREATE INDEX "Question_topicId_idx" ON public."Question" USING btree ("topicId")
 
 
 --
+-- Name: Question_topicId_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Question_topicId_idx1" ON public."Question" USING btree ("topicId");
+
+
+--
 -- Name: Question_type_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11781,6 +11863,13 @@ CREATE INDEX ncert_sentence_idx ON public."NcertSentence" USING btree (sentence)
 --
 
 CREATE INDEX notification_user_id ON public."Notification" USING btree ("userId");
+
+
+--
+-- Name: partial_idx_answer_created_at_1_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX partial_idx_answer_created_at_1_month ON public."Answer" USING btree ("createdAt") WHERE ("createdAt" >= '2021-05-11 00:00:00+00'::timestamp with time zone);
 
 
 --
@@ -13384,6 +13473,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210526122358'),
 ('20210531062211'),
 ('20210531124523'),
-('20210602041533');
+('20210602041533'),
+('20210603141321'),
+('20210611075034');
 
 
