@@ -318,4 +318,11 @@ class Question < ApplicationRecord
 
   def use_chapter=(attr)
   end
+
+  amoeba do
+    enable
+    include_association :ncert_sentences
+    include_association :video_sentences
+    include_association :subTopics
+  end
 end
