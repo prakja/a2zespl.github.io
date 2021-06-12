@@ -49,8 +49,9 @@ ActiveAdmin.register SubTopic do
 
   # remove one of the duplicate question
   member_action :mark_duplicate, method: :post do
+    dq = nil
     begin
-      DuplicateQuestion.create!(
+      dq = DuplicateQuestion.create!(
         questionId1: params[:question_id1].to_i,
         questionId2: params[:question_id2].to_i
       )
@@ -58,6 +59,13 @@ ActiveAdmin.register SubTopic do
       if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
       else
         raise e.message
+      end
+    end
+    if dq.present? and dq.question_bank_chapter_id.present?
+      if params[:retain_question_id] == params[:question_id2]
+        dq.remove_q1_from_question_bank
+      elsif params[:retain_question_id] == params[:question_id1]
+        dq.remove_duplicate_from_question_bank
       end
     end
     respond_to do |format|

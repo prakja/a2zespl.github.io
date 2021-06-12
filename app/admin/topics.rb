@@ -67,6 +67,7 @@ ActiveAdmin.register Topic do
   sidebar :related_data, only: :show do
     ul do
       li link_to "Practice Questions", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id}, order: 'id_asc')
+      li link_to "Practice Questions (NCERT)", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id, ncert_true: 1}, order: 'id_asc')
       li link_to "Practice Questions (NEET & AIPMT Past Year)", admin_questions_path(q: { questionTopics_chapterId_eq: topic.id, details_exam_in: ['NEET', 'AIPMT']}, order: 'id_asc'), target: "_blank"
       li link_to "All Marked NEET & AIPMT Past Year Questions", admin_questions_path(q: { topicId_eq: topic.id}, order: 'id_asc', scope: "neet_test_questions"), target: "_blank"
       li link_to "Remaining Questions", admin_questions_path(q: { topicId_eq: topic.id, questionTopics_chapterId_not_eq: topic.id}, order: 'id_asc')
