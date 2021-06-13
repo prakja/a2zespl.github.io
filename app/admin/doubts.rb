@@ -107,6 +107,10 @@ ActiveAdmin.register Doubt do
     link_to 'Pending Doubts Count', '../../doubts/pending_stats'
   end
 
+  action_item :top_doubt_asking_student, only: :index do
+    link_to 'Top Doubt asking Students', "/admin/user_doubt_stats", target: "_blank"
+  end
+
   index do
     render partial: 'img_css'
     selectable_column
