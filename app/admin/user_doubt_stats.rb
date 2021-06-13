@@ -22,6 +22,11 @@ ActiveAdmin.register UserDoubtStat do
 
   index do
     column :user
-    column ('Doubts in last 7 days') { |d| d.doubt7DaysCount}
+    column :doubt7DaysCount, sortable: true do |d| 
+      d.doubt7DaysCount
+    end
+    column :doubtCount, sortable: true do |d| 
+      d.doubtCount
+    end
   end
 end
