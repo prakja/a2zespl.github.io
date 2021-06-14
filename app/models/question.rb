@@ -239,7 +239,7 @@ class Question < ApplicationRecord
   scope :bio_masterclass_course, -> {joins(:topics => :subject).where(topics: {Subject: {courseId: Rails.configuration.bio_masterclass_course_id}})}
   scope :neetprep_tests, -> {joins(:tests => :topics).where(tests: {Topic: {subjectId: [53,54,55,56]}})}
 
-  scope :physics_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 55}})}
+  scope :physics_mcqs, -> {where(subjectId: 55)}
   scope :physics_mcqs_difficult, ->(topic_id) {
     subject_id(55).topic(topic_id).difficult
   }
@@ -254,9 +254,9 @@ class Question < ApplicationRecord
   }
   scope :empty_explanation, -> {where('LENGTH("Question"."explanation") < 30')}
   scope :short_explanation, -> {where('LENGTH("Question"."explanation") < 200 and LENGTH("Question"."explanation") >= 30')}
-  scope :chemistry_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 54}})}
-  scope :botany_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 53}})}
-  scope :zoology_mcqs, -> {joins(:topics => :subject).where(topics: {Subject: {id: 56}})}
+  scope :chemistry_mcqs, -> {where(subjectId: 54)}
+  scope :botany_mcqs, -> {where(subjectId: 53)}
+  scope :zoology_mcqs, -> {where(subjectId: 56)}
   scope :test_questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."id" in (select "testId" from  "ChapterTest" union select "testId" from "CourseTest"))')}
   scope :include_deleted, -> { unscope(:where)  }
   scope :NEET_AIPMT_PMT_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" in ('NEET', 'AIPMT', 'PMT') and \"Question\".\"deleted\"=false")}
