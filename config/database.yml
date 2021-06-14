@@ -53,7 +53,7 @@ development:
         host: neetprep-staging.cvvtorjqg7t7.ap-south-1.rds.amazonaws.com
 
       - role: slave
-        host: neetprep-staging-reader.cvvtorjqg7t7.ap-south-1.rds.amazonaws.com
+        host: neetprep-staging-cluster.cluster-ro-cvvtorjqg7t7.ap-south-1.rds.amazonaws.com
 
 
   # The specified database role being used to connect to postgres.
