@@ -97,3 +97,4 @@ gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dab
 gem 'best_in_place'
 gem 'active_admin-duplicatable'
 gem 'amoeba'
+gem 'makara'

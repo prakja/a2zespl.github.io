@@ -15,7 +15,7 @@
 # gem 'pg'
 #
 default: &default
-  adapter: postgresql
+  adapter: postgresql_makara
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
@@ -26,11 +26,35 @@ default: &default
   password: letmepass
   variables:
     statement_timeout: 60000
+
+  # Schema search path. The server defaults to $user,public
   schema_search_path: public,google_ads
 
 development:
   <<: *default
   database: learner_development
+  username: learner
+  password: letmepass
+
+  # any other standard AR configurations
+
+  # add a makara subconfig
+  makara:
+    id: postgres
+    disable_blacklist: true
+    primary_ttl: 5 # how long the primary context is persisted. generally, this needs to be longer than any replication lag
+    sticky: true # once a query as been sent to the primary, all queries for the rest of the request will also be sent to the primary
+    primary_strategy: round_robin
+
+    # list your connections with the override values (they're merged into the top-level config)
+    # be sure to provide the role if primary, role is assumed to be a replica if not provided
+    connections:
+      - role: master
+        host: neetprep-staging.cvvtorjqg7t7.ap-south-1.rds.amazonaws.com
+
+      - role: slave
+        host: neetprep-staging-cluster.cluster-ro-cvvtorjqg7t7.ap-south-1.rds.amazonaws.com
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -45,13 +69,6 @@ development:
   # domain socket that doesn't need configuration. Windows does not have
   # domain sockets, so uncomment these lines.
   #host: localhost
-
-  # The TCP port the server listens on. Defaults to 5432.
-  # If your server runs on a different port number, change accordingly.
-  #port: 5432
-
-  # Schema search path. The server defaults to $user,public
-  schema_search_path: public,google_ads
 
   # Minimum log levels, in increasing order:
   #   debug5, debug4, debug3, debug2, debug1,
@@ -91,5 +108,23 @@ production:
   database: <%= ENV['RUBYACTIVEADMIN_DATABASE'] %>
   username: <%= ENV['RUBYACTIVEADMIN_DATABASE_USER'] %>
   password: <%= ENV['RUBYACTIVEADMIN_DATABASE_PASSWORD'] %>
-  host: <%= ENV['RUBYACTIVEADMIN_DATABASE_HOST'] %>
   schema_search_path: public,google_ads
+
+  # any other standard AR configurations
+
+  # add a makara subconfig
+  makara:
+
+    id: postgres
+    disable_blacklist: true
+    primary_ttl: 5 # how long the primary context is persisted. generally, this needs to be longer than any replication lag
+    sticky: true # once a query as been sent to the primary, all queries for the rest of the request will also be sent to the primary
+    primary_strategy: round_robin
+
+    connections:
+      - role: master
+        host: <%= ENV['RUBYACTIVEADMIN_DATABASE_HOST'] %>
+
+      - role: slave
+        host: <%= ENV['DB_READ_REPLICA'] %>
+
