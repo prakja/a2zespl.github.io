@@ -77,7 +77,7 @@ ActiveAdmin.register Question do
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
-        super.left_outer_joins(:doubts, :bookmarks).select('"Question".*, COUNT(distinct("Doubt"."id")) as doubts_count, COUNT(distinct("BookmarkQuestion"."id")) as bookmarks_count').group('"Question"."id"')
+        super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
       else
