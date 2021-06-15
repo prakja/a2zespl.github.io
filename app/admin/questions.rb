@@ -288,6 +288,10 @@ ActiveAdmin.register Question do
     link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
   end
 
+  action_item :question_issues, only: :show do
+    link_to 'Customer Issues', '../../admin/customer_issues?scope=all&q[questionId_eq]=' + resource.id.to_s
+  end
+
   action_item :set_image_link, only: :show do
     link_to 'Set Image Link', '#', class: 'setImageLink'
   end
