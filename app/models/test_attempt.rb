@@ -10,6 +10,10 @@ class TestAttempt < ApplicationRecord
   scope :test_series, -> {course_id(8)}
   scope :aryan_raj_test_series, -> {course_id(Rails.configuration.aryan_raj_test_series_1_yr)}
   scope :inspire_batch, -> {course_id(Rails.configuration.aryan_raj_test_series_2_yr)}
+  scope :completed, -> {where(completed: true)}
+  scope :completed_target_tests, -> {joins(:test).where('"Test"."name" ~ \'Target Test\'').completed}
+  scope :completed_dpp_tests, -> {joins(:test).where('"Test"."name" ~ \'Target DPP Test\'').completed}
+  scope :completed_test_series_tests, -> {test_series.completed}
 
   scope :score_gte, -> (score){
     TestAttempt.where("(\"result\"->>'totalMarks')::INTEGER >= ?", score)

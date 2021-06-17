@@ -9,9 +9,12 @@ ActiveAdmin.register TestAttempt do
   scope :test_series, show_count: false
   scope :aryan_raj_test_series, show_count: false
   scope :inspire_batch, show_count: false
+  scope :completed_target_tests, show_count: false
+  scope :completed_dpp_tests, show_count: false
+  scope :completed_test_series_tests, show_count: false
   controller do
     def scoped_collection
-      super.preload(:test, user: :user_profile).select('*, cast("result"#>>\'{sections,2,totalMarks}\' as integer) as "physics_score", cast("result"#>>\'{sections,1,totalMarks}\' as integer) as "chemistry_score", cast("result"#>>\'{sections,0,totalMarks}\' as integer) as "biology_score"')
+      super.preload(:test, user: :user_profile).select('"TestAttempt".*, cast("result"#>>\'{sections,2,totalMarks}\' as integer) as "physics_score", cast("result"#>>\'{sections,1,totalMarks}\' as integer) as "chemistry_score", cast("result"#>>\'{sections,0,totalMarks}\' as integer) as "biology_score"')
     end
   end
 
@@ -20,10 +23,15 @@ ActiveAdmin.register TestAttempt do
     column :user
     column :test
     column :completed
-    column :result
+    #column :result
     column "Total" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
-        testAttempt.result['totalMarks']
+        testAttempt.result['totalMarks'].to_s + " / " + (testAttempt.test.numQuestions.to_i * 4).to_s
+      end
+    end
+    column "Percentage" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
+        (testAttempt.result['totalMarks'].to_i / ((testAttempt.test.numQuestions || testAttempt.questions.count).to_i * 4).to_f * 100.0).ceil
       end
     end
     column "Physics Score", sortable: "physics_score" do |testAttempt|
@@ -42,11 +50,6 @@ ActiveAdmin.register TestAttempt do
       end
     end
     column "Time Taken" do |testAttempt|
-      if testAttempt.elapsedDurationInSec.present?
-        (testAttempt.elapsedDurationInSec / 60.0).round
-      end
-    end
-    column "Time Taken 2" do |testAttempt|
       if testAttempt.createdAt.present? and testAttempt.updatedAt.present?
         raw((((testAttempt.finishedAt || testAttempt.updatedAt) - testAttempt.createdAt) / 60).round.to_s + " minutes")
       end
@@ -79,7 +82,12 @@ ActiveAdmin.register TestAttempt do
     end
     column "Total" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
-        testAttempt.result['totalMarks']
+        testAttempt.result['totalMarks'].to_s + " / " + (testAttempt.test.numQuestions.to_i * 4).to_s
+      end
+    end
+    column "Percentage" do |testAttempt|
+      if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
+        (testAttempt.result['totalMarks'].to_i / ((testAttempt.test.numQuestions || testAttempt.questions.count).to_i * 4).to_f * 100.0).ceil
       end
     end
     column "Physics Score" do |testAttempt|
