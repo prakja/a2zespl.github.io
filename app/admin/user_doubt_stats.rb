@@ -3,22 +3,10 @@ ActiveAdmin.register UserDoubtStat do
 
   actions :index
 
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # Uncomment all parameters which should be permitted for assignment
-  #
-  # permit_params :userId, :doubtCount, :doubt7DaysCount
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:userId, :doubtCount, :doubt7DaysCount]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
-  # end
-
   remove_filter  :user
+
+  scope :paid_students, show_count: false, default: false
+  scope :all, show_count: false
 
   index do
     column :user
