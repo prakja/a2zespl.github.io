@@ -1,5 +1,7 @@
 class User < ApplicationRecord
  self.table_name = "User"
+ before_save :swap_unique_email_phone
+ nilify_blanks
 
  has_many :schedule_item_users, class_name: "ScheduleItemUser", foreign_key: "userId"
  has_one :user_profile, class_name: "UserProfile", foreign_key: "userId"
@@ -43,6 +45,21 @@ class User < ApplicationRecord
 # scope :paid_users, -> {
  #   joins(:user_courses).where('"UserCourse"."expiryAt" >= CURRENT_TIMESTAMP')
  # }
+ 
+ def swap_unique_email_phone
+   if self.email_changed?
+     swap_unique("email")
+   end
+   if self.phone_changed?
+     swap_unique("phone")
+   end
+ end
+
+ def swap_unique(field_name)
+   if self[(field_name).to_sym].present?
+     User.where("\"#{field_name}\" = '#{self[(field_name).to_sym]}' and \"id\" != #{self.id}").update_all(field_name.to_sym => "\##{self.id}\##{self.send(field_name + "_was")}")
+   end
+ end
 
  def self.ransackable_scopes(_auth_object = nil)
    [:student_name, :student_email, :student_phone]

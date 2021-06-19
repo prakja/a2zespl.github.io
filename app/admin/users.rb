@@ -3,7 +3,7 @@ ActiveAdmin.register User do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :blockedUser, :password_text
+permit_params :blockedUser, :password_text, :email, :phone
 #
 # or
 #
@@ -21,6 +21,8 @@ form do |f|
   f.inputs "User" do
     f.input :blockedUser
     f.input :password_text
+    f.input :email
+    f.input :phone
     # f.input :password_confirmation
   end
   f.actions
@@ -74,6 +76,8 @@ controller do
       user.password = password
     end
     user.blockedUser = blockedUser
+    user.email = user_params[:email]
+    user.phone = user_params[:phone]
     user.save!
     redirect_to admin_user_path user
   end
