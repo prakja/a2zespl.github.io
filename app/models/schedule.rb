@@ -5,4 +5,7 @@ class Schedule < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   has_many :scheduleItems, class_name: "ScheduleItem", foreign_key: "scheduleId"
+  scope :active, ->() {
+    where(isActive: true)
+  }
 end
