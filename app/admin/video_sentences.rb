@@ -19,6 +19,24 @@ ActiveAdmin.register VideoSentence do
   permit_params :sentence
   preserve_default_filters!
 
+  action_item only: :index do
+    link_to 'Upload Transcription output', action: :upload_transcribe
+  end
+
+  collection_action :upload_transcribe do
+    render 'admin/video_setences/import_transcribe'
+  end
+
+  collection_action :import_transcribe, method: :post do
+    json, videoId =  params[:outputJson] || false, params[:videoId] || false
+
+    if json and videoId
+      parse_transcribe_output videoId: videoId, json: json
+      flash[:notice] = "Json file imported successfully!"
+    end
+    redirect_to action: :index
+  end
+
   index do
     selectable_column
     id_column
@@ -60,6 +78,7 @@ ActiveAdmin.register VideoSentence do
   end
 
   controller do
+    include VideoSentenceHelper
 
     def scoped_collection
       super.hinglish.addDetail
