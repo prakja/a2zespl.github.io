@@ -1,56 +1,49 @@
 module VideoSentenceHelper
   def parse_transcribe_output(videoId:, json:)
-    json_data = JSON.parse json.read
+    json_data = JSON.parse(json.read)
     video = Video.find videoId
 
-    video_sentences = video.sentences
-
-    # get an hash containing timestamp => VideoSentence
-    hash_video_sentences = video_sentences
-      .map { |s| {s.timestampStart => s}}
-      .reduce({}, :merge)
+    video_sentences = video.sentences.order(timestampStart: :asc)
 
     # get an hash containing timestamp => {:sentence => content, :endtime => endtime}
     output_file_timestamps = json_data['results']['items']
-      .map { |s| {s["start_time"].to_f => {:sentence => s['alternatives']['content'], :endtime => s['end_time'].to_f}}}
+      .map { |s| {s["start_time"].to_f => {:sentence => s['alternatives'].first['content'], :endtime => s['end_time'].to_f}}}
       .reduce({}, :merge)
 
-    # update sentences
-    update_timestamps = output_file_timestamps.keys & video_sentences.keys
+    update_video_sentences = []
+    video_sentences.each do |sentence|
+      sentences_arr = find_sentences_in_range json_sentences: output_file_timestamps,
+        upper: sentence.timestampStart, lower: sentence.timestampEnd
 
-    unless update_timestamps.empty?
-      update_video_sentences = []
+      sentence1 = sentences_arr.join(' ')
 
-      update_timestamps.each do |timestamp|
-        video_sentence_instance = hash_video_sentences[timestamp]
-        video_sentence_instance.sentence1 = output_file_timestamps[timestamp][:sentence]
-        update_video_sentences << video_sentence_instance
+      unless sentence1.empty?
+        sentence.sentence1 = sentence1
+        update_video_sentences << sentence
       end
-
-      VideoSentence.import update_video_sentences, on_duplicate_key_update: [:sentence1]
     end
 
-    # create new sentences
-    new_timestamps = output_file_timestamps.keys - update_timestamps
-
-    unless new_timestamps.empty?
-      new_video_sentences = []
-      chapterId = ChapterVideo.where(:videoId => videoId).first.chapterId
-
-      new_timestamps.each do |timestamp|
-        transcribed_sentence = output_file_timestamps[timestamp][:sentence]
-        timestampEndtime = output_file_timestamps[timestamp][:endtime]
-  
-        new_video_sentences << VideoSentence.new(
-          :videoId => videoId, :chapterId => chapterId,
-          :timestampStart => timestamp,
-          :timestampEnd => timestampEndtime,
-          :sentence => nil, :sentence1 => transcribed_sentence, 
-          :section => nil
-        )
-      end
-
-      VideoSentence.import new_video_sentences, validate: false
-    end
+    VideoSentence.import update_video_sentences
   end
+
+  private
+    def find_sentences_in_range(json_sentences:, upper:, lower:)
+      json_timestamps = json_sentences.keys
+
+      upper_timestamp = json_timestamps.min_by  { |x| (upper - x).abs }
+      lower_timestamp = json_timestamps.min_by  { |x| (lower - x).abs }
+
+      # in case the bound exceeds the total timestamps in json file
+      return [] if upper_timestamp == lower_timestamp 
+
+      sentences = []
+
+      json_timestamps.each do |ts|
+        if ts >= lower_timestamp and ts < upper_timestamp
+          sentences << json_sentences[timestamp][:sentence]
+        end
+      end
+
+      return sentences
+    end
 end
