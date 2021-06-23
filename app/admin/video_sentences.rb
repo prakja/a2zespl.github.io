@@ -86,10 +86,12 @@ ActiveAdmin.register VideoSentence do
 
     def find_by_sentence
       sentence = params.require(:sentence)
-      query = 'to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)'
-      video_sentence = VideoSentence.where(query, sentence.gsub(' ', " & ")).order(:videoId, :timestampStart) # chapterId is also injected to the query
+      query = 'to_tsvector(\'english\', sentence1) @@ to_tsquery(\'english\', ?) OR to_tsvector(\'english\', sentence) @@ to_tsquery(\'english\', ?)'
+      nz_sentence = sentence.gsub(' ', " & ")
+      video_sentence = VideoSentence.where(query, nz_sentence, nz_sentence) # chapterId is also injected to the query
+        .order(:videoId, :timestampStart)
       video_sentence = video_sentence.uniq { |s| [s.videoId, s.timestampStart]}
-      render json: video_sentence.to_json, status: 200
+      render json: video_sentence.to_json(methods: :transcribed_sentence), status: 200
     end
   end
 end

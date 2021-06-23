@@ -38,6 +38,10 @@ class VideoSentence < ApplicationRecord
     self.sentence
   end
 
+  def transcribed_sentence
+    self[:sentence1] || self[:sentence]
+  end
+
   def prevSentence
     return self.detail.prevSentence
   end
