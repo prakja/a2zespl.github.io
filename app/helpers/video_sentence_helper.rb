@@ -5,9 +5,9 @@ module VideoSentenceHelper
 
     video_sentences = video.sentences.order(timestampStart: :asc)
 
-    # get an hash containing timestamp => {:sentence => content, :endtime => endtime}
+    # get an hash containing timestamp => content
     output_file_timestamps = json_data['results']['items']
-      .map { |s| {s["start_time"].to_f => {:sentence => s['alternatives'].first['content'], :endtime => s['end_time'].to_f}}}
+      .map { |s| {s["start_time"].to_f => s['alternatives'].first['content'].to_s }}
       .reduce({}, :merge)
 
     update_video_sentences = []
@@ -40,7 +40,7 @@ module VideoSentenceHelper
 
       json_timestamps.each do |ts|
         if ts >= lower_timestamp and ts < upper_timestamp
-          sentences << json_sentences[timestamp][:sentence]
+          sentences << json_sentences[ts]
         end
       end
 
