@@ -285,6 +285,14 @@ ActiveAdmin.register Question do
   #scope :include_deleted, label: "Include Deleted"
 
   action_item :similar_question, only: :show do
+    link_to 'Add Explanation', '/questions/add_explanation/' + resource.id.to_s
+  end
+
+  action_item :similar_question, only: :show do
+    link_to 'Add Hint', '/questions/add_hint/' + resource.id.to_s
+  end
+
+  action_item :similar_question, only: :show do
     link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
   end
 
