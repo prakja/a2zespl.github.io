@@ -171,6 +171,10 @@ ActiveAdmin.register Question do
       column ("Add Hint") { |question|
         raw('<a target="_blank" href="/questions/add_hint/' + question.id.to_s + '">' + "Add Hint" + '</a>')
       }
+      column ("History") {|question| raw('<a target="_blank" href="/admin/questions/' + (question.id).to_s + '/history">View History</a>')}
+      if current_admin_user.role == 'admin'
+        column ("Restore") { |question| raw('<a href="/admin/questions/' + (question.id).to_s + '/restore">Restore</a>')}
+      end
     end
     actions defaults: true do |question|
       if params[:q].present? and params[:q][:similar_questions].present?
@@ -359,6 +363,28 @@ ActiveAdmin.register Question do
     end
     dq.destroy
     redirect_back fallback_location: collection_path, notice: "deleted duplicate with main question"
+  end
+
+  member_action :history do
+    @question = Question.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Question', item_id: @question.id)
+    render "layouts/history"
+  end
+
+  member_action :restore do
+    @question = Question.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Question', item_id: @question.id)
+    if !@versions.last.reify.nil?
+      @lock_version = @versions.last.reify.lock_version + 1
+      @question = @versions.last.reify
+      @question.lock_version = @lock_version
+      @question.save!
+      @versions.last.destroy
+      @versions.last.destroy
+      redirect_back fallback_location: collection_path, notice: "Restored to previos version"
+    else
+      redirect_back fallback_location: collection_path, notice: "There is no previous version"
+    end 
   end
 
   action_item :change_option_index, only: :show do

@@ -39,7 +39,10 @@ ActiveAdmin.register Note do
     column :createdAt
     column :updatedAt
     column ("History") {|note| raw('<a target="_blank" href="/admin/notes/' + (note.id).to_s + '/history">View History</a>')}
-    actions
+    if current_admin_user.role == 'admin'
+      column ("Restore") { |note| raw('<a href="/admin/notes/' + (note.id).to_s + '/restore">Restore</a>')}
+    end
+      actions
   end
 
   action_item :set_image_link, only: :show do
@@ -97,4 +100,19 @@ ActiveAdmin.register Note do
     render "layouts/history"
   end
 
+  member_action :restore do
+    @note = Note.find(params[:id])
+    @versions = PaperTrail::Version.where(item_type: 'Note', item_id: @note.id)
+    if !@versions.last.reify.nil?
+      @lock_version = @versions.last.reify.lock_version + 1
+      @note = @versions.last.reify
+      @note.lock_version = @lock_version
+      @note.save!
+      @versions.last.destroy
+      @versions.last.destroy
+      redirect_back fallback_location: collection_path, notice: "Restored to previos version"
+    else
+      redirect_back fallback_location: collection_path, notice: "There is no previous version"
+    end 
+  end
 end
