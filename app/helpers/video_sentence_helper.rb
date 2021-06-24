@@ -60,7 +60,7 @@ module VideoSentenceHelper
   private
     def find_sentences_in_range(json_sentences:, upper:, lower:)
       # assumption gap between gcp transcribe is greater that of aws
-      json_timestamps = json_sentences.keys
+      json_timestamps = json_sentences.keys.sort
 
       upper_timestamp = json_timestamps.min_by  { |x| (upper - x).abs }
       lower_timestamp = json_timestamps.min_by  { |x| (lower - x).abs }
