@@ -27,7 +27,7 @@ class VideoSentence < ApplicationRecord
   }
 
   def sentenceHtml
-    self[:sentenceHtml].blank? ? self.sentence : self[:sentenceHtml]
+    self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
   end
 
   def setUpdatedTime
