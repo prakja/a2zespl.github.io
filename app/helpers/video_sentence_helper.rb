@@ -29,7 +29,8 @@ module VideoSentenceHelper
 
     VideoSentence.import update_video_sentences, on_duplicate_key_update: [:sentence1]
 
-    merge remaining sentences
+    #merge remaining sentences
+
     last_video_sentance = video_sentences.last
     remaining_sentences_ts = output_file_timestamps.keys
       .sort.filter { |ts| ts > last_video_sentance.timestampEnd}
