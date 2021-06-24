@@ -31,8 +31,8 @@ ActiveAdmin.register VideoSentence do
     json, videoId =  params[:outputJson] || false, params[:videoId] || false
 
     if json and videoId
-      parse_transcribe_output videoId: videoId, json: json
-      flash[:notice] = "Json file imported successfully!"
+      msg = parse_transcribe_output videoId: videoId, json: json
+      flash[:notice] = msg.nil? ? "Invalid videoId" : msg
     end
     redirect_to action: :index
   end
@@ -87,8 +87,8 @@ ActiveAdmin.register VideoSentence do
     def find_by_sentence
       sentence = params.require(:sentence)
       query = 'to_tsvector(\'english\', sentence1) @@ to_tsquery(\'english\', ?) OR to_tsvector(\'english\', sentence) @@ to_tsquery(\'english\', ?)'
-      nz_sentence = sentence.gsub(' ', " & ")
-      video_sentence = VideoSentence.where(query, nz_sentence, nz_sentence) # chapterId is also injected to the query
+      nz_sent = sentence.gsub(' ', " & ")
+      video_sentence = VideoSentence.where(query, nz_sent, nz_sent) # chapterId is also injected to the query
         .order(:videoId, :timestampStart)
       video_sentence = video_sentence.uniq { |s| [s.videoId, s.timestampStart]}
       render json: video_sentence.to_json(methods: :transcribed_sentence), status: 200
