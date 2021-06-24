@@ -32,7 +32,11 @@ ActiveAdmin.register VideoSentence do
 
     if json and videoId
       msg = parse_transcribe_output videoId: videoId, json: json
-      flash[:notice] = msg.nil? ? "Invalid videoId" : msg
+      if msg.nil?
+        flash[:danger] = "Invalid videoId"
+      else
+        flash[:notice] = msg
+      end
     end
     redirect_to action: :index
   end
@@ -40,17 +44,11 @@ ActiveAdmin.register VideoSentence do
   index do
     selectable_column
     id_column
-    column ("Video") {|vs|
-      auto_link(vs.video)
-    }
-    column ("Chapter") {|vs|
-      auto_link(vs.chapter)
-    }
-    column (:sentence) { |vs|
-      best_in_place vs, :sentence, url: [:admin, vs]
-    }
-    column (:timestampStart) {|vs| vs.timestampStart}
-    column (:timestampEnd) {|vs| vs.timestampEnd}
+    column ("Video") { |vs|auto_link(vs.video)}
+    column ("Chapter") {|vs| auto_link(vs.chapter) }
+    column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
+    column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
+    column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
   end
 
   show do
@@ -65,11 +63,11 @@ ActiveAdmin.register VideoSentence do
       row :sentence do |videoSentence|
         best_in_place videoSentence, :sentence, as: :input, url: [:admin, videoSentence]
       end
-      row ("Timestamp start") do |videoSentence|
-        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} </a>")
+      row :sentenceAlt do |videoSentence|
+        best_in_place videoSentence, :sentence1, as: :input, url: [:admin, videoSentence]
       end
-      row ("Timestamp end") do |videoSentence|
-        videoSentence.timestampEnd
+      row ("Timestamp") do |videoSentence|
+        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} - #{videoSentence.timestampEnd}  </a>")
       end
       row :questions do |videoSentence|
         videoSentence.questions
@@ -85,13 +83,18 @@ ActiveAdmin.register VideoSentence do
     end
 
     def find_by_sentence
-      sentence = params.require(:sentence)
+      q = params["q"]
+      chapterId = q["chapterId_eq"].to_i
+      sentence = q["groupings"]["0"]["sentence_contains"].to_s
+
       query = 'to_tsvector(\'english\', sentence1) @@ to_tsquery(\'english\', ?) OR to_tsvector(\'english\', sentence) @@ to_tsquery(\'english\', ?)'
       nz_sent = sentence.gsub(' ', " & ")
+
       video_sentence = VideoSentence.where(query, nz_sent, nz_sent) # chapterId is also injected to the query
         .order(:videoId, :timestampStart)
+
       video_sentence = video_sentence.uniq { |s| [s.videoId, s.timestampStart]}
-      render json: video_sentence.to_json(methods: :transcribed_sentence), status: 200
+      render json: video_sentence.to_json(methods: [:transcribed_sentence]), status: 200
     end
   end
 end

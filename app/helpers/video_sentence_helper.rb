@@ -1,6 +1,6 @@
 module VideoSentenceHelper
   def parse_transcribe_output(videoId:, json:)
-    video = Video.find videoId
+    video = Video.find_by_id videoId
 
     return nil if video.nil?
 
@@ -11,13 +11,13 @@ module VideoSentenceHelper
     # get an hash containing timestamp => content
     output_file_timestamps = json_data['results']['items']
       .map { |s| {s["start_time"].to_f => 
-          { :sentence => s['alternatives'].first['content'].to_s}, :timestamp_end =>  s['end_time'].to_f}}
+        { :sentence => s['alternatives'].first['content'].to_s, :timestamp_end =>  s['end_time'].to_f}}}
       .reduce({}, :merge)
 
     update_video_sentences = []
     video_sentences.each do |sentence|
       sentences_arr = find_sentences_in_range json_sentences: output_file_timestamps,
-        upper: sentence.timestampStart, lower: sentence.timestampEnd
+        lower: sentence.timestampStart, upper: sentence.timestampEnd
 
       sentence1 = sentences_arr.join(' ')
 
@@ -27,22 +27,20 @@ module VideoSentenceHelper
       end
     end
 
-    VideoSentence.import update_video_sentences
+    VideoSentence.import update_video_sentences, on_duplicate_key_update: [:sentence1]
 
-    # merge remaining sentences
+    merge remaining sentences
     last_video_sentance = video_sentences.last
     remaining_sentences_ts = output_file_timestamps.keys
       .sort.filter { |ts| ts > last_video_sentance.timestampEnd}
 
     unless remaining_sentences_ts.empty?
       remaining_sentences = remaining_sentences_ts.map { |ts| output_file_timestamps[ts]}
-
-      sentence1 = remaining_sentences.map { |k, v| v[:sentence]}
+      sentence1 = remaining_sentences.map { |rs| rs[:sentence]}
       sentence1 = sentence1.join(' ')
 
-      # [4.5, {:sentence=> "aaple", :timestamp_end=>4.5}] 
-      timestamp_end = remaining_sentences.last.first.first
-      timestamp_start = remaining_sentences.first.first.last[:timestamp_end]
+      timestamp_start = remaining_sentences_ts.first
+      timestamp_end = output_file_timestamps[remaining_sentences_ts.last][:timestamp_end]
 
       VideoSentence.create(
         :sentence1 => sentence1, :sentence => nil,
@@ -54,7 +52,7 @@ module VideoSentenceHelper
       )
     end
 
-    "Total #{update_video_sentences.length} video sentences updated and #{remaining_sentences_ts.empty? ? 1 : 0} added"
+    "Total #{update_video_sentences.length} video sentences updated and #{remaining_sentences_ts.empty? ? 0 : 1} added"
   end
 
   private

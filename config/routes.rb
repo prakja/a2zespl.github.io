@@ -122,6 +122,6 @@ Rails.application.routes.draw do
 
     post "/questions/:id/create_translation", to: "questions#create_translation"
     post "/ncert_sentences/find", to: "ncert_sentences#find_by_sentence"
-    post "/video_sentences/find", to: "video_sentences#find_by_sentence"
+    get "/video_sentences/sentence/find", to: "video_sentences#find_by_sentence"
   end
 end

@@ -1,7 +1,7 @@
 
 <%= form_with url: "/admin/video_sentences/import_transcribe", method: :post do |form| %>
   <%= form.label :videoId, "Video Id:" %>
-  <%= form.number_field :videoId, in: 1.0..100000, step: 1 %>
+  <%= form.number_field :videoId, in: 1.0..100000000000, step: 1 %>
   <%= form.file_field :outputJson %>
   <%= form.submit "Upload" %>
 <% end %>
