@@ -379,8 +379,8 @@ ActiveAdmin.register Question do
       @question = @versions.last.reify
       @question.lock_version = @lock_version
       @question.save!
-      @versions.last.destroy
-      @versions.last.destroy
+      #@versions.last.destroy
+      #@versions.last.destroy
       redirect_back fallback_location: collection_path, notice: "Restored to previos version"
     else
       redirect_back fallback_location: collection_path, notice: "There is no previous version"
