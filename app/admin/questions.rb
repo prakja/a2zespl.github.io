@@ -528,11 +528,11 @@ ActiveAdmin.register Question do
 
       f.input :video_sentence_ids, 
         input_html: {id: "question_video_sentences_select2"}, 
-        label: "Video Sentence", 
-        as: :selected_list,
-        url: admin_video_sentences_sentence_find_path(q: {chapterId_eq: f.object.topicId}), 
-        fields: [:sentence],
-        minimum_input_length: 5,
+        label: "Video Sentence", as: :selected_list,
+        url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}), 
+        fields: [:sentence1, :sentence],
+        display_name: 'sentenceContext', predicate: 'matches_regexp', 
+        minimum_input_length: 5, 
         hint: raw("<a href='#{admin_videos_path(order: 'seqId_asc_and_id_asc', q: {videoTopics_chapterId_eq: f.object.topicId, language_eq: 'hinglish'})}' target='_blank'>Chapter Videos</a> List used for linking") if f.object.topicId.present?
 
       render partial: 'cross_chapter'

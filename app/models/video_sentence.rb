@@ -43,15 +43,17 @@ class VideoSentence < ApplicationRecord
   end
 
   def prevSentence
-    return self.detail.prevSentence
+    detail = self.detail
+    detail.prevSentence1 || detail.prevSentence
   end
 
   def nextSentence
-    return self.detail.nextSentence
+    detail = self.detail
+    detail.nextSentence1 || detail.nextSentence
   end
 
   def sentenceContext
-    '[ ' + self.detail.videoName + ' ]' + self.prevSentence.to_s  + " (" + self.sentence + ") " + self.nextSentence.to_s
+    '[ ' + self.detail.videoName + ' ]' + self.prevSentence.to_s  + " (" + self.transcribed_sentence + ") " + self.nextSentence.to_s
   end
 
   def playableUrlWithTimestamp
