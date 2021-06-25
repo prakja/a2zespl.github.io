@@ -34,7 +34,7 @@ ActiveAdmin.register VideoSentence do
     if json and videoId
       msg = parse_transcribe_output videoId: videoId, json: json
       if msg.nil?
-        flash[:danger] = "Invalid videoId"
+        flash[:danger] = "Kindly make sure the video Id is valid & file is in json format !"
       else
         flash[:notice] = msg
       end

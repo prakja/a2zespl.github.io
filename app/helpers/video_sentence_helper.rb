@@ -1,10 +1,11 @@
 module VideoSentenceHelper
   def parse_transcribe_output(videoId:, json:)
-    video = Video.find_by_id videoId
-
-    return nil if video.nil?
-
-    json_data = JSON.parse(json.read)
+    begin
+      video = Video.find videoId
+      json_data = JSON.parse(json.read)
+    rescue => exception
+      return nil
+    end
 
     video_sentences = video.sentences.order(timestampStart: :asc)
 
