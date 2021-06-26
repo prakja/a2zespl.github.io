@@ -80,7 +80,12 @@ ActiveAdmin.register VideoSentence do
     include VideoSentenceHelper
 
     def scoped_collection
-      super.hinglish.addDetail
+      regex_data = params[:q] and params[:q]["groupings"].present? and params[:q]["groupings"]["0"].present? and params[:q]["groupings"]["0"]["sentence_matches_regexp"].present? ? params[:q]["groupings"]["0"]["sentence_matches_regexp"] : nil
+      if regex_data
+        super.hinglish.addDetail(regex_data)
+      else
+        super.hinglish.addDetail
+      end
     end
 
     def find_by_sentence

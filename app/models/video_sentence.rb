@@ -18,8 +18,12 @@ class VideoSentence < ApplicationRecord
     self.createdAt = Time.now
   end
 
-  scope :addDetail, ->() {
-    select('"VideoSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :video)
+  scope :addDetail, ->(regex_data = nil) {
+    if regex_data
+      select('"VideoSentence".*, \'\' as "sentenceContext", "sentence" ~ \'(?i)' + regex_data + '\' as "sentenceMatch", "sentence1" ~ \'(?i)' + regex_data + '\' as "sentence1Match"').preload(:detail, :chapter, :video)
+    else
+      select('"VideoSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :video)
+    end
   }
 
   scope :hinglish, ->() {
@@ -28,6 +32,14 @@ class VideoSentence < ApplicationRecord
 
   def sentenceHtml
     self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
+  end
+
+  def sentence
+    if self.read_attribute(:sentence).present?
+      return self.read_attribute(:sentence)
+    else
+      return self.sentence1
+    end
   end
 
   def setUpdatedTime
@@ -39,17 +51,35 @@ class VideoSentence < ApplicationRecord
   end
 
   def transcribed_sentence
-    self[:sentence1] || self[:sentence]
+    if self.sentenceMatch
+      self.sentence
+    elsif self.sentence1Match
+      self.sentence1
+    else
+      self.sentence
+    end
   end
 
   def prevSentence
     detail = self.detail
-    detail.prevSentence1 || detail.prevSentence
+    if self.sentenceMatch
+      detail.prevSentence
+    elsif self.sentence1Match
+      detail.prevSentence1
+    else
+      detail.prevSentence
+    end
   end
 
   def nextSentence
     detail = self.detail
-    detail.nextSentence1 || detail.nextSentence
+    if self.sentenceMatch
+      detail.nextSentence
+    elsif self.sentence1Match
+      detail.nextSentence1
+    else
+      detail.nextSentence
+    end
   end
 
   def sentenceContext

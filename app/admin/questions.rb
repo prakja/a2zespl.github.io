@@ -529,7 +529,7 @@ ActiveAdmin.register Question do
       f.input :video_sentence_ids, 
         input_html: {id: "question_video_sentences_select2"}, 
         label: "Video Sentence", as: :selected_list,
-        order_by: 'timestampStart_asc_and_videoId_desc',
+        order_by: 'videoId_asc_and_timestampStart_asc',
         fields: [:sentence, :sentence1],
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}),
         display_name: 'sentenceContext', predicate: 'matches_regexp', 
