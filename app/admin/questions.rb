@@ -42,7 +42,8 @@ ActiveAdmin.register Question do
   scope :neetprep_course, show_count: false
   scope :image_question, show_count: false
   scope :test_image_question, show_count: false
-  scope :unused_in_high_yield_bio, show_count: false
+  #scope :unused_in_high_yield_bio, show_count: false
+  scope :unused_questions, show_count: false
   scope :NEET_Test_Questions, show_count: false
   scope :not_neetprep_course, show_count: false
   scope :bio_masterclass_course, show_count: false
