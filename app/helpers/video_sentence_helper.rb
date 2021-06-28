@@ -9,10 +9,12 @@ module VideoSentenceHelper
 
     video_sentences = video.sentences.order(timestampStart: :asc)
 
-    # get an hash containing timestamp => content
+    # get an hash containing {44.5 => {:sentence => 'sample', :timestamp_end => 45.5}}
     output_file_timestamps = json_data['results']['items']
-      .map { |s| {s["start_time"].to_f => 
-        { :sentence => s['alternatives'].first['content'].to_s, :timestamp_end =>  s['end_time'].to_f}}}
+      .map { |s| {s["start_time"].to_f => { 
+          :sentence => s['alternatives'].first['content'].to_s, 
+          :timestamp_end =>  s['end_time'].to_f, :type => s['type'].to_s
+        }}}
       .reduce({}, :merge)
 
     update_video_sentences = []
@@ -29,32 +31,42 @@ module VideoSentenceHelper
     end
 
     VideoSentence.import update_video_sentences, on_duplicate_key_update: [:sentence1]
+    msg = "Total #{update_video_sentences.length} video sentences updated "
 
     #merge remaining sentences
-
     last_video_sentance = video_sentences.last
     remaining_sentences_ts = output_file_timestamps.keys
-      .sort.filter { |ts| ts > last_video_sentance.timestampEnd}
+      .filter { |ts| ts > last_video_sentance.timestampEnd}
 
     unless remaining_sentences_ts.empty?
-      remaining_sentences = remaining_sentences_ts.map { |ts| output_file_timestamps[ts]}
-      sentence1 = remaining_sentences.map { |rs| rs[:sentence]}
-      sentence1 = sentence1.join(' ')
+      remaining_sentences = remaining_sentences_ts
+        .map { |ts| {ts => output_file_timestamps[ts]}}
+        .reduce({}, :merge)
 
-      timestamp_start = remaining_sentences_ts.first
-      timestamp_end = output_file_timestamps[remaining_sentences_ts.last][:timestamp_end]
+      # [{:sentence => 'sample', :start_time=> 4.4, :end_time => 5.5}]
+      sentences_arr = group_remaining_sentences sentences: remaining_sentences, limit: 5
 
-      VideoSentence.create(
-        :sentence1 => sentence1, :sentence => nil,
-        :chapterId => last_video_sentance.chapterId,
-        :sectionId => last_video_sentance.sectionId,
-        :videoId => last_video_sentance.videoId,
-        :createdAt => Time.now, :updatedAt => Time.now,
-        :timestampStart => timestamp_start, :timestampEnd => timestamp_end
-      )
+      create_sentences = []
+
+      sentences_arr.each do |sentence|
+        video_sentence = VideoSentence.new(
+          :sentence1 => sentence[:sentence1], :sentence => nil,
+          :chapterId => last_video_sentance.chapterId,
+          :sectionId => last_video_sentance.sectionId,
+          :videoId => last_video_sentance.videoId,
+          :timestampStart => sentence[:start_time], 
+          :timestampEnd => sentence[:end_time],
+          :createdAt => Time.now, :updatedAt => Time.now
+        )
+
+        create_sentences << video_sentence
+      end
+
+      VideoSentence.import create_sentences
+      msg = "#{msg} and #{create_sentences.length} added"
     end
 
-    "Total #{update_video_sentences.length} video sentences updated and #{remaining_sentences_ts.empty? ? 0 : 1} added"
+    "#{msg} successfully."
   end
 
   private
@@ -77,5 +89,38 @@ module VideoSentenceHelper
       end
 
       return sentences
+    end
+
+    def group_remaining_sentences(sentences:, limit:) 
+      remaining_sentences = []
+
+      sentences = sentences.sort
+
+      tmp, iter = [], 1
+
+      sentences.each do |ts_start, sentence|
+        if iter == limit
+          tmp, iter = [], 1
+          remaining_sentences << tmp
+        end
+
+        tmp << sentence.merge({:timestamp_start => ts_start})
+        iter = iter + 1 unless sentence[:type] == 'punctuation'
+      end
+
+      unless tmp.empty?
+        remaining_sentences << tmp
+      end
+
+      # merge sentences in tmp array
+      remaining_sentences = remaining_sentences.map do |sentence_arr|
+        merged_sentence = sentence_arr.map { |rs| rs[:sentence]}.join ' '
+        start_time = sentence_arr.first[:timestamp_start]
+        end_time = sentence_arr.first[:timestamp_end]
+
+        {:sentence1 => merged_sentence, :start_time => start_time, :end_time => end_time}
+      end
+
+      remaining_sentences.uniq { |s| s.values_at(:start_time, :end_time)}
     end
 end
