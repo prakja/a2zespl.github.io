@@ -15,24 +15,41 @@ ActiveAdmin.register VideoSentence do
   #   permitted
   # end
 
-  remove_filter :video, :chapter, :section, :versions, :detail, :questions
+  remove_filter :chapter, :section, :versions, :detail, :questions
   permit_params :sentence
+  filter :videoId, as: :numeric
   preserve_default_filters!
+
+  action_item only: :index do
+    link_to 'Upload Transcription output', action: :upload_transcribe
+  end
+
+  collection_action :upload_transcribe do
+    render 'admin/video_setences/import_transcribe'
+  end
+
+  collection_action :import_transcribe, method: :post do
+    json, videoId =  params[:outputJson] || false, params[:videoId] || false
+
+    if json and videoId
+      msg = parse_transcribe_output videoId: videoId, json: json
+      if msg.nil?
+        flash[:danger] = "Kindly make sure the video Id is valid & file is in json format !"
+      else
+        flash[:notice] = msg
+      end
+    end
+    redirect_to action: :index
+  end
 
   index do
     selectable_column
     id_column
-    column ("Video") {|vs|
-      auto_link(vs.video)
-    }
-    column ("Chapter") {|vs|
-      auto_link(vs.chapter)
-    }
-    column (:sentence) { |vs|
-      best_in_place vs, :sentence, url: [:admin, vs]
-    }
-    column (:timestampStart) {|vs| vs.timestampStart}
-    column (:timestampEnd) {|vs| vs.timestampEnd}
+    column ("Video") { |vs|auto_link(vs.video)}
+    column ("Chapter") {|vs| auto_link(vs.chapter) }
+    column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
+    column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
+    column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
   end
 
   show do
@@ -47,11 +64,11 @@ ActiveAdmin.register VideoSentence do
       row :sentence do |videoSentence|
         best_in_place videoSentence, :sentence, as: :input, url: [:admin, videoSentence]
       end
-      row ("Timestamp start") do |videoSentence|
-        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} </a>")
+      row :sentenceAlt do |videoSentence|
+        best_in_place videoSentence, :sentence1, as: :input, url: [:admin, videoSentence]
       end
-      row ("Timestamp end") do |videoSentence|
-        videoSentence.timestampEnd
+      row ("Timestamp") do |videoSentence|
+        raw("<a target='_blank' href='/admin/videos/#{videoSentence.videoId}/play?start_time=#{videoSentence.timestampStart}'> #{videoSentence.timestampStart} - #{videoSentence.timestampEnd}  </a>")
       end
       row :questions do |videoSentence|
         videoSentence.questions
@@ -60,17 +77,30 @@ ActiveAdmin.register VideoSentence do
   end
 
   controller do
+    include VideoSentenceHelper
 
     def scoped_collection
-      super.hinglish.addDetail
+      regex_data = (params[:q].present? and params[:q]["groupings"].present? and params[:q]["groupings"]["0"].present? and params[:q]["groupings"]["0"]["sentence_matches_regexp"].present?) ? params[:q]["groupings"]["0"]["sentence_matches_regexp"] : nil
+      if regex_data
+        super.hinglish.addDetail(regex_data)
+      else
+        super.hinglish.addDetail
+      end
     end
 
     def find_by_sentence
-      sentence = params.require(:sentence)
-      query = 'to_tsvector(\'english\', "sentence") @@ to_tsquery(\'english\', ?)'
-      video_sentence = VideoSentence.where(query, sentence.gsub(' ', " & ")).order(:videoId, :timestampStart) # chapterId is also injected to the query
+      q = params["q"]
+      chapterId = q["chapterId_eq"].to_i
+      sentence = q["groupings"]["0"]["sentence_contains"].to_s
+
+      query = 'to_tsvector(\'english\', sentence1) @@ to_tsquery(\'english\', ?) OR to_tsvector(\'english\', sentence) @@ to_tsquery(\'english\', ?)'
+      nz_sent = sentence.gsub(' ', " & ")
+
+      video_sentence = VideoSentence.where(query, nz_sent, nz_sent) # chapterId is also injected to the query
+        .order(:videoId, :timestampStart)
+
       video_sentence = video_sentence.uniq { |s| [s.videoId, s.timestampStart]}
-      render json: video_sentence.to_json, status: 200
+      render json: video_sentence.to_json(methods: [:transcribed_sentence]), status: 200
     end
   end
 end

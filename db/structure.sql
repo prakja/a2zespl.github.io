@@ -3762,8 +3762,7 @@ CREATE TABLE public."Note" (
     "externalURL" text,
     "epubURL" text,
     "epubContent" text,
-    lock_version integer DEFAULT 0 NOT NULL,
-    "noteType" character varying(15)
+    lock_version integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6945,7 +6944,8 @@ CREATE TABLE public."VideoSentence" (
     "timestampStart" double precision,
     "timestampEnd" double precision,
     "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
+    "updatedAt" timestamp without time zone NOT NULL,
+    sentence1 text
 );
 
 
@@ -6976,6 +6976,8 @@ CREATE VIEW public."VideoSentenceDetail" AS
     "VideoSentence".sentence,
     lead("VideoSentence".sentence, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "nextSentence",
     lag("VideoSentence".sentence, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "prevSentence",
+    lead("VideoSentence".sentence1, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "nextSentence1",
+    lag("VideoSentence".sentence1, 1) OVER (PARTITION BY "VideoSentence"."videoId" ORDER BY "VideoSentence"."timestampStart") AS "prevSentence1",
     "Video".name AS "videoName"
    FROM public."VideoSentence",
     public."Video"
@@ -7711,7 +7713,8 @@ CREATE TABLE public.versions (
     object text,
     created_at timestamp without time zone,
     whodunnit_type character varying DEFAULT 'admin'::character varying,
-    transaction_id integer
+    transaction_id integer,
+    object_changes text
 );
 
 
@@ -10655,6 +10658,13 @@ CREATE INDEX "DailyUserEvent_eventCount_idx" ON public."DailyUserEvent" USING bt
 
 
 --
+-- Name: DoubtAnswer_content_gin_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DoubtAnswer_content_gin_index" ON public."DoubtAnswer" USING gin (content public.gin_trgm_ops);
+
+
+--
 -- Name: Doubt_answer_doubt_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10666,6 +10676,13 @@ CREATE INDEX "Doubt_answer_doubt_id" ON public."DoubtAnswer" USING btree ("doubt
 --
 
 CREATE INDEX "Doubt_answer_user_id" ON public."DoubtAnswer" USING btree ("userId");
+
+
+--
+-- Name: Doubt_content_gin_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Doubt_content_gin_index" ON public."Doubt" USING gin (content public.gin_trgm_ops);
 
 
 --
@@ -13475,6 +13492,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210531124523'),
 ('20210602041533'),
 ('20210603141321'),
-('20210611075034');
+('20210611075034'),
+('20210624102840');
 
 

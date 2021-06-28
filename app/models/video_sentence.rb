@@ -2,6 +2,8 @@ class VideoSentence < ApplicationRecord
   include SEOHelper
 
   self.table_name = "VideoSentence"
+  self.sequence_name = 'public."VideoSentence_id_seq"'
+
   has_paper_trail
   belongs_to :video, class_name: "Video", foreign_key: "videoId"
   belongs_to :chapter, class_name: "Topic", foreign_key: "chapterId"
@@ -16,8 +18,12 @@ class VideoSentence < ApplicationRecord
     self.createdAt = Time.now
   end
 
-  scope :addDetail, ->() {
-    select('"VideoSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :video)
+  scope :addDetail, ->(regex_data = nil) {
+    if regex_data
+      select('"VideoSentence".*, \'\' as "sentenceContext", "sentence" ~ \'(?i)' + regex_data + '\' as "sentenceMatch", "sentence1" ~ \'(?i)' + regex_data + '\' as "sentence1Match"').preload(:detail, :chapter, :video)
+    else
+      select('"VideoSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :video)
+    end
   }
 
   scope :hinglish, ->() {
@@ -25,7 +31,15 @@ class VideoSentence < ApplicationRecord
   }
 
   def sentenceHtml
-    self[:sentenceHtml].blank? ? self.sentence : self[:sentenceHtml]
+    self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
+  end
+
+  def sentence
+    if self.read_attribute(:sentence).present?
+      return self.read_attribute(:sentence)
+    else
+      return self.sentence1
+    end
   end
 
   def setUpdatedTime
@@ -36,16 +50,40 @@ class VideoSentence < ApplicationRecord
     self.sentence
   end
 
+  def transcribed_sentence
+    if self.sentenceMatch
+      self.sentence
+    elsif self.sentence1Match
+      self.sentence1
+    else
+      self.sentence
+    end
+  end
+
   def prevSentence
-    return self.detail.prevSentence
+    detail = self.detail
+    if self.sentenceMatch
+      detail.prevSentence
+    elsif self.sentence1Match
+      detail.prevSentence1
+    else
+      detail.prevSentence
+    end
   end
 
   def nextSentence
-    return self.detail.nextSentence
+    detail = self.detail
+    if self.sentenceMatch
+      detail.nextSentence
+    elsif self.sentence1Match
+      detail.nextSentence1
+    else
+      detail.nextSentence
+    end
   end
 
   def sentenceContext
-    '[ ' + self.detail.videoName + ' ]' + self.prevSentence.to_s  + " (" + self.sentence + ") " + self.nextSentence.to_s
+    '[ ' + self.detail.videoName + ' ]' + self.prevSentence.to_s  + " (" + self.transcribed_sentence + ") " + self.nextSentence.to_s
   end
 
   def playableUrlWithTimestamp
