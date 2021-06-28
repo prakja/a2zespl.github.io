@@ -59,6 +59,7 @@ module VideoSentenceHelper
           :createdAt => Time.now, :updatedAt => Time.now
         )
 
+        puts sentence[:sentence1]
         create_sentences << video_sentence
       end
 
@@ -91,25 +92,29 @@ module VideoSentenceHelper
       return sentences
     end
 
+    def is_proper_sentence?(sentence)
+      sentence[:type] != 'punctuation' and sentence[:sentence].length > 2
+    end
+
     def group_remaining_sentences(sentences:, limit:) 
       remaining_sentences = []
-
       sentences = sentences.sort
-
-      tmp, iter = [], 1
+      tmp, iter = [], 0
 
       sentences.each do |ts_start, sentence|
         if iter == limit
-          tmp, iter = [], 1
+          tmp, iter = [], 0
           remaining_sentences << tmp
         end
 
         tmp << sentence.merge({:timestamp_start => ts_start})
-        iter = iter + 1 unless sentence[:type] == 'punctuation'
+        if is_proper_sentence? sentence
+          iter = iter + 1 
+        end
       end
 
       unless tmp.empty?
-        remaining_sentences << tmp
+        remaining_sentences[-1] = remaining_sentences.last + tmp
       end
 
       # merge sentences in tmp array
