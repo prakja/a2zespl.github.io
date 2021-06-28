@@ -92,8 +92,8 @@ module VideoSentenceHelper
       return sentences
     end
 
-    def is_proper_sentence?(sentence)
-      sentence[:type] != 'punctuation' and sentence[:sentence].length > 2
+    def is_proper_sentence?(sentence, length: 0)
+      sentence[:type] != 'punctuation' and sentence[:sentence].length > length
     end
 
     def group_remaining_sentences(sentences:, limit:) 
@@ -121,7 +121,7 @@ module VideoSentenceHelper
       remaining_sentences = remaining_sentences.map do |sentence_arr|
         merged_sentence = sentence_arr.map { |rs| rs[:sentence]}.join ' '
         start_time = sentence_arr.first[:timestamp_start]
-        end_time = sentence_arr.first[:timestamp_end]
+        end_time = sentence_arr.last[:timestamp_end]
 
         {:sentence1 => merged_sentence, :start_time => start_time, :end_time => end_time}
       end
