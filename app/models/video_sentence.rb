@@ -20,7 +20,8 @@ class VideoSentence < ApplicationRecord
 
   scope :addDetail, ->(regex_data = nil) {
     if regex_data
-      select('"VideoSentence".*, \'\' as "sentenceContext", "sentence" ~ \'(?i)' + regex_data + '\' as "sentenceMatch", "sentence1" ~ \'(?i)' + regex_data + '\' as "sentence1Match"').preload(:detail, :chapter, :video)
+      sentence_search = regex_data["groupings"]["0"]["sentence_matches_regexp"]
+      select('"VideoSentence".*, \'\' as "sentenceContext", "sentence" ~ \'(?i)' + sentence_search + '\' as "sentenceMatch", "sentence1" ~ \'(?i)' + sentence_search + '\' as "sentence1Match"').preload(:detail, :chapter, :video)
     else
       select('"VideoSentence".*, \'\' as "sentenceContext"').preload(:detail, :chapter, :video)
     end
