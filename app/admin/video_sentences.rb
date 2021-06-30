@@ -16,7 +16,7 @@ ActiveAdmin.register VideoSentence do
   # end
 
   remove_filter :chapter, :section, :versions, :detail, :questions
-  permit_params :sentence
+  permit_params :sentence, :timestampStart, :timestampEnd, :videoId, :chapterId
   filter :videoId, as: :numeric
   preserve_default_filters!
 
@@ -50,6 +50,27 @@ ActiveAdmin.register VideoSentence do
     column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
     column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
+  end
+
+  member_action :mydup do
+    video_sentence = VideoSentence.find(params[:id])
+    @video_sentence = video_sentence.dup
+    render 'active_admin/resource/new.html.arb', layout: false
+  end
+
+  action_item "Clone Video Sentence", :only => :show do
+    link_to("Clone", mydup_admin_video_sentence_path(id: resource.id))
+  end
+
+  form do |f|
+    f.inputs "Video Sentence" do
+      f.input :videoId
+      f.input :chapterId
+      f.input :sentence
+      f.input :timestampStart
+      f.input :timestampEnd
+    end
+    f.actions
   end
 
   show do
