@@ -51,9 +51,9 @@ class VideoSentence < ApplicationRecord
   end
 
   def transcribed_sentence
-    if self.sentenceMatch
+    if self[:sentenceMatch]
       self.sentence
-    elsif self.sentence1Match
+    elsif self[:sentence1Match]
       self.sentence1
     else
       self.sentence
@@ -62,9 +62,9 @@ class VideoSentence < ApplicationRecord
 
   def prevSentence
     detail = self.detail
-    if self.sentenceMatch
+    if self[:sentenceMatch]
       detail.prevSentence
-    elsif self.sentence1Match
+    elsif self[:sentence1Match]
       detail.prevSentence1
     else
       detail.prevSentence
@@ -73,9 +73,9 @@ class VideoSentence < ApplicationRecord
 
   def nextSentence
     detail = self.detail
-    if self.sentenceMatch
+    if self[:sentenceMatch]
       detail.nextSentence
-    elsif self.sentence1Match
+    elsif self[:sentence1Match]
       detail.nextSentence1
     else
       detail.nextSentence
