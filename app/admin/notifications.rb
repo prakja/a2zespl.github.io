@@ -22,9 +22,9 @@ ActiveAdmin.register Notification do
           int_return = Integer(id) rescue false
           if int_return == false
             int_id = Base64.decode64(id)
-            link_to "Answer this doubt", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + int_id.split(':')[1], target: ":_blank"
+            link_to "Answer this doubt", "/doubt_answers/answer?doubt_id=" + int_id.split(':')[1], target: ":_blank"
           else
-            link_to "Answer this doubt", "http://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + id.to_s, target: ":_blank"
+            link_to "Answer this doubt", "/doubt_answers/answer?doubt_id=" + id.to_s, target: ":_blank"
           end
         else
           link_to "", "", target: ":_blank"

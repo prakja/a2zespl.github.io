@@ -20,14 +20,14 @@
   <% @questions.each do |question| %>
     <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
 
-      <a href="<%= "https://admin1.neetprep.com/admin/questions/" + question.id.to_s %>"><%= "https://admin1.neetprep.com/admin/questions/" + question.id.to_s %></a>
+      <a href="<%= "/admin/questions/" + question.id.to_s %>"><%= "/admin/questions/" + question.id.to_s %></a>
       <h3 style="margin-top: -2px"><%= raw(question.question) %></h3>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h4><b><%= raw('Explanation:') %></b></h4>
         <h3 style="margin-top: -2px"><%= raw(question.explanation) %></h3>
       </div>
       <p>Translation</p>
-      <a href="<%= "https://admin1.neetprep.com/admin/question_translations/" + question.translated_id.to_s %>"><%= "https://admin1.neetprep.com/admin/question_translations/" + question.translated_id.to_s %></a>
+      <a href="<%= "/admin/question_translations/" + question.translated_id.to_s %>"><%= "/admin/question_translations/" + question.translated_id.to_s %></a>
       <h3 style="margin-top: -2px"><%= raw(question.translated_question) %></h3>
       <div style="margin-top: 4px; margin-left: 36px; padding: 8px; border: 1px solid #828282">
         <h4><b><%= raw('Explanation:') %></b></h4>
