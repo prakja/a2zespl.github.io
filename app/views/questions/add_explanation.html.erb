@@ -31,7 +31,7 @@
 </style>
 
 <div style="padding: 8px">
-  <p>Question <%= raw('<a href="https://admin1.neetprep.com/admin/questions/'+ @question.id.to_s + '/edit" target="_blank">(Edit Question)</a>') %></p>
+  <p>Question <%= raw('<a href="/admin/questions/'+ @question.id.to_s + '/edit" target="_blank">(Edit Question)</a>') %></p>
   <div style="border: 1px solid black">
     <p><%= raw(@questionBody) %></p>
   </div>
