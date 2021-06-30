@@ -97,7 +97,7 @@ module VideoSentenceHelper
     end
 
     def group_remaining_sentences(sentences:, limit:) 
-      remaining_sentences = []
+      remaining_sentences = [] # [[{:sentence}, {:sentence}...]]
       sentences = sentences.sort
       tmp, iter = [], 0
 
@@ -114,7 +114,11 @@ module VideoSentenceHelper
       end
 
       unless tmp.empty?
-        remaining_sentences[-1] = remaining_sentences.last + tmp
+        if remaining_sentences.empty?
+          remaining_sentences = [tmp]
+        else
+          remaining_sentences[-1] = remaining_sentences.last + tmp
+        end
       end
 
       # merge sentences in tmp array
