@@ -2,6 +2,8 @@ ActiveAdmin.register WorkLog do
   actions :all, :except => [:destroy]
   permit_params :start_time, :end_time, :total_hours, :content, :date
   remove_filter :start_time, :end_time, :total_hours, :content, :versions
+  filter :created_by,  as: :searchable_select, collection: proc {AdminUser.distinct_non_sales_name_id}, label: "Select User"
+  preserve_default_filters!
 
   scope :my_logs, show_count: false do |log|
     log.my_logs(current_admin_user)
