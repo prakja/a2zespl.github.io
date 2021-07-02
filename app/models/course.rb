@@ -4,6 +4,7 @@ class Course < ApplicationRecord
 
   before_create :setCreatedTime, :setUpdatedTime
   before_update :setUpdatedTime
+  after_update :courseOfferSync
   has_paper_trail
   before_save :default_values
   def default_values
@@ -22,6 +23,16 @@ class Course < ApplicationRecord
   def self.course_names
     Course.all
       .pluck(:name,:id).map{|course_name, course_id| [course_name, course_id]}
+  end
+
+  def courseOfferSync
+    course_offer = CourseOffer.where(actualCourseId: self.id).first
+    if course_offer
+      course_offer.discountedFee = self.discountedFee
+      course_offer.fee = self.fee
+      course_offer.description = self.feeDesc
+      course_offer.save!
+    end
   end
 
   scope :public_courses, -> {where(package: 'neet').order('"id" ASC')}
