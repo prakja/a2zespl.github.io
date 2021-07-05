@@ -78,7 +78,7 @@ ActiveAdmin.register Question do
   controller do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
-        super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count').group('"Question"."id"')
+        super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count, (select count(*) from "CustomerIssue" where "CustomerIssue"."questionId" = "Question"."id" and "resolved" = false) as issues_count').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
       else
@@ -161,10 +161,13 @@ ActiveAdmin.register Question do
     if current_admin_user.question_bank_owner? and params[:showNCERT] != 'yes'
       # p params["q"]["questionTopics_chapterId_in"]
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
-        column ("Doubts Count"), sortable: true do |question|
+        column :doubts_count, sortable: true do |question|
           link_to question.doubts_count, admin_doubts_path(q: {questionId_eq: question.id})
         end
         column :bookmarks_count, sortable: true
+        column :issues_count, sortable: true do |question|
+          link_to question.issues_count, admin_customer_issues_path(q: {questionId_eq: question.id})
+        end
       end
       column ("Add explanation") { |question|
         raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
