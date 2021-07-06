@@ -288,11 +288,11 @@ ActiveAdmin.register Question do
   # not working well so commenting out, checked with chapter filter
   #scope :include_deleted, label: "Include Deleted"
 
-  action_item :similar_question, only: :show do
+  action_item :add_explanation, only: :show do
     link_to 'Add Explanation', '/questions/add_explanation/' + resource.id.to_s
   end
 
-  action_item :similar_question, only: :show do
+  action_item :add_hint, only: :show do
     link_to 'Add Hint', '/questions/add_hint/' + resource.id.to_s
   end
 
@@ -302,6 +302,14 @@ ActiveAdmin.register Question do
 
   action_item :question_issues, only: :show do
     link_to 'Customer Issues', '../../admin/customer_issues?scope=all&q[questionId_eq]=' + resource.id.to_s
+  end
+
+  action_item :question_doubts, only: :show do
+    link_to 'Question Doubts', '../../admin/doubts?scope=all&q[questionId_eq]=' + resource.id.to_s
+  end
+
+  action_item :question_doubt_answers, only: :show do
+    link_to 'Question Doubt Answers', '../../admin/doubt_answers?scope=all&q[doubt_questionId_eq]=' + resource.id.to_s
   end
 
   action_item :set_image_link, only: :show do
@@ -321,6 +329,16 @@ ActiveAdmin.register Question do
   member_action :merge_explanation, method: :post do
     resource.update_column('explanation', resource.explanation + '<br>' + Question.find(params[:origId]).explanation) 
     redirect_back fallback_location: collection_path, notice: "merged explanation from main question"
+  end
+
+  member_action :merge_doubt_answer, method: :post do 
+    doubt_answer = DoubtAnswer.find(params[:doubtAnswerId])
+    if resource.explanation.include? "doubt-answer-#{doubt_answer.id}"
+      redirect_back fallback_location: collection_path, flash: {error: "doubt answer already merged"}
+    else
+      resource.update_column('explanation', resource.explanation + '<br />' + "'<p class=\"doubt-answer-copy\" id=\"doubt-answer-#{doubt_answer.id}\">#{doubt_answer.content}</p>'")
+      redirect_back fallback_location: collection_path, notice: "doubt answer merged with question explanation"
+    end
   end
 
   member_action :copy_video_solution, method: :post do
