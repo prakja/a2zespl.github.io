@@ -91,7 +91,10 @@ CREATE TYPE public."enum_Doubt_doubtType" AS ENUM (
     'Question_Not_Related_To_Topic',
     'Spelling_Mistakes',
     'Academic_Doubt',
-    'Website_Not_Working_Properly'
+    'Website_Not_Working_Properly',
+    'new_value',
+    'Wrong_Ncert_Sentence_Marking',
+    'Wrong_Video_Sentence_Marking'
 );
 
 
@@ -286,34 +289,6 @@ $$;
 
 
 --
--- Name: InsertTasks(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public."InsertTasks"() RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE 
-  counter integer;
-  rec RECORD;
-BEGIN 
-  FOR rec IN 
-    SELECT distinct "chapterId" from "ChapterName"
-  LOOP
-    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'Videos&Notes');
-    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'NCERT Reading');
-    INSERT INTO "Task"("chapterId",name) VALUES(rec."chapterId",'Question Practice');
-  END LOOP;
-  FOR counter in 1..20
-  LOOP
-    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Revision Done');
-    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Mock Test Time');
-    INSERT INTO "Task"("mockTestSeq",name) VALUES(counter,'Post Mortem Time');    
-  END LOOP;
-END
-$$;
-
-
---
 -- Name: LongRunningQueries(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -328,6 +303,27 @@ CREATE FUNCTION public."LongRunningQueries"(minutes integer DEFAULT 1) RETURNS T
     state
   FROM pg_stat_activity
   WHERE (now() - pg_stat_activity.query_start) > (minutes || 'minutes')::INTERVAL;
+  END
+  $$;
+
+
+--
+-- Name: MissingNEETExamQuestion(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."MissingNEETExamQuestion"(yr integer) RETURNS TABLE("qId" integer)
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+  RETURN QUERY SELECT "questionId" From (
+      select * From (
+        select "CourseTestQuestion"."questionId" from "CourseTestQuestion", "Test" where "courseId" = 980 and "Test"."id" = "CourseTestQuestion"."testId" and extract(year from "startedAt") = yr
+        except
+        select "CourseQuestion"."questionId" from "CourseQuestion", "Question" where "courseId" = 8 and "CourseQuestion"."questionId" = "Question"."id" and exists (select * from "QuestionDetail" where "QuestionDetail"."questionId" = "Question"."id" and "exam" in ('NEET', 'AIPMT') and "year" = yr)) a
+        except 
+       select "DuplicateQuestion"."questionId2" from "CourseQuestion", "Question", "DuplicateQuestion" where "CourseQuestion"."courseId" = 8 and "questionId" = "Question"."id" and exists (select * from "QuestionDetail" where "QuestionDetail"."questionId" = "Question"."id" and "exam" in ('NEET', 'AIPMT') and "year" = yr) and "DuplicateQuestion"."questionId1" = "Question"."id") b
+       except 
+      select "DuplicateQuestion"."questionId1" as "questionId" from "CourseQuestion", "Question", "DuplicateQuestion" where "CourseQuestion"."courseId" = 8 and "questionId" = "Question"."id" and exists (select * from "QuestionDetail" where "QuestionDetail"."questionId" = "Question"."id" and "exam" in ('NEET', 'AIPMT') and "year" >= yr) and "DuplicateQuestion"."questionId2" = "Question"."id";
   END
   $$;
 
@@ -544,7 +540,7 @@ SELECT count(UserChapter.id) > 0
             "Subject",
             "Topic",
             "SubjectChapter"
-          WHERE "User".id = "UserCourse"."userId" AND "UserCourse"."courseId" = "Subject"."courseId" AND "Subject".id = "SubjectChapter"."subjectId" AND "SubjectChapter"."chapterId" = "Topic".id AND "UserCourse"."expiryAt" >= now() AND "SubjectChapter".deleted = false AND "Topic".free <> true) UserChapter ON UserChapter."chapterId" = "ChapterTest"."chapterId" AND (UserChapter."userId" = "TestAttempt"."userId")
+          WHERE "User".id = "UserCourse"."userId" AND "UserCourse"."courseId" = "Subject"."courseId" AND "Subject".id = "SubjectChapter"."subjectId" AND "SubjectChapter"."chapterId" = "Topic".id AND "UserCourse"."expiryAt" >= now() AND "SubjectChapter".deleted = false) UserChapter ON UserChapter."chapterId" = "ChapterTest"."chapterId" AND (UserChapter."userId" = "TestAttempt"."userId")
   GROUP BY "TestAttempt".id into showAnswer;
 return showAnswer;
 END
@@ -896,76 +892,76 @@ COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left 
 
 
 --
--- Name: ncert_dict; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: -
+-- Name: context_dict; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: -
 --
 
-CREATE TEXT SEARCH DICTIONARY public.ncert_dict (
+CREATE TEXT SEARCH DICTIONARY public.context_dict (
     TEMPLATE = pg_catalog.simple,
     stopwords = 'english' );
 
 
 --
--- Name: ncert_dict; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: -
+-- Name: context_dict; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: -
 --
 
-CREATE TEXT SEARCH CONFIGURATION public.ncert_dict (
+CREATE TEXT SEARCH CONFIGURATION public.context_dict (
     PARSER = pg_catalog."default" );
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR asciiword WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR asciiword WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR word WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR word WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR numword WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR email WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR url WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR host WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR sfloat WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR version WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR hword_numpart WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR hword_part WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword_part WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR hword_asciipart WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword_asciipart WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR numhword WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR asciihword WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR asciihword WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
-    ADD MAPPING FOR hword WITH public.ncert_dict;
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword WITH public.context_dict;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR url_path WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR file WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR "float" WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR "int" WITH simple;
 
-ALTER TEXT SEARCH CONFIGURATION public.ncert_dict
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
     ADD MAPPING FOR uint WITH simple;
 
 
@@ -1413,8 +1409,8 @@ CREATE VIEW public."ChapQuesUserAnswer" AS
 CREATE TABLE public."ChapterFlashCard" (
     id bigint NOT NULL,
     "chapterId" integer NOT NULL,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL,
+    "updatedAt" timestamp without time zone DEFAULT now() NOT NULL,
     "flashCardId" integer NOT NULL,
     "seqId" integer
 );
@@ -1439,6 +1435,20 @@ CREATE TABLE public."ChapterFlashCard20200609" (
 --
 
 CREATE TABLE public."ChapterFlashCard20200924" (
+    id bigint,
+    "chapterId" integer,
+    "createdAt" timestamp without time zone,
+    "updatedAt" timestamp without time zone,
+    "flashCardId" integer,
+    "seqId" integer
+);
+
+
+--
+-- Name: ChapterFlashCard20210617; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterFlashCard20210617" (
     id bigint,
     "chapterId" integer,
     "createdAt" timestamp without time zone,
@@ -1669,6 +1679,19 @@ CREATE TABLE public."ChapterQuestion20210215" (
 
 
 --
+-- Name: ChapterQuestion20210220; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion20210220" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
 -- Name: ChapterQuestion20211801; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1708,6 +1731,19 @@ CREATE TABLE public."ChapterQuestion20211801_2" (
 
 
 --
+-- Name: ChapterQuestion26052021; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion26052021" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
 -- Name: ChapterSubTopicWeightage; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1719,6 +1755,38 @@ SELECT
     NULL::bigint AS "ncertQuestionCount",
     NULL::numeric AS "chapterCount",
     NULL::numeric AS weightage;
+
+
+--
+-- Name: ChapterTask; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterTask" (
+    id integer NOT NULL,
+    "chapterId" integer,
+    "taskId" integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: ChapterTask_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."ChapterTask_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ChapterTask_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."ChapterTask_id_seq" OWNED BY public."ChapterTask".id;
 
 
 --
@@ -2513,34 +2581,13 @@ CREATE VIEW public."CorrectAnswerVideo" AS
 --
 
 CREATE TABLE public."Coupon" (
-    id bigint NOT NULL,
-    code character varying,
-    description character varying,
-    "discountType" character varying NOT NULL,
-    discount double precision NOT NULL,
-    deactivated boolean DEFAULT false,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    id integer,
+    code character varying(255),
+    description text,
+    quantity integer DEFAULT '-1'::integer NOT NULL,
+    discount numeric(10,2) DEFAULT 0 NOT NULL,
+    "discountType" public."enum_Coupon_discountType" DEFAULT 'absolute'::public."enum_Coupon_discountType"
 );
-
-
---
--- Name: Coupon_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."Coupon_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Coupon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."Coupon_id_seq" OWNED BY public."Coupon".id;
 
 
 --
@@ -2579,8 +2626,8 @@ CREATE TABLE public."Course" (
     "seqId" integer,
     "showPayment" boolean DEFAULT false NOT NULL,
     "feeDesc" text,
-    "feeTitle" text,
-    "hideCourseFee" boolean DEFAULT false
+    "hideCourseFee" boolean DEFAULT false,
+    "feeTitle" text
 );
 
 
@@ -2609,7 +2656,7 @@ CREATE VIEW public."CourseChapter" AS
     "SubjectChapter"."subjectId"
    FROM public."Subject",
     public."SubjectChapter"
-  WHERE ("SubjectChapter"."subjectId" = "Subject".id);
+  WHERE (("SubjectChapter"."subjectId" = "Subject".id) AND ("SubjectChapter".deleted = false));
 
 
 --
@@ -2705,7 +2752,7 @@ CREATE TABLE public."CourseOffer" (
     id integer NOT NULL,
     title character varying(255),
     description text,
-    "courseId" integer,
+    "courseId" integer NOT NULL,
     fee numeric(10,2) NOT NULL,
     "discountedFee" numeric(10,2),
     email character varying(255),
@@ -2720,9 +2767,7 @@ CREATE TABLE public."CourseOffer" (
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "actualCourseId" integer,
-    accepted boolean DEFAULT false,
-    "couponId" integer,
-    "isCouponAvailed" boolean DEFAULT false
+    accepted boolean DEFAULT false
 );
 
 
@@ -2845,6 +2890,22 @@ ALTER SEQUENCE public."CourseTestimonial_id_seq" OWNED BY public."CourseTestimon
 
 
 --
+-- Name: CourseVideo; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."CourseVideo" AS
+ SELECT "Subject"."courseId",
+    "Subject".id AS "subjectId",
+    "SubjectChapter"."chapterId",
+    "ChapterVideo"."videoId"
+   FROM public."Subject",
+    public."SubjectChapter",
+    public."ChapterVideo",
+    public."Video"
+  WHERE (("SubjectChapter"."subjectId" = "Subject".id) AND ("SubjectChapter"."chapterId" = "ChapterVideo"."chapterId") AND ("ChapterVideo"."videoId" = "Video".id) AND ("SubjectChapter".deleted = false));
+
+
+--
 -- Name: Course_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2881,7 +2942,8 @@ CREATE TABLE public."CustomerIssue" (
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
     "testId" integer,
-    "flashCardId" integer
+    "flashCardId" integer,
+    "adminUserId" integer
 );
 
 
@@ -3704,8 +3766,7 @@ CREATE TABLE public."NcertChapterQuestion" (
     "chapterId" integer NOT NULL,
     "questionId" integer NOT NULL,
     "questionTitle" character varying(255),
-    "seqNum" integer DEFAULT 0 NOT NULL,
-    "NcertQuestionType" public."enum_Ncert_question_type" DEFAULT 'Exercises'::public."enum_Ncert_question_type" NOT NULL,
+    "ncertQuestionType" public."enum_Ncert_question_type" DEFAULT 'Exercises'::public."enum_Ncert_question_type" NOT NULL,
     "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -3716,7 +3777,6 @@ CREATE TABLE public."NcertChapterQuestion" (
 --
 
 CREATE SEQUENCE public."NcertChapterQuestion_id_seq"
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3922,34 +3982,22 @@ CREATE TABLE public."Note20201026" (
 
 
 --
--- Name: Note20210313; Type: TABLE; Schema: public; Owner: -
+-- Name: Note20210410; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public."Note20210313" (
-    id integer NOT NULL,
+CREATE TABLE public."Note20210410" (
+    id integer,
     name character varying(255),
-    content text
+    content text,
+    description text,
+    "creatorId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "externalURL" text,
+    "epubURL" text,
+    "epubContent" text,
+    lock_version integer
 );
-
-
---
--- Name: Note20210313_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."Note20210313_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Note20210313_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."Note20210313_id_seq" OWNED BY public."Note20210313".id;
 
 
 --
@@ -4217,16 +4265,6 @@ ALTER SEQUENCE public."Post_id_seq" OWNED BY public."Post".id;
 
 
 --
--- Name: ProgressTracker; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."ProgressTracker" (
-    "topicId" integer,
-    "userId" integer
-);
-
-
---
 -- Name: Question20200516; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4346,54 +4384,65 @@ CREATE TABLE public."Question20210211" (
 
 
 --
--- Name: Question20210313; Type: TABLE; Schema: public; Owner: -
+-- Name: Question20210514; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public."Question20210313" (
-    id integer NOT NULL,
+CREATE TABLE public."Question20210514" (
+    id integer,
     question text,
     options json,
     "correctOptionIndex" integer,
     explanation text,
-    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
     "creatorId" integer,
     "canvasQuestionId" integer,
     "canvasQuizId" integer,
-    deleted boolean DEFAULT false NOT NULL,
-    type public."enum_Question_type" DEFAULT 'MCQ-SO'::public."enum_Question_type" NOT NULL,
-    "paidAccess" boolean DEFAULT false,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
     "explanationMp4" text,
     level public."enum_Question_level",
-    jee boolean DEFAULT false,
-    "sequenceId" integer DEFAULT 0,
-    "proofRead" boolean DEFAULT false,
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
     "orignalQuestionId" integer,
     "topicId" integer,
     "subjectId" integer,
-    lock_version integer DEFAULT 0 NOT NULL,
+    lock_version integer,
     ncert boolean
 );
 
 
 --
--- Name: Question20210313_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Question20210607; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public."Question20210313_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Question20210313_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."Question20210313_id_seq" OWNED BY public."Question20210313".id;
+CREATE TABLE public."Question20210607" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
 
 
 --
@@ -4748,10 +4797,10 @@ ALTER SEQUENCE public."Quiz_id_seq" OWNED BY public."Quiz".id;
 --
 
 CREATE VIEW public."ReplaceDuplicateQuestion" AS
- SELECT "DuplicateQuestion"."questionId1" AS "keepQuestionId",
-    min("DuplicateQuestion"."questionId2") AS "removeQuestionId"
+ SELECT min("DuplicateQuestion"."questionId1") AS "keepQuestionId",
+    "DuplicateQuestion"."questionId2" AS "removeQuestionId"
    FROM public."DuplicateQuestion"
-  GROUP BY "DuplicateQuestion"."questionId1";
+  GROUP BY "DuplicateQuestion"."questionId2";
 
 
 --
@@ -5083,6 +5132,19 @@ CREATE TABLE public."SequelizeMeta" (
 
 
 --
+-- Name: SimilarChapterQuestion; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public."SimilarChapterQuestion" AS
+ SELECT q1.id AS "questionId1",
+    q2.id AS "questionId2",
+    q1."topicId" AS "chapterId"
+   FROM public."Question" q1,
+    public."Question" q2
+  WHERE ((q1.id < q2.id) AND (q1."topicId" = q2."topicId") AND (public.similarity(q1.question, q2.question) > (0.8)::double precision) AND (q1.type = q2.type) AND (q1.type = 'MCQ-SO'::public."enum_Question_type"));
+
+
+--
 -- Name: StudentNote; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5100,7 +5162,6 @@ CREATE TABLE public."StudentNote" (
     details jsonb,
     "noteRange" int4range,
     "videoId" integer,
-    "videoTimeStampImgUri" text,
     "studentAttachImgUri" text
 );
 
@@ -5375,11 +5436,21 @@ ALTER SEQUENCE public."Target_id_seq" OWNED BY public."Target".id;
 
 CREATE TABLE public."Task" (
     id integer NOT NULL,
-    "chapterId" integer,
-    name character varying(255),
-    "mockTestSeq" integer,
-    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "parentId" integer,
+    "courseId" integer,
+    "seqId" integer,
+    title text,
+    link text,
+    "desc" text,
+    duration numeric(5,2),
+    year integer,
+    "scheduledAt" timestamp with time zone,
+    "expiredAt" timestamp with time zone,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "liveSeqId2019" integer,
+    "liveSeqId2020" integer,
+    level integer
 );
 
 
@@ -5388,7 +5459,6 @@ CREATE TABLE public."Task" (
 --
 
 CREATE SEQUENCE public."Task_id_seq"
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5523,19 +5593,6 @@ CREATE TABLE public."TestAttemptHistory" (
 
 
 --
--- Name: TestAttemptInCorrectQuestion; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public."TestAttemptInCorrectQuestion" AS
- SELECT (json_each_text.key)::integer AS "questionId",
-    "TestAttempt".id AS "testAttemptId"
-   FROM public."TestAttempt",
-    public."Question",
-    LATERAL json_each_text("TestAttempt"."userAnswers") json_each_text(key, value)
-  WHERE (("Question".id = (json_each_text.key)::integer) AND ((json_each_text.value)::integer <> "Question"."correctOptionIndex"));
-
-
---
 -- Name: TestAttemptIncorrectQuestion; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -5582,19 +5639,6 @@ CREATE SEQUENCE public."TestAttemptPostmartem_id_seq"
 --
 
 ALTER SEQUENCE public."TestAttemptPostmartem_id_seq" OWNED BY public."TestAttemptPostmartem".id;
-
-
---
--- Name: TestAttemptUnAttemptedQuestion; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public."TestAttemptUnAttemptedQuestion" AS
- SELECT "TestQuestion"."questionId",
-    "TestAttempt".id AS "testAttemptId"
-   FROM public."TestQuestion",
-    public."TestAttempt"
-  WHERE (("TestAttempt"."testId" = "TestQuestion"."testId") AND (NOT ("TestQuestion"."questionId" IN ( SELECT ("UserAnswers".key)::integer AS key
-           FROM json_each_text("TestAttempt"."userAnswers") "UserAnswers"(key, value)))));
 
 
 --
@@ -6069,41 +6113,6 @@ CREATE TABLE public."UserCourse177174" (
 
 
 --
--- Name: UserCourseCoupon; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."UserCourseCoupon" (
-    id bigint NOT NULL,
-    "userId" integer,
-    "couponId" integer,
-    "courseId" integer,
-    "courseOfferId" integer,
-    "isPaymentMade" boolean DEFAULT false,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: UserCourseCoupon_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."UserCourseCoupon_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: UserCourseCoupon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."UserCourseCoupon_id_seq" OWNED BY public."UserCourseCoupon".id;
-
-
---
 -- Name: UserCourse_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6380,8 +6389,7 @@ CREATE TABLE public."UserProfile" (
     "allowVideoDownload" boolean DEFAULT false NOT NULL,
     "allowDeprecatedNcert" boolean DEFAULT false NOT NULL,
     "playerQuality" character varying,
-    "playerSpeed" character varying,
-    state character varying
+    "playerSpeed" character varying
 );
 
 
@@ -6588,12 +6596,14 @@ ALTER SEQUENCE public."UserSectionStat_id_seq" OWNED BY public."UserSectionStat"
 
 CREATE TABLE public."UserTask" (
     id integer NOT NULL,
-    "taskId" integer,
     "userId" integer,
-    "mockTestDate" timestamp with time zone,
-    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    hours integer DEFAULT 0
+    "taskId" integer,
+    duration numeric(5,2),
+    "userDuration" numeric(5,2),
+    completed boolean DEFAULT false,
+    started boolean DEFAULT false,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
 );
 
 
@@ -6634,7 +6644,6 @@ CREATE MATERIALIZED VIEW public."UserTaskProgress" AS
 --
 
 CREATE SEQUENCE public."UserTask_id_seq"
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6842,6 +6851,27 @@ CREATE TABLE public."Video20201119" (
 
 
 --
+-- Name: Video20210610; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Video20210610" (
+    id integer,
+    name character varying(255),
+    description text,
+    url text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    thumbnail text,
+    duration double precision,
+    "seqId" integer,
+    "youtubeUrl" character varying(255),
+    language character varying(255),
+    url2 text
+);
+
+
+--
 -- Name: VideoAnnotation; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6946,23 +6976,6 @@ CREATE TABLE public."VideoSentence" (
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL,
     sentence1 text
-);
-
-
---
--- Name: VideoSentence20210428; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."VideoSentence20210428" (
-    id bigint,
-    "videoId" integer,
-    "chapterId" integer,
-    "sectionId" integer,
-    sentence character varying,
-    "timestampStart" double precision,
-    "timestampEnd" double precision,
-    "createdAt" timestamp without time zone,
-    "updatedAt" timestamp without time zone
 );
 
 
@@ -7508,6 +7521,5733 @@ ALTER SEQUENCE public.doubt_chat_doubts_id_seq OWNED BY public.doubt_chat_doubts
 
 
 --
+-- Name: drupal_batch; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_batch (
+    bid bigint NOT NULL,
+    token character varying(64) NOT NULL,
+    "timestamp" integer NOT NULL,
+    batch bytea,
+    CONSTRAINT drupal_batch_bid_check CHECK ((bid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_batch; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_batch IS 'Stores details about batches (processes that run in multiple HTTP requests).';
+
+
+--
+-- Name: COLUMN drupal_batch.bid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_batch.bid IS 'Primary Key: Unique batch ID.';
+
+
+--
+-- Name: COLUMN drupal_batch.token; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_batch.token IS 'A string token generated against the current user''s session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it.';
+
+
+--
+-- Name: COLUMN drupal_batch."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_batch."timestamp" IS 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.';
+
+
+--
+-- Name: COLUMN drupal_batch.batch; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_batch.batch IS 'A serialized array containing the processing data for the batch.';
+
+
+--
+-- Name: drupal_block_content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content (
+    id integer NOT NULL,
+    revision_id bigint,
+    type character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_block_content_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_block_content_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content IS 'The base table for block_content entities.';
+
+
+--
+-- Name: COLUMN drupal_block_content.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content.type IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_block_content__body; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content__body (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    body_value text NOT NULL,
+    body_summary text,
+    body_format character varying(255),
+    CONSTRAINT drupal_block_content__body_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_block_content__body_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_block_content__body_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content__body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content__body IS 'Data storage for block_content field body.';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_block_content__body.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content__body.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: drupal_block_content_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content_field_data (
+    id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    type character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    info character varying(255),
+    changed integer,
+    reusable smallint,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_block_content_field_data_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_block_content_field_data_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content_field_data IS 'The data table for block_content entities.';
+
+
+--
+-- Name: COLUMN drupal_block_content_field_data.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_field_data.type IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_block_content_field_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content_field_revision (
+    id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    info character varying(255),
+    changed integer,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_block_content_field_revision_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_block_content_field_revision_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content_field_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision data table for block_content entities.';
+
+
+--
+-- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_block_content_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_block_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_block_content_id_seq OWNED BY public.drupal_block_content.id;
+
+
+--
+-- Name: drupal_block_content_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content_revision (
+    id bigint NOT NULL,
+    revision_id integer NOT NULL,
+    langcode character varying(12) NOT NULL,
+    revision_user bigint,
+    revision_created integer,
+    revision_log text,
+    revision_default smallint,
+    CONSTRAINT drupal_block_content_revision_id_check1 CHECK ((id >= 0)),
+    CONSTRAINT drupal_block_content_revision_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_block_content_revision_revision_user_check CHECK ((revision_user >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content_revision IS 'The revision table for block_content entities.';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision.revision_user; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision.revision_user IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_block_content_revision__body; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_block_content_revision__body (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    body_value text NOT NULL,
+    body_summary text,
+    body_format character varying(255),
+    CONSTRAINT drupal_block_content_revision__body_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_block_content_revision__body_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_block_content_revision__body_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_block_content_revision__body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_block_content_revision__body IS 'Revision archive storage for block_content field body.';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_block_content_revision__body.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_block_content_revision__body.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: drupal_block_content_revision_revision_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_block_content_revision_revision_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_block_content_revision_revision_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_block_content_revision_revision_id_seq OWNED BY public.drupal_block_content_revision.revision_id;
+
+
+--
+-- Name: drupal_cache_bootstrap; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_bootstrap (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_bootstrap; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_bootstrap IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_bootstrap.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_bootstrap.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_config; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_config (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_config; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_config IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_config.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_config.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_config.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_container; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_container (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_container; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_container IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_container.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_container.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_container.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_data (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_data IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_data.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_data.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_data.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_default; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_default (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_default; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_default IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_default.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_default.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_default.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_discovery; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_discovery (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_discovery; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_discovery IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_discovery.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_discovery.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_dynamic_page_cache; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_dynamic_page_cache (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_dynamic_page_cache; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_dynamic_page_cache IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_dynamic_page_cache.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_dynamic_page_cache.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_entity; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_entity (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_entity; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_entity IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_entity.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_entity.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_menu; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_menu (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_menu; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_menu IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_menu.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_menu.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_page; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_page (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_page; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_page IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_page.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_page.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_page.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_render; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_render (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_render; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_render IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_render.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_render.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_render.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cache_toolbar; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cache_toolbar (
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created numeric(14,3) DEFAULT 0 NOT NULL,
+    serialized smallint DEFAULT 0 NOT NULL,
+    tags text,
+    checksum character varying(255) NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cache_toolbar; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cache_toolbar IS 'Storage for the cache API.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.cid IS 'Primary Key: Unique cache ID.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.data IS 'A collection of data to cache.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.expire IS 'A Unix timestamp indicating when the cache entry should expire, or -1 for never.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.created IS 'A timestamp with millisecond precision indicating when the cache entry was created.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.serialized IS 'A flag to indicate whether content is serialized (1) or not (0).';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.tags IS 'Space-separated list of cache tags for this entry.';
+
+
+--
+-- Name: COLUMN drupal_cache_toolbar.checksum; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cache_toolbar.checksum IS 'The tag invalidation checksum when this entry was saved.';
+
+
+--
+-- Name: drupal_cachetags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_cachetags (
+    tag character varying(255) DEFAULT ''::character varying NOT NULL,
+    invalidations integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_cachetags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_cachetags IS 'Cache table for tracking cache tag invalidations.';
+
+
+--
+-- Name: COLUMN drupal_cachetags.tag; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cachetags.tag IS 'Namespace-prefixed tag string.';
+
+
+--
+-- Name: COLUMN drupal_cachetags.invalidations; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_cachetags.invalidations IS 'Number incremented when the tag is invalidated.';
+
+
+--
+-- Name: drupal_comment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_comment (
+    cid integer NOT NULL,
+    comment_type character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_comment_cid_check CHECK ((cid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_comment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_comment IS 'The base table for comment entities.';
+
+
+--
+-- Name: COLUMN drupal_comment.comment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment.comment_type IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_comment__comment_body; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_comment__comment_body (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    comment_body_value text NOT NULL,
+    comment_body_format character varying(255),
+    CONSTRAINT drupal_comment__comment_body_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_comment__comment_body_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_comment__comment_body_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_comment__comment_body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_comment__comment_body IS 'Data storage for comment field comment_body.';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.revision_id IS 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_comment__comment_body.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment__comment_body.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: drupal_comment_cid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_comment_cid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_comment_cid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_comment_cid_seq OWNED BY public.drupal_comment.cid;
+
+
+--
+-- Name: drupal_comment_entity_statistics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_comment_entity_statistics (
+    entity_id bigint DEFAULT 0 NOT NULL,
+    entity_type character varying(32) DEFAULT 'node'::character varying NOT NULL,
+    field_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    cid integer DEFAULT 0 NOT NULL,
+    last_comment_timestamp integer DEFAULT 0 NOT NULL,
+    last_comment_name character varying(60),
+    last_comment_uid bigint DEFAULT 0 NOT NULL,
+    comment_count bigint DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_comment_entity_statistics_comment_count_check CHECK ((comment_count >= 0)),
+    CONSTRAINT drupal_comment_entity_statistics_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_comment_entity_statistics_last_comment_uid_check CHECK ((last_comment_uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_comment_entity_statistics; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_comment_entity_statistics IS 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.entity_id IS 'The entity_id of the entity for which the statistics are compiled.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.entity_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.entity_type IS 'The entity_type of the entity to which this comment is a reply.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.field_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.field_name IS 'The field_name of the field that was used to add this comment.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.cid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.cid IS 'The drupal_comment.cid of the last comment.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.last_comment_timestamp; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.last_comment_timestamp IS 'The Unix timestamp of the last comment that was posted within this node, from drupal_comment.changed.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.last_comment_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.last_comment_name IS 'The name of the latest author to post a comment on this node, from drupal_comment.name.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.last_comment_uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.last_comment_uid IS 'The user ID of the latest author to post a comment on this node, from drupal_comment.uid.';
+
+
+--
+-- Name: COLUMN drupal_comment_entity_statistics.comment_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_entity_statistics.comment_count IS 'The total number of comments on this entity.';
+
+
+--
+-- Name: drupal_comment_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_comment_field_data (
+    cid bigint NOT NULL,
+    comment_type character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    uid bigint NOT NULL,
+    pid bigint,
+    entity_id bigint,
+    subject character varying(64),
+    name character varying(60),
+    mail character varying(254),
+    homepage character varying(255),
+    hostname character varying(128),
+    created integer NOT NULL,
+    changed integer,
+    thread character varying(255) NOT NULL,
+    entity_type character varying(32) NOT NULL,
+    field_name character varying(32) NOT NULL,
+    default_langcode smallint NOT NULL,
+    CONSTRAINT drupal_comment_field_data_cid_check CHECK ((cid >= 0)),
+    CONSTRAINT drupal_comment_field_data_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_comment_field_data_pid_check CHECK ((pid >= 0)),
+    CONSTRAINT drupal_comment_field_data_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_comment_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_comment_field_data IS 'The data table for comment entities.';
+
+
+--
+-- Name: COLUMN drupal_comment_field_data.comment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_field_data.comment_type IS 'The ID of the target entity.';
+
+
+--
+-- Name: COLUMN drupal_comment_field_data.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_field_data.uid IS 'The ID of the target entity.';
+
+
+--
+-- Name: COLUMN drupal_comment_field_data.pid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_field_data.pid IS 'The ID of the target entity.';
+
+
+--
+-- Name: COLUMN drupal_comment_field_data.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_comment_field_data.entity_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_config; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_config (
+    collection character varying(255) DEFAULT ''::character varying NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea
+);
+
+
+--
+-- Name: TABLE drupal_config; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_config IS 'The base table for configuration data.';
+
+
+--
+-- Name: COLUMN drupal_config.collection; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_config.collection IS 'Primary Key: Config object collection.';
+
+
+--
+-- Name: COLUMN drupal_config.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_config.name IS 'Primary Key: Config object name.';
+
+
+--
+-- Name: COLUMN drupal_config.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_config.data IS 'A serialized configuration object data.';
+
+
+--
+-- Name: drupal_file_managed; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_file_managed (
+    fid integer NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    uid bigint,
+    filename character varying(255),
+    uri character varying(255) NOT NULL,
+    filemime character varying(255),
+    filesize bigint,
+    status smallint NOT NULL,
+    created integer,
+    changed integer NOT NULL,
+    CONSTRAINT drupal_file_managed_fid_check CHECK ((fid >= 0)),
+    CONSTRAINT drupal_file_managed_filesize_check CHECK ((filesize >= 0)),
+    CONSTRAINT drupal_file_managed_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_file_managed; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_file_managed IS 'The base table for file entities.';
+
+
+--
+-- Name: COLUMN drupal_file_managed.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_managed.uid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_file_managed_fid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_file_managed_fid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_file_managed_fid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_file_managed_fid_seq OWNED BY public.drupal_file_managed.fid;
+
+
+--
+-- Name: drupal_file_usage; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_file_usage (
+    fid bigint NOT NULL,
+    module character varying(50) DEFAULT ''::character varying NOT NULL,
+    type character varying(64) DEFAULT ''::character varying NOT NULL,
+    id character varying(64) DEFAULT 0 NOT NULL,
+    count bigint DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_file_usage_count_check CHECK ((count >= 0)),
+    CONSTRAINT drupal_file_usage_fid_check CHECK ((fid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_file_usage; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_file_usage IS 'Track where a file is used.';
+
+
+--
+-- Name: COLUMN drupal_file_usage.fid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_usage.fid IS 'File ID.';
+
+
+--
+-- Name: COLUMN drupal_file_usage.module; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_usage.module IS 'The name of the module that is using the file.';
+
+
+--
+-- Name: COLUMN drupal_file_usage.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_usage.type IS 'The name of the object type in which the file is used.';
+
+
+--
+-- Name: COLUMN drupal_file_usage.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_usage.id IS 'The primary key of the object using the file.';
+
+
+--
+-- Name: COLUMN drupal_file_usage.count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_file_usage.count IS 'The number of times this file is used by this object.';
+
+
+--
+-- Name: drupal_h5p_content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_content (
+    id integer NOT NULL,
+    library_id bigint,
+    parameters text,
+    filtered_parameters text,
+    disabled_features integer,
+    title character varying(255),
+    authors text,
+    source character varying(2083),
+    year_from bigint,
+    year_to bigint,
+    license character varying(32),
+    license_version character varying(10),
+    changes text,
+    license_extras text,
+    author_comments text,
+    default_language character varying(32),
+    CONSTRAINT drupal_h5p_content_disabled_features_check CHECK ((disabled_features >= 0)),
+    CONSTRAINT drupal_h5p_content_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_h5p_content_library_id_check CHECK ((library_id >= 0)),
+    CONSTRAINT drupal_h5p_content_year_from_check CHECK ((year_from >= 0)),
+    CONSTRAINT drupal_h5p_content_year_to_check CHECK ((year_to >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_content; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_content IS 'The base table for h5p_content entities.';
+
+
+--
+-- Name: drupal_h5p_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_h5p_content_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_h5p_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_h5p_content_id_seq OWNED BY public.drupal_h5p_content.id;
+
+
+--
+-- Name: drupal_h5p_content_libraries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_content_libraries (
+    content_id bigint NOT NULL,
+    library_id bigint NOT NULL,
+    dependency_type character varying(31) DEFAULT 'preloaded'::character varying NOT NULL,
+    drop_css integer DEFAULT 0 NOT NULL,
+    weight bigint DEFAULT 999999 NOT NULL,
+    CONSTRAINT drupal_h5p_content_libraries_content_id_check CHECK ((content_id >= 0)),
+    CONSTRAINT drupal_h5p_content_libraries_drop_css_check CHECK ((drop_css >= 0)),
+    CONSTRAINT drupal_h5p_content_libraries_library_id_check CHECK ((library_id >= 0)),
+    CONSTRAINT drupal_h5p_content_libraries_weight_check CHECK ((weight >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_content_libraries; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_content_libraries IS 'Stores information about what h5p uses what libraries.';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_libraries.content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_libraries.content_id IS 'The identifier of an H5P Content entity.';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_libraries.library_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_libraries.library_id IS 'The identifier of an H5P Library used by the H5P Content';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_libraries.dependency_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_libraries.dependency_type IS 'dynamic, preloaded or editor';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_libraries.drop_css; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_libraries.drop_css IS '1 if the preloaded css from the dependency is to be excluded.';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_libraries.weight; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_libraries.weight IS 'Determines the order in which the preloaded libraries will be loaded';
+
+
+--
+-- Name: drupal_h5p_content_user_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_content_user_data (
+    user_id bigint NOT NULL,
+    content_main_id bigint NOT NULL,
+    sub_content_id bigint NOT NULL,
+    data_id character varying(127) NOT NULL,
+    "timestamp" bigint NOT NULL,
+    data text NOT NULL,
+    preloaded integer,
+    delete_on_content_change integer,
+    CONSTRAINT drupal_h5p_content_user_data_content_main_id_check CHECK ((content_main_id >= 0)),
+    CONSTRAINT drupal_h5p_content_user_data_delete_on_content_change_check CHECK ((delete_on_content_change >= 0)),
+    CONSTRAINT drupal_h5p_content_user_data_preloaded_check CHECK ((preloaded >= 0)),
+    CONSTRAINT drupal_h5p_content_user_data_sub_content_id_check CHECK ((sub_content_id >= 0)),
+    CONSTRAINT drupal_h5p_content_user_data_timestamp_check CHECK (("timestamp" >= 0)),
+    CONSTRAINT drupal_h5p_content_user_data_user_id_check CHECK ((user_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_content_user_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_content_user_data IS 'Stores user data about the content';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.user_id IS 'The user identifier';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.content_main_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.content_main_id IS 'The main identifier for the h5p content';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.sub_content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.sub_content_id IS 'The sub identifier for the h5p content';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.data_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.data_id IS 'The data type identifier';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data."timestamp" IS 'What the time is';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.data IS 'Contains the data saved';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.preloaded; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.preloaded IS 'Indicates if the is to be preloaded';
+
+
+--
+-- Name: COLUMN drupal_h5p_content_user_data.delete_on_content_change; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_content_user_data.delete_on_content_change IS 'Indicates if the data is to be deleted when the content gets updated';
+
+
+--
+-- Name: drupal_h5p_counters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_counters (
+    type character varying(63) NOT NULL,
+    library_name character varying(127) NOT NULL,
+    library_version character varying(31) NOT NULL,
+    num bigint NOT NULL,
+    CONSTRAINT drupal_h5p_counters_num_check CHECK ((num >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_counters; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_counters IS 'Global counters for the H5P system';
+
+
+--
+-- Name: COLUMN drupal_h5p_counters.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_counters.type IS 'Type of counter';
+
+
+--
+-- Name: COLUMN drupal_h5p_counters.library_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_counters.library_name IS 'Library';
+
+
+--
+-- Name: COLUMN drupal_h5p_counters.library_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_counters.library_version IS 'Version of library';
+
+
+--
+-- Name: COLUMN drupal_h5p_counters.num; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_counters.num IS 'Number value of counter';
+
+
+--
+-- Name: drupal_h5p_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_events (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    created_at integer NOT NULL,
+    type character varying(63) NOT NULL,
+    sub_type character varying(63) NOT NULL,
+    content_id bigint NOT NULL,
+    content_title character varying(255) NOT NULL,
+    library_name character varying(127) NOT NULL,
+    library_version character varying(31) NOT NULL,
+    CONSTRAINT drupal_h5p_events_content_id_check CHECK ((content_id >= 0)),
+    CONSTRAINT drupal_h5p_events_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_h5p_events_user_id_check CHECK ((user_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_events; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_events IS 'Keeps track of what happens in the H5P system';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.id IS 'The unique event identifier';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.user_id IS 'User id';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.created_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.created_at IS 'Time of the event';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.type IS 'Type of event';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.sub_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.sub_type IS 'Sub type of event';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.content_id IS 'Content id';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.content_title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.content_title IS 'Content title';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.library_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.library_name IS 'Library name';
+
+
+--
+-- Name: COLUMN drupal_h5p_events.library_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_events.library_version IS 'Version of library';
+
+
+--
+-- Name: drupal_h5p_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_h5p_events_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_h5p_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_h5p_events_id_seq OWNED BY public.drupal_h5p_events.id;
+
+
+--
+-- Name: drupal_h5p_libraries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_libraries (
+    library_id integer NOT NULL,
+    machine_name character varying(127) DEFAULT ''::character varying NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
+    major_version bigint NOT NULL,
+    minor_version bigint NOT NULL,
+    patch_version bigint NOT NULL,
+    runnable integer DEFAULT 1 NOT NULL,
+    fullscreen integer DEFAULT 0 NOT NULL,
+    embed_types character varying(255) DEFAULT ''::character varying NOT NULL,
+    preloaded_js text,
+    preloaded_css text,
+    drop_library_css text,
+    semantics text NOT NULL,
+    restricted integer DEFAULT 0 NOT NULL,
+    tutorial_url character varying(1000),
+    has_icon integer DEFAULT 0 NOT NULL,
+    add_to text,
+    metadata_settings text,
+    CONSTRAINT drupal_h5p_libraries_fullscreen_check CHECK ((fullscreen >= 0)),
+    CONSTRAINT drupal_h5p_libraries_has_icon_check CHECK ((has_icon >= 0)),
+    CONSTRAINT drupal_h5p_libraries_library_id_check CHECK ((library_id >= 0)),
+    CONSTRAINT drupal_h5p_libraries_major_version_check CHECK ((major_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_minor_version_check CHECK ((minor_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_patch_version_check CHECK ((patch_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_restricted_check CHECK ((restricted >= 0)),
+    CONSTRAINT drupal_h5p_libraries_runnable_check CHECK ((runnable >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_libraries; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_libraries IS 'Stores information about what h5p uses what libraries.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.library_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.library_id IS 'Primary Key: The id of the library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.machine_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.machine_name IS 'The library machine name';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.title IS 'The human readable name of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.major_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.major_version IS 'The version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.minor_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.minor_version IS 'The minor version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.patch_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.patch_version IS 'The patch version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.runnable; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.runnable IS 'Whether or not this library is executable.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.fullscreen; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.fullscreen IS 'Indicates if this library can be opened in fullscreen.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.embed_types; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.embed_types IS 'The allowed embed types for this library as a comma separated list';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.preloaded_js; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.preloaded_js IS 'The preloaded js for this library as a comma separated list';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.preloaded_css; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.preloaded_css IS 'The preloaded css for this library as a comma separated list';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.drop_library_css; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.drop_library_css IS 'List of libraries that should not have CSS included if this library is used. Comma separated list.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.semantics; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.semantics IS 'The semantics definition in json format';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.restricted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.restricted IS 'Restricts the ability to create new content using this library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.tutorial_url; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.tutorial_url IS 'URL to a tutorial for this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.has_icon; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.has_icon IS 'Whether or not this library contains an icon.svg';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.add_to; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.add_to IS 'Plugin configuration data';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries.metadata_settings; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries.metadata_settings IS 'Metadata settings';
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_libraries_hub_cache (
+    id integer NOT NULL,
+    machine_name character varying(127) DEFAULT ''::character varying NOT NULL,
+    major_version bigint NOT NULL,
+    minor_version bigint NOT NULL,
+    patch_version bigint NOT NULL,
+    h5p_major_version bigint,
+    h5p_minor_version bigint,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
+    summary text NOT NULL,
+    description text NOT NULL,
+    icon character varying(511) DEFAULT ''::character varying NOT NULL,
+    created_at integer NOT NULL,
+    updated_at integer NOT NULL,
+    is_recommended integer DEFAULT 1 NOT NULL,
+    popularity bigint DEFAULT 0 NOT NULL,
+    screenshots text,
+    license text,
+    example character varying(511) DEFAULT ''::character varying NOT NULL,
+    tutorial character varying(511),
+    keywords text,
+    categories text,
+    owner character varying(511),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_h5p_major_version_check CHECK ((h5p_major_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_h5p_minor_version_check CHECK ((h5p_minor_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_is_recommended_check CHECK ((is_recommended >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_major_version_check CHECK ((major_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_minor_version_check CHECK ((minor_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_patch_version_check CHECK ((patch_version >= 0)),
+    CONSTRAINT drupal_h5p_libraries_hub_cache_popularity_check CHECK ((popularity >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_libraries_hub_cache; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_libraries_hub_cache IS 'Stores information about what h5p uses what libraries.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.id IS 'Primary Key: The id of the library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.machine_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.machine_name IS 'The library machine name';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.major_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.major_version IS 'The version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.minor_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.minor_version IS 'The minor version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.patch_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.patch_version IS 'The patch version of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.h5p_major_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.h5p_major_version IS 'The major version required of H5P core.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.h5p_minor_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.h5p_minor_version IS 'The minor version required of H5P core.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.title IS 'The human readable name of this library';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.summary; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.summary IS 'Short description of library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.description IS 'Long description of library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.icon; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.icon IS 'URL to icon.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.created_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.created_at IS 'Time that the library was uploaded.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.updated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.updated_at IS 'Time that the library had its latest update.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.is_recommended; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.is_recommended IS 'Whether the library is recommended by the HUB moderators.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.popularity; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.popularity IS 'How many times the library has been downloaded.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.screenshots; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.screenshots IS 'Screenshot URLs json encoded';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.license; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.license IS 'Library license(s) json encoded';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.example; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.example IS 'URL to example content for this library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.tutorial; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.tutorial IS 'Tutorial URL';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.keywords; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.keywords IS 'Keywords for library json encoded';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.categories; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.categories IS 'Categories for library json encoded';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_hub_cache.owner; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_hub_cache.owner IS 'Owner of the library';
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_h5p_libraries_hub_cache_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_h5p_libraries_hub_cache_id_seq OWNED BY public.drupal_h5p_libraries_hub_cache.id;
+
+
+--
+-- Name: drupal_h5p_libraries_languages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_libraries_languages (
+    library_id bigint NOT NULL,
+    language_code character varying(31) NOT NULL,
+    language_json text NOT NULL,
+    CONSTRAINT drupal_h5p_libraries_languages_library_id_check CHECK ((library_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_libraries_languages; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_libraries_languages IS 'Stores translations for the languages.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_languages.library_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_languages.library_id IS 'Primary Key: The id of a h5p library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_languages.language_code; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_languages.language_code IS 'Primary Key: The language code.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_languages.language_json; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_languages.language_json IS 'The translations defined in json format';
+
+
+--
+-- Name: drupal_h5p_libraries_libraries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_libraries_libraries (
+    library_id bigint NOT NULL,
+    required_library_id bigint NOT NULL,
+    dependency_type character varying(31) NOT NULL,
+    CONSTRAINT drupal_h5p_libraries_libraries_library_id_check CHECK ((library_id >= 0)),
+    CONSTRAINT drupal_h5p_libraries_libraries_required_library_id_check CHECK ((required_library_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_libraries_libraries; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_libraries_libraries IS 'Stores information about library dependencies.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_libraries.library_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_libraries.library_id IS 'Primary Key: The id of a h5p library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_libraries.required_library_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_libraries.required_library_id IS 'Primary Key: The id of a h5p library.';
+
+
+--
+-- Name: COLUMN drupal_h5p_libraries_libraries.dependency_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_libraries_libraries.dependency_type IS 'preloaded, dynamic, or editor';
+
+
+--
+-- Name: drupal_h5p_libraries_library_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_h5p_libraries_library_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_h5p_libraries_library_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_h5p_libraries_library_id_seq OWNED BY public.drupal_h5p_libraries.library_id;
+
+
+--
+-- Name: drupal_h5p_points; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_h5p_points (
+    content_id bigint NOT NULL,
+    uid bigint NOT NULL,
+    started bigint NOT NULL,
+    finished bigint DEFAULT 0 NOT NULL,
+    points bigint,
+    max_points bigint,
+    CONSTRAINT drupal_h5p_points_content_id_check CHECK ((content_id >= 0)),
+    CONSTRAINT drupal_h5p_points_finished_check CHECK ((finished >= 0)),
+    CONSTRAINT drupal_h5p_points_max_points_check CHECK ((max_points >= 0)),
+    CONSTRAINT drupal_h5p_points_points_check CHECK ((points >= 0)),
+    CONSTRAINT drupal_h5p_points_started_check CHECK ((started >= 0)),
+    CONSTRAINT drupal_h5p_points_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_h5p_points; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_h5p_points IS 'Stores user statistics.';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.content_id IS 'Primary Key: The unique identifier for this node.';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.uid IS 'Primary Key: The id for the user answering this H5P.';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.started; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.started IS 'When the user started on the interaction';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.finished; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.finished IS 'When the user submitted the result';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.points; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.points IS 'The users score';
+
+
+--
+-- Name: COLUMN drupal_h5p_points.max_points; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_h5p_points.max_points IS 'The maximum score for this test';
+
+
+--
+-- Name: drupal_history; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_history (
+    uid integer DEFAULT 0 NOT NULL,
+    nid bigint DEFAULT 0 NOT NULL,
+    "timestamp" integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_history_nid_check CHECK ((nid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_history; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_history IS 'A record of which drupal_users have read which drupal_nodes.';
+
+
+--
+-- Name: COLUMN drupal_history.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_history.uid IS 'The drupal_users.uid that read the drupal_node nid.';
+
+
+--
+-- Name: COLUMN drupal_history.nid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_history.nid IS 'The drupal_node.nid that was read.';
+
+
+--
+-- Name: COLUMN drupal_history."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_history."timestamp" IS 'The Unix timestamp at which the read occurred.';
+
+
+--
+-- Name: drupal_key_value; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_key_value (
+    collection character varying(128) DEFAULT ''::character varying NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    value bytea NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_key_value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_key_value IS 'Generic key-value storage table. See the state system for an example.';
+
+
+--
+-- Name: COLUMN drupal_key_value.collection; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value.collection IS 'A named collection of key and value pairs.';
+
+
+--
+-- Name: COLUMN drupal_key_value.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value.name IS 'The key of the key-value pair. As KEY is a SQL reserved keyword, name was chosen instead.';
+
+
+--
+-- Name: COLUMN drupal_key_value.value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value.value IS 'The value.';
+
+
+--
+-- Name: drupal_key_value_expire; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_key_value_expire (
+    collection character varying(128) DEFAULT ''::character varying NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    value bytea NOT NULL,
+    expire integer DEFAULT 2147483647 NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_key_value_expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_key_value_expire IS 'Generic key/value storage table with an expiration.';
+
+
+--
+-- Name: COLUMN drupal_key_value_expire.collection; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value_expire.collection IS 'A named collection of key and value pairs.';
+
+
+--
+-- Name: COLUMN drupal_key_value_expire.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value_expire.name IS 'The key of the key/value pair.';
+
+
+--
+-- Name: COLUMN drupal_key_value_expire.value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value_expire.value IS 'The value of the key/value pair.';
+
+
+--
+-- Name: COLUMN drupal_key_value_expire.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_key_value_expire.expire IS 'The time since Unix epoch in seconds when this item expires. Defaults to the maximum possible time.';
+
+
+--
+-- Name: drupal_menu_link_content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_menu_link_content (
+    id integer NOT NULL,
+    revision_id bigint,
+    bundle character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_menu_link_content_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_menu_link_content_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_menu_link_content; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_menu_link_content IS 'The base table for menu_link_content entities.';
+
+
+--
+-- Name: drupal_menu_link_content_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_menu_link_content_data (
+    id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    bundle character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    enabled smallint NOT NULL,
+    title character varying(255),
+    description character varying(255),
+    menu_name character varying(255),
+    link__uri character varying(2048),
+    link__title character varying(255),
+    link__options bytea,
+    external smallint,
+    rediscover smallint,
+    weight integer,
+    expanded smallint,
+    parent character varying(255),
+    changed integer,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_menu_link_content_data_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_menu_link_content_data_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_menu_link_content_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_menu_link_content_data IS 'The data table for menu_link_content entities.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_data.link__uri; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_data.link__uri IS 'The URI of the link.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_data.link__title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_data.link__title IS 'The link text.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_data.link__options; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_data.link__options IS 'Serialized array of options for the link.';
+
+
+--
+-- Name: drupal_menu_link_content_field_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_menu_link_content_field_revision (
+    id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(12) NOT NULL,
+    enabled smallint NOT NULL,
+    title character varying(255),
+    description character varying(255),
+    link__uri character varying(2048),
+    link__title character varying(255),
+    link__options bytea,
+    external smallint,
+    changed integer,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_menu_link_content_field_revision_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_menu_link_content_field_revision_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_menu_link_content_field_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_menu_link_content_field_revision IS 'The revision data table for menu_link_content entities.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_field_revision.link__uri; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_field_revision.link__uri IS 'The URI of the link.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_field_revision.link__title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_field_revision.link__title IS 'The link text.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_field_revision.link__options; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_field_revision.link__options IS 'Serialized array of options for the link.';
+
+
+--
+-- Name: drupal_menu_link_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_menu_link_content_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_menu_link_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_menu_link_content_id_seq OWNED BY public.drupal_menu_link_content.id;
+
+
+--
+-- Name: drupal_menu_link_content_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_menu_link_content_revision (
+    id bigint NOT NULL,
+    revision_id integer NOT NULL,
+    langcode character varying(12) NOT NULL,
+    revision_user bigint,
+    revision_created integer,
+    revision_log_message text,
+    revision_default smallint,
+    CONSTRAINT drupal_menu_link_content_revision_id_check1 CHECK ((id >= 0)),
+    CONSTRAINT drupal_menu_link_content_revision_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_menu_link_content_revision_revision_user_check CHECK ((revision_user >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_menu_link_content_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_menu_link_content_revision IS 'The revision table for menu_link_content entities.';
+
+
+--
+-- Name: COLUMN drupal_menu_link_content_revision.revision_user; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_link_content_revision.revision_user IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_menu_link_content_revision_revision_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_menu_link_content_revision_revision_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_menu_link_content_revision_revision_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_menu_link_content_revision_revision_id_seq OWNED BY public.drupal_menu_link_content_revision.revision_id;
+
+
+--
+-- Name: drupal_menu_tree; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_menu_tree (
+    menu_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    mlid integer NOT NULL,
+    id character varying(255) NOT NULL,
+    parent character varying(255) DEFAULT ''::character varying NOT NULL,
+    route_name character varying(255),
+    route_param_key character varying(255),
+    route_parameters bytea,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    title bytea,
+    description bytea,
+    class text,
+    options bytea,
+    provider character varying(50) DEFAULT 'system'::character varying NOT NULL,
+    enabled smallint DEFAULT 1 NOT NULL,
+    discovered smallint DEFAULT 0 NOT NULL,
+    expanded smallint DEFAULT 0 NOT NULL,
+    weight integer DEFAULT 0 NOT NULL,
+    metadata bytea,
+    has_children smallint DEFAULT 0 NOT NULL,
+    depth smallint DEFAULT 0 NOT NULL,
+    p1 bigint DEFAULT 0 NOT NULL,
+    p2 bigint DEFAULT 0 NOT NULL,
+    p3 bigint DEFAULT 0 NOT NULL,
+    p4 bigint DEFAULT 0 NOT NULL,
+    p5 bigint DEFAULT 0 NOT NULL,
+    p6 bigint DEFAULT 0 NOT NULL,
+    p7 bigint DEFAULT 0 NOT NULL,
+    p8 bigint DEFAULT 0 NOT NULL,
+    p9 bigint DEFAULT 0 NOT NULL,
+    form_class character varying(255),
+    CONSTRAINT drupal_menu_tree_mlid_check CHECK ((mlid >= 0)),
+    CONSTRAINT drupal_menu_tree_p1_check CHECK ((p1 >= 0)),
+    CONSTRAINT drupal_menu_tree_p2_check CHECK ((p2 >= 0)),
+    CONSTRAINT drupal_menu_tree_p3_check CHECK ((p3 >= 0)),
+    CONSTRAINT drupal_menu_tree_p4_check CHECK ((p4 >= 0)),
+    CONSTRAINT drupal_menu_tree_p5_check CHECK ((p5 >= 0)),
+    CONSTRAINT drupal_menu_tree_p6_check CHECK ((p6 >= 0)),
+    CONSTRAINT drupal_menu_tree_p7_check CHECK ((p7 >= 0)),
+    CONSTRAINT drupal_menu_tree_p8_check CHECK ((p8 >= 0)),
+    CONSTRAINT drupal_menu_tree_p9_check CHECK ((p9 >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_menu_tree; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_menu_tree IS 'Contains the menu tree hierarchy.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.menu_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.menu_name IS 'The menu name. All links with the same menu name (such as ''tools'') are part of the same menu.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.mlid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.mlid IS 'The menu link ID (mlid) is the integer primary key.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.id IS 'Unique machine name: the plugin ID.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.parent; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.parent IS 'The plugin ID for the parent of this link.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.route_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.route_name IS 'The machine name of a defined Symfony Route this menu item represents.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.route_param_key; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.route_param_key IS 'An encoded string of route parameters for loading by route.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.route_parameters; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.route_parameters IS 'Serialized array of route parameters of this menu link.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.url; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.url IS 'The external path this link points to (when not using a route).';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.title IS 'The serialized title for the link. May be a TranslatableMarkup.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.description IS 'The serialized description of this link - used for admin pages and title attribute. May be a TranslatableMarkup.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.class; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.class IS 'The class for this link plugin.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.options; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.options IS 'A serialized array of URL options, such as a query string or HTML attributes.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.provider; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.provider IS 'The name of the module that generated this link.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.enabled; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.enabled IS 'A flag for whether the link should be rendered in menus. (0 = a disabled menu item that may be shown on admin screens, 1 = a normal, visible link)';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.discovered; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.discovered IS 'A flag for whether the link was discovered, so can be purged on rebuild';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.expanded; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.expanded IS 'Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded)';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.weight; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.weight IS 'Link weight among links in the same menu at the same depth.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.metadata; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.metadata IS 'A serialized array of data that may be used by the plugin instance.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.has_children; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.has_children IS 'Flag indicating whether any enabled links have this link as a parent (1 = enabled children exist, 0 = no enabled children).';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.depth; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.depth IS 'The depth relative to the top level. A link with empty parent will have depth == 1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p1; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p1 IS 'The first mlid in the materialized path. If N = depth, then pN must equal the mlid. If depth > 1 then p(N-1) must equal the parent link mlid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p2; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p2 IS 'The second mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p3; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p3 IS 'The third mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p4; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p4 IS 'The fourth mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p5; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p5 IS 'The fifth mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p6; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p6 IS 'The sixth mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p7; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p7 IS 'The seventh mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p8; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p8 IS 'The eighth mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.p9; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.p9 IS 'The ninth mlid in the materialized path. See p1.';
+
+
+--
+-- Name: COLUMN drupal_menu_tree.form_class; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_menu_tree.form_class IS 'meh';
+
+
+--
+-- Name: drupal_menu_tree_mlid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_menu_tree_mlid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_menu_tree_mlid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_menu_tree_mlid_seq OWNED BY public.drupal_menu_tree.mlid;
+
+
+--
+-- Name: drupal_node; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node (
+    nid integer NOT NULL,
+    vid bigint,
+    type character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_node_nid_check CHECK ((nid >= 0)),
+    CONSTRAINT drupal_node_vid_check CHECK ((vid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node IS 'The base table for node entities.';
+
+
+--
+-- Name: COLUMN drupal_node.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node.type IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node__body; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node__body (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    body_value text NOT NULL,
+    body_summary text,
+    body_format character varying(255),
+    CONSTRAINT drupal_node__body_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node__body_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node__body_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node__body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node__body IS 'Data storage for node field body.';
+
+
+--
+-- Name: COLUMN drupal_node__body.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node__body.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node__body.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__body.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__body.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node__body.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__body.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: drupal_node__comment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node__comment (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    comment_status integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_node__comment_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node__comment_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node__comment_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node__comment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node__comment IS 'Data storage for node field comment.';
+
+
+--
+-- Name: COLUMN drupal_node__comment.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node__comment.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node__comment.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__comment.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__comment.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node__comment.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node__comment.comment_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__comment.comment_status IS 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).';
+
+
+--
+-- Name: drupal_node__field_h5p; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node__field_h5p (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_h5p_h5p_content_id bigint,
+    CONSTRAINT drupal_node__field_h5p_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node__field_h5p_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node__field_h5p_field_h5p_h5p_content_id_check CHECK ((field_h5p_h5p_content_id >= 0)),
+    CONSTRAINT drupal_node__field_h5p_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node__field_h5p; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node__field_h5p IS 'Data storage for node field field_h5p.';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node__field_h5p.field_h5p_h5p_content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_h5p.field_h5p_h5p_content_id IS 'Referance to the H5P Content entity ID';
+
+
+--
+-- Name: drupal_node__field_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node__field_image (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_image_target_id bigint NOT NULL,
+    field_image_alt character varying(512),
+    field_image_title character varying(1024),
+    field_image_width bigint,
+    field_image_height bigint,
+    CONSTRAINT drupal_node__field_image_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node__field_image_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node__field_image_field_image_height_check CHECK ((field_image_height >= 0)),
+    CONSTRAINT drupal_node__field_image_field_image_target_id_check CHECK ((field_image_target_id >= 0)),
+    CONSTRAINT drupal_node__field_image_field_image_width_check CHECK ((field_image_width >= 0)),
+    CONSTRAINT drupal_node__field_image_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node__field_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node__field_image IS 'Data storage for node field field_image.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.field_image_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.field_image_target_id IS 'The ID of the file entity.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.field_image_alt; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.field_image_alt IS 'Alternative image text, for the image''s ''alt'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.field_image_title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.field_image_title IS 'Image title text, for the image''s ''title'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.field_image_width; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.field_image_width IS 'The width of the image in pixels.';
+
+
+--
+-- Name: COLUMN drupal_node__field_image.field_image_height; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_image.field_image_height IS 'The height of the image in pixels.';
+
+
+--
+-- Name: drupal_node__field_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node__field_tags (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_tags_target_id bigint NOT NULL,
+    CONSTRAINT drupal_node__field_tags_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node__field_tags_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node__field_tags_field_tags_target_id_check CHECK ((field_tags_target_id >= 0)),
+    CONSTRAINT drupal_node__field_tags_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node__field_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node__field_tags IS 'Data storage for node field field_tags.';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node__field_tags.field_tags_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node__field_tags.field_tags_target_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node_access; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_access (
+    nid bigint DEFAULT 0 NOT NULL,
+    langcode character varying(12) DEFAULT ''::character varying NOT NULL,
+    fallback integer DEFAULT 1 NOT NULL,
+    gid bigint DEFAULT 0 NOT NULL,
+    realm character varying(255) DEFAULT ''::character varying NOT NULL,
+    grant_view integer DEFAULT 0 NOT NULL,
+    grant_update integer DEFAULT 0 NOT NULL,
+    grant_delete integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_node_access_fallback_check CHECK ((fallback >= 0)),
+    CONSTRAINT drupal_node_access_gid_check CHECK ((gid >= 0)),
+    CONSTRAINT drupal_node_access_grant_delete_check CHECK ((grant_delete >= 0)),
+    CONSTRAINT drupal_node_access_grant_update_check CHECK ((grant_update >= 0)),
+    CONSTRAINT drupal_node_access_grant_view_check CHECK ((grant_view >= 0)),
+    CONSTRAINT drupal_node_access_nid_check CHECK ((nid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_access; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_access IS 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.';
+
+
+--
+-- Name: COLUMN drupal_node_access.nid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.nid IS 'The drupal_node.nid this record affects.';
+
+
+--
+-- Name: COLUMN drupal_node_access.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.langcode IS 'The drupal_language.langcode of this node.';
+
+
+--
+-- Name: COLUMN drupal_node_access.fallback; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.fallback IS 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.';
+
+
+--
+-- Name: COLUMN drupal_node_access.gid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.gid IS 'The grant ID a user must possess in the specified realm to gain this row''s privileges on the node.';
+
+
+--
+-- Name: COLUMN drupal_node_access.realm; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.realm IS 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().';
+
+
+--
+-- Name: COLUMN drupal_node_access.grant_view; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.grant_view IS 'Boolean indicating whether a user with the realm/grant pair can view this node.';
+
+
+--
+-- Name: COLUMN drupal_node_access.grant_update; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.grant_update IS 'Boolean indicating whether a user with the realm/grant pair can edit this node.';
+
+
+--
+-- Name: COLUMN drupal_node_access.grant_delete; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_access.grant_delete IS 'Boolean indicating whether a user with the realm/grant pair can delete this node.';
+
+
+--
+-- Name: drupal_node_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_field_data (
+    nid bigint NOT NULL,
+    vid bigint NOT NULL,
+    type character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    uid bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    created integer NOT NULL,
+    changed integer NOT NULL,
+    promote smallint NOT NULL,
+    sticky smallint NOT NULL,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_node_field_data_nid_check CHECK ((nid >= 0)),
+    CONSTRAINT drupal_node_field_data_uid_check CHECK ((uid >= 0)),
+    CONSTRAINT drupal_node_field_data_vid_check CHECK ((vid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_field_data IS 'The data table for node entities.';
+
+
+--
+-- Name: COLUMN drupal_node_field_data.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_field_data.type IS 'The ID of the target entity.';
+
+
+--
+-- Name: COLUMN drupal_node_field_data.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_field_data.uid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node_field_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_field_revision (
+    nid bigint NOT NULL,
+    vid bigint NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    uid bigint NOT NULL,
+    title character varying(255),
+    created integer,
+    changed integer,
+    promote smallint,
+    sticky smallint,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_node_field_revision_nid_check CHECK ((nid >= 0)),
+    CONSTRAINT drupal_node_field_revision_uid_check CHECK ((uid >= 0)),
+    CONSTRAINT drupal_node_field_revision_vid_check CHECK ((vid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_field_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_field_revision IS 'The revision data table for node entities.';
+
+
+--
+-- Name: COLUMN drupal_node_field_revision.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_field_revision.uid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node_nid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_node_nid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_node_nid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_node_nid_seq OWNED BY public.drupal_node.nid;
+
+
+--
+-- Name: drupal_node_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision (
+    nid bigint NOT NULL,
+    vid integer NOT NULL,
+    langcode character varying(12) NOT NULL,
+    revision_uid bigint,
+    revision_timestamp integer,
+    revision_log text,
+    revision_default smallint,
+    CONSTRAINT drupal_node_revision_nid_check CHECK ((nid >= 0)),
+    CONSTRAINT drupal_node_revision_revision_uid_check CHECK ((revision_uid >= 0)),
+    CONSTRAINT drupal_node_revision_vid_check CHECK ((vid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision IS 'The revision table for node entities.';
+
+
+--
+-- Name: COLUMN drupal_node_revision.revision_uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision.revision_uid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node_revision__body; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision__body (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    body_value text NOT NULL,
+    body_summary text,
+    body_format character varying(255),
+    CONSTRAINT drupal_node_revision__body_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node_revision__body_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node_revision__body_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision__body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision__body IS 'Revision archive storage for node field body.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__body.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__body.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: drupal_node_revision__comment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision__comment (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    comment_status integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_node_revision__comment_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node_revision__comment_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node_revision__comment_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision__comment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision__comment IS 'Revision archive storage for node field comment.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node_revision__comment.comment_status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__comment.comment_status IS 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).';
+
+
+--
+-- Name: drupal_node_revision__field_h5p; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision__field_h5p (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_h5p_h5p_content_id bigint,
+    CONSTRAINT drupal_node_revision__field_h5p_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node_revision__field_h5p_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_h5p_field_h5p_h5p_content_id_check CHECK ((field_h5p_h5p_content_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_h5p_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision__field_h5p; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision__field_h5p IS 'Revision archive storage for node field field_h5p.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_h5p.field_h5p_h5p_content_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_h5p.field_h5p_h5p_content_id IS 'Referance to the H5P Content entity ID';
+
+
+--
+-- Name: drupal_node_revision__field_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision__field_image (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_image_target_id bigint NOT NULL,
+    field_image_alt character varying(512),
+    field_image_title character varying(1024),
+    field_image_width bigint,
+    field_image_height bigint,
+    CONSTRAINT drupal_node_revision__field_image_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node_revision__field_image_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_image_field_image_height_check CHECK ((field_image_height >= 0)),
+    CONSTRAINT drupal_node_revision__field_image_field_image_target_id_check CHECK ((field_image_target_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_image_field_image_width_check CHECK ((field_image_width >= 0)),
+    CONSTRAINT drupal_node_revision__field_image_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision__field_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision__field_image IS 'Revision archive storage for node field field_image.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.field_image_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.field_image_target_id IS 'The ID of the file entity.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.field_image_alt; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.field_image_alt IS 'Alternative image text, for the image''s ''alt'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.field_image_title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.field_image_title IS 'Image title text, for the image''s ''title'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.field_image_width; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.field_image_width IS 'The width of the image in pixels.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_image.field_image_height; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_image.field_image_height IS 'The height of the image in pixels.';
+
+
+--
+-- Name: drupal_node_revision__field_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_node_revision__field_tags (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    field_tags_target_id bigint NOT NULL,
+    CONSTRAINT drupal_node_revision__field_tags_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_node_revision__field_tags_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_tags_field_tags_target_id_check CHECK ((field_tags_target_id >= 0)),
+    CONSTRAINT drupal_node_revision__field_tags_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_node_revision__field_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_node_revision__field_tags IS 'Revision archive storage for node field field_tags.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_node_revision__field_tags.field_tags_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_node_revision__field_tags.field_tags_target_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_node_revision_vid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_node_revision_vid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_node_revision_vid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_node_revision_vid_seq OWNED BY public.drupal_node_revision.vid;
+
+
+--
+-- Name: drupal_path_alias; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_path_alias (
+    id integer NOT NULL,
+    revision_id bigint,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    path character varying(255),
+    alias character varying(255),
+    status smallint NOT NULL,
+    CONSTRAINT drupal_path_alias_id_check CHECK ((id >= 0)),
+    CONSTRAINT drupal_path_alias_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_path_alias; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_path_alias IS 'The base table for path_alias entities.';
+
+
+--
+-- Name: drupal_path_alias_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_path_alias_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_path_alias_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_path_alias_id_seq OWNED BY public.drupal_path_alias.id;
+
+
+--
+-- Name: drupal_path_alias_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_path_alias_revision (
+    id bigint NOT NULL,
+    revision_id integer NOT NULL,
+    langcode character varying(12) NOT NULL,
+    path character varying(255),
+    alias character varying(255),
+    status smallint NOT NULL,
+    revision_default smallint,
+    CONSTRAINT drupal_path_alias_revision_id_check1 CHECK ((id >= 0)),
+    CONSTRAINT drupal_path_alias_revision_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_path_alias_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_path_alias_revision IS 'The revision table for path_alias entities.';
+
+
+--
+-- Name: drupal_path_alias_revision_revision_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_path_alias_revision_revision_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_path_alias_revision_revision_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_path_alias_revision_revision_id_seq OWNED BY public.drupal_path_alias_revision.revision_id;
+
+
+--
+-- Name: drupal_queue; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_queue (
+    item_id integer NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    data bytea,
+    expire integer DEFAULT 0 NOT NULL,
+    created integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_queue_item_id_check CHECK ((item_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_queue; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_queue IS 'Stores items in queues.';
+
+
+--
+-- Name: COLUMN drupal_queue.item_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_queue.item_id IS 'Primary Key: Unique item ID.';
+
+
+--
+-- Name: COLUMN drupal_queue.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_queue.name IS 'The queue name.';
+
+
+--
+-- Name: COLUMN drupal_queue.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_queue.data IS 'The arbitrary data for the item.';
+
+
+--
+-- Name: COLUMN drupal_queue.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_queue.expire IS 'Timestamp when the claim lease expires on the item.';
+
+
+--
+-- Name: COLUMN drupal_queue.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_queue.created IS 'Timestamp when the item was created.';
+
+
+--
+-- Name: drupal_queue_item_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_queue_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_queue_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_queue_item_id_seq OWNED BY public.drupal_queue.item_id;
+
+
+--
+-- Name: drupal_router; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_router (
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    path character varying(255) DEFAULT ''::character varying NOT NULL,
+    pattern_outline character varying(255) DEFAULT ''::character varying NOT NULL,
+    fit integer DEFAULT 0 NOT NULL,
+    route bytea,
+    number_parts smallint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_router; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_router IS 'Maps paths to various callbacks (access, page and title)';
+
+
+--
+-- Name: COLUMN drupal_router.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.name IS 'Primary Key: Machine name of this route';
+
+
+--
+-- Name: COLUMN drupal_router.path; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.path IS 'The path for this URI';
+
+
+--
+-- Name: COLUMN drupal_router.pattern_outline; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.pattern_outline IS 'The pattern';
+
+
+--
+-- Name: COLUMN drupal_router.fit; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.fit IS 'A numeric representation of how specific the path is.';
+
+
+--
+-- Name: COLUMN drupal_router.route; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.route IS 'A serialized Route object';
+
+
+--
+-- Name: COLUMN drupal_router.number_parts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_router.number_parts IS 'Number of parts in this router path.';
+
+
+--
+-- Name: drupal_s3fs_file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_s3fs_file (
+    uri character varying(255) DEFAULT ''::character varying NOT NULL,
+    filesize bigint DEFAULT 0 NOT NULL,
+    "timestamp" bigint DEFAULT 0 NOT NULL,
+    dir integer DEFAULT 0 NOT NULL,
+    version character varying(32) DEFAULT ''::character varying,
+    CONSTRAINT drupal_s3fs_file_filesize_check CHECK ((filesize >= 0)),
+    CONSTRAINT drupal_s3fs_file_timestamp_check CHECK (("timestamp" >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_s3fs_file; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_s3fs_file IS 'Stores metadata about files in S3.';
+
+
+--
+-- Name: COLUMN drupal_s3fs_file.uri; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_s3fs_file.uri IS 'The S3 URI of the file.';
+
+
+--
+-- Name: COLUMN drupal_s3fs_file.filesize; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_s3fs_file.filesize IS 'The size of the file in bytes.';
+
+
+--
+-- Name: COLUMN drupal_s3fs_file."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_s3fs_file."timestamp" IS 'UNIX timestamp for when the file was added.';
+
+
+--
+-- Name: COLUMN drupal_s3fs_file.dir; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_s3fs_file.dir IS 'Boolean indicating whether or not this object is a directory.';
+
+
+--
+-- Name: COLUMN drupal_s3fs_file.version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_s3fs_file.version IS 'The S3 VersionId of the object.';
+
+
+--
+-- Name: drupal_search_dataset; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_search_dataset (
+    sid bigint DEFAULT 0 NOT NULL,
+    langcode character varying(12) DEFAULT ''::character varying NOT NULL,
+    type character varying(64) NOT NULL,
+    data text NOT NULL,
+    reindex bigint DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_search_dataset_reindex_check CHECK ((reindex >= 0)),
+    CONSTRAINT drupal_search_dataset_sid_check CHECK ((sid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_search_dataset; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_search_dataset IS 'Stores items that will be searched.';
+
+
+--
+-- Name: COLUMN drupal_search_dataset.sid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_dataset.sid IS 'Search item ID, e.g. node ID for nodes.';
+
+
+--
+-- Name: COLUMN drupal_search_dataset.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_dataset.langcode IS 'The drupal_languages.langcode of the item variant.';
+
+
+--
+-- Name: COLUMN drupal_search_dataset.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_dataset.type IS 'Type of item, e.g. node.';
+
+
+--
+-- Name: COLUMN drupal_search_dataset.data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_dataset.data IS 'List of space-separated words from the item.';
+
+
+--
+-- Name: COLUMN drupal_search_dataset.reindex; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_dataset.reindex IS 'Set to force node reindexing.';
+
+
+--
+-- Name: drupal_search_index; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_search_index (
+    word character varying(50) DEFAULT ''::character varying NOT NULL,
+    sid bigint DEFAULT 0 NOT NULL,
+    langcode character varying(12) DEFAULT ''::character varying NOT NULL,
+    type character varying(64) NOT NULL,
+    score real,
+    CONSTRAINT drupal_search_index_sid_check CHECK ((sid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_search_index; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_search_index IS 'Stores the search index, associating words, items and scores.';
+
+
+--
+-- Name: COLUMN drupal_search_index.word; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_index.word IS 'The drupal_search_total.word that is associated with the search item.';
+
+
+--
+-- Name: COLUMN drupal_search_index.sid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_index.sid IS 'The drupal_search_dataset.sid of the searchable item to which the word belongs.';
+
+
+--
+-- Name: COLUMN drupal_search_index.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_index.langcode IS 'The drupal_languages.langcode of the item variant.';
+
+
+--
+-- Name: COLUMN drupal_search_index.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_index.type IS 'The drupal_search_dataset.type of the searchable item to which the word belongs.';
+
+
+--
+-- Name: COLUMN drupal_search_index.score; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_index.score IS 'The numeric score of the word, higher being more important.';
+
+
+--
+-- Name: drupal_search_total; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_search_total (
+    word character varying(50) DEFAULT ''::character varying NOT NULL,
+    count real
+);
+
+
+--
+-- Name: TABLE drupal_search_total; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_search_total IS 'Stores search totals for words.';
+
+
+--
+-- Name: COLUMN drupal_search_total.word; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_total.word IS 'Primary Key: Unique word in the search index.';
+
+
+--
+-- Name: COLUMN drupal_search_total.count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_search_total.count IS 'The count of the word in the index using Zipf''s law to equalize the probability distribution.';
+
+
+--
+-- Name: drupal_semaphore; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_semaphore (
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
+    expire double precision NOT NULL
+);
+
+
+--
+-- Name: TABLE drupal_semaphore; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_semaphore IS 'Table for holding semaphores, locks, flags, etc. that cannot be stored as state since they must not be cached.';
+
+
+--
+-- Name: COLUMN drupal_semaphore.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_semaphore.name IS 'Primary Key: Unique name.';
+
+
+--
+-- Name: COLUMN drupal_semaphore.value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_semaphore.value IS 'A value for the semaphore.';
+
+
+--
+-- Name: COLUMN drupal_semaphore.expire; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_semaphore.expire IS 'A Unix timestamp with microseconds indicating when the semaphore should expire.';
+
+
+--
+-- Name: drupal_sequences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_sequences (
+    value integer NOT NULL,
+    CONSTRAINT drupal_sequences_value_check CHECK ((value >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_sequences; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_sequences IS 'Stores IDs.';
+
+
+--
+-- Name: COLUMN drupal_sequences.value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sequences.value IS 'The value of the sequence.';
+
+
+--
+-- Name: drupal_sequences_value_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_sequences_value_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_sequences_value_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_sequences_value_seq OWNED BY public.drupal_sequences.value;
+
+
+--
+-- Name: drupal_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_sessions (
+    uid bigint NOT NULL,
+    sid character varying(128) NOT NULL,
+    hostname character varying(128) DEFAULT ''::character varying NOT NULL,
+    "timestamp" integer DEFAULT 0 NOT NULL,
+    session bytea,
+    CONSTRAINT drupal_sessions_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_sessions; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_sessions IS 'Drupal''s session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated.';
+
+
+--
+-- Name: COLUMN drupal_sessions.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sessions.uid IS 'The drupal_users.uid corresponding to a session, or 0 for anonymous user.';
+
+
+--
+-- Name: COLUMN drupal_sessions.sid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sessions.sid IS 'A session ID (hashed). The value is generated by Drupal''s session handlers.';
+
+
+--
+-- Name: COLUMN drupal_sessions.hostname; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sessions.hostname IS 'The IP address that last used this session ID (sid).';
+
+
+--
+-- Name: COLUMN drupal_sessions."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sessions."timestamp" IS 'The Unix timestamp when this session last requested a page. Old records are purged by PHP automatically.';
+
+
+--
+-- Name: COLUMN drupal_sessions.session; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_sessions.session IS 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.';
+
+
+--
+-- Name: drupal_shortcut; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_shortcut (
+    id integer NOT NULL,
+    shortcut_set character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_shortcut_id_check CHECK ((id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_shortcut; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_shortcut IS 'The base table for shortcut entities.';
+
+
+--
+-- Name: COLUMN drupal_shortcut.shortcut_set; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut.shortcut_set IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_shortcut_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_shortcut_field_data (
+    id bigint NOT NULL,
+    shortcut_set character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    title character varying(255),
+    weight integer,
+    link__uri character varying(2048),
+    link__title character varying(255),
+    link__options bytea,
+    default_langcode smallint NOT NULL,
+    CONSTRAINT drupal_shortcut_field_data_id_check CHECK ((id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_shortcut_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_shortcut_field_data IS 'The data table for shortcut entities.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_field_data.shortcut_set; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_field_data.shortcut_set IS 'The ID of the target entity.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_field_data.link__uri; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_field_data.link__uri IS 'The URI of the link.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_field_data.link__title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_field_data.link__title IS 'The link text.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_field_data.link__options; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_field_data.link__options IS 'Serialized array of options for the link.';
+
+
+--
+-- Name: drupal_shortcut_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_shortcut_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_shortcut_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_shortcut_id_seq OWNED BY public.drupal_shortcut.id;
+
+
+--
+-- Name: drupal_shortcut_set_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_shortcut_set_users (
+    uid bigint DEFAULT 0 NOT NULL,
+    set_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    CONSTRAINT drupal_shortcut_set_users_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_shortcut_set_users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_shortcut_set_users IS 'Maps users to shortcut sets.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_set_users.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_set_users.uid IS 'The drupal_users.uid for this set.';
+
+
+--
+-- Name: COLUMN drupal_shortcut_set_users.set_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_shortcut_set_users.set_name IS 'The drupal_shortcut_set.set_name that will be displayed for this user.';
+
+
+--
+-- Name: drupal_taxonomy_index; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_index (
+    nid bigint DEFAULT 0 NOT NULL,
+    tid bigint DEFAULT 0 NOT NULL,
+    status integer DEFAULT 1 NOT NULL,
+    sticky smallint DEFAULT 0,
+    created integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_taxonomy_index_nid_check CHECK ((nid >= 0)),
+    CONSTRAINT drupal_taxonomy_index_tid_check CHECK ((tid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_index; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_index IS 'Maintains denormalized information about node/term relationships.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_index.nid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_index.nid IS 'The drupal_node.nid this record tracks.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_index.tid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_index.tid IS 'The term ID.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_index.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_index.status IS 'Boolean indicating whether the node is published (visible to non-administrators).';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_index.sticky; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_index.sticky IS 'Boolean indicating whether the node is sticky.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_index.created; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_index.created IS 'The Unix timestamp when the node was created.';
+
+
+--
+-- Name: drupal_taxonomy_term__parent; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term__parent (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    parent_target_id bigint NOT NULL,
+    CONSTRAINT drupal_taxonomy_term__parent_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_taxonomy_term__parent_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term__parent_parent_target_id_check CHECK ((parent_target_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term__parent_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term__parent; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term__parent IS 'Data storage for taxonomy_term field parent.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term__parent.parent_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term__parent.parent_target_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_taxonomy_term_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term_data (
+    tid integer NOT NULL,
+    revision_id bigint,
+    vid character varying(32) NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_taxonomy_term_data_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_data_tid_check CHECK ((tid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term_data IS 'The base table for taxonomy_term entities.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_data.vid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_data.vid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_taxonomy_term_data_tid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_taxonomy_term_data_tid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_taxonomy_term_data_tid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_taxonomy_term_data_tid_seq OWNED BY public.drupal_taxonomy_term_data.tid;
+
+
+--
+-- Name: drupal_taxonomy_term_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term_field_data (
+    tid bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    vid character varying(32) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    name character varying(255) NOT NULL,
+    description__value text,
+    description__format character varying(255),
+    weight integer NOT NULL,
+    changed integer,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_taxonomy_term_field_data_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_field_data_tid_check CHECK ((tid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term_field_data IS 'The data table for taxonomy_term entities.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_field_data.vid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_field_data.vid IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_taxonomy_term_field_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term_field_revision (
+    tid bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(12) NOT NULL,
+    status smallint NOT NULL,
+    name character varying(255),
+    description__value text,
+    description__format character varying(255),
+    changed integer,
+    default_langcode smallint NOT NULL,
+    revision_translation_affected smallint,
+    CONSTRAINT drupal_taxonomy_term_field_revision_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_field_revision_tid_check CHECK ((tid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term_field_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term_field_revision IS 'The revision data table for taxonomy_term entities.';
+
+
+--
+-- Name: drupal_taxonomy_term_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term_revision (
+    tid bigint NOT NULL,
+    revision_id integer NOT NULL,
+    langcode character varying(12) NOT NULL,
+    revision_user bigint,
+    revision_created integer,
+    revision_log_message text,
+    revision_default smallint,
+    CONSTRAINT drupal_taxonomy_term_revision_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_revision_revision_user_check CHECK ((revision_user >= 0)),
+    CONSTRAINT drupal_taxonomy_term_revision_tid_check CHECK ((tid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term_revision IS 'The revision table for taxonomy_term entities.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision.revision_user; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision.revision_user IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_taxonomy_term_revision__parent; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_taxonomy_term_revision__parent (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    parent_target_id bigint NOT NULL,
+    CONSTRAINT drupal_taxonomy_term_revision__parent_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_taxonomy_term_revision__parent_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_revision__parent_parent_target_id_check CHECK ((parent_target_id >= 0)),
+    CONSTRAINT drupal_taxonomy_term_revision__parent_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_taxonomy_term_revision__parent; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_taxonomy_term_revision__parent IS 'Revision archive storage for taxonomy_term field parent.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.revision_id IS 'The entity revision id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_taxonomy_term_revision__parent.parent_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_taxonomy_term_revision__parent.parent_target_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_taxonomy_term_revision_revision_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_taxonomy_term_revision_revision_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_taxonomy_term_revision_revision_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_taxonomy_term_revision_revision_id_seq OWNED BY public.drupal_taxonomy_term_revision.revision_id;
+
+
+--
+-- Name: drupal_user__roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_user__roles (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    roles_target_id character varying(255) NOT NULL,
+    CONSTRAINT drupal_user__roles_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_user__roles_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_user__roles_revision_id_check CHECK ((revision_id >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_user__roles; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_user__roles IS 'Data storage for user field roles.';
+
+
+--
+-- Name: COLUMN drupal_user__roles.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_user__roles.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_user__roles.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_user__roles.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.revision_id IS 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id';
+
+
+--
+-- Name: COLUMN drupal_user__roles.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_user__roles.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_user__roles.roles_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__roles.roles_target_id IS 'The ID of the target entity.';
+
+
+--
+-- Name: drupal_user__user_picture; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_user__user_picture (
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
+    deleted smallint DEFAULT 0 NOT NULL,
+    entity_id bigint NOT NULL,
+    revision_id bigint NOT NULL,
+    langcode character varying(32) DEFAULT ''::character varying NOT NULL,
+    delta bigint NOT NULL,
+    user_picture_target_id bigint NOT NULL,
+    user_picture_alt character varying(512),
+    user_picture_title character varying(1024),
+    user_picture_width bigint,
+    user_picture_height bigint,
+    CONSTRAINT drupal_user__user_picture_delta_check CHECK ((delta >= 0)),
+    CONSTRAINT drupal_user__user_picture_entity_id_check CHECK ((entity_id >= 0)),
+    CONSTRAINT drupal_user__user_picture_revision_id_check CHECK ((revision_id >= 0)),
+    CONSTRAINT drupal_user__user_picture_user_picture_height_check CHECK ((user_picture_height >= 0)),
+    CONSTRAINT drupal_user__user_picture_user_picture_target_id_check CHECK ((user_picture_target_id >= 0)),
+    CONSTRAINT drupal_user__user_picture_user_picture_width_check CHECK ((user_picture_width >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_user__user_picture; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_user__user_picture IS 'Data storage for user field user_picture.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.bundle; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.bundle IS 'The field instance bundle to which this row belongs, used when deleting a field instance';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.deleted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.deleted IS 'A boolean indicating whether this data item has been deleted';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.entity_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.entity_id IS 'The entity id this data is attached to';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.revision_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.revision_id IS 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.langcode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.langcode IS 'The language code for this data item.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.delta; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.delta IS 'The sequence number for this data item, used for multi-value fields';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.user_picture_target_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.user_picture_target_id IS 'The ID of the file entity.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.user_picture_alt; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.user_picture_alt IS 'Alternative image text, for the image''s ''alt'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.user_picture_title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.user_picture_title IS 'Image title text, for the image''s ''title'' attribute.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.user_picture_width; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.user_picture_width IS 'The width of the image in pixels.';
+
+
+--
+-- Name: COLUMN drupal_user__user_picture.user_picture_height; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_user__user_picture.user_picture_height IS 'The height of the image in pixels.';
+
+
+--
+-- Name: drupal_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_users (
+    uid bigint NOT NULL,
+    uuid character varying(128) NOT NULL,
+    langcode character varying(12) NOT NULL,
+    CONSTRAINT drupal_users_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_users IS 'The base table for user entities.';
+
+
+--
+-- Name: drupal_users_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_users_data (
+    uid bigint DEFAULT 0 NOT NULL,
+    module character varying(50) DEFAULT ''::character varying NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    value bytea,
+    serialized integer DEFAULT 0,
+    CONSTRAINT drupal_users_data_serialized_check CHECK ((serialized >= 0)),
+    CONSTRAINT drupal_users_data_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_users_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_users_data IS 'Stores module data as key/value pairs per user.';
+
+
+--
+-- Name: COLUMN drupal_users_data.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_users_data.uid IS 'The drupal_users.uid this record affects.';
+
+
+--
+-- Name: COLUMN drupal_users_data.module; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_users_data.module IS 'The name of the module declaring the variable.';
+
+
+--
+-- Name: COLUMN drupal_users_data.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_users_data.name IS 'The identifier of the data.';
+
+
+--
+-- Name: COLUMN drupal_users_data.value; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_users_data.value IS 'The value.';
+
+
+--
+-- Name: COLUMN drupal_users_data.serialized; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_users_data.serialized IS 'Whether value is serialized.';
+
+
+--
+-- Name: drupal_users_field_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_users_field_data (
+    uid bigint NOT NULL,
+    langcode character varying(12) NOT NULL,
+    preferred_langcode character varying(12),
+    preferred_admin_langcode character varying(12),
+    name character varying(60) NOT NULL,
+    pass character varying(255),
+    mail character varying(254),
+    timezone character varying(32),
+    status smallint,
+    created integer NOT NULL,
+    changed integer,
+    access integer NOT NULL,
+    login integer,
+    init character varying(254),
+    default_langcode smallint NOT NULL,
+    CONSTRAINT drupal_users_field_data_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_users_field_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_users_field_data IS 'The data table for user entities.';
+
+
+--
+-- Name: drupal_watchdog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drupal_watchdog (
+    wid integer NOT NULL,
+    uid bigint DEFAULT 0 NOT NULL,
+    type character varying(64) DEFAULT ''::character varying NOT NULL,
+    message text NOT NULL,
+    variables bytea NOT NULL,
+    severity integer DEFAULT 0 NOT NULL,
+    link text,
+    location text NOT NULL,
+    referer text,
+    hostname character varying(128) DEFAULT ''::character varying NOT NULL,
+    "timestamp" integer DEFAULT 0 NOT NULL,
+    CONSTRAINT drupal_watchdog_severity_check CHECK ((severity >= 0)),
+    CONSTRAINT drupal_watchdog_uid_check CHECK ((uid >= 0))
+);
+
+
+--
+-- Name: TABLE drupal_watchdog; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.drupal_watchdog IS 'Table that contains logs of all system events.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.wid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.wid IS 'Primary Key: Unique watchdog event ID.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.uid; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.uid IS 'The drupal_users.uid of the user who triggered the event.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.type IS 'Type of log message, for example "user" or "page not found."';
+
+
+--
+-- Name: COLUMN drupal_watchdog.message; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.message IS 'Text of log message to be passed into the t() function.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.variables; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.variables IS 'Serialized array of variables that match the message string and that is passed into the t() function.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.severity; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.severity IS 'The severity level of the event. ranges from 0 (Emergency) to 7 (Debug)';
+
+
+--
+-- Name: COLUMN drupal_watchdog.link; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.link IS 'Link to view the result of the event.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.location IS 'URL of the origin of the event.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.referer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.referer IS 'URL of referring page.';
+
+
+--
+-- Name: COLUMN drupal_watchdog.hostname; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog.hostname IS 'Hostname of the user who triggered the event.';
+
+
+--
+-- Name: COLUMN drupal_watchdog."timestamp"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.drupal_watchdog."timestamp" IS 'Unix timestamp of when event occurred.';
+
+
+--
+-- Name: drupal_watchdog_wid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drupal_watchdog_wid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drupal_watchdog_wid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drupal_watchdog_wid_seq OWNED BY public.drupal_watchdog.wid;
+
+
+--
 -- Name: history; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7552,8 +13292,8 @@ CREATE TABLE public.student_coaches (
     "studentId" integer NOT NULL,
     "coachId" integer NOT NULL,
     role character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -7713,8 +13453,7 @@ CREATE TABLE public.versions (
     object text,
     created_at timestamp without time zone,
     whodunnit_type character varying DEFAULT 'admin'::character varying,
-    transaction_id integer,
-    object_changes text
+    transaction_id integer
 );
 
 
@@ -7735,40 +13474,6 @@ CREATE SEQUENCE public.versions_id_seq
 --
 
 ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
-
-
---
--- Name: video_time_stamp_imgs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.video_time_stamp_imgs (
-    id bigint NOT NULL,
-    "videoId" integer,
-    "timestamp" character varying NOT NULL,
-    "urlArg" character varying NOT NULL,
-    img character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: video_time_stamp_imgs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.video_time_stamp_imgs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_time_stamp_imgs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.video_time_stamp_imgs_id_seq OWNED BY public.video_time_stamp_imgs.id;
 
 
 --
@@ -7816,8 +13521,8 @@ CREATE TABLE public.work_logs (
     id bigint NOT NULL,
     start_time time without time zone,
     end_time time without time zone,
-    date date,
-    total_hours integer,
+    date date NOT NULL,
+    total_hours integer NOT NULL,
     content text,
     admin_user_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -7922,6 +13627,13 @@ ALTER TABLE ONLY public."ChapterQuestionCopy" ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: ChapterTask id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterTask" ALTER COLUMN id SET DEFAULT nextval('public."ChapterTask_id_seq"'::regclass);
+
+
+--
 -- Name: ChapterTest id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -7975,13 +13687,6 @@ ALTER TABLE ONLY public."CopyAnswer" ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public."CopyTestAttempt" ALTER COLUMN id SET DEFAULT nextval('public."CopyTestAttempt_id_seq"'::regclass);
-
-
---
--- Name: Coupon id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Coupon" ALTER COLUMN id SET DEFAULT nextval('public."Coupon_id_seq"'::regclass);
 
 
 --
@@ -8202,13 +13907,6 @@ ALTER TABLE ONLY public."Note" ALTER COLUMN id SET DEFAULT nextval('public."Note
 
 
 --
--- Name: Note20210313 id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Note20210313" ALTER COLUMN id SET DEFAULT nextval('public."Note20210313_id_seq"'::regclass);
-
-
---
 -- Name: Notification id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8255,13 +13953,6 @@ ALTER TABLE ONLY public."Post" ALTER COLUMN id SET DEFAULT nextval('public."Post
 --
 
 ALTER TABLE ONLY public."Question" ALTER COLUMN id SET DEFAULT nextval('public."Question_id_seq"'::regclass);
-
-
---
--- Name: Question20210313 id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Question20210313" ALTER COLUMN id SET DEFAULT nextval('public."Question20210313_id_seq"'::regclass);
 
 
 --
@@ -8503,13 +14194,6 @@ ALTER TABLE ONLY public."UserCourse" ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: UserCourseCoupon id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."UserCourseCoupon" ALTER COLUMN id SET DEFAULT nextval('public."UserCourseCoupon_id_seq"'::regclass);
-
-
---
 -- Name: UserDpp id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8706,6 +14390,153 @@ ALTER TABLE ONLY public.doubt_chat_doubts ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: drupal_block_content id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content ALTER COLUMN id SET DEFAULT nextval('public.drupal_block_content_id_seq'::regclass);
+
+
+--
+-- Name: drupal_block_content_revision revision_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content_revision ALTER COLUMN revision_id SET DEFAULT nextval('public.drupal_block_content_revision_revision_id_seq'::regclass);
+
+
+--
+-- Name: drupal_comment cid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment ALTER COLUMN cid SET DEFAULT nextval('public.drupal_comment_cid_seq'::regclass);
+
+
+--
+-- Name: drupal_file_managed fid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_file_managed ALTER COLUMN fid SET DEFAULT nextval('public.drupal_file_managed_fid_seq'::regclass);
+
+
+--
+-- Name: drupal_h5p_content id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_content ALTER COLUMN id SET DEFAULT nextval('public.drupal_h5p_content_id_seq'::regclass);
+
+
+--
+-- Name: drupal_h5p_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_events ALTER COLUMN id SET DEFAULT nextval('public.drupal_h5p_events_id_seq'::regclass);
+
+
+--
+-- Name: drupal_h5p_libraries library_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries ALTER COLUMN library_id SET DEFAULT nextval('public.drupal_h5p_libraries_library_id_seq'::regclass);
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries_hub_cache ALTER COLUMN id SET DEFAULT nextval('public.drupal_h5p_libraries_hub_cache_id_seq'::regclass);
+
+
+--
+-- Name: drupal_menu_link_content id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content ALTER COLUMN id SET DEFAULT nextval('public.drupal_menu_link_content_id_seq'::regclass);
+
+
+--
+-- Name: drupal_menu_link_content_revision revision_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content_revision ALTER COLUMN revision_id SET DEFAULT nextval('public.drupal_menu_link_content_revision_revision_id_seq'::regclass);
+
+
+--
+-- Name: drupal_menu_tree mlid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_tree ALTER COLUMN mlid SET DEFAULT nextval('public.drupal_menu_tree_mlid_seq'::regclass);
+
+
+--
+-- Name: drupal_node nid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node ALTER COLUMN nid SET DEFAULT nextval('public.drupal_node_nid_seq'::regclass);
+
+
+--
+-- Name: drupal_node_revision vid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision ALTER COLUMN vid SET DEFAULT nextval('public.drupal_node_revision_vid_seq'::regclass);
+
+
+--
+-- Name: drupal_path_alias id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias ALTER COLUMN id SET DEFAULT nextval('public.drupal_path_alias_id_seq'::regclass);
+
+
+--
+-- Name: drupal_path_alias_revision revision_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias_revision ALTER COLUMN revision_id SET DEFAULT nextval('public.drupal_path_alias_revision_revision_id_seq'::regclass);
+
+
+--
+-- Name: drupal_queue item_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_queue ALTER COLUMN item_id SET DEFAULT nextval('public.drupal_queue_item_id_seq'::regclass);
+
+
+--
+-- Name: drupal_sequences value; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_sequences ALTER COLUMN value SET DEFAULT nextval('public.drupal_sequences_value_seq'::regclass);
+
+
+--
+-- Name: drupal_shortcut id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_shortcut ALTER COLUMN id SET DEFAULT nextval('public.drupal_shortcut_id_seq'::regclass);
+
+
+--
+-- Name: drupal_taxonomy_term_data tid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_data ALTER COLUMN tid SET DEFAULT nextval('public.drupal_taxonomy_term_data_tid_seq'::regclass);
+
+
+--
+-- Name: drupal_taxonomy_term_revision revision_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_revision ALTER COLUMN revision_id SET DEFAULT nextval('public.drupal_taxonomy_term_revision_revision_id_seq'::regclass);
+
+
+--
+-- Name: drupal_watchdog wid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_watchdog ALTER COLUMN wid SET DEFAULT nextval('public.drupal_watchdog_wid_seq'::regclass);
+
+
+--
 -- Name: student_coaches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -8731,13 +14562,6 @@ ALTER TABLE ONLY public.version_associations ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
-
-
---
--- Name: video_time_stamp_imgs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_time_stamp_imgs ALTER COLUMN id SET DEFAULT nextval('public.video_time_stamp_imgs_id_seq'::regclass);
 
 
 --
@@ -9139,58 +14963,40 @@ ALTER TABLE ONLY public."TestAttempt"
 
 
 --
--- Name: Test Test_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Test"
-    ADD CONSTRAINT "Test_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: TestLeaderBoard; Type: MATERIALIZED VIEW; Schema: public; Owner: -
 --
 
 CREATE MATERIALIZED VIEW public."TestLeaderBoard" AS
  SELECT "TestLeaderBoardDataWithRank".id,
     "TestLeaderBoardDataWithRank".rank,
-    "TestLeaderBoardDataWithRank"."stateRank",
     "TestLeaderBoardDataWithRank"."testAttemptNo",
     "TestLeaderBoardDataWithRank"."userId",
     "TestLeaderBoardDataWithRank"."testId",
     "TestLeaderBoardDataWithRank"."testAttemptId",
     "TestLeaderBoardDataWithRank".score,
-    "TestLeaderBoardDataWithRank"."userState",
     "TestLeaderBoardDataWithRank"."correctAnswerCount",
     "TestLeaderBoardDataWithRank"."incorrectAnswerCount"
    FROM ( SELECT "TestLeaderBoardData"."testAttemptId" AS id,
             rank() OVER (PARTITION BY "TestLeaderBoardData"."testId" ORDER BY "TestLeaderBoardData".score DESC) AS rank,
-            rank() OVER (PARTITION BY "TestLeaderBoardData"."testId", "TestLeaderBoardData"."userState" ORDER BY "TestLeaderBoardData".score DESC) AS "stateRank",
             "TestLeaderBoardData"."testAttemptNo",
             "TestLeaderBoardData"."userId",
             "TestLeaderBoardData"."testId",
             "TestLeaderBoardData"."testAttemptId",
             "TestLeaderBoardData".score,
-            "TestLeaderBoardData"."userState",
             "TestLeaderBoardData"."correctAnswerCount",
             "TestLeaderBoardData"."incorrectAnswerCount"
-           FROM ( SELECT "User".id AS "userId",
-                    "Test"."userId" AS "testUserId",
-                    "UserProfile".state AS "userState",
+           FROM ( SELECT "TestAttempt"."userId",
                     "TestAttempt"."testId",
                     "TestAttempt".id AS "testAttemptId",
                     ("TestAttempt".result -> 'correctAnswerCount'::text) AS "correctAnswerCount",
                     ("TestAttempt".result -> 'incorrectAnswerCount'::text) AS "incorrectAnswerCount",
-                    row_number() OVER (PARTITION BY "User".id, "TestAttempt"."testId" ORDER BY "TestAttempt".id) AS "testAttemptNo",
+                    row_number() OVER (PARTITION BY "TestAttempt"."userId", "TestAttempt"."testId" ORDER BY "TestAttempt".id) AS "testAttemptNo",
                     (("TestAttempt".result ->> 'totalMarks'::text))::integer AS score
-                   FROM public."User",
-                    public."UserProfile",
-                    public."TestAttempt",
-                    public."Question",
-                    public."Test",
-                    public."TestQuestion"
-                  WHERE (("TestAttempt"."testId" = "Test".id) AND ("TestQuestion"."questionId" = "Question".id) AND ("TestQuestion"."testId" = "TestAttempt"."testId") AND ("Test"."showAnswer" = true) AND ("User".id = "TestAttempt"."userId") AND ("UserProfile"."userId" = "User".id) AND ("TestAttempt".result IS NOT NULL) AND (("TestAttempt"."createdAt" >= (now() - '3 mons'::interval)) AND ("TestAttempt"."createdAt" <= now())))
-                  GROUP BY "User".id, "UserProfile".state, "TestAttempt"."testId", "Test".id, "TestAttempt".id) "TestLeaderBoardData"
-          WHERE (("TestLeaderBoardData"."testAttemptNo" = 1) AND ("TestLeaderBoardData"."testUserId" IS NULL))) "TestLeaderBoardDataWithRank"
+                   FROM public."TestAttempt",
+                    public."Test"
+                  WHERE (("TestAttempt"."testId" = "Test".id) AND ("Test"."userId" IS NULL) AND ("Test"."showAnswer" = true) AND ("TestAttempt".result IS NOT NULL) AND ("TestAttempt".completed = true))
+                  GROUP BY "TestAttempt"."userId", "TestAttempt"."testId", "TestAttempt".id) "TestLeaderBoardData"
+          WHERE ("TestLeaderBoardData"."testAttemptNo" = 1)) "TestLeaderBoardDataWithRank"
   WITH NO DATA;
 
 
@@ -9299,6 +15105,14 @@ ALTER TABLE ONLY public."ChapterQuestion"
 
 
 --
+-- Name: ChapterTask ChapterTask_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterTask"
+    ADD CONSTRAINT "ChapterTask_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: ChapterTest ChapterTest_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9360,14 +15174,6 @@ ALTER TABLE ONLY public."Constant"
 
 ALTER TABLE ONLY public."CopyTestAttempt"
     ADD CONSTRAINT "CopyTestAttempt_pkey" PRIMARY KEY (id);
-
-
---
--- Name: Coupon Coupon_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Coupon"
-    ADD CONSTRAINT "Coupon_pkey" PRIMARY KEY (id);
 
 
 --
@@ -9651,14 +15457,6 @@ ALTER TABLE ONLY public."NotDuplicateQuestion"
 
 
 --
--- Name: Note20210313 Note20210313_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Note20210313"
-    ADD CONSTRAINT "Note20210313_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: Note Note_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9723,14 +15521,6 @@ ALTER TABLE ONLY public."Post"
 
 
 --
--- Name: Question20210313 Question20210313_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Question20210313"
-    ADD CONSTRAINT "Question20210313_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: QuestionCourse QuestionCourse_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9752,6 +15542,14 @@ ALTER TABLE ONLY public."QuestionDetail"
 
 ALTER TABLE ONLY public."QuestionDetail"
     ADD CONSTRAINT "QuestionDetail_questionId_year_exam_unique" UNIQUE ("questionId", year, exam);
+
+
+--
+-- Name: QuestionDetail QuestionDetail_questionId_year_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionDetail"
+    ADD CONSTRAINT "QuestionDetail_questionId_year_unique" UNIQUE ("questionId", year);
 
 
 --
@@ -10011,6 +15809,14 @@ ALTER TABLE ONLY public."TestQuestion"
 
 
 --
+-- Name: Test Test_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."Test"
+    ADD CONSTRAINT "Test_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: TopicAssetOld TopicAsset_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10040,14 +15846,6 @@ ALTER TABLE ONLY public."UserChapterStat"
 
 ALTER TABLE ONLY public."UserClaim"
     ADD CONSTRAINT "UserClaim_pkey" PRIMARY KEY (id);
-
-
---
--- Name: UserCourseCoupon UserCourseCoupon_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."UserCourseCoupon"
-    ADD CONSTRAINT "UserCourseCoupon_pkey" PRIMARY KEY (id);
 
 
 --
@@ -10371,6 +16169,830 @@ ALTER TABLE ONLY public.doubt_chat_doubts
 
 
 --
+-- Name: drupal_menu_link_content drupal_OUc_bIkVV_RMYM_IZJxmprmJQWZmml85XqJrLpH0luI_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content
+    ADD CONSTRAINT "drupal_OUc_bIkVV_RMYM_IZJxmprmJQWZmml85XqJrLpH0luI_key" UNIQUE (uuid);
+
+
+--
+-- Name: drupal_batch drupal_batch____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_batch
+    ADD CONSTRAINT drupal_batch____pkey PRIMARY KEY (bid);
+
+
+--
+-- Name: drupal_block_content drupal_block_content____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content
+    ADD CONSTRAINT drupal_block_content____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_block_content drupal_block_content__block_content__revision_id__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content
+    ADD CONSTRAINT drupal_block_content__block_content__revision_id__key UNIQUE (revision_id);
+
+
+--
+-- Name: drupal_block_content drupal_block_content__block_content_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content
+    ADD CONSTRAINT drupal_block_content__block_content_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_block_content__body drupal_block_content__body____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content__body
+    ADD CONSTRAINT drupal_block_content__body____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_block_content_field_data drupal_block_content_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content_field_data
+    ADD CONSTRAINT drupal_block_content_field_data____pkey PRIMARY KEY (id, langcode);
+
+
+--
+-- Name: drupal_block_content_field_revision drupal_block_content_field_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content_field_revision
+    ADD CONSTRAINT drupal_block_content_field_revision____pkey PRIMARY KEY (revision_id, langcode);
+
+
+--
+-- Name: drupal_block_content_revision drupal_block_content_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content_revision
+    ADD CONSTRAINT drupal_block_content_revision____pkey PRIMARY KEY (revision_id);
+
+
+--
+-- Name: drupal_block_content_revision__body drupal_block_content_revision__body____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_block_content_revision__body
+    ADD CONSTRAINT drupal_block_content_revision__body____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_taxonomy_term_data drupal_c9dnKBdvoo2vdKAuSj5iFSeChEJtUzcWyY8AwqTRv6Q_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_data
+    ADD CONSTRAINT "drupal_c9dnKBdvoo2vdKAuSj5iFSeChEJtUzcWyY8AwqTRv6Q_key" UNIQUE (uuid);
+
+
+--
+-- Name: drupal_cache_bootstrap drupal_cache_bootstrap____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_bootstrap
+    ADD CONSTRAINT drupal_cache_bootstrap____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_config drupal_cache_config____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_config
+    ADD CONSTRAINT drupal_cache_config____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_container drupal_cache_container____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_container
+    ADD CONSTRAINT drupal_cache_container____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_data drupal_cache_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_data
+    ADD CONSTRAINT drupal_cache_data____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_default drupal_cache_default____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_default
+    ADD CONSTRAINT drupal_cache_default____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_discovery drupal_cache_discovery____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_discovery
+    ADD CONSTRAINT drupal_cache_discovery____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_dynamic_page_cache drupal_cache_dynamic_page_cache____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_dynamic_page_cache
+    ADD CONSTRAINT drupal_cache_dynamic_page_cache____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_entity drupal_cache_entity____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_entity
+    ADD CONSTRAINT drupal_cache_entity____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_menu drupal_cache_menu____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_menu
+    ADD CONSTRAINT drupal_cache_menu____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_page drupal_cache_page____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_page
+    ADD CONSTRAINT drupal_cache_page____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_render drupal_cache_render____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_render
+    ADD CONSTRAINT drupal_cache_render____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cache_toolbar drupal_cache_toolbar____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cache_toolbar
+    ADD CONSTRAINT drupal_cache_toolbar____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_cachetags drupal_cachetags____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_cachetags
+    ADD CONSTRAINT drupal_cachetags____pkey PRIMARY KEY (tag);
+
+
+--
+-- Name: drupal_comment drupal_comment____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment
+    ADD CONSTRAINT drupal_comment____pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: drupal_comment__comment_body drupal_comment__comment_body____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment__comment_body
+    ADD CONSTRAINT drupal_comment__comment_body____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_comment drupal_comment__comment_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment
+    ADD CONSTRAINT drupal_comment__comment_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_comment_entity_statistics drupal_comment_entity_statistics____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment_entity_statistics
+    ADD CONSTRAINT drupal_comment_entity_statistics____pkey PRIMARY KEY (entity_id, entity_type, field_name);
+
+
+--
+-- Name: drupal_comment_field_data drupal_comment_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_comment_field_data
+    ADD CONSTRAINT drupal_comment_field_data____pkey PRIMARY KEY (cid, langcode);
+
+
+--
+-- Name: drupal_config drupal_config____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_config
+    ADD CONSTRAINT drupal_config____pkey PRIMARY KEY (collection, name);
+
+
+--
+-- Name: drupal_file_managed drupal_file_managed____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_file_managed
+    ADD CONSTRAINT drupal_file_managed____pkey PRIMARY KEY (fid);
+
+
+--
+-- Name: drupal_file_managed drupal_file_managed__file_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_file_managed
+    ADD CONSTRAINT drupal_file_managed__file_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_file_usage drupal_file_usage____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_file_usage
+    ADD CONSTRAINT drupal_file_usage____pkey PRIMARY KEY (fid, type, id, module);
+
+
+--
+-- Name: drupal_h5p_content drupal_h5p_content____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_content
+    ADD CONSTRAINT drupal_h5p_content____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_h5p_content_libraries drupal_h5p_content_libraries____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_content_libraries
+    ADD CONSTRAINT drupal_h5p_content_libraries____pkey PRIMARY KEY (content_id, library_id, dependency_type);
+
+
+--
+-- Name: drupal_h5p_content_user_data drupal_h5p_content_user_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_content_user_data
+    ADD CONSTRAINT drupal_h5p_content_user_data____pkey PRIMARY KEY (user_id, content_main_id, sub_content_id, data_id);
+
+
+--
+-- Name: drupal_h5p_counters drupal_h5p_counters____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_counters
+    ADD CONSTRAINT drupal_h5p_counters____pkey PRIMARY KEY (type, library_name, library_version);
+
+
+--
+-- Name: drupal_h5p_events drupal_h5p_events____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_events
+    ADD CONSTRAINT drupal_h5p_events____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_h5p_libraries drupal_h5p_libraries____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries
+    ADD CONSTRAINT drupal_h5p_libraries____pkey PRIMARY KEY (library_id);
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache drupal_h5p_libraries_hub_cache____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries_hub_cache
+    ADD CONSTRAINT drupal_h5p_libraries_hub_cache____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_h5p_libraries_languages drupal_h5p_libraries_languages____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries_languages
+    ADD CONSTRAINT drupal_h5p_libraries_languages____pkey PRIMARY KEY (library_id, language_code);
+
+
+--
+-- Name: drupal_h5p_libraries_libraries drupal_h5p_libraries_libraries____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_libraries_libraries
+    ADD CONSTRAINT drupal_h5p_libraries_libraries____pkey PRIMARY KEY (library_id, required_library_id);
+
+
+--
+-- Name: drupal_h5p_points drupal_h5p_points____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_h5p_points
+    ADD CONSTRAINT drupal_h5p_points____pkey PRIMARY KEY (content_id, uid);
+
+
+--
+-- Name: drupal_history drupal_history____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_history
+    ADD CONSTRAINT drupal_history____pkey PRIMARY KEY (uid, nid);
+
+
+--
+-- Name: drupal_key_value drupal_key_value____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_key_value
+    ADD CONSTRAINT drupal_key_value____pkey PRIMARY KEY (collection, name);
+
+
+--
+-- Name: drupal_key_value_expire drupal_key_value_expire____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_key_value_expire
+    ADD CONSTRAINT drupal_key_value_expire____pkey PRIMARY KEY (collection, name);
+
+
+--
+-- Name: drupal_menu_link_content drupal_menu_link_content____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content
+    ADD CONSTRAINT drupal_menu_link_content____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_menu_link_content drupal_menu_link_content__menu_link_content__revision_id__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content
+    ADD CONSTRAINT drupal_menu_link_content__menu_link_content__revision_id__key UNIQUE (revision_id);
+
+
+--
+-- Name: drupal_menu_link_content_data drupal_menu_link_content_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content_data
+    ADD CONSTRAINT drupal_menu_link_content_data____pkey PRIMARY KEY (id, langcode);
+
+
+--
+-- Name: drupal_menu_link_content_field_revision drupal_menu_link_content_field_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content_field_revision
+    ADD CONSTRAINT drupal_menu_link_content_field_revision____pkey PRIMARY KEY (revision_id, langcode);
+
+
+--
+-- Name: drupal_menu_link_content_revision drupal_menu_link_content_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_link_content_revision
+    ADD CONSTRAINT drupal_menu_link_content_revision____pkey PRIMARY KEY (revision_id);
+
+
+--
+-- Name: drupal_menu_tree drupal_menu_tree____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_tree
+    ADD CONSTRAINT drupal_menu_tree____pkey PRIMARY KEY (mlid);
+
+
+--
+-- Name: drupal_menu_tree drupal_menu_tree__id__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_menu_tree
+    ADD CONSTRAINT drupal_menu_tree__id__key UNIQUE (id);
+
+
+--
+-- Name: drupal_node drupal_node____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node
+    ADD CONSTRAINT drupal_node____pkey PRIMARY KEY (nid);
+
+
+--
+-- Name: drupal_node__body drupal_node__body____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node__body
+    ADD CONSTRAINT drupal_node__body____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node__comment drupal_node__comment____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node__comment
+    ADD CONSTRAINT drupal_node__comment____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node__field_h5p drupal_node__field_h5p____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node__field_h5p
+    ADD CONSTRAINT drupal_node__field_h5p____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node__field_image drupal_node__field_image____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node__field_image
+    ADD CONSTRAINT drupal_node__field_image____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node__field_tags drupal_node__field_tags____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node__field_tags
+    ADD CONSTRAINT drupal_node__field_tags____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node drupal_node__node__vid__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node
+    ADD CONSTRAINT drupal_node__node__vid__key UNIQUE (vid);
+
+
+--
+-- Name: drupal_node drupal_node__node_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node
+    ADD CONSTRAINT drupal_node__node_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_node_access drupal_node_access____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_access
+    ADD CONSTRAINT drupal_node_access____pkey PRIMARY KEY (nid, gid, realm, langcode);
+
+
+--
+-- Name: drupal_node_field_data drupal_node_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_field_data
+    ADD CONSTRAINT drupal_node_field_data____pkey PRIMARY KEY (nid, langcode);
+
+
+--
+-- Name: drupal_node_field_revision drupal_node_field_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_field_revision
+    ADD CONSTRAINT drupal_node_field_revision____pkey PRIMARY KEY (vid, langcode);
+
+
+--
+-- Name: drupal_node_revision drupal_node_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision
+    ADD CONSTRAINT drupal_node_revision____pkey PRIMARY KEY (vid);
+
+
+--
+-- Name: drupal_node_revision__body drupal_node_revision__body____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision__body
+    ADD CONSTRAINT drupal_node_revision__body____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node_revision__comment drupal_node_revision__comment____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision__comment
+    ADD CONSTRAINT drupal_node_revision__comment____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node_revision__field_h5p drupal_node_revision__field_h5p____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision__field_h5p
+    ADD CONSTRAINT drupal_node_revision__field_h5p____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node_revision__field_image drupal_node_revision__field_image____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision__field_image
+    ADD CONSTRAINT drupal_node_revision__field_image____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_node_revision__field_tags drupal_node_revision__field_tags____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_node_revision__field_tags
+    ADD CONSTRAINT drupal_node_revision__field_tags____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_path_alias drupal_path_alias____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias
+    ADD CONSTRAINT drupal_path_alias____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_path_alias drupal_path_alias__path_alias__revision_id__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias
+    ADD CONSTRAINT drupal_path_alias__path_alias__revision_id__key UNIQUE (revision_id);
+
+
+--
+-- Name: drupal_path_alias drupal_path_alias__path_alias_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias
+    ADD CONSTRAINT drupal_path_alias__path_alias_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_path_alias_revision drupal_path_alias_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_path_alias_revision
+    ADD CONSTRAINT drupal_path_alias_revision____pkey PRIMARY KEY (revision_id);
+
+
+--
+-- Name: drupal_queue drupal_queue____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_queue
+    ADD CONSTRAINT drupal_queue____pkey PRIMARY KEY (item_id);
+
+
+--
+-- Name: drupal_router drupal_router____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_router
+    ADD CONSTRAINT drupal_router____pkey PRIMARY KEY (name);
+
+
+--
+-- Name: drupal_s3fs_file drupal_s3fs_file____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_s3fs_file
+    ADD CONSTRAINT drupal_s3fs_file____pkey PRIMARY KEY (uri);
+
+
+--
+-- Name: drupal_search_dataset drupal_search_dataset____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_search_dataset
+    ADD CONSTRAINT drupal_search_dataset____pkey PRIMARY KEY (sid, langcode, type);
+
+
+--
+-- Name: drupal_search_index drupal_search_index____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_search_index
+    ADD CONSTRAINT drupal_search_index____pkey PRIMARY KEY (word, sid, langcode, type);
+
+
+--
+-- Name: drupal_search_total drupal_search_total____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_search_total
+    ADD CONSTRAINT drupal_search_total____pkey PRIMARY KEY (word);
+
+
+--
+-- Name: drupal_semaphore drupal_semaphore____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_semaphore
+    ADD CONSTRAINT drupal_semaphore____pkey PRIMARY KEY (name);
+
+
+--
+-- Name: drupal_sequences drupal_sequences____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_sequences
+    ADD CONSTRAINT drupal_sequences____pkey PRIMARY KEY (value);
+
+
+--
+-- Name: drupal_sessions drupal_sessions____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_sessions
+    ADD CONSTRAINT drupal_sessions____pkey PRIMARY KEY (sid);
+
+
+--
+-- Name: drupal_shortcut drupal_shortcut____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_shortcut
+    ADD CONSTRAINT drupal_shortcut____pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drupal_shortcut drupal_shortcut__shortcut_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_shortcut
+    ADD CONSTRAINT drupal_shortcut__shortcut_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_shortcut_field_data drupal_shortcut_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_shortcut_field_data
+    ADD CONSTRAINT drupal_shortcut_field_data____pkey PRIMARY KEY (id, langcode);
+
+
+--
+-- Name: drupal_shortcut_set_users drupal_shortcut_set_users____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_shortcut_set_users
+    ADD CONSTRAINT drupal_shortcut_set_users____pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: drupal_taxonomy_index drupal_taxonomy_index____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_index
+    ADD CONSTRAINT drupal_taxonomy_index____pkey PRIMARY KEY (nid, tid);
+
+
+--
+-- Name: drupal_taxonomy_term__parent drupal_taxonomy_term__parent____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term__parent
+    ADD CONSTRAINT drupal_taxonomy_term__parent____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_taxonomy_term_data drupal_taxonomy_term_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_data
+    ADD CONSTRAINT drupal_taxonomy_term_data____pkey PRIMARY KEY (tid);
+
+
+--
+-- Name: drupal_taxonomy_term_data drupal_taxonomy_term_data__taxonomy_term__revision_id__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_data
+    ADD CONSTRAINT drupal_taxonomy_term_data__taxonomy_term__revision_id__key UNIQUE (revision_id);
+
+
+--
+-- Name: drupal_taxonomy_term_field_data drupal_taxonomy_term_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_field_data
+    ADD CONSTRAINT drupal_taxonomy_term_field_data____pkey PRIMARY KEY (tid, langcode);
+
+
+--
+-- Name: drupal_taxonomy_term_field_revision drupal_taxonomy_term_field_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_field_revision
+    ADD CONSTRAINT drupal_taxonomy_term_field_revision____pkey PRIMARY KEY (revision_id, langcode);
+
+
+--
+-- Name: drupal_taxonomy_term_revision drupal_taxonomy_term_revision____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_revision
+    ADD CONSTRAINT drupal_taxonomy_term_revision____pkey PRIMARY KEY (revision_id);
+
+
+--
+-- Name: drupal_taxonomy_term_revision__parent drupal_taxonomy_term_revision__parent____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_taxonomy_term_revision__parent
+    ADD CONSTRAINT drupal_taxonomy_term_revision__parent____pkey PRIMARY KEY (entity_id, revision_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_user__roles drupal_user__roles____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_user__roles
+    ADD CONSTRAINT drupal_user__roles____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_user__user_picture drupal_user__user_picture____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_user__user_picture
+    ADD CONSTRAINT drupal_user__user_picture____pkey PRIMARY KEY (entity_id, deleted, delta, langcode);
+
+
+--
+-- Name: drupal_users drupal_users____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_users
+    ADD CONSTRAINT drupal_users____pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: drupal_users drupal_users__user_field__uuid__value__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_users
+    ADD CONSTRAINT drupal_users__user_field__uuid__value__key UNIQUE (uuid);
+
+
+--
+-- Name: drupal_users_data drupal_users_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_users_data
+    ADD CONSTRAINT drupal_users_data____pkey PRIMARY KEY (uid, module, name);
+
+
+--
+-- Name: drupal_users_field_data drupal_users_field_data____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_users_field_data
+    ADD CONSTRAINT drupal_users_field_data____pkey PRIMARY KEY (uid, langcode);
+
+
+--
+-- Name: drupal_users_field_data drupal_users_field_data__user__name__key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_users_field_data
+    ADD CONSTRAINT drupal_users_field_data__user__name__key UNIQUE (name, langcode);
+
+
+--
+-- Name: drupal_watchdog drupal_watchdog____pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drupal_watchdog
+    ADD CONSTRAINT drupal_watchdog____pkey PRIMARY KEY (wid);
+
+
+--
 -- Name: NcertChapterQuestion ncert_chapterquestion_chapter_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10512,14 +17134,6 @@ ALTER TABLE ONLY public.version_associations
 
 ALTER TABLE ONLY public.versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
-
-
---
--- Name: video_time_stamp_imgs video_time_stamp_imgs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_time_stamp_imgs
-    ADD CONSTRAINT video_time_stamp_imgs_pkey PRIMARY KEY (id);
 
 
 --
@@ -11022,13 +17636,6 @@ CREATE INDEX "QuestionDetail_questionId" ON public."QuestionDetail" USING btree 
 
 
 --
--- Name: QuestionDetail_questionId_year_exam_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX "QuestionDetail_questionId_year_exam_idx" ON public."QuestionDetail" USING btree ("questionId", year, exam);
-
-
---
 -- Name: QuestionExplanation_courseId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11085,13 +17692,6 @@ CREATE INDEX "QuestionVideoSentence_questionId_idx" ON public."QuestionVideoSent
 
 
 --
--- Name: QuestionVideoSentence_questionId_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX "QuestionVideoSentence_questionId_idx1" ON public."QuestionVideoSentence" USING btree ("questionId");
-
-
---
 -- Name: QuestionVideoSentence_videoSentenceId_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11117,13 +17717,6 @@ CREATE INDEX "Question_paidAccess_idx" ON public."Question" USING btree ("paidAc
 --
 
 CREATE INDEX "Question_topicId_idx" ON public."Question" USING btree ("topicId");
-
-
---
--- Name: Question_topicId_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX "Question_topicId_idx1" ON public."Question" USING btree ("topicId");
 
 
 --
@@ -11323,6 +17916,55 @@ CREATE INDEX "Target_userId_status_idx" ON public."Target" USING btree ("userId"
 
 
 --
+-- Name: TestAttemptPostmartem_questionId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "TestAttemptPostmartem_questionId_idx" ON public."TestAttemptPostmartem" USING btree ("questionId");
+
+
+--
+-- Name: TestAttemptPostmartem_testAttemptId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "TestAttemptPostmartem_testAttemptId_idx" ON public."TestAttemptPostmartem" USING btree ("testAttemptId");
+
+
+--
+-- Name: TestAttemptPostmartem_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "TestAttemptPostmartem_userId_idx" ON public."TestAttemptPostmartem" USING btree ("userId");
+
+
+--
+-- Name: TestQuestion_testId_questionId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "TestQuestion_testId_questionId_idx" ON public."TestQuestion" USING btree ("testId", "questionId");
+
+
+--
+-- Name: Test_exam_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Test_exam_idx" ON public."Test" USING btree (exam);
+
+
+--
+-- Name: Test_expiryAt_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Test_expiryAt_idx" ON public."Test" USING btree ("expiryAt");
+
+
+--
+-- Name: Test_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Test_userId_idx" ON public."Test" USING btree ("userId");
+
+
+--
 -- Name: Topic_free_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11341,6 +17983,13 @@ CREATE INDEX "Topic_subjectId" ON public."Topic" USING btree ("subjectId");
 --
 
 CREATE INDEX "UserCourse_courseId" ON public."UserCourse" USING btree ("courseId");
+
+
+--
+-- Name: UserCourse_courseId_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "UserCourse_courseId_userId_idx" ON public."UserCourse" USING btree ("courseId", "userId");
 
 
 --
@@ -11397,6 +18046,13 @@ CREATE UNIQUE INDEX "UserFlashCard_userId_flashCardId_idx" ON public."UserFlashC
 --
 
 CREATE INDEX "UserFlashCard_userId_idx" ON public."UserFlashCard" USING btree ("userId");
+
+
+--
+-- Name: VideoSentence_chapterId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "VideoSentence_chapterId_idx" ON public."VideoSentence" USING btree ("chapterId");
 
 
 --
@@ -11488,6 +18144,20 @@ CREATE INDEX chapter_question_chapter_id ON public."ChapterQuestion" USING btree
 --
 
 CREATE INDEX chapter_question_question_id ON public."ChapterQuestion" USING btree ("questionId");
+
+
+--
+-- Name: chapter_task_chapter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX chapter_task_chapter_id ON public."ChapterTask" USING btree ("chapterId");
+
+
+--
+-- Name: chapter_task_task_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX chapter_task_task_id ON public."ChapterTask" USING btree ("taskId");
 
 
 --
@@ -11600,6 +18270,1231 @@ CREATE INDEX "difficultyLevel10" ON public."QuestionAnalytics25" USING btree ("d
 --
 
 CREATE INDEX "doubt_admins_doubtId_idx" ON public.doubt_admins USING btree ("doubtId");
+
+
+--
+-- Name: drupal_2WkW2rDHKTAuZ0sp2gS_oVSlKUSTjzLA_o5lQ2yjSxk_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_2WkW2rDHKTAuZ0sp2gS_oVSlKUSTjzLA_o5lQ2yjSxk_idx" ON public.drupal_taxonomy_term_data USING btree (vid);
+
+
+--
+-- Name: drupal_2iYXGShMfy6U1Md5x8P7BDx7JT2s_fAFotjvdqBFICo_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_2iYXGShMfy6U1Md5x8P7BDx7JT2s_fAFotjvdqBFICo_idx" ON public.drupal_shortcut_field_data USING btree (shortcut_set);
+
+
+--
+-- Name: drupal_4R5k8gb9lS4_u1dM08ReAxIB2YvM5QR5zT1ksoHdKk4_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_4R5k8gb9lS4_u1dM08ReAxIB2YvM5QR5zT1ksoHdKk4_idx" ON public.drupal_comment_field_data USING btree (comment_type);
+
+
+--
+-- Name: drupal_5HDxA7KulvPEudfRd4yoKYsVXCL3IsJDzm6jrAc3SsQ_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_5HDxA7KulvPEudfRd4yoKYsVXCL3IsJDzm6jrAc3SsQ_idx" ON public.drupal_block_content_field_data USING btree (id, default_langcode, langcode);
+
+
+--
+-- Name: drupal_5xsyULeQe8iYqpcLv3TcOnK70Rxw6aYy9pwLwmbQ5dg_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_5xsyULeQe8iYqpcLv3TcOnK70Rxw6aYy9pwLwmbQ5dg_idx" ON public.drupal_shortcut_field_data USING btree (id, default_langcode, langcode);
+
+
+--
+-- Name: drupal_Agu3DzIkGoLovnZlRkbtObsyRX5Aoc111NlGGhQnMrY_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_Agu3DzIkGoLovnZlRkbtObsyRX5Aoc111NlGGhQnMrY_idx" ON public.drupal_taxonomy_term_field_data USING btree (tid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_EENQTA2lrY_Noin5yUqztBKLF5RCNJc979dqTzskLAM_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_EENQTA2lrY_Noin5yUqztBKLF5RCNJc979dqTzskLAM_idx" ON public.drupal_taxonomy_term_field_revision USING btree (description__format);
+
+
+--
+-- Name: drupal_ItFcO8Z4TtkHPw9aYqHOh_SQ9lQUPH2_GBMGsgb9e6E_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_ItFcO8Z4TtkHPw9aYqHOh_SQ9lQUPH2_GBMGsgb9e6E_idx" ON public.drupal_users_field_data USING btree (uid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_OONi8dt_er_IJWEP2yizs4WKuNQT3kRUwlDThOOQMNE_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_OONi8dt_er_IJWEP2yizs4WKuNQT3kRUwlDThOOQMNE_idx" ON public.drupal_taxonomy_term_field_data USING btree (revision_id);
+
+
+--
+-- Name: drupal_QnV_yx12IV6LUDK8fiqQScOLltRLWh6lj73Z_u1PXWY_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_QnV_yx12IV6LUDK8fiqQScOLltRLWh6lj73Z_u1PXWY_idx" ON public.drupal_menu_link_content_field_revision USING btree (substr((link__uri)::text, 1, 30));
+
+
+--
+-- Name: drupal_RJguZGrY1lqakWsNPDkV5fpfIdfmXzgP6r5jnmFiSyQ_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_RJguZGrY1lqakWsNPDkV5fpfIdfmXzgP6r5jnmFiSyQ_idx" ON public.drupal_taxonomy_term_field_revision USING btree (tid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_Sqc70zqbkgRTBjonZwn_XDEMHS44PjMq7OAm316sMew_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_Sqc70zqbkgRTBjonZwn_XDEMHS44PjMq7OAm316sMew_idx" ON public.drupal_taxonomy_term_revision USING btree (revision_user);
+
+
+--
+-- Name: drupal_Txnsmz4PXYNvliwMqnitosP85A_C_OZPIbzcp867Wg4_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_Txnsmz4PXYNvliwMqnitosP85A_C_OZPIbzcp867Wg4_idx" ON public.drupal_menu_link_content_data USING btree (enabled, bundle, id);
+
+
+--
+-- Name: drupal_WDtmXUpoI3tQcnQT4tJyUWZVj2f_CtQ5QFGHlNnWq7o_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_WDtmXUpoI3tQcnQT4tJyUWZVj2f_CtQ5QFGHlNnWq7o_idx" ON public.drupal_node_field_revision USING btree (nid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_XkAl6i7KGA5LbzjrrqKjIvDr3SJkT2GIfjqD26Cjt9I_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_XkAl6i7KGA5LbzjrrqKjIvDr3SJkT2GIfjqD26Cjt9I_idx" ON public.drupal_menu_link_content_data USING btree (id, default_langcode, langcode);
+
+
+--
+-- Name: drupal_batch__token__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_batch__token__idx ON public.drupal_batch USING btree (token);
+
+
+--
+-- Name: drupal_block_content__block_content_field__type__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content__block_content_field__type__target_id__idx ON public.drupal_block_content USING btree (type);
+
+
+--
+-- Name: drupal_block_content__body__body_format__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content__body__body_format__idx ON public.drupal_block_content__body USING btree (body_format);
+
+
+--
+-- Name: drupal_block_content__body__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content__body__bundle__idx ON public.drupal_block_content__body USING btree (bundle);
+
+
+--
+-- Name: drupal_block_content__body__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content__body__revision_id__idx ON public.drupal_block_content__body USING btree (revision_id);
+
+
+--
+-- Name: drupal_block_content_revision__block_content__id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content_revision__block_content__id__idx ON public.drupal_block_content_revision USING btree (id);
+
+
+--
+-- Name: drupal_block_content_revision__body__body_format__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content_revision__body__body_format__idx ON public.drupal_block_content_revision__body USING btree (body_format);
+
+
+--
+-- Name: drupal_block_content_revision__body__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content_revision__body__bundle__idx ON public.drupal_block_content_revision__body USING btree (bundle);
+
+
+--
+-- Name: drupal_block_content_revision__body__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_block_content_revision__body__revision_id__idx ON public.drupal_block_content_revision__body USING btree (revision_id);
+
+
+--
+-- Name: drupal_cVSMadGF_0hxpr1v27sC8JIBiKf0wZKWoxVY_kIYg5Y_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_cVSMadGF_0hxpr1v27sC8JIBiKf0wZKWoxVY_kIYg5Y_idx" ON public.drupal_comment_field_data USING btree (cid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_cache_bootstrap__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_bootstrap__created__idx ON public.drupal_cache_bootstrap USING btree (created);
+
+
+--
+-- Name: drupal_cache_bootstrap__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_bootstrap__expire__idx ON public.drupal_cache_bootstrap USING btree (expire);
+
+
+--
+-- Name: drupal_cache_config__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_config__created__idx ON public.drupal_cache_config USING btree (created);
+
+
+--
+-- Name: drupal_cache_config__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_config__expire__idx ON public.drupal_cache_config USING btree (expire);
+
+
+--
+-- Name: drupal_cache_container__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_container__created__idx ON public.drupal_cache_container USING btree (created);
+
+
+--
+-- Name: drupal_cache_container__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_container__expire__idx ON public.drupal_cache_container USING btree (expire);
+
+
+--
+-- Name: drupal_cache_data__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_data__created__idx ON public.drupal_cache_data USING btree (created);
+
+
+--
+-- Name: drupal_cache_data__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_data__expire__idx ON public.drupal_cache_data USING btree (expire);
+
+
+--
+-- Name: drupal_cache_default__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_default__created__idx ON public.drupal_cache_default USING btree (created);
+
+
+--
+-- Name: drupal_cache_default__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_default__expire__idx ON public.drupal_cache_default USING btree (expire);
+
+
+--
+-- Name: drupal_cache_discovery__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_discovery__created__idx ON public.drupal_cache_discovery USING btree (created);
+
+
+--
+-- Name: drupal_cache_discovery__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_discovery__expire__idx ON public.drupal_cache_discovery USING btree (expire);
+
+
+--
+-- Name: drupal_cache_dynamic_page_cache__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_dynamic_page_cache__created__idx ON public.drupal_cache_dynamic_page_cache USING btree (created);
+
+
+--
+-- Name: drupal_cache_dynamic_page_cache__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_dynamic_page_cache__expire__idx ON public.drupal_cache_dynamic_page_cache USING btree (expire);
+
+
+--
+-- Name: drupal_cache_entity__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_entity__created__idx ON public.drupal_cache_entity USING btree (created);
+
+
+--
+-- Name: drupal_cache_entity__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_entity__expire__idx ON public.drupal_cache_entity USING btree (expire);
+
+
+--
+-- Name: drupal_cache_menu__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_menu__created__idx ON public.drupal_cache_menu USING btree (created);
+
+
+--
+-- Name: drupal_cache_menu__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_menu__expire__idx ON public.drupal_cache_menu USING btree (expire);
+
+
+--
+-- Name: drupal_cache_page__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_page__created__idx ON public.drupal_cache_page USING btree (created);
+
+
+--
+-- Name: drupal_cache_page__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_page__expire__idx ON public.drupal_cache_page USING btree (expire);
+
+
+--
+-- Name: drupal_cache_render__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_render__created__idx ON public.drupal_cache_render USING btree (created);
+
+
+--
+-- Name: drupal_cache_render__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_render__expire__idx ON public.drupal_cache_render USING btree (expire);
+
+
+--
+-- Name: drupal_cache_toolbar__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_toolbar__created__idx ON public.drupal_cache_toolbar USING btree (created);
+
+
+--
+-- Name: drupal_cache_toolbar__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_cache_toolbar__expire__idx ON public.drupal_cache_toolbar USING btree (expire);
+
+
+--
+-- Name: drupal_comment__comment_body__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment__comment_body__bundle__idx ON public.drupal_comment__comment_body USING btree (bundle);
+
+
+--
+-- Name: drupal_comment__comment_body__comment_body_format__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment__comment_body__comment_body_format__idx ON public.drupal_comment__comment_body USING btree (comment_body_format);
+
+
+--
+-- Name: drupal_comment__comment_body__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment__comment_body__revision_id__idx ON public.drupal_comment__comment_body USING btree (revision_id);
+
+
+--
+-- Name: drupal_comment__comment_field__comment_type__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment__comment_field__comment_type__target_id__idx ON public.drupal_comment USING btree (comment_type);
+
+
+--
+-- Name: drupal_comment_entity_statistics__comment_count__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_entity_statistics__comment_count__idx ON public.drupal_comment_entity_statistics USING btree (comment_count);
+
+
+--
+-- Name: drupal_comment_entity_statistics__last_comment_timestamp__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_entity_statistics__last_comment_timestamp__idx ON public.drupal_comment_entity_statistics USING btree (last_comment_timestamp);
+
+
+--
+-- Name: drupal_comment_entity_statistics__last_comment_uid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_entity_statistics__last_comment_uid__idx ON public.drupal_comment_entity_statistics USING btree (last_comment_uid);
+
+
+--
+-- Name: drupal_comment_field_data__comment__entity_langcode__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment__entity_langcode__idx ON public.drupal_comment_field_data USING btree (entity_id, entity_type, comment_type, default_langcode);
+
+
+--
+-- Name: drupal_comment_field_data__comment__num_new__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment__num_new__idx ON public.drupal_comment_field_data USING btree (entity_id, entity_type, comment_type, status, created, cid, thread);
+
+
+--
+-- Name: drupal_comment_field_data__comment__status_comment_type__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment__status_comment_type__idx ON public.drupal_comment_field_data USING btree (status, comment_type, cid);
+
+
+--
+-- Name: drupal_comment_field_data__comment__status_pid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment__status_pid__idx ON public.drupal_comment_field_data USING btree (pid, status);
+
+
+--
+-- Name: drupal_comment_field_data__comment_field__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment_field__created__idx ON public.drupal_comment_field_data USING btree (created);
+
+
+--
+-- Name: drupal_comment_field_data__comment_field__uid__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_comment_field_data__comment_field__uid__target_id__idx ON public.drupal_comment_field_data USING btree (uid);
+
+
+--
+-- Name: drupal_file_managed__file_field__changed__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_managed__file_field__changed__idx ON public.drupal_file_managed USING btree (changed);
+
+
+--
+-- Name: drupal_file_managed__file_field__status__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_managed__file_field__status__idx ON public.drupal_file_managed USING btree (status);
+
+
+--
+-- Name: drupal_file_managed__file_field__uid__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_managed__file_field__uid__target_id__idx ON public.drupal_file_managed USING btree (uid);
+
+
+--
+-- Name: drupal_file_managed__file_field__uri__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_managed__file_field__uri__idx ON public.drupal_file_managed USING btree (uri);
+
+
+--
+-- Name: drupal_file_usage__fid_count__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_usage__fid_count__idx ON public.drupal_file_usage USING btree (fid, count);
+
+
+--
+-- Name: drupal_file_usage__fid_module__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_usage__fid_module__idx ON public.drupal_file_usage USING btree (fid, module);
+
+
+--
+-- Name: drupal_file_usage__type_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_file_usage__type_id__idx ON public.drupal_file_usage USING btree (type, id);
+
+
+--
+-- Name: drupal_h5p_content__h5p_library__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_content__h5p_library__idx ON public.drupal_h5p_content USING btree (library_id);
+
+
+--
+-- Name: drupal_h5p_content_libraries__weight__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_content_libraries__weight__idx ON public.drupal_h5p_content_libraries USING btree (weight);
+
+
+--
+-- Name: drupal_h5p_events__created_at__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_events__created_at__idx ON public.drupal_h5p_events USING btree (created_at);
+
+
+--
+-- Name: drupal_h5p_libraries__library__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_libraries__library__idx ON public.drupal_h5p_libraries USING btree (machine_name, major_version, minor_version);
+
+
+--
+-- Name: drupal_h5p_libraries__title__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_libraries__title__idx ON public.drupal_h5p_libraries USING btree (title);
+
+
+--
+-- Name: drupal_h5p_libraries_hub_cache__machine_name__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_h5p_libraries_hub_cache__machine_name__idx ON public.drupal_h5p_libraries_hub_cache USING btree (machine_name);
+
+
+--
+-- Name: drupal_history__nid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_history__nid__idx ON public.drupal_history USING btree (nid);
+
+
+--
+-- Name: drupal_i0Re9DsmoAaiXcm02u2v0Jn2f47jG6lHSdYevPDo1RQ_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_i0Re9DsmoAaiXcm02u2v0Jn2f47jG6lHSdYevPDo1RQ_idx" ON public.drupal_block_content_field_data USING btree (type);
+
+
+--
+-- Name: drupal_jQo4tQ0QnB5zlKZgqIxF3pnmufQhXRmPhGrj9JwlsTw_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_jQo4tQ0QnB5zlKZgqIxF3pnmufQhXRmPhGrj9JwlsTw_idx" ON public.drupal_menu_link_content_data USING btree (revision_id);
+
+
+--
+-- Name: drupal_japlpTlVFdkxFOCqEzOf_I1XRt2rDXKPwU7kU2OoJDg_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_japlpTlVFdkxFOCqEzOf_I1XRt2rDXKPwU7kU2OoJDg_idx" ON public.drupal_block_content_field_revision USING btree (id, default_langcode, langcode);
+
+
+--
+-- Name: drupal_key_value_expire__all__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_key_value_expire__all__idx ON public.drupal_key_value_expire USING btree (name, collection, expire);
+
+
+--
+-- Name: drupal_key_value_expire__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_key_value_expire__expire__idx ON public.drupal_key_value_expire USING btree (expire);
+
+
+--
+-- Name: drupal_l49aMQ_MdQ3FDWdekL6JfXtLDM9M3USLnG3Zg_T5QrI_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_l49aMQ_MdQ3FDWdekL6JfXtLDM9M3USLnG3Zg_T5QrI_idx" ON public.drupal_menu_link_content_data USING btree (substr((link__uri)::text, 1, 30));
+
+
+--
+-- Name: drupal_lzXQShkPKTs_XiR9LgOH4mhN5_TmIz6ZUUu04OxYf3I_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_lzXQShkPKTs_XiR9LgOH4mhN5_TmIz6ZUUu04OxYf3I_idx" ON public.drupal_block_content_revision USING btree (revision_user);
+
+
+--
+-- Name: drupal_menu_link_content_revision__menu_link_content__id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_menu_link_content_revision__menu_link_content__id__idx ON public.drupal_menu_link_content_revision USING btree (id);
+
+
+--
+-- Name: drupal_menu_tree__menu_parent_expand_child__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_menu_tree__menu_parent_expand_child__idx ON public.drupal_menu_tree USING btree (menu_name, expanded, has_children, substr((parent)::text, 1, 16));
+
+
+--
+-- Name: drupal_menu_tree__menu_parents__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_menu_tree__menu_parents__idx ON public.drupal_menu_tree USING btree (menu_name, p1, p2, p3, p4, p5, p6, p7, p8, p9);
+
+
+--
+-- Name: drupal_menu_tree__route_values__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_menu_tree__route_values__idx ON public.drupal_menu_tree USING btree (substr((route_name)::text, 1, 32), substr((route_param_key)::text, 1, 16));
+
+
+--
+-- Name: drupal_mg0CEMgG7XU4Bn2RxXTtbyYyjLJ5VOTZXKidWpIMBr8_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_mg0CEMgG7XU4Bn2RxXTtbyYyjLJ5VOTZXKidWpIMBr8_idx" ON public.drupal_block_content_field_data USING btree (status, type, id);
+
+
+--
+-- Name: drupal_node__body__body_format__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__body__body_format__idx ON public.drupal_node__body USING btree (body_format);
+
+
+--
+-- Name: drupal_node__body__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__body__bundle__idx ON public.drupal_node__body USING btree (bundle);
+
+
+--
+-- Name: drupal_node__body__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__body__revision_id__idx ON public.drupal_node__body USING btree (revision_id);
+
+
+--
+-- Name: drupal_node__comment__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__comment__bundle__idx ON public.drupal_node__comment USING btree (bundle);
+
+
+--
+-- Name: drupal_node__comment__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__comment__revision_id__idx ON public.drupal_node__comment USING btree (revision_id);
+
+
+--
+-- Name: drupal_node__field_h5p__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_h5p__bundle__idx ON public.drupal_node__field_h5p USING btree (bundle);
+
+
+--
+-- Name: drupal_node__field_h5p__field_h5p_h5p_content_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_h5p__field_h5p_h5p_content_id__idx ON public.drupal_node__field_h5p USING btree (field_h5p_h5p_content_id);
+
+
+--
+-- Name: drupal_node__field_h5p__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_h5p__revision_id__idx ON public.drupal_node__field_h5p USING btree (revision_id);
+
+
+--
+-- Name: drupal_node__field_image__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_image__bundle__idx ON public.drupal_node__field_image USING btree (bundle);
+
+
+--
+-- Name: drupal_node__field_image__field_image_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_image__field_image_target_id__idx ON public.drupal_node__field_image USING btree (field_image_target_id);
+
+
+--
+-- Name: drupal_node__field_image__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_image__revision_id__idx ON public.drupal_node__field_image USING btree (revision_id);
+
+
+--
+-- Name: drupal_node__field_tags__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_tags__bundle__idx ON public.drupal_node__field_tags USING btree (bundle);
+
+
+--
+-- Name: drupal_node__field_tags__field_tags_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_tags__field_tags_target_id__idx ON public.drupal_node__field_tags USING btree (field_tags_target_id);
+
+
+--
+-- Name: drupal_node__field_tags__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__field_tags__revision_id__idx ON public.drupal_node__field_tags USING btree (revision_id);
+
+
+--
+-- Name: drupal_node__node_field__type__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node__node_field__type__target_id__idx ON public.drupal_node USING btree (type);
+
+
+--
+-- Name: drupal_node_field_data__node__frontpage__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node__frontpage__idx ON public.drupal_node_field_data USING btree (promote, status, sticky, created);
+
+
+--
+-- Name: drupal_node_field_data__node__status_type__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node__status_type__idx ON public.drupal_node_field_data USING btree (status, type, nid);
+
+
+--
+-- Name: drupal_node_field_data__node__title_type__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node__title_type__idx ON public.drupal_node_field_data USING btree (title, substr((type)::text, 1, 4));
+
+
+--
+-- Name: drupal_node_field_data__node__vid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node__vid__idx ON public.drupal_node_field_data USING btree (vid);
+
+
+--
+-- Name: drupal_node_field_data__node_field__changed__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node_field__changed__idx ON public.drupal_node_field_data USING btree (changed);
+
+
+--
+-- Name: drupal_node_field_data__node_field__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node_field__created__idx ON public.drupal_node_field_data USING btree (created);
+
+
+--
+-- Name: drupal_node_field_data__node_field__type__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node_field__type__target_id__idx ON public.drupal_node_field_data USING btree (type);
+
+
+--
+-- Name: drupal_node_field_data__node_field__uid__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_data__node_field__uid__target_id__idx ON public.drupal_node_field_data USING btree (uid);
+
+
+--
+-- Name: drupal_node_field_revision__node_field__uid__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_field_revision__node_field__uid__target_id__idx ON public.drupal_node_field_revision USING btree (uid);
+
+
+--
+-- Name: drupal_node_revision__body__body_format__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__body__body_format__idx ON public.drupal_node_revision__body USING btree (body_format);
+
+
+--
+-- Name: drupal_node_revision__body__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__body__bundle__idx ON public.drupal_node_revision__body USING btree (bundle);
+
+
+--
+-- Name: drupal_node_revision__body__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__body__revision_id__idx ON public.drupal_node_revision__body USING btree (revision_id);
+
+
+--
+-- Name: drupal_node_revision__comment__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__comment__bundle__idx ON public.drupal_node_revision__comment USING btree (bundle);
+
+
+--
+-- Name: drupal_node_revision__comment__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__comment__revision_id__idx ON public.drupal_node_revision__comment USING btree (revision_id);
+
+
+--
+-- Name: drupal_node_revision__field_h5p__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_h5p__bundle__idx ON public.drupal_node_revision__field_h5p USING btree (bundle);
+
+
+--
+-- Name: drupal_node_revision__field_h5p__field_h5p_h5p_content_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_h5p__field_h5p_h5p_content_id__idx ON public.drupal_node_revision__field_h5p USING btree (field_h5p_h5p_content_id);
+
+
+--
+-- Name: drupal_node_revision__field_h5p__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_h5p__revision_id__idx ON public.drupal_node_revision__field_h5p USING btree (revision_id);
+
+
+--
+-- Name: drupal_node_revision__field_image__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_image__bundle__idx ON public.drupal_node_revision__field_image USING btree (bundle);
+
+
+--
+-- Name: drupal_node_revision__field_image__field_image_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_image__field_image_target_id__idx ON public.drupal_node_revision__field_image USING btree (field_image_target_id);
+
+
+--
+-- Name: drupal_node_revision__field_image__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_image__revision_id__idx ON public.drupal_node_revision__field_image USING btree (revision_id);
+
+
+--
+-- Name: drupal_node_revision__field_tags__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_tags__bundle__idx ON public.drupal_node_revision__field_tags USING btree (bundle);
+
+
+--
+-- Name: drupal_node_revision__field_tags__field_tags_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_tags__field_tags_target_id__idx ON public.drupal_node_revision__field_tags USING btree (field_tags_target_id);
+
+
+--
+-- Name: drupal_node_revision__field_tags__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__field_tags__revision_id__idx ON public.drupal_node_revision__field_tags USING btree (revision_id);
+
+
+--
+-- Name: drupal_node_revision__node__nid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__node__nid__idx ON public.drupal_node_revision USING btree (nid);
+
+
+--
+-- Name: drupal_node_revision__node_field__langcode__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__node_field__langcode__idx ON public.drupal_node_revision USING btree (langcode);
+
+
+--
+-- Name: drupal_node_revision__node_field__revision_uid__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_node_revision__node_field__revision_uid__target_id__idx ON public.drupal_node_revision USING btree (revision_uid);
+
+
+--
+-- Name: drupal_oBgqUhimP4lLm603LfPC5jISBFm6_Xc0FDyZkgE1aBg_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_oBgqUhimP4lLm603LfPC5jISBFm6_Xc0FDyZkgE1aBg_idx" ON public.drupal_node_field_data USING btree (nid, default_langcode, langcode);
+
+
+--
+-- Name: drupal_path_alias__path_alias__alias_langcode_id_status__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_path_alias__path_alias__alias_langcode_id_status__idx ON public.drupal_path_alias USING btree (alias, langcode, id, status);
+
+
+--
+-- Name: drupal_path_alias__path_alias__path_langcode_id_status__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_path_alias__path_alias__path_langcode_id_status__idx ON public.drupal_path_alias USING btree (path, langcode, id, status);
+
+
+--
+-- Name: drupal_path_alias__path_alias__status__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_path_alias__path_alias__status__idx ON public.drupal_path_alias USING btree (status, id);
+
+
+--
+-- Name: drupal_path_alias_revision__path_alias__id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_path_alias_revision__path_alias__id__idx ON public.drupal_path_alias_revision USING btree (id);
+
+
+--
+-- Name: drupal_qUMWUKjUQm2iEerDmqhNAn9AGhMDVpu9Ic0owiNvk6g_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_qUMWUKjUQm2iEerDmqhNAn9AGhMDVpu9Ic0owiNvk6g_idx" ON public.drupal_block_content_field_data USING btree (revision_id);
+
+
+--
+-- Name: drupal_queue__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_queue__expire__idx ON public.drupal_queue USING btree (expire);
+
+
+--
+-- Name: drupal_queue__name_created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_queue__name_created__idx ON public.drupal_queue USING btree (name, created);
+
+
+--
+-- Name: drupal_router__pattern_outline_parts__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_router__pattern_outline_parts__idx ON public.drupal_router USING btree (pattern_outline, number_parts);
+
+
+--
+-- Name: drupal_s3fs_file__timestamp__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_s3fs_file__timestamp__idx ON public.drupal_s3fs_file USING btree ("timestamp");
+
+
+--
+-- Name: drupal_search_index__sid_type__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_search_index__sid_type__idx ON public.drupal_search_index USING btree (sid, langcode, type);
+
+
+--
+-- Name: drupal_semaphore__expire__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_semaphore__expire__idx ON public.drupal_semaphore USING btree (expire);
+
+
+--
+-- Name: drupal_semaphore__value__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_semaphore__value__idx ON public.drupal_semaphore USING btree (value);
+
+
+--
+-- Name: drupal_sessions__timestamp__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_sessions__timestamp__idx ON public.drupal_sessions USING btree ("timestamp");
+
+
+--
+-- Name: drupal_sessions__uid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_sessions__uid__idx ON public.drupal_sessions USING btree (uid);
+
+
+--
+-- Name: drupal_shortcut__shortcut_field__shortcut_set__target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_shortcut__shortcut_field__shortcut_set__target_id__idx ON public.drupal_shortcut USING btree (shortcut_set);
+
+
+--
+-- Name: drupal_shortcut_field_data__shortcut_field__link__uri__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_shortcut_field_data__shortcut_field__link__uri__idx ON public.drupal_shortcut_field_data USING btree (substr((link__uri)::text, 1, 30));
+
+
+--
+-- Name: drupal_shortcut_set_users__set_name__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_shortcut_set_users__set_name__idx ON public.drupal_shortcut_set_users USING btree (set_name);
+
+
+--
+-- Name: drupal_sp0KOjWoGZ3w3gvNpK_LrsSZT3Vd1wbELkfIg7d0434_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_sp0KOjWoGZ3w3gvNpK_LrsSZT3Vd1wbELkfIg7d0434_idx" ON public.drupal_menu_link_content_revision USING btree (revision_user);
+
+
+--
+-- Name: drupal_taxonomy_index__term_node__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_index__term_node__idx ON public.drupal_taxonomy_index USING btree (tid, status, sticky, created);
+
+
+--
+-- Name: drupal_taxonomy_term__parent__bundle_delta_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term__parent__bundle_delta_target_id__idx ON public.drupal_taxonomy_term__parent USING btree (bundle, delta, parent_target_id);
+
+
+--
+-- Name: drupal_taxonomy_term__parent__parent_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term__parent__parent_target_id__idx ON public.drupal_taxonomy_term__parent USING btree (parent_target_id);
+
+
+--
+-- Name: drupal_taxonomy_term__parent__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term__parent__revision_id__idx ON public.drupal_taxonomy_term__parent USING btree (revision_id);
+
+
+--
+-- Name: drupal_taxonomy_term_field_data__taxonomy_term__status_vid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_field_data__taxonomy_term__status_vid__idx ON public.drupal_taxonomy_term_field_data USING btree (status, vid, tid);
+
+
+--
+-- Name: drupal_taxonomy_term_field_data__taxonomy_term__tree__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_field_data__taxonomy_term__tree__idx ON public.drupal_taxonomy_term_field_data USING btree (vid, weight, name);
+
+
+--
+-- Name: drupal_taxonomy_term_field_data__taxonomy_term__vid_name__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_field_data__taxonomy_term__vid_name__idx ON public.drupal_taxonomy_term_field_data USING btree (vid, name);
+
+
+--
+-- Name: drupal_taxonomy_term_field_data__taxonomy_term_field__name__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_field_data__taxonomy_term_field__name__idx ON public.drupal_taxonomy_term_field_data USING btree (name);
+
+
+--
+-- Name: drupal_taxonomy_term_revision__parent__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_revision__parent__bundle__idx ON public.drupal_taxonomy_term_revision__parent USING btree (bundle);
+
+
+--
+-- Name: drupal_taxonomy_term_revision__parent__parent_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_revision__parent__parent_target_id__idx ON public.drupal_taxonomy_term_revision__parent USING btree (parent_target_id);
+
+
+--
+-- Name: drupal_taxonomy_term_revision__parent__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_revision__parent__revision_id__idx ON public.drupal_taxonomy_term_revision__parent USING btree (revision_id);
+
+
+--
+-- Name: drupal_taxonomy_term_revision__taxonomy_term__tid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_taxonomy_term_revision__taxonomy_term__tid__idx ON public.drupal_taxonomy_term_revision USING btree (tid);
+
+
+--
+-- Name: drupal_user__roles__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__roles__bundle__idx ON public.drupal_user__roles USING btree (bundle);
+
+
+--
+-- Name: drupal_user__roles__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__roles__revision_id__idx ON public.drupal_user__roles USING btree (revision_id);
+
+
+--
+-- Name: drupal_user__roles__roles_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__roles__roles_target_id__idx ON public.drupal_user__roles USING btree (roles_target_id);
+
+
+--
+-- Name: drupal_user__user_picture__bundle__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__user_picture__bundle__idx ON public.drupal_user__user_picture USING btree (bundle);
+
+
+--
+-- Name: drupal_user__user_picture__revision_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__user_picture__revision_id__idx ON public.drupal_user__user_picture USING btree (revision_id);
+
+
+--
+-- Name: drupal_user__user_picture__user_picture_target_id__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_user__user_picture__user_picture_target_id__idx ON public.drupal_user__user_picture USING btree (user_picture_target_id);
+
+
+--
+-- Name: drupal_users_data__module__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_users_data__module__idx ON public.drupal_users_data USING btree (module);
+
+
+--
+-- Name: drupal_users_data__name__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_users_data__name__idx ON public.drupal_users_data USING btree (name);
+
+
+--
+-- Name: drupal_users_field_data__user_field__access__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_users_field_data__user_field__access__idx ON public.drupal_users_field_data USING btree (access);
+
+
+--
+-- Name: drupal_users_field_data__user_field__created__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_users_field_data__user_field__created__idx ON public.drupal_users_field_data USING btree (created);
+
+
+--
+-- Name: drupal_users_field_data__user_field__mail__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_users_field_data__user_field__mail__idx ON public.drupal_users_field_data USING btree (mail);
+
+
+--
+-- Name: drupal_watchdog__severity__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_watchdog__severity__idx ON public.drupal_watchdog USING btree (severity);
+
+
+--
+-- Name: drupal_watchdog__type__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_watchdog__type__idx ON public.drupal_watchdog USING btree (type);
+
+
+--
+-- Name: drupal_watchdog__uid__idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX drupal_watchdog__uid__idx ON public.drupal_watchdog USING btree (uid);
+
+
+--
+-- Name: drupal_zEbDWUZt6MxU7ude3NMzflCrVl6J1GoH7K0ojqLsx3Y_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "drupal_zEbDWUZt6MxU7ude3NMzflCrVl6J1GoH7K0ojqLsx3Y_idx" ON public.drupal_menu_link_content_field_revision USING btree (id, default_langcode, langcode);
 
 
 --
@@ -11862,13 +19757,6 @@ CREATE INDEX ncert_chapter_question_question_id ON public."NcertChapterQuestion"
 
 
 --
--- Name: ncert_sentence_gin_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX ncert_sentence_gin_idx ON public."NcertSentence" USING gin (to_tsvector('english'::regconfig, (sentence)::text));
-
-
---
 -- Name: ncert_sentence_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11883,10 +19771,24 @@ CREATE INDEX notification_user_id ON public."Notification" USING btree ("userId"
 
 
 --
+-- Name: partial_idx_answer_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX partial_idx_answer_created_at ON public."Answer" USING btree ("createdAt") WHERE ("createdAt" >= '2021-04-01 00:00:00+00'::timestamp with time zone);
+
+
+--
 -- Name: partial_idx_answer_created_at_1_month; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX partial_idx_answer_created_at_1_month ON public."Answer" USING btree ("createdAt") WHERE ("createdAt" >= '2021-05-11 00:00:00+00'::timestamp with time zone);
+
+
+--
+-- Name: partial_idx_answer_created_at_2020; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX partial_idx_answer_created_at_2020 ON public."Answer" USING btree ("createdAt") WHERE (("createdAt" >= '2020-04-01 00:00:00+00'::timestamp with time zone) AND ("createdAt" <= '2020-06-30 00:00:00+00'::timestamp with time zone));
 
 
 --
@@ -12013,6 +19915,41 @@ CREATE UNIQUE INDEX subject_leader_board_user_id_subject_id3 ON public."SubjectL
 --
 
 CREATE INDEX "tagExist10" ON public."QuestionAnalytics25" USING btree ("tagExist");
+
+
+--
+-- Name: task_course_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX task_course_id ON public."Task" USING btree ("courseId");
+
+
+--
+-- Name: task_expired_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX task_expired_at ON public."Task" USING btree ("expiredAt");
+
+
+--
+-- Name: task_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX task_parent_id ON public."Task" USING btree ("parentId");
+
+
+--
+-- Name: task_scheduled_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX task_scheduled_at ON public."Task" USING btree ("scheduledAt");
+
+
+--
+-- Name: task_year; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX task_year ON public."Task" USING btree (year);
 
 
 --
@@ -12226,6 +20163,27 @@ CREATE UNIQUE INDEX user_task_progress_user_id_schedule_id ON public."UserTaskPr
 
 
 --
+-- Name: user_task_task_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_task_task_id ON public."UserTask" USING btree ("taskId");
+
+
+--
+-- Name: user_task_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_task_user_id ON public."UserTask" USING btree ("userId");
+
+
+--
+-- Name: user_task_user_id_task_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX user_task_user_id_task_id ON public."UserTask" USING btree ("userId", "taskId");
+
+
+--
 -- Name: user_video_stat_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12293,6 +20251,13 @@ CREATE INDEX vote_owner_id_owner_type ON public."Vote" USING btree ("ownerId", "
 --
 
 CREATE INDEX vote_user_id ON public."Vote" USING btree ("userId");
+
+
+--
+-- Name: work_logs_admin_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX work_logs_admin_user_id_idx ON public.work_logs USING btree (admin_user_id);
 
 
 --
@@ -12431,6 +20396,14 @@ ALTER TABLE ONLY public."CourseOffer"
 
 ALTER TABLE ONLY public."CourseTestimonial"
     ADD CONSTRAINT "CourseTestimonial_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
+
+
+--
+-- Name: CustomerIssue CustomerIssue_adminUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CustomerIssue"
+    ADD CONSTRAINT "CustomerIssue_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES public.admin_users(id);
 
 
 --
@@ -12658,14 +20631,6 @@ ALTER TABLE ONLY public."Subject"
 
 
 --
--- Name: Task Task_chapterId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."Task"
-    ADD CONSTRAINT "Task_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
-
-
---
 -- Name: Topic Topic_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12703,22 +20668,6 @@ ALTER TABLE ONLY public."UserCourse"
 
 ALTER TABLE ONLY public."UserProfile"
     ADD CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: UserTask UserTask_taskId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."UserTask"
-    ADD CONSTRAINT "UserTask_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES public."Task"(id);
-
-
---
--- Name: UserTask UserTask_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."UserTask"
-    ADD CONSTRAINT "UserTask_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id);
 
 
 --
@@ -12871,6 +20820,22 @@ ALTER TABLE ONLY public."ChapterQuestion"
 
 ALTER TABLE ONLY public."ChapterQuestionCopy"
     ADD CONSTRAINT fk_chapter_question_questionid FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
+-- Name: ChapterTask fk_chapter_task_chapterid; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterTask"
+    ADD CONSTRAINT fk_chapter_task_chapterid FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
+-- Name: ChapterTask fk_chapter_task_taskid; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterTask"
+    ADD CONSTRAINT fk_chapter_task_taskid FOREIGN KEY ("taskId") REFERENCES public."Task"(id);
 
 
 --
@@ -13071,22 +21036,6 @@ ALTER TABLE ONLY public.student_coaches
 
 ALTER TABLE ONLY public."Section"
     ADD CONSTRAINT fk_rails_69f13a1696 FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
-
-
---
--- Name: CourseOffer fk_rails_7205069e9d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."CourseOffer"
-    ADD CONSTRAINT fk_rails_7205069e9d FOREIGN KEY ("couponId") REFERENCES public."Coupon"(id);
-
-
---
--- Name: video_time_stamp_imgs fk_rails_7fbbd02688; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_time_stamp_imgs
-    ADD CONSTRAINT fk_rails_7fbbd02688 FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
 
 
 --
@@ -13476,23 +21425,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210211061357'),
 ('20210212061637'),
 ('20210212084401'),
-('20210313143122'),
-('20210315042743'),
 ('20210316123522'),
-('20210415123928'),
-('20210420054010'),
 ('20210421065723'),
 ('20210426103243'),
-('20210517135957'),
-('20210525073404'),
-('20210525081004'),
-('20210526062304'),
-('20210526122358'),
 ('20210531062211'),
 ('20210531124523'),
 ('20210602041533'),
-('20210603141321'),
 ('20210611075034'),
-('20210624102840');
+('20210624102840'),
+('20210706105329'),
+('20210706140821');
 
 

@@ -30,6 +30,28 @@ class VideoSentence < ApplicationRecord
     joins(:video).where({"Video": {language: 'hinglish'}})
   }
 
+  scope :similar_to_question, ->(questionId) {
+
+    # TODO: let's try to also show the essential_tokens in the dashboard, might be helpful to faculties
+    question = Question.where(:id => questionId).where.not(:topicId => nil).first
+
+    if question.nil?
+      raise "Can't find video sentences for question with no topic"
+    end
+
+    question_text = ActionView::Base.full_sanitizer.sanitize(question.question)
+    normalized_question_text = ActiveRecord::Base
+      .connection.execute("select to_tsvector('context_dict', '#{question_text}'::TEXT )").to_a.first['to_tsvector']
+
+    essential_token = normalized_question_text.scan(/\w+(?:'\w+)*/).filter { |r| r.gsub(/[^a-z ]/i, '').length > 0}
+    search_query = essential_token.join(' | ')
+    where(:chapterId => question.topicId).where("to_tsvector('english', sentence1) @@ to_tsquery(?) OR to_tsvector('english', sentence) @@ to_tsquery(?)", search_query, search_query)
+  }
+
+  def self.ransackable_scopes(_auth_object = nil)
+    [:similar_to_question]
+  end
+
   def sentenceHtml
     self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
   end

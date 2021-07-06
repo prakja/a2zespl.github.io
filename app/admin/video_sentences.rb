@@ -18,6 +18,7 @@ ActiveAdmin.register VideoSentence do
   remove_filter :chapter, :section, :versions, :detail, :questions
   permit_params :sentence, :timestampStart, :timestampEnd, :videoId, :chapterId
   filter :videoId, as: :numeric
+  filter :similar_to_question, as: :number, label: "Similar to Question ID"
   preserve_default_filters!
 
   action_item only: :index do
@@ -46,10 +47,15 @@ ActiveAdmin.register VideoSentence do
     selectable_column
     id_column
     column ("Video") { |vs|auto_link(vs.video)}
-    column ("Chapter") {|vs| auto_link(vs.chapter) }
+    column ("Chapter") { |vs| auto_link(vs.chapter) }
     column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
     column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
+    actions defaults: false do |sentence|
+      if params[:q].present? and params[:q][:similar_to_question].present?
+        item "Create Mapping", class: 'member_link'
+      end
+    end
   end
 
   member_action :mydup do
