@@ -78,6 +78,12 @@ ActiveAdmin.register VideoSentence do
         "
       end
     end
+
+    if params[:q].present? and params[:q][:similar_to_question].present?
+      questionId = params[:q][:similar_to_question].to_i
+      question = Question.find(questionId)
+      render partial: 'keywords', :locals => {:question => question}
+    end
   end
 
   member_action :mydup do
