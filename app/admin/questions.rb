@@ -297,19 +297,19 @@ ActiveAdmin.register Question do
   end
 
   action_item :similar_question, only: :show do
-    link_to 'Find Similar Questions', '../../admin/questions?q[similar_questions]=' + resource.id.to_s
+    link_to 'Find Similar Questions', '/admin/questions?q[similar_questions]=' + resource.id.to_s
   end
 
   action_item :question_issues, only: :show do
-    link_to 'Customer Issues', '../../admin/customer_issues?scope=all&q[questionId_eq]=' + resource.id.to_s
+    link_to 'Customer Issues', '/admin/customer_issues?scope=all&q[questionId_eq]=' + resource.id.to_s
   end
 
   action_item :question_doubts, only: :show do
-    link_to 'Question Doubts', '../../admin/doubts?scope=all&q[questionId_eq]=' + resource.id.to_s
+    link_to 'Question Doubts', '/admin/doubts?scope=all&q[questionId_eq]=' + resource.id.to_s
   end
 
   action_item :question_doubt_answers, only: :show do
-    link_to 'Question Doubt Answers', '../../admin/doubt_answers?scope=all&q[doubt_questionId_eq]=' + resource.id.to_s
+    link_to 'Question Doubt Answers', '/admin/doubt_answers?scope=all&q[doubt_questionId_eq]=' + resource.id.to_s
   end
 
   action_item :set_image_link, only: :show do
