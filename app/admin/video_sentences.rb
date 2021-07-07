@@ -62,7 +62,6 @@ ActiveAdmin.register VideoSentence do
 
     actions defaults: false do |sentence|
       if params[:q].present? and params[:q][:similar_to_question].present?
-        questionId = params[:q][:similar_to_question].to_i
         item "Add to Question", '#!', class: 'member_link', onclick: "add_sentence_mapping(#{sentence.id})"
       end
     end
