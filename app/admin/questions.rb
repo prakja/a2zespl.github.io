@@ -385,6 +385,10 @@ ActiveAdmin.register Question do
     link_to('Set Hindi Translation', '#', class: 'addTranslation')
   end
 
+  action_item :relevant_video_sentences, only: :show do
+    link_to 'Relevant Video Sentences', "../../admin/video_sentences?q[similar_to_question]=#{resource.id.to_s}"
+  end
+
   #action_item :see_physics_difficult_questions, only: :index do
   #  link_to 'Physics Difficult Questions', '../../questions/pdf_questions?subject=physics'
   #end
