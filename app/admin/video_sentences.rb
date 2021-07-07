@@ -18,6 +18,7 @@ ActiveAdmin.register VideoSentence do
   remove_filter :chapter, :section, :versions, :detail, :questions
   permit_params :sentence, :timestampStart, :timestampEnd, :videoId, :chapterId
   filter :videoId, as: :numeric
+  filter :similar_to_question, as: :number, label: "Similar to Question ID"
   preserve_default_filters!
 
   action_item only: :index do
@@ -25,7 +26,7 @@ ActiveAdmin.register VideoSentence do
   end
 
   collection_action :upload_transcribe do
-    render 'admin/video_setences/import_transcribe'
+    render 'import_transcribe'
   end
 
   collection_action :import_transcribe, method: :post do
@@ -46,10 +47,24 @@ ActiveAdmin.register VideoSentence do
     selectable_column
     id_column
     column ("Video") { |vs|auto_link(vs.video)}
-    column ("Chapter") {|vs| auto_link(vs.chapter) }
+    column ("Chapter") { |vs| auto_link(vs.chapter) }
     column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
     column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
+
+    if params[:q].present? and params[:q][:similar_to_question].present?
+      questionId = params[:q][:similar_to_question].to_i
+      question = Question.find(questionId)
+
+      render partial: 'keywords', :locals => {:question => question}
+      render partial: 'similar_to_question', :locals => {:question => question}
+    end
+
+    actions defaults: false do |sentence|
+      if params[:q].present? and params[:q][:similar_to_question].present?
+        item "Add to Question", '#!', class: 'member_link', onclick: "add_sentence_mapping(#{sentence.id})"
+      end
+    end
   end
 
   member_action :mydup do
@@ -106,6 +121,18 @@ ActiveAdmin.register VideoSentence do
         super.hinglish.addDetail(regex_data)
       else
         super.hinglish.addDetail
+      end
+    end
+
+    def add_sentence_to_question
+      begin
+        questionId = params.require('questionId').to_i
+        sentenceId = params.require('sentenceId').to_i
+
+        QuestionVideoSentence.create(:videoSentenceId => sentenceId, :questionId => questionId)
+        render json: {:msg => :ok}, status: 200
+      rescue => exception
+        render json: {:error => exception.to_s}, status: 500
       end
     end
 

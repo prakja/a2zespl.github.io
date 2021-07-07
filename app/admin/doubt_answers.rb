@@ -62,7 +62,12 @@ ActiveAdmin.register DoubtAnswer do
         doubt_answer.doubt.goodFlag
       }
       end
-    actions
+    actions defaults: true do |doubt_answer|
+      if params[:q].present? and params[:q][:doubt_questionId_eq].present?
+        question_id = params[:q][:doubt_questionId_eq].to_i
+        item 'Add Answer to Question Explanation', merge_doubt_answer_admin_question_path(question_id, doubtAnswerId: doubt_answer.id), class: 'member_link', method: :post, data: {confirm: "Please confirm that this doubt answer should be added to question ID: #{question_id} explanation"}
+      end
+    end
   end
   
   action_item :doubt_answer_count, only: :index do

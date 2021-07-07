@@ -891,6 +891,81 @@ CREATE OPERATOR public.- (
 COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
 
 
+
+--
+-- Name: context_dict; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: -
+--
+
+CREATE TEXT SEARCH DICTIONARY public.context_dict (
+    TEMPLATE = pg_catalog.simple,
+    stopwords = 'english' );
+
+
+--
+-- Name: context_dict; Type: TEXT SEARCH CONFIGURATION; Schema: public; Owner: -
+--
+
+CREATE TEXT SEARCH CONFIGURATION public.context_dict (
+    PARSER = pg_catalog."default" );
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR asciiword WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR word WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR numword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR email WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR url WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR host WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR sfloat WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR version WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword_numpart WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword_part WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword_asciipart WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR numhword WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR asciihword WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR hword WITH public.context_dict;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR url_path WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR file WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR "float" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR "int" WITH simple;
+
+ALTER TEXT SEARCH CONFIGURATION public.context_dict
+    ADD MAPPING FOR uint WITH simple;
+
+
 SET default_tablespace = '';
 
 --
@@ -7655,6 +7730,15 @@ COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision dat
 -- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
+=======
+--
+
+COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision data table for block_content entities.';
+
+
+--
+-- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 CREATE SEQUENCE public.drupal_block_content_id_seq
     AS integer
     START WITH 1
@@ -21360,5 +21444,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210611075034'),
 ('20210624102840'),
 ('20210706105329');
-
+('20210706105329'),
+('20210706140821');
 

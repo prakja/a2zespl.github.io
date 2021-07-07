@@ -263,7 +263,7 @@ class Question < ApplicationRecord
   scope :NEET_Test_Questions, -> {where('exists (select * from "TestQuestion", "Test" where "questionId" = "Question"."id" and "Test"."id" = "TestQuestion"."testId" and "Test"."userId" is null and "Test"."exam" in (\'NEET\', \'AIPMT\'))')}
   scope :AIIMS_Questions, -> {joins("INNER JOIN \"QuestionDetail\" on \"QuestionDetail\".\"questionId\"=\"Question\".\"id\" and \"QuestionDetail\".\"exam\" = 'AIIMS' and \"Question\".\"deleted\"=false")}
   #scope :unused_in_high_yield_bio, -> {where('"id" in (select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" = 270) and "seqNum" = 0 except select "questionId" from "TestQuestion" where "testId" in (select "testId" from "CourseTest" where "courseId" in (148,452)))')}
-  scope :unused_questions, -> {where('not exists (select * from "TestQuestion" where (exists (select * from "CourseTest" where "CourseTest"."testId" = "TestQuestion"."testId") or exists (select * from "ChapterTest" where "ChapterTest"."testId" = "TestQuestion"."testId")) and "TestQuestion"."questionId" = "Question"."id") or not exists (select * from "ChapterQuestion" where "ChapterQuestion"."questionId" = "Question"."id")')}
+  scope :unused_questions, -> {where('not exists (select * from "TestQuestion" where (exists (select * from "CourseTest" where "CourseTest"."testId" = "TestQuestion"."testId") or exists (select * from "ChapterTest" where "ChapterTest"."testId" = "TestQuestion"."testId")) and "TestQuestion"."questionId" = "Question"."id") and not exists (select * from "ChapterQuestion" where "ChapterQuestion"."questionId" = "Question"."id")')}
 
   scope :abcd_options, -> {where('"type" = \'MCQ-SO\' and "question" ~* \'.*?\s*.*?\(a\).*?\s*.*?\(b\).*?\s*.*?\(c\).*?\s*.*?\(d\).*\' and "question" !~* \'.*?\s*.*?\(?1\)?\.?.*?\s*.*?\(?2\)?\.?.*?\s*.*?\(?3\)?\.?.*?\s*.*?\(?4\)?\.?.*\'')}
 
@@ -318,6 +318,18 @@ class Question < ApplicationRecord
   end
 
   def use_chapter=(attr)
+  end
+
+  def essential_keywords
+    question_text = ActionView::Base.full_sanitizer.sanitize(self.question)
+
+    # using context_dict because pg dicts will perform stemming which were not giving good results
+    # in our use case
+    normalized_question_text = ActiveRecord::Base
+      .connection.execute("select to_tsvector('context_dict', '#{question_text}'::TEXT )").to_a.first['to_tsvector']
+
+    # remove all puncations, numbers and just keep words
+    normalized_question_text.scan(/\w+(?:'\w+)*/).filter { |r| r.gsub(/[^a-z]/i, '').length > 0}
   end
 
   amoeba do
