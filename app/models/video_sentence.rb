@@ -30,6 +30,28 @@ class VideoSentence < ApplicationRecord
     joins(:video).where({"Video": {language: 'hinglish'}})
   }
 
+  scope :similar_to_question, ->(questionId) {
+    question = Question.where(:id => questionId).where.not(:topicId => nil).first
+
+    if question.nil?
+      raise "Can't find video sentences for question with no topic"
+    end
+
+    search_query = question.essential_keywords.join(' | ')
+
+    where(:chapterId => question.topicId)
+      .where.not(:id => question.video_sentences.pluck(:id))
+      .where("
+        to_tsvector('english', sentence) @@ to_tsquery(?) OR 
+        to_tsvector('english', sentence1) @@ to_tsquery(?)
+        ".strip, search_query, search_query
+      )
+  }
+
+  def self.ransackable_scopes(_auth_object = nil)
+    [:similar_to_question]
+  end
+
   def sentenceHtml
     self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
   end

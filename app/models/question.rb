@@ -320,6 +320,18 @@ class Question < ApplicationRecord
   def use_chapter=(attr)
   end
 
+  def essential_keywords
+    question_text = ActionView::Base.full_sanitizer.sanitize(self.question)
+
+    # using context_dict because pg dicts will perform stemming which were not giving good results
+    # in our use case
+    normalized_question_text = ActiveRecord::Base
+      .connection.execute("select to_tsvector('context_dict', '#{question_text}'::TEXT )").to_a.first['to_tsvector']
+
+    # remove all puncations, numbers and just keep words
+    normalized_question_text.scan(/\w+(?:'\w+)*/).filter { |r| r.gsub(/[^a-z]/i, '').length > 0}
+  end
+
   amoeba do
     enable
     include_association :ncert_sentences
