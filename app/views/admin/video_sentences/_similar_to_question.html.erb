@@ -1,5 +1,29 @@
 <script>
-  function add_sentence_mapping(sentenceId, questionId){
-    
+  function add_sentence_mapping(sentenceId) {
+    const questionId = <%= question.id %>;
+    $.ajax({
+      type: 'POST',
+      url: `/admin/video_sentences/add_to_question`,
+      data: {
+        questionId,
+        sentenceId,
+      },
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name=\"csrf-token\"]').attr('content'));
+      },
+    }).done((data) => {
+      alert(`Successfully Added sentence to question !`);
+
+      // disable "Add to question"
+      $(`#video_sentence_${sentenceId} .member_link`).removeAttr('onclick');
+      $(`#video_sentence_${sentenceId} .member_link`).removeAttr('href');
+      $(`#video_sentence_${sentenceId} .member_link`).attr('style', 'pointer-events: none;cursor: default;');
+      $(`#video_sentence_${sentenceId} .member_link`).html('Added');
+    }).fail((xhr, status, error) => {
+      alert(`Something went wrong, check console !`);
+      console.error(xhr.responseJSON);
+    });
+
+    return false;
   }
-<script>
+</script>

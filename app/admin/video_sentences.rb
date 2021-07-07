@@ -51,38 +51,20 @@ ActiveAdmin.register VideoSentence do
     column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
     column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
-    actions defaults: false do |sentence|
-      if params[:q].present? and params[:q][:similar_to_question].present?
-        questionId = params[:q][:similar_to_question].to_i
-        item "Add to Question", '#', class: 'member_link', onclick: "
-          const sentenceId = #{sentence.id};
-          const questionId = #{questionId};
-
-          $.ajax({
-            type: 'POST',
-            url: `/admin/video_sentences/add_to_question`,
-            data: {
-              questionId, 
-              sentenceId,
-            },
-            beforeSend: function(xhr) {
-              xhr.setRequestHeader('X-CSRF-Token', $('meta[name=\"csrf-token\"]').attr('content'));
-            },
-          }).done((data) => {
-            alert(`Successfully Added sentence to question !`);
-            $(`#video_sentence_${sentenceId}`).hide();
-          }).fail((xhr, status, error) => {
-            alert(`Something went wrong, check console !`);
-            console.error(xhr.responseJSON);
-          });
-        "
-      end
-    end
 
     if params[:q].present? and params[:q][:similar_to_question].present?
       questionId = params[:q][:similar_to_question].to_i
       question = Question.find(questionId)
+
       render partial: 'keywords', :locals => {:question => question}
+      render partial: 'similar_to_question', :locals => {:question => question}
+    end
+
+    actions defaults: false do |sentence|
+      if params[:q].present? and params[:q][:similar_to_question].present?
+        questionId = params[:q][:similar_to_question].to_i
+        item "Add to Question", '#!', class: 'member_link', onclick: "add_sentence_mapping(#{sentence.id})"
+      end
     end
   end
 
