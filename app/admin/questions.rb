@@ -336,7 +336,7 @@ ActiveAdmin.register Question do
     if resource.explanation.include? "doubt-answer-#{doubt_answer.id}"
       redirect_back fallback_location: collection_path, flash: {error: "doubt answer already merged"}
     else
-      resource.update_column('explanation', resource.explanation + '<br />' + "'<p class=\"doubt-answer-copy\" id=\"doubt-answer-#{doubt_answer.id}\">#{doubt_answer.content}</p>'")
+      resource.update_column('explanation', resource.explanation + '<br />' + "<p class='doubt-answer-copy' id='doubt-answer-#{doubt_answer.id}'>#{doubt_answer.content}</p>")
       redirect_back fallback_location: collection_path, notice: "doubt answer merged with question explanation"
     end
   end
