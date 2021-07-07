@@ -891,6 +891,7 @@ CREATE OPERATOR public.- (
 COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
 
 
+
 --
 -- Name: context_dict; Type: TEXT SEARCH DICTIONARY; Schema: public; Owner: -
 --
@@ -7729,6 +7730,15 @@ COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision dat
 -- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
+=======
+--
+
+COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision data table for block_content entities.';
+
+
+--
+-- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
 CREATE SEQUENCE public.drupal_block_content_id_seq
     AS integer
     START WITH 1
@@ -21433,7 +21443,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210602041533'),
 ('20210611075034'),
 ('20210624102840'),
+('20210706105329');
 ('20210706105329'),
 ('20210706140821');
-
 
