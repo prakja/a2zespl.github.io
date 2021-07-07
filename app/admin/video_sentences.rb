@@ -26,7 +26,7 @@ ActiveAdmin.register VideoSentence do
   end
 
   collection_action :upload_transcribe do
-    render 'admin/video_setences/import_transcribe'
+    render 'import_transcribe'
   end
 
   collection_action :import_transcribe, method: :post do
@@ -53,7 +53,29 @@ ActiveAdmin.register VideoSentence do
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
     actions defaults: false do |sentence|
       if params[:q].present? and params[:q][:similar_to_question].present?
-        item "Create Mapping", class: 'member_link'
+        questionId = params[:q][:similar_to_question].to_i
+        item "Add to Question", '#', class: 'member_link', onclick: "
+          const sentenceId = #{sentence.id};
+          const questionId = #{questionId};
+
+          $.ajax({
+            type: 'POST',
+            url: `/admin/video_sentences/add_to_question`,
+            data: {
+              questionId, 
+              sentenceId,
+            },
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRF-Token', $('meta[name=\"csrf-token\"]').attr('content'));
+            },
+          }).done((data) => {
+            alert(`Successfully Added sentence to question !`);
+            $(`#video_sentence_${sentenceId}`).hide();
+          }).fail((xhr, status, error) => {
+            alert(`Something went wrong, check console !`);
+            console.error(xhr.responseJSON);
+          });
+        "
       end
     end
   end
@@ -112,6 +134,18 @@ ActiveAdmin.register VideoSentence do
         super.hinglish.addDetail(regex_data)
       else
         super.hinglish.addDetail
+      end
+    end
+
+    def add_sentence_to_question
+      begin
+        questionId = params.require('questionId').to_i
+        sentenceId = params.require('sentenceId').to_i
+
+        QuestionVideoSentence.create(:videoSentenceId => sentenceId, :questionId => questionId)
+        render json: {:msg => :ok}, status: 200
+      rescue => exception
+        render json: {:error => exception.to_s}, status: 500
       end
     end
 
