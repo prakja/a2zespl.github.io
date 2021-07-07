@@ -339,7 +339,7 @@ class Question < ApplicationRecord
     nouns = tagger.get_nouns(tagged).keys.map { |n| n.downcase.gsub('-', '') }
     nouns.uniq!
 
-    nouns.filter { |w| w.length > 2 and not STOPWORDS.include? w}
+    nouns.filter { |w| w.length > 3 and not STOPWORDS.include? w}
   end
 
   amoeba do
