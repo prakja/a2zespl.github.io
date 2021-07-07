@@ -327,7 +327,7 @@ class Question < ApplicationRecord
 
   STOPWORDS = [
     "cannot", "show", "statement", "group", "life", "forms", "select", "option",
-    "match", "following", "acid"
+    "match", "following", "acid", "study", "name", "reaction"
   ]
 
   def essential_keywords

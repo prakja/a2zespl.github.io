@@ -5,6 +5,12 @@
     flex-wrap: wrap;
   }
 
+  .close {
+    font-size: 60px;
+    font-weight: bold;
+    color: #000;
+  }
+
   .tag {
     background-color: #000;
     color: #fff;
@@ -28,10 +34,39 @@
 
 <div class="essential-keywords">
   <p> Important keywords from <a target="_blank" href="<%= admin_question_path(question.id) %>">
-    <span class="tag green"> Question #<%= question.id %> </span></a> </p>
+    <span class="tag green"> Question #<%= question.id %> </span></a> <button onclick="resetTags()"> Reset</button> </p>
   <div class="keywords-list">
     <% question.essential_keywords.each do |word|%>
-      <p><span class="tag teal"><%= word %></span></p>
+      <p id="tag-<%= word %>">
+        <span class="tag teal"><%= word %><span class="close-btn" onclick="removeFilter('<%= word %>')">&times;</span></span>
+      </p>
     <% end %>
   </div>
 </div>
+
+<script>
+  
+  const removeFilterWords = [];
+  const currentLocation = new URLSearchParams(window.location.search);
+
+  for (var ent of currentLocation.entries()) {
+    ent[0] === 'q[sentence_not_cont_any][]' && removeFilterWords.push(ent[1]);
+  }
+
+  removeFilterWords.forEach(word => {
+    console.log(word);
+    const attr = document.getElementById(`tag-${word}`);
+    !!attr && attr.remove();
+  });
+
+
+  function resetTags() {
+    const questionId = <%= question.id %>;
+    window.location = `${window.location.origin}/admin/video_sentences?q[similar_to_question]=${questionId}`;
+  }
+
+  function removeFilter(word) {
+    const currentLocation = window.location.href;
+    window.location = `${currentLocation}&q[sentence_not_cont_any][]=${word}`;
+  }
+</script>
