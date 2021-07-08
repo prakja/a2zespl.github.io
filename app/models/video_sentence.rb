@@ -43,11 +43,18 @@ class VideoSentence < ApplicationRecord
 
     where(:chapterId => question.topicId)
       .where.not(:id => question.video_sentences.pluck(:id))
+      .select("
+        *,
+        (
+          ts_rank_cd(to_tsvector('english', sentence), to_tsquery('#{search_query}'::TEXT))::decimal +
+          coalesce(ts_rank_cd(to_tsvector('english', sentence1), to_tsquery('#{search_query}'::TEXT))::decimal, 0.00)
+        )  AS sentence_rank
+        ".strip)
       .where("
-        to_tsvector('english', sentence) @@ to_tsquery(?) OR 
+        to_tsvector('english', sentence) @@ to_tsquery(?) or
         to_tsvector('english', sentence1) @@ to_tsquery(?)
         ".strip, search_query, search_query
-      )
+      ).reorder('sentence_rank desc')
   }
 
   def self.ransackable_scopes(_auth_object = nil)

@@ -118,18 +118,21 @@ ActiveAdmin.register VideoSentence do
     include VideoSentenceHelper
 
     def scoped_collection
-
-      if params[:q].present? and params[:q]["similar_to_question"].present?
-        questionId = params[:q]["similar_to_question"].to_i
-        exclude = params[:q]["exclude"] || ''
-        exclude_keyword = exclude.split(',')
-        params[:q]["similar_to_question"] = {:questionId => questionId, :exclude => exclude_keyword}
-      end
-
       regex_data = (params[:q].present? and params[:q]["groupings"].present? and params[:q]["groupings"]["0"].present? and params[:q]["groupings"]["0"]["sentence_matches_regexp"].present?) ? params[:q]["groupings"]["0"]["sentence_matches_regexp"] : nil
       if regex_data
         super.hinglish.addDetail(regex_data)
       else
+        if params[:q].present? and params[:q]["similar_to_question"].present?
+          puts params[:q]["similar_to_question"]
+          questionId = params[:q]["similar_to_question"]
+          questionId = questionId['questionId'] || questionId
+
+          exclude = params[:q]["exclude"] || ''
+          exclude_keyword = exclude.split(',')
+          params[:q]["similar_to_question"] = {:questionId => questionId.to_i, :exclude => exclude_keyword}
+        else
+          super
+        end
         super.hinglish.addDetail
       end
     end
