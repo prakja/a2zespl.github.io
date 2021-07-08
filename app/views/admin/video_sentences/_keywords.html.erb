@@ -30,43 +30,44 @@
     color: #fff !important;
     background-color: #1b5e20 !important
   }
+
+  .close-button {
+    cursor: pointer;
+  }
 </style>
 
 <div class="essential-keywords">
   <p> Important keywords from <a target="_blank" href="<%= admin_question_path(question.id) %>">
-    <span class="tag green"> Question #<%= question.id %> </span></a> <button onclick="resetTags()"> Reset</button> </p>
+    <span class="tag green"> Question #<%= question.id %> </span></a></p>
   <div class="keywords-list">
     <% question.essential_keywords.each do |word|%>
-      <p id="tag-<%= word %>">
-        <span class="tag teal"><%= word %><span class="close-btn" onclick="removeFilter('<%= word %>')">&times;</span></span>
-      </p>
+      <% unless exclude_keywords.include? word%>
+        <p id="tag-<%= word %>">
+          <span class="tag teal"><%= word %><span class="close-btn" onclick="removeFilter('<%= word %>')">&times;</span></span>
+        </p>
+      <% end %>
     <% end %>
+    <p> <a href="#" onclick="resetTags()"> <span class="tag green">Reset Tags</span></a> </p>
   </div>
 </div>
 
 <script>
-  
-  const removeFilterWords = [];
-  const currentLocation = new URLSearchParams(window.location.search);
 
-  for (var ent of currentLocation.entries()) {
-    ent[0] === 'q[sentence_not_cont_any][]' && removeFilterWords.push(ent[1]);
-  }
-
-  removeFilterWords.forEach(word => {
-    console.log(word);
-    const attr = document.getElementById(`tag-${word}`);
-    !!attr && attr.remove();
-  });
-
+  const questionId = <%= question.id %>;
 
   function resetTags() {
-    const questionId = <%= question.id %>;
-    window.location = `${window.location.origin}/admin/video_sentences?q[similar_to_question]=${questionId}`;
+    const currentLocation = new URLSearchParams(window.location.href);
+    currentLocation.delete('q[exclude]');
+    const queryParams = decodeURIComponent(currentLocation.toString()).split('?')[1];
+    window.location = `/admin/video_sentences?${queryParams}`;
   }
 
   function removeFilter(word) {
-    const currentLocation = window.location.href;
-    window.location = `${currentLocation}&q[sentence_not_cont_any][]=${word}`;
+    const currentLocation = new URLSearchParams(window.location.href);
+    const prevExclude = currentLocation.get('q[exclude]');
+    const exclude = prevExclude === null ? word : `${prevExclude},${word}`;
+    currentLocation.set('q[exclude]', exclude);
+
+    window.location = decodeURIComponent(currentLocation.toString());
   }
 </script>
