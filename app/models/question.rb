@@ -1,7 +1,11 @@
+require 'engtagger'
+
 class Question < ApplicationRecord
   include ActiveModel::Dirty
+
   before_save :default_values
   after_save :update_question_bank_chapters
+
   def default_values
     self.options = ["(1)", "(2)", "(3)", "(4)"] if self.options.blank?
     self.level = nil if self.level.blank?
@@ -320,16 +324,22 @@ class Question < ApplicationRecord
   def use_chapter=(attr)
   end
 
+
+  STOPWORDS = [
+    "cannot", "show", "statement", "group", "life", "forms", "select", "option",
+    "match", "following", "acid", "study", "name", "reaction"
+  ]
+
   def essential_keywords
     question_text = ActionView::Base.full_sanitizer.sanitize(self.question)
 
-    # using context_dict because pg dicts will perform stemming which were not giving good results
-    # in our use case
-    normalized_question_text = ActiveRecord::Base
-      .connection.execute("select to_tsvector('context_dict', '#{question_text}'::TEXT )").to_a.first['to_tsvector']
+    tagger = EngTagger.new
+    tagged = tagger.add_tags(question_text)
 
-    # remove all puncations, numbers and just keep words
-    normalized_question_text.scan(/\w+(?:'\w+)*/).filter { |r| r.gsub(/[^a-z]/i, '').length > 0}
+    nouns = tagger.get_nouns(tagged).keys.map { |n| n.downcase.gsub('-', '') }
+    nouns.uniq!
+
+    nouns.filter { |w| w.length > 3 and not STOPWORDS.include? w}
   end
 
   amoeba do

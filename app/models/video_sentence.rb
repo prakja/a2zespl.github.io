@@ -30,22 +30,31 @@ class VideoSentence < ApplicationRecord
     joins(:video).where({"Video": {language: 'hinglish'}})
   }
 
-  scope :similar_to_question, ->(questionId) {
+  scope :similar_to_question, ->(questionId, exclude) {
     question = Question.where(:id => questionId).where.not(:topicId => nil).first
+    exclude = exclude[1] || []
 
     if question.nil?
       raise "Can't find video sentences for question with no topic"
     end
 
-    search_query = question.essential_keywords.join(' | ')
+    keywords = question.essential_keywords.filter { |e| not exclude.include? e}
+    search_query = keywords.join(' | ')
 
     where(:chapterId => question.topicId)
       .where.not(:id => question.video_sentences.pluck(:id))
+      .select("
+        *,
+        (
+          ts_rank_cd(to_tsvector('english', sentence), to_tsquery('#{search_query}'::TEXT))::decimal +
+          coalesce(ts_rank_cd(to_tsvector('english', sentence1), to_tsquery('#{search_query}'::TEXT))::decimal, 0.00)
+        )  AS sentence_rank
+        ".strip)
       .where("
-        to_tsvector('english', sentence) @@ to_tsquery(?) OR 
+        to_tsvector('english', sentence) @@ to_tsquery(?) or
         to_tsvector('english', sentence1) @@ to_tsquery(?)
         ".strip, search_query, search_query
-      )
+      ).reorder('sentence_rank desc')
   }
 
   def self.ransackable_scopes(_auth_object = nil)

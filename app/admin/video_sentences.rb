@@ -52,12 +52,14 @@ ActiveAdmin.register VideoSentence do
     column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
 
-    if params[:q].present? and params[:q][:similar_to_question].present?
-      questionId = params[:q][:similar_to_question].to_i
+    if params[:q].present? and not params[:q][:similar_to_question].empty?
+      scope = params[:q][:similar_to_question]
+      questionId, exclude = scope[:questionId], scope[:exclude]
+
       question = Question.find(questionId)
 
-      render partial: 'keywords', :locals => {:question => question}
       render partial: 'similar_to_question', :locals => {:question => question}
+      render partial: 'keywords', :locals => {:question => question, :exclude_keywords => exclude}
     end
 
     actions defaults: false do |sentence|
@@ -120,6 +122,17 @@ ActiveAdmin.register VideoSentence do
       if regex_data
         super.hinglish.addDetail(regex_data)
       else
+        if params[:q].present? and params[:q]["similar_to_question"].present?
+          puts params[:q]["similar_to_question"]
+          questionId = params[:q]["similar_to_question"]
+          questionId = questionId['questionId'] || questionId
+
+          exclude = params[:q]["exclude"] || ''
+          exclude_keyword = exclude.split(',')
+          params[:q]["similar_to_question"] = {:questionId => questionId.to_i, :exclude => exclude_keyword}
+        else
+          super
+        end
         super.hinglish.addDetail
       end
     end
