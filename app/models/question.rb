@@ -2,6 +2,7 @@ require 'engtagger'
 
 class Question < ApplicationRecord
   include ActiveModel::Dirty
+  include QuestionKeyword
 
   before_save :default_values
   after_save :update_question_bank_chapters
@@ -324,22 +325,9 @@ class Question < ApplicationRecord
   def use_chapter=(attr)
   end
 
-
-  STOPWORDS = [
-    "cannot", "show", "statement", "group", "life", "forms", "select", "option",
-    "match", "following", "acid", "study", "name", "reaction"
-  ]
-
   def essential_keywords
-    question_text = ActionView::Base.full_sanitizer.sanitize(self.question)
-
-    tagger = EngTagger.new
-    tagged = tagger.add_tags(question_text)
-
-    nouns = tagger.get_nouns(tagged).keys.map { |n| n.downcase.gsub('-', '') }
-    nouns.uniq!
-
-    nouns.filter { |w| w.length > 3 and not STOPWORDS.include? w}
+    nouns = get_nouns_from_text self.question
+    filter_out_stopwords words: nouns, stopwords: get_stopwords
   end
 
   amoeba do
@@ -348,4 +336,5 @@ class Question < ApplicationRecord
     include_association :video_sentences
     include_association :questionSubTopics
   end
+
 end
