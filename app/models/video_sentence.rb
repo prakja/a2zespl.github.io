@@ -41,7 +41,6 @@ class VideoSentence < ApplicationRecord
     keywords = question.essential_keywords.filter { |e| not exclude.include? e}
     search_query = keywords.join(' | ')
 
-    puts "here ===? #{search_query}"
     where(:chapterId => question.topicId)
       .where.not(:id => question.video_sentences.pluck(:id))
       .select("
