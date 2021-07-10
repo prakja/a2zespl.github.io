@@ -11,7 +11,7 @@ ActiveAdmin.register Topic do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests, :sections, :topicNotes, :notes, :topicFlashCards, :flash_cards, :target_chapters, :targets, :ncertChapterQuestions, :ncertQuestions
+  remove_filter :questions, :topicQuestions, :subject, :videos, :topicVideos, :doubts, :issues, :scheduleItems, :subTopics, :versions, :topicSubjects, :topicChapterTests, :tests, :sections, :topicNotes, :notes, :topicFlashCards, :flash_cards, :target_chapters, :targets, :ncertChapterQuestions, :ncertQuestions, :glossaries, :chapter_glossaries, :question_stopword
   permit_params :free, :name, :image, :description, :position, :createdAt, :updatedAt, :seqid, :importUrl, :published, :isComingSoon, :subjectId, :subject_id, :sectionReady
   preserve_default_filters!
   filter :subjects, as: :searchable_select, multiple: true, collection: -> {Subject.neetprep_course_subjects}, label: "Subject"
