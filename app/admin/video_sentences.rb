@@ -47,20 +47,20 @@ ActiveAdmin.register VideoSentence do
     selectable_column
     id_column
     column ("Video") { |vs|auto_link(vs.video)}
-    if params[:q].present? and not params[:q][:similar_to_question].empty?
+    if params[:q].present? and params[:q][:similar_to_question].present? and not params[:q][:similar_to_question].empty?
       column :prevSentence 
     else
       column ("Chapter") { |vs| auto_link(vs.chapter) }
     end
     column (:sentence) { |vs| best_in_place vs, :sentence, url: [:admin, vs] }
-    if params[:q].present? and not params[:q][:similar_to_question].empty?
+    if params[:q].present? and params[:q][:similar_to_question].present? and not params[:q][:similar_to_question].empty?
       column :nextSentence
     else
       column (:sentenceAlt) { |vs| best_in_place vs, :sentence1, url: [:admin, vs]}
     end
     column ("Timestamp") { |vs| "#{vs.timestampStart} - #{vs.timestampEnd}"}
 
-    if params[:q].present? and not params[:q][:similar_to_question].empty?
+    if params[:q].present? and params[:q][:similar_to_question].present? and not params[:q][:similar_to_question].empty?
       scope = params[:q][:similar_to_question]
       questionId, exclude = scope[:questionId], scope[:exclude]
 
