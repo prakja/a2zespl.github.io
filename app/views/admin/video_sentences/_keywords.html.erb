@@ -38,10 +38,13 @@
 
 <%= render partial: 'mathjax' %>
 <div class="essential-keywords">
+  <p>
+    <span id="question-text"><%=raw(question.question)%></span>
+    <span id="question-option">Correct Option: <%=question.correctOption%></span>
+  </p>
+  <br />
   <p> Important keywords from <a target="_blank" href="<%= admin_question_path(question.id) %>">
     <span class="tag green"> Question #<%= question.id %> </span></a>
-    <br />
-    <span id="question-text"><%=raw(question.question)%></span>
   </p>
   <div class="keywords-list">
     <% question.essential_keywords.each do |word|%>

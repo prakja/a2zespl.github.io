@@ -43,9 +43,7 @@ class VideoSentence < ApplicationRecord
 
     where(:chapterId => question.topicId)
       .where.not(:id => question.video_sentences.pluck(:id))
-      .select("
-        *,
-        (
+      .select("(
           ts_rank_cd(to_tsvector('english', sentence), to_tsquery('#{search_query}'::TEXT))::decimal +
           coalesce(ts_rank_cd(to_tsvector('english', sentence1), to_tsquery('#{search_query}'::TEXT))::decimal, 0.00)
         )  AS sentence_rank
