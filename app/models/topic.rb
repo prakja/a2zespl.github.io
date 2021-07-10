@@ -50,6 +50,8 @@ class Topic < ApplicationRecord
   has_many :chapter_glossaries, foreign_key: "chapterId", class_name: 'ChapterGlossary'
   has_many :glossaries, through: :chapter_glossaries
 
+  has_one :question_stopword, foreign_key: :topicId, class_name: :TopicQuestionStopWord
+
   def hinglish_videos
     self.videos.where(language: 'hinglish')
   end
