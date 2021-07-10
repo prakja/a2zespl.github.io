@@ -404,7 +404,7 @@ ActiveAdmin.register Question do
   end
 
   action_item :relevant_video_sentences, only: :show do
-    link_to 'Relevant Video Sentences', "../../admin/video_sentences?q[similar_to_question]=#{resource.id.to_s}"
+    link_to 'Relevant Video Sentences', "/admin/video_sentences?q[similar_to_question]=#{resource.id.to_s}"
   end
 
   #action_item :see_physics_difficult_questions, only: :index do
@@ -568,7 +568,7 @@ ActiveAdmin.register Question do
         url: admin_video_sentences_path(q: {chapterId_eq: f.object.topicId}),
         display_name: 'sentenceContext', predicate: 'matches_regexp', 
         minimum_input_length: 5, 
-        hint: raw("<a href='#{admin_videos_path(order: 'seqId_asc_and_id_asc', q: {videoTopics_chapterId_eq: f.object.topicId, language_eq: 'hinglish'})}' target='_blank'>Chapter Videos</a> List used for linking") if f.object.topicId.present?
+        hint: raw("<a href='#{admin_videos_path(order: 'seqId_asc_and_id_asc', q: {videoTopics_chapterId_eq: f.object.topicId, language_eq: 'hinglish'})}' target='_blank'>Chapter Videos</a> List used for linking <br />Check <a href='#{admin_video_sentences_path(q: {similar_to_question: f.object.id})}' target='_blank'>Suggested Video Sentences</a> to link") if f.object.topicId.present?
 
       render partial: 'cross_chapter'
       render partial: 'question_edit'
