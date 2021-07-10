@@ -613,6 +613,53 @@ $$;
 
 
 --
+-- Name: get_chapter_wise_stopwords_from_question(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_chapter_wise_stopwords_from_question(topic_id integer) RETURNS json
+    LANGUAGE plpgsql
+    AS $$ 
+        DECLARE stopword_list TEXT[];
+        BEGIN
+          RETURN (
+            SELECT
+              row_to_json(u) AS stopword_list 
+            FROM
+              (
+                SELECT
+                  ARRAY_AGG(word) AS stopwords,
+                  COUNT(word) AS word_count 
+                FROM
+                  (
+                    SELECT
+                      *,
+                      ((CAST(ndoc AS decimal) / (
+                        SELECT
+                          COUNT(id) 
+                        FROM
+                          "Question" 
+                        WHERE
+                          "topicId" = topic_id 
+                          AND "deleted" = false)) * 100
+                      )
+                      ::FLOAT AS repr 
+                    FROM
+                      ts_stat(format('SELECT to_tsvector(''context_dict'', question) FROM "Question" WHERE "topicId" = %s', topic_id)) 
+                    WHERE
+                      LENGTH(word) > 3 
+                    ORDER BY
+                      repr DESC 
+                  )
+                  question_stat 
+                WHERE
+                  repr > 8
+              )
+              u);
+        END;
+        $$;
+
+
+--
 -- Name: history_delete(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -889,7 +936,6 @@ CREATE OPERATOR public.- (
 --
 
 COMMENT ON OPERATOR public.- (jsonb, jsonb) IS 'delete matching pairs from left operand';
-
 
 
 --
@@ -1960,6 +2006,36 @@ CREATE SEQUENCE public."ChapterVideo_id_seq"
 --
 
 ALTER SEQUENCE public."ChapterVideo_id_seq" OWNED BY public."ChapterVideo".id;
+
+
+--
+-- Name: VideoSentence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."VideoSentence" (
+    id bigint NOT NULL,
+    "videoId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "timestampStart" double precision,
+    "timestampEnd" double precision,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL,
+    sentence1 text
+);
+
+
+--
+-- Name: ChapterWiseQuestionStopWord; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public."ChapterWiseQuestionStopWord" AS
+ SELECT chapter_wise_data.topic_id AS "topicId",
+    public.get_chapter_wise_stopwords_from_question(chapter_wise_data.topic_id) AS "questionStopwords"
+   FROM ( SELECT DISTINCT "VideoSentence"."chapterId" AS topic_id
+           FROM public."VideoSentence") chapter_wise_data
+  WITH NO DATA;
 
 
 --
@@ -6963,24 +7039,6 @@ ALTER SEQUENCE public."VideoQuestion_id_seq" OWNED BY public."VideoQuestion".id;
 
 
 --
--- Name: VideoSentence; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."VideoSentence" (
-    id bigint NOT NULL,
-    "videoId" integer,
-    "chapterId" integer,
-    "sectionId" integer,
-    sentence character varying,
-    "timestampStart" double precision,
-    "timestampEnd" double precision,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL,
-    sentence1 text
-);
-
-
---
 -- Name: VideoSentenceDetail; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -7730,15 +7788,6 @@ COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision dat
 -- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-=======
---
-
-COMMENT ON TABLE public.drupal_block_content_field_revision IS 'The revision data table for block_content entities.';
-
-
---
--- Name: drupal_block_content_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
 CREATE SEQUENCE public.drupal_block_content_id_seq
     AS integer
     START WITH 1
@@ -21443,7 +21492,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210602041533'),
 ('20210611075034'),
 ('20210624102840'),
-('20210706105329');
 ('20210706105329'),
-('20210706140821');
+('20210706140821'),
+('20210709103127'),
+('20210709104030');
+
 
