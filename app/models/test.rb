@@ -6,10 +6,15 @@ class Test < ApplicationRecord
     self.ownerType = nil if self.ownerId.blank?
     self.exam = nil if self.exam.blank?
   end
+  after_validation :check_test_validity
 
   after_commit :after_update_test, if: Proc.new { |model| model.previous_changes[:sections]}, on: [:update]
   before_create :setSections
   before_update :setSections
+
+  def check_test_validity
+    errors.add(:reviewAt, 'is less than started At') if reviewAt.present? and startedAt.present? and reviewAt < startedAt
+  end
 
   def setSections
     if self.pdfURL.blank?
