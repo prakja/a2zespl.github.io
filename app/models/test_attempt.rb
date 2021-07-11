@@ -16,7 +16,7 @@ class TestAttempt < ApplicationRecord
   scope :completed_test_series_tests, -> {test_series.completed}
 
   def completed_attempts_count
-    TestAttempt.where(userId: self.userId, testId: self.testId, completed: true).count
+    TestAttempt.where(userId: self.userId, testId: self.testId).where('"result" is not null').count
   end
 
   scope :score_gte, -> (score){
