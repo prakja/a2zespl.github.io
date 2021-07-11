@@ -14,6 +14,7 @@
         th Email
         th Phone
         th Finished At
+        th Attempt Count
         th Duration
         th Score
       - @paid_attempts.each do |attempt|
@@ -23,6 +24,7 @@
           td = attempt.user.email || attempt.user.user_profile.email
           td = attempt.user.phone || attempt.user.user_profile.phone
           td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = attempt&.completed_attempts_count
           td = raw(((attempt.finishedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.finishedAt.present?
           td = attempt.result["totalMarks"]
 
@@ -36,6 +38,7 @@
         th Email
         th Phone
         th Finished At
+        th Attempt Count
         th Duration
         th Score
       - @inspire_attempts.each do |attempt|
@@ -45,6 +48,7 @@
           td = attempt.user.email || attempt.user.user_profile.email
           td = attempt.user.phone || attempt.user.user_profile.phone
           td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = attempt&.completed_attempts_count
           td = raw(((attempt.updatedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.updatedAt.present?
           td = attempt.result["totalMarks"]
 
@@ -58,6 +62,7 @@
         th Email
         th Phone
         th Finished At
+        th Attempt Count
         th Duration
         th Score
       - @achiever_attempts.each do |attempt|
@@ -67,6 +72,7 @@
           td = attempt.user.email || attempt.user.user_profile.email
           td = attempt.user.phone || attempt.user.user_profile.phone
           td = attempt&.finishedAt&.strftime("%d-%m-%Y %H:%M")
+          td = attempt&.completed_attempts_count
           td = raw(((attempt.updatedAt - attempt.createdAt) / 60).round.to_s + " minutes") if attempt.createdAt.present? and attempt.updatedAt.present?
           td = attempt.result["totalMarks"]
 javascript:

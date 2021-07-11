@@ -15,6 +15,10 @@ class TestAttempt < ApplicationRecord
   scope :completed_dpp_tests, -> {joins(:test).where('"Test"."name" ~ \'Target DPP Test\'').completed}
   scope :completed_test_series_tests, -> {test_series.completed}
 
+  def completed_attempts_count
+    TestAttempt.where(userId: self.userId, testId: self.testId, completed: true).count
+  end
+
   scope :score_gte, -> (score){
     TestAttempt.where("(\"result\"->>'totalMarks')::INTEGER >= ?", score)
   }

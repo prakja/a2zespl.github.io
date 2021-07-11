@@ -31,7 +31,7 @@ ActiveAdmin.register TestAttempt do
     end
     column "Percentage" do |testAttempt|
       if testAttempt.result.present? and testAttempt.result['totalMarks'].present?
-        (testAttempt.result['totalMarks'].to_i / ((testAttempt.test.numQuestions || testAttempt.questions.count).to_i * 4).to_f * 100.0).ceil
+        (testAttempt.result['totalMarks'].to_i / ((testAttempt.test.numQuestions || testAttempt.test.question_ids.count).to_i * 4).to_f * 100.0).ceil
       end
     end
     column "Physics Score", sortable: "physics_score" do |testAttempt|
