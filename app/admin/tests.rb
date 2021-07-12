@@ -1,4 +1,5 @@
 ActiveAdmin.register Test do
+  duplicatable
 permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :discussionEnd, :ownerType, :ownerId, :scholarship, course_ids: [], topic_ids: []
 remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests, :test_attempts, :target, :question_ids
 

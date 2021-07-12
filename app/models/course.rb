@@ -42,4 +42,9 @@ class Course < ApplicationRecord
   has_many :tests, through: :courseCourseTests
   has_many :subjects, class_name: "Subject", foreign_key: "courseId"
   has_many :course_offers, class_name: "CourseOffer", foreign_key: "courseId"
+
+  amoeba do
+    enable
+    include_association :subjects
+  end
 end

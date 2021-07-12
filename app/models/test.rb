@@ -228,4 +228,9 @@ class Test < ApplicationRecord
 
     TestQuestion.import test_questions
   end
+
+  amoeba do
+    enable
+    include_association :testCourseTests
+  end
 end
