@@ -1,11 +1,15 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "application" %>
+<% end %>
+
 <style>
   .canvas-view {
     display: flex;
 
   }
-.colorButtons {
-			display: block;
-			margin: 20px 0;
+  .colorButtons {
+    display: block;
+    margin: 20px 0;
 		}
 
 		canvas {
@@ -54,40 +58,41 @@
 			height: 40px;
 		}
 </style>
-<div class="canvas-view">
-	<div id="sidebar">
-		<div class="colorButtons">
-			<h3>Colour</h3>
-			<input type="color" id="colorpicker" value="#rgb(0,0,0)" class="colorpicker">
-		</div>
-		<div class="colorButtons">
-			<h3>Bg Color</h3>
-			<input type="color" value="#ffffff" id="bgcolorpicker" class="colorpicker">
-		</div>
 
-		<div class="toolsButtons">
-			<h3>Tools</h3>
-			<button id="eraser" class="btn btn-default">Eraser</button>
-			<button id="clear" class="btn btn-danger">Clear</button>
-		</div>
+<div id="canvas_view" style="display: none;">
+  <div class="canvas-view">
+    <div id="sidebar">
+      <div class="colorButtons">
+        <h3>Colour</h3>
+        <input type="color" id="colorpicker" value="#rgb(0,0,0)" class="colorpicker">
+      </div>
+      <div class="colorButtons">
+        <h3>Bg Color</h3>
+        <input type="color" value="#ffffff" id="bgcolorpicker" class="colorpicker">
+      </div>
 
-		<div class="buttonSize">
-			<h3>Size (<span id="showSize">5</span>)</h3>
-			<input type="range" min="1" max="50" value="5" step="1" id="controlSize">
-		</div>
+      <div class="toolsButtons">
+        <h3>Tools</h3>
+        <button id="eraser" class="btn btn-default">Eraser</button>
+        <button id="clear" class="btn btn-danger">Clear</button>
+      </div>
 
-		<div class="extra">
-			<h3>Save</h3>
-      <button id="save" class="btn btn-default" onclick="saveCanvas()">Save</button>
-			<a id="saveToImage" class="btn btn-warning">Download</a>
-		</div>
-	</div>
-  <canvas id="canvas1" class="canvas" width="1000" height="600" style="border:2px solid;"></canvas>
+      <div class="buttonSize">
+        <h3>Size (<span id="showSize">5</span>)</h3>
+        <input type="range" min="1" max="50" value="5" step="1" id="controlSize">
+      </div>
+
+      <div class="extra">
+        <h3>Save</h3>
+        <button id="save" class="btn btn-default" onclick="saveCanvas()">Save</button>
+        <a id="saveToImage" class="btn btn-warning">Download</a>
+      </div>
+    </div>
+    <canvas id="canvas1" class="canvas" width="1500" height="800" style="border:2px solid;"></canvas>
+  </div>
 </div>
 
-<% content_for :head do %>
-  <%= javascript_include_tag "application" %>
-<% end %>
+<button onclick="$(`#canvas_view`).toggle();"> Drawing Canvas</button>
 
 <script>
   init();

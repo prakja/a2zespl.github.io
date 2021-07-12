@@ -129,8 +129,8 @@
       </div>
     </div>
     <div style="text-align: center">
+      <%= render :partial => 'canvas' %>
       <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
-      <%= render :partial => 'canvas', locals: { post: 23 } %>
     </div>
   <% else %>
     <p>You can't post answer to this doubt as it is not assigned to you. </p>
