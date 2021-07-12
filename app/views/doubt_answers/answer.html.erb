@@ -20,6 +20,7 @@
     reset();
   };
 </script>
+
 <div style="padding: 8px">
   <div style="margin: 16px; padding: 8px; border: 1px solid #828282">
     <% if(@doubt.admin_user.nil?) %>
@@ -129,6 +130,7 @@
     </div>
     <div style="text-align: center">
       <button name="post_button" id="post_button" type="button" onclick="putAnswer()">Post Answer</button>
+      <%= render :partial => 'canvas', locals: { post: 23 } %>
     </div>
   <% else %>
     <p>You can't post answer to this doubt as it is not assigned to you. </p>
