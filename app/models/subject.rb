@@ -14,7 +14,7 @@ class Subject < ApplicationRecord
 
   self.table_name = "Subject"
   scope :neetprep_course, -> {where(courseId: [Rails.configuration.hinglish_full_course_id, Rails.configuration.english_full_course_id, Rails.configuration.boostup_course_id])}
-  belongs_to :course, foreign_key: 'courseId', class_name: 'Course'
+  belongs_to :course, foreign_key: 'courseId', class_name: 'Course', optional: true
 
   has_many :subjectTopics, -> {where(deleted: false)}, foreign_key: :subjectId, class_name: 'SubjectChapter'
   has_many :topics, through: :subjectTopics

@@ -1,6 +1,6 @@
 class CourseTest < ApplicationRecord
   self.table_name = "CourseTest"
-  belongs_to :course, class_name: "Course", foreign_key: "courseId"
+  belongs_to :course, class_name: "Course", foreign_key: "courseId", optional: true 
   belongs_to :test, class_name: "Test", foreign_key: "testId"
 
   before_create :setCreatedTime, :setUpdatedTime

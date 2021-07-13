@@ -1,6 +1,6 @@
 class SubjectChapter < ApplicationRecord
   self.table_name = "SubjectChapter"
-  belongs_to :subject, class_name: "Subject", foreign_key: 'subjectId'
+  belongs_to :subject, class_name: "Subject", foreign_key: 'subjectId', optional: true
   belongs_to :topic, class_name: "Topic", foreign_key: 'chapterId'
 
   before_create :setCreatedTime, :setUpdatedTime

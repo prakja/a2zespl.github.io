@@ -43,6 +43,12 @@ class Course < ApplicationRecord
   has_many :subjects, class_name: "Subject", foreign_key: "courseId"
   has_many :course_offers, class_name: "CourseOffer", foreign_key: "courseId"
 
+  def clone_course!
+    new_course = self.amoeba_dup
+    new_course.save!
+    return new_course
+  end
+
   amoeba do
     enable
     include_association :subjects

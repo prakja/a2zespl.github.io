@@ -26,7 +26,7 @@ class Test < ApplicationRecord
     if self.sections.blank?
       self.sections = nil
     else
-      self.sections = JSON.parse(self.sections)
+      self.sections = JSON.parse(self.sections.to_s)
     end
   end
 

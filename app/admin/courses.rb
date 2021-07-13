@@ -75,4 +75,13 @@ ActiveAdmin.register Course do
     link_to 'Sync Course Questions', '/questions/sync_course_questions/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This will potentially modify all questions of the course and even delete unintended questions. Recommended to take a backup of ChapterQuestion before proceeding'}
   end
 
+  member_action :clone_course, method: :post do
+    new_resource = resource.clone_course!
+    redirect_to admin_course_path(new_resource), notice: "New cloned course created!" 
+  end
+
+  action_item :clone_course, only: :show, if: proc{current_admin_user.admin?} do
+    link_to 'Clone Course', clone_course_admin_course_path(resource), method: :post 
+  end
+
 end
