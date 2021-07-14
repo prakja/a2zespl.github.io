@@ -122,8 +122,14 @@
     <div class="loader"></div>
     <div id="printDiv" class="noprint"><button id='printBtn'>Print</button></div>
     <div id="newsletterContent" style="display:none;">
+      <% test_sections = @test.sections.index_by(&:second) if @test.sections.present? %>
       <% @test_questions.each_with_index do |question, index| %>
-        <div class="dontsplit question"><span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %></div>
+        <div class="dontsplit question">
+          <% if test_sections and test_sections[index + 1] %>
+            <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b><%= test_sections[index + 1][0]%></b></div>
+          <% end %>
+          <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %>
+        </div>
         <% if index + 1 == @test_questions.length %>
           <div>
             <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet</h2>
