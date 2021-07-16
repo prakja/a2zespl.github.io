@@ -38,16 +38,22 @@
 
 <%= render partial: 'mathjax' %>
 <div class="essential-keywords">
+  <h4>Question: </h4>
   <p>
     <span id="question-text"><%=raw(question.question)%></span>
     <span id="question-option">Correct Option: <%=question.correctOption%></span>
   </p>
   <br />
+  <h4>NCERT Sentences: </h4>
+  <% question.ncert_sentences.pluck(:sentence).each_with_index do |sentence, index|%>
+    <p><%= index + 1 %>. <%= sentence %></p>
+  <% end %>
+  <br />
   <p> Important keywords from <a target="_blank" href="<%= admin_question_path(question.id) %>">
     <span class="tag green"> Question #<%= question.id %> </span></a>
   </p>
   <div class="keywords-list">
-    <% question.essential_keywords.each do |word|%>
+    <% question.get_keywords_from_question_ncert_sentences.each do |word|%>
       <% unless exclude_keywords.include? word%>
         <p id="tag-<%= word %>">
           <span class="tag teal"><%= word %><span class="close-btn" onclick="removeFilter('<%= word %>')">&times;</span></span>

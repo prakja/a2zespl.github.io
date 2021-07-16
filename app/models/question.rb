@@ -2,7 +2,7 @@ require 'engtagger'
 
 class Question < ApplicationRecord
   include ActiveModel::Dirty
-  include QuestionKeyword
+  extend QuestionKeyword
 
   before_save :default_values
   after_save :update_question_bank_chapters
@@ -25,14 +25,14 @@ class Question < ApplicationRecord
   after_validation :check_correct_option_of_mcq_type_question
 
   def check_correct_option_of_mcq_type_question
-   errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
+    errors.add(:correctOptionIndex, 'is required field for mcq question') if type == 'MCQ-SO' and correctOptionIndex.blank?
   end
 
   def correctOption
     if not self.options.blank? and self.options.kind_of?(Array) and not self.correctOptionIndex.blank? and self.correctOptionIndex >= 0
       return self.options[self.correctOptionIndex]
     else
-     return nil
+      return nil
     end
   end
 
@@ -54,7 +54,7 @@ class Question < ApplicationRecord
   end
 
   def test_addition_validation
-   errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
+    errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
   end
 
   def after_update_question
@@ -64,8 +64,8 @@ class Question < ApplicationRecord
 
     HTTParty.post(
       Rails.configuration.node_site_url + "api/v1/webhook/afterUpdateQuestion",
-       body: {
-         id: self.id
+        body: {
+          id: self.id
     })
   end
 
@@ -113,7 +113,7 @@ class Question < ApplicationRecord
   before_update :setUpdatedTime
 
   def setUpdatedTime
-   self.updatedAt = Time.now
+    self.updatedAt = Time.now
   end
 
   scope :course_subject_id, ->(subject_id) {
@@ -325,9 +325,21 @@ class Question < ApplicationRecord
   def use_chapter=(attr)
   end
 
-  def essential_keywords
-    nouns = get_nouns_from_text self.question
-    filter_out_stopwords words: nouns, stopwords: get_stopwords
+  def get_keywords_from_question_ncert_sentences
+    topic_stopwords = Question.get_stopwords topic: self.topic
+    question_keywords = Question.essential_keywords self.question, stopwords: topic_stopwords
+
+    ncert_sentences_keywords = []
+    self.ncert_sentences.pluck(:sentence).each do |ncert_sent|
+      ncert_sentences_keywords += Question.essential_keywords ncert_sent,
+        stopwords: topic_stopwords
+    end
+
+    ncert_sentences_keywords = Question.filter_out_stopwords words: ncert_sentences_keywords.uniq,
+      stopwords: topic_stopwords
+
+    keywords = ncert_sentences_keywords + question_keywords
+    keywords.uniq
   end
 
   amoeba do

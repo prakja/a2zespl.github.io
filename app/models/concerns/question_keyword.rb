@@ -17,6 +17,11 @@ module QuestionKeyword
     "select", "select", "show", "shown", "statement", "study", "system"
   ]
 
+  def essential_keywords(content, stopwords:[])
+    nouns = get_nouns_from_text content
+    filter_out_stopwords words: nouns, stopwords: stopwords
+  end
+
   def get_nouns_from_text(text)
     question_text = ActionView::Base.full_sanitizer.sanitize(text)
 
@@ -27,7 +32,7 @@ module QuestionKeyword
     nouns.uniq
   end
 
-  def get_stopwords
+  def get_stopwords(topic:)
     stopwords = QUESTION_COMMON_STOPWORDS + (topic&.question_stopword&.stopwords || [])
     stopwords.uniq
   end
