@@ -263,7 +263,18 @@ function assignToMe() {
       "doubtId": doubtId
     }
   }).done (function (data) {
-    location.reload();
+    if(data.doubt_id==''){
+      location.reload();
+    }
+    else{
+      let url =  "https://admin1.neetprep.com/doubt_answers/answer?doubt_id=" + data.doubt_id
+      let a = document.createElement('a');
+      a.href = url;
+      if(window.confirm('You already have 1 doubt unsolved. Go to doubt.')){
+        a.click();
+      }
+    }
+
   }).fail(function (data) {
     console.log(data);
     alert("Failed to assign");
