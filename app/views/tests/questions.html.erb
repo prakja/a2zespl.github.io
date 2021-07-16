@@ -122,7 +122,7 @@
     <div class="loader"></div>
     <div id="printDiv" class="noprint"><button id='printBtn'>Print</button></div>
     <div id="newsletterContent" style="display:none;">
-      <% test_sections = @test.sections.index_by(&:second) if @test.sections.present? %>
+      <% test_sections = @test.sections_by_start_question_num  %>
       <% @test_questions.each_with_index do |question, index| %>
         <div class="dontsplit question">
           <% if test_sections and test_sections[index + 1] %>
@@ -132,7 +132,10 @@
         </div>
         <% if index + 1 == @test_questions.length %>
           <div>
-            <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet</h2>
+            <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet*</h2></a>
+          </div>
+          <div>
+            *If above link doesn't work, please go to test link from where you got the pdf and fill OMR from there
           </div>
         <% end %>
       <% end %>
