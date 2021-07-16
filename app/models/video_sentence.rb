@@ -38,7 +38,8 @@ class VideoSentence < ApplicationRecord
       raise "Can't find video sentences for question with no topic"
     end
 
-    keywords = question.essential_keywords.filter { |e| not exclude.include? e}
+    keywords = question.get_keywords_from_question_ncert_sentences
+    keywords = keywords.uniq.filter { |e| not exclude.include? e}
     search_query = keywords.join(' | ')
 
     where(:chapterId => question.topicId)

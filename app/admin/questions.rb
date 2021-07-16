@@ -162,7 +162,7 @@ ActiveAdmin.register Question do
       # p params["q"]["questionTopics_chapterId_in"]
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         column :doubts_count, sortable: true do |question|
-          link_to question.doubts_count, admin_doubts_path(q: {questionId_eq: question.id})
+          link_to question.doubts_count, admin_doubts_path(q: {questionId_eq: question.id}, scope: 'all')
         end
         column :bookmarks_count, sortable: true
         column :issues_count, sortable: true do |question|
