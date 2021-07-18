@@ -36,6 +36,7 @@ index do
   column :positiveMarks
   column :exam
   column :startedAt
+  column :reviewAt
   column :expiryAt
   column ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
   # column ("All Questions") {|test| link_to 'All Test Questions', "../../admin/questions?order=sequenceId_asc_and_id_asc&showProofRead=yes&q[questionTests_testId_eq]=" + test.id.to_s}
@@ -176,6 +177,7 @@ form do |f|
     f.input :reviewAt, as: :datetime_picker, label: "Review Test At"
     f.input :discussionEnd, as: :datetime_picker, label: "Test discussion End At"
     f.input :pdfURL, as: :string
+    f.input :seqId
   end
 
   f.inputs "Additional Information" do
