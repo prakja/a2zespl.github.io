@@ -16,9 +16,15 @@ class DoubtAnswersController < ApplicationController
     doubt_admin[:admin_user_id] = admin_user_id
     doubt_admin[:created_at] = Time.now
     doubt_admin[:created_at] = Time.now
-    doubt_admin.save!
+    doubt_id = ''
+    if doubt_admin.valid?
+      doubt_admin.save!
+    else
+      doubt_id = doubt_admin.unsolved_doubt
+    end
     response = {
-      :status => 'ok'
+      :status => 'ok',
+      :doubt_id => doubt_id
     }
     render json: response, :status => 200
   rescue => exception
