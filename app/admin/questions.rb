@@ -12,7 +12,7 @@ ActiveAdmin.register Question do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :topic, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count, :completed_reviewed_translations, :question_ncert_sentences, :question_video_sentences
+  remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count, :completed_reviewed_translations, :question_ncert_sentences, :question_video_sentences
   permit_params :question, :orignalQuestionId, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
@@ -24,7 +24,8 @@ ActiveAdmin.register Question do
   # end
 
   # make a drop down menu
-  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :topic, as: :searchable_select, multiple: true, label: "Question Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :topics, as: :searchable_select, multiple: true, label: "Question Bank Chapter", :collection => Topic.name_with_subject_hinglish
   filter :subTopics_id_eq, as: :searchable_select, collection: -> { SubTopic.distinct_name }, label: "Sub Topic"
   filter :details_year, as: :select, collection: -> { QuestionDetail.distinct_year }, label: "Exam Year"
   filter :details_exam, as: :select, collection: -> { QuestionDetail.distinct_exam_name }, label: "Exam Name"

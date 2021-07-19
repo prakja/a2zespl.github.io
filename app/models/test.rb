@@ -30,6 +30,10 @@ class Test < ApplicationRecord
     end
   end
 
+  def sections_by_start_question_num
+    self.sections.present? ? self.sections.index_by(&:second) : nil
+  end
+
   def test_attempt(user_id)
     self.test_attempts.where(userId: user_id, completed: true).order(createdAt: :desc).first
   end
