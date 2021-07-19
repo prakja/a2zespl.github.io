@@ -12,5 +12,9 @@ class DoubtAdmin < ApplicationRecord
 
   belongs_to :doubt, class_name: "Doubt", foreign_key: "doubtId"
   belongs_to :admin_user, -> {where(role: ['faculty', 'superfaculty', 'admin'])}, foreign_key: "admin_user_id" 
+
+  def unsolved_doubt
+    Doubt.where(id: DoubtAdmin.where(admin_user_id: self.admin_user_id).pluck(:doubtId)).solved('no').pluck(:id).first
+  end
 end
   
