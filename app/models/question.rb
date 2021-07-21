@@ -191,6 +191,10 @@ class Question < ApplicationRecord
     where('"Question"."topicId" = ? and similarity("question", (select "question" from "Question" t where t."id" = ?)) > 0.5 and not exists (select * from "NotDuplicateQuestion" where ("questionId1" = "Question"."id" and "questionId2" = ?) or ("questionId2" = "Question"."id" and "questionId1" = ?))', question.topicId, question_id, question_id, question_id);
   }
 
+  scope :not_in_qb, -> {
+    where('not exists (select * from "ChapterQuestion" where "ChapterQuestion"."chapterId" = "Question"."topicId" and "ChapterQuestion"."questionId" = "Question"."id") and not exists (select * from "ChapterQuestion" where "ChapterQuestion"."chapterId" = "Question"."topicId" and "ChapterQuestion"."questionId" in (select "questionId1" from "DuplicateQuestion" where "DuplicateQuestion"."questionId2" = "Question"."id")) and not exists (select * from "ChapterQuestion" where "ChapterQuestion"."chapterId" = "Question"."topicId" and "ChapterQuestion"."questionId" in (Select "questionId2" from "DuplicateQuestion" where "DuplicateQuestion"."questionId1" = "Question"."id"))')
+  }
+
   scope :multiple_youtube, ->() {
     where('"explanation" like \'%youtu%youtu%\'')
   }
