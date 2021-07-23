@@ -53,6 +53,10 @@ class Question < ApplicationRecord
     ChapterQuestion.main_course_chapter_update!(self.id, self.topicId)
   end
 
+  def insert_chapter_question
+    ChapterQuestion.create!(chapterId: self.topicId, questionId: self.id)
+  end
+
   def test_addition_validation
     errors.add(:type, 'mcq only questions can be added in tests') if type == 'SUBJECTIVE' and !tests.blank?
   end

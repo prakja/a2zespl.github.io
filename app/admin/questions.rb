@@ -72,6 +72,13 @@ ActiveAdmin.register Question do
     redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
   end
 
+  batch_action :add_to_qb, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.insert_chapter_question
+    end
+    redirect_back fallback_location: collection_path, notice: "Questions added in the main question bank."
+  end
+
   member_action :update_chapter_questions, method: :post do
     resource.update_chapter_questions!
     redirect_to admin_question_path, notice: "Question chapter banks fixed!"
