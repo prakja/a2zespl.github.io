@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # Permanently redirect all requests originally to admin1.neetprep.com to newadmin.neetprep.com
   get '/(*path)', to: redirect { |path_params, request|
     "https://newadmin.neetprep.com/#{path_params[:path]}"
-  }, status: 301, constraints: { domain: 'admin1.neetprep.com' }
+  }, status: 301, constraints: { domain: 'https://admin1.neetprep.com' }
 
   # ... Remaining application routes
   devise_for :admin_users, ActiveAdmin::Devise.config
