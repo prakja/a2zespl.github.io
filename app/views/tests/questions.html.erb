@@ -62,7 +62,7 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
-    <script async src="https://dsbihjlymzdyy.cloudfront.net/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <%= render partial: 'mathjax'%>
     <script>
     $(function(){
       var content_height = 980;  // the height of the content, discluding the header/footer
@@ -128,7 +128,7 @@
           <% if test_sections and test_sections[index + 1] %>
             <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b><%= test_sections[index + 1][0]%></b></div>
           <% end %>
-          <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %>
+          <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %><br /><br />
         </div>
         <% if index + 1 == @test_questions.length %>
           <div>
