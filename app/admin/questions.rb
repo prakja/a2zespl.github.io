@@ -529,7 +529,7 @@ ActiveAdmin.register Question do
             subtopics.forEach((item, _) => $('#question_subTopic_ids').append(`<option value=${item.id}>${item.name}</option>`));
           });
         "
-        }, :collection => Topic.main_course_topic_name_with_subject, 
+      }, :collection => Topic.main_course_topic_name_with_subject + (f.object.topicId > 8000 ? Topic.topic_name_with_subject(f.object.topicId) : []) #crazy hack for now to get hindi course questions working which assumes topicId > 8000 must be for hindi course question,
         label: "Question Chapter",
         hint: "Only for knowing chapter of the question but not shown to student except in chapter-wise test analysis" if current_admin_user.question_bank_owner?
 
