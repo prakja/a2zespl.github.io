@@ -33,6 +33,18 @@ class TestsController < ApplicationController
     end
   end
 
+  def live_session_questions
+    id = params.require(:id)
+    begin
+      @test = Test.find(id)
+      questions_count = @test.question_ids.count
+      @test_questions = @test.questions.first(questions_count)
+      render layout: false
+    rescue => exception
+      p exception
+    end
+  end
+
   def add_question
     if not current_admin_user
       redirect_to "/admin/login"

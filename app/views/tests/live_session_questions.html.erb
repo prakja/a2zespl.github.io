@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<style>
+.container{
+	display: flex;
+}
+.col{
+	flex: 1;
+  font-size: <%= params[:font_size].present? ? params[:font_size] : 24%>px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.question {
+	text-align: left;
+  <%= "color: " + params[:color] if params[:color].present? %>
+}
+.logo {
+  text-align: right;
+}
+</style>
+<head>
+    <meta charset="utf-8">
+
+    <title></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/theme/simple.css" id="theme">
+</head>
+
+
+<body>
+</script>
+    <div class="reveal">
+
+        <div class="slides">
+
+					<% @test_questions.each_with_index do |question, index| %>
+            <section data-background-color="<%= params[:background].present? ? params[:background] : 'rgb(0, 0, 0)'%>">
+							<div class="container">
+								<div class="col question">
+									<%= raw(question.question) %>
+								</div>
+								<div class="col logo">
+                  <image src="https://signup.neetprep.com/assets/img/logo.png" />
+								</div>
+              </div>
+						</section>
+					<% end %>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/math/math.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				CommonHTML: {
+				mtextFontInherit: true
+			}
+		});
+		</script>
+    <script>
+        Reveal.initialize({
+            transition: 'linear',
+            disableLayout: true,
+            minScale: 1,
+            maxScale: 1,
+            math: {
+							  mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.5/MathJax.js',
+							  config: 'TeX-MML-AM_HTMLorMML',
+            },
+
+            plugins: [RevealMath]
+        });
+    </script>
+
+</body>
+
+</html>
