@@ -13,7 +13,8 @@
 }
 .question {
 	text-align: left;
-  <%= "color: " + params[:color] if params[:color].present? %>
+  font-weight: <%=params[:font_weight].present? ? params[:font_weight] : "bold;"%>; 
+  <%= "color: " + params[:color] + ";" if params[:color].present? %>
 }
 .logo {
   text-align: right;
