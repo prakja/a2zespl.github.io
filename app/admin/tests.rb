@@ -132,6 +132,10 @@ ActiveAdmin.register Test do
     link_to 'PDF (Two Columns)', '/tests/questions/' + resource.id.to_s, target: :_blank
   end
 
+  action_item :live_session_questions_pdf, only: :show do
+    link_to 'PDF (Live Session)', '/tests/live_session_questions/' + resource.id.to_s, target: :_blank
+  end
+
   action_item :questions_list, only: :show do
     link_to 'Questions List', '/admin/questions?order=id_asc&q[tests_id_eq]=' + resource.id.to_s, target: :_blank
   end
