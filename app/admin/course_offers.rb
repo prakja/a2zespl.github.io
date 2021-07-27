@@ -16,7 +16,7 @@ ActiveAdmin.register CourseOffer do
   # end
 
   remove_filter :admin_user, :course
-  permit_params :title, :text, :courseId, :fee, :discountedFee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :expiryAt, :description
+  permit_params :title, :text, :courseId, :fee, :discountedFee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :expiryAt, :description, :actualCourseId
 
   index do
     id_column
