@@ -51,6 +51,7 @@ ActiveAdmin.register CourseOffer do
       f.input :expiryAt, as: :date_picker, label: "Course Expiry At", hint: "Date on which the coures should expire"
       f.input :offerStartedAt, as: :date_picker, label: "Offer Start At", hint: "Date after which the user can avail this offer"
       f.input :offerExpiryAt, as: :date_picker, label: "Offer Expiry At", hint: "Date until which the user can avail this offer"
+      f.input :actualCourseId
       f.input :hidden
       f.input :admin_user_id, as: :hidden, :input_html => { :value => current_admin_user.id } if f.object.admin_user_id.blank?
       f.input :admin_user_id, as: :hidden if not f.object.admin_user_id.blank?
