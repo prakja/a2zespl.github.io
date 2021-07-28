@@ -16,9 +16,19 @@
   font-weight: <%=params[:font_weight].present? ? params[:font_weight] : "bold;"%>; 
   <%= "color: " + params[:color] + ";" if params[:color].present? %>
 }
+.solution{
+  flex-basis: 80%;
+  padding: 30px;
+  font-size: <%= params[:font_size].present? ? params[:font_size] : 24%>px;
+}
 .logo {
   text-align: right;
 }
+        .top-right {
+          position: absolute;
+          top: 30px;
+          right: 30px;
+        }
   </style>
   <head>
     <meta charset="utf-8">
@@ -39,6 +49,9 @@
       <div class="slides">
 
         <% @test_questions.each_with_index do |question, index| %>
+          <% if params[:embed_section] == "1" %>
+            <section>
+          <% end %>
           <section data-background-color="<%= params[:background].present? ? params[:background] : 'rgb(0, 0, 0)'%>">
             <div class="container">
               <div class="col question">
@@ -48,9 +61,26 @@
                 <image width="270" src="<%=params[:logo] == 'black' ? 'https://dsbihjlymzdyy.cloudfront.net/logo/logo_black.png' : 'https://dsbihjlymzdyy.cloudfront.net/logo/logo_white.png'%>" />
               </div>
             </div>
+            <aside class="notes">
+              <%= question.id.to_s + " - " + question.correctOption.to_s %>
+            </aside>
           </section>
+          <% if params[:show_solution] == "1" %>
+            <section data-background-color="<%= params[:background].present? ? params[:background] : 'rgb(0, 0, 0)'%>">
+              <div class="container">
+                <div class="question solution">
+                  <%= raw(question.explanation) %>
+                  <div class="top-right logo">
+                    <image width="270" src="<%=params[:logo] == 'black' ? 'https://dsbihjlymzdyy.cloudfront.net/logo/logo_black.png' : 'https://dsbihjlymzdyy.cloudfront.net/logo/logo_white.png'%>" />
+                  </div>
+                </div>
+              </div>
+            </section>
+          <% end %>
+          <% if params[:embed_section] == "1" %>
+            </section>
+          <% end %>
         <% end %>
-
       </div>
     </div>
 
