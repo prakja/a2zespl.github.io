@@ -51,6 +51,8 @@
       .sheet .content .column h1{ padding: 0 10px;  }
       .sheet .header{ text-align: center; font-size: 18pt; font-family: helvetica, arial; padding: 20px 0 0;  }
       .sheet .header .contact{ float: right; font-size: 14pt; font-family: helvetica, arial;}
+
+      .sheet .header .trial{ float: left; font-size: 14pt; font-family: helvetica, arial;}
       .sheet .header .logo{ float: left; vertical-align: middle;}
       .sheet .header hr, .sheet .footer hr{ width: 800px;  }
       .sheet .footer span{ position: absolute; bottom: 10px; right: 10px;  }
@@ -115,7 +117,9 @@
   </head>
   <body class="A4">
     <div class="page_template">
-      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><%=@test.name%><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
+      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><%=@test.name%><br />
+      <span class="trial">Get Free Trial</span>
+      <span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
       <div class='content'></div>
       <div class='footer'><span>Page: </span></div>
     </div>
