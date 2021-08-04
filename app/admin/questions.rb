@@ -13,7 +13,7 @@ ActiveAdmin.register Question do
   #   permitted
   # end
   remove_filter :details, :questionTopics, :subTopics, :questionSubTopics, :question_analytic, :issues, :versions, :doubts, :questionTests, :tests, :bookmarks, :explanations, :hints, :answers, :translations, :notes, :systemTests, :subject, :lock_version, :ncert_sentences, :ncertSentences_count,:video_sentences, :subTopics_count, :topics_count, :course_tests_count, :videoSentences_count, :completed_reviewed_translations, :question_ncert_sentences, :question_video_sentences
-  permit_params :question, :orignalQuestionId, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
+  permit_params :question, :orignalQuestionId, :correctOptionIndex, :explanation, :type, :level, :deleted, :testId, :topic, :topicId, :proofRead, :ncert, :lock_version, :paidAccess, :test_ids, topic_ids: [], subTopic_ids: [], systemTest_ids: [], ncert_sentence_ids: [], video_sentence_ids: [], details_attributes: [:id, :exam, :year, :_destroy]
 
   before_action :create_token, only: [:show]
 
@@ -152,6 +152,7 @@ ActiveAdmin.register Question do
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
     column ("Question Chapter") {|question| question&.topic&.name}
+    column ("Question Sets") {|question| best_in_place question, :test_ids, as: :select, collection: Test.find([419, 15263]).each_with_object({}) { |i, memo| memo[i.id] = i.name }, url: [:admin, question] }
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
