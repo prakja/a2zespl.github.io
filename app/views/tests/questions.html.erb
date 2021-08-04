@@ -15,6 +15,12 @@
           display:none !important;
         }
       }
+      .free-trial {
+        font-size: 30px;
+        background: green;
+        color: white;
+        padding: 20px;
+      }
       .loader {
         border-top: 16px solid blue;
         border-right: 16px solid green;
@@ -131,11 +137,23 @@
           <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span><%= raw(question.question) %><br /><br />
         </div>
         <% if index + 1 == @test_questions.length %>
-          <div>
-            <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet*</h2></a>
-          </div>
-          <div>
-            *If above link doesn't work, please go to test link from where you got the pdf and fill OMR from there
+          <div class="dontsplit">
+            <div>
+              <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet*</h2></a>
+            </div>
+            <div>
+              *If above link doesn't work, please go to test link from where you got the pdf and fill OMR from there
+            </div>
+            <br>
+            <br>
+            <% unless params[:hide_trial].present? and params[:hide_trial] == "1" %> 
+              <br>
+              <div class="free-trial">
+                <a target="_blank" href="https://www.neetprep.com/get-free-trial">Click here</a> to start your free trial for a NEETprep course.
+              </div>
+              <br>
+              <br>
+            <% end %>
           </div>
         <% end %>
       <% end %>
