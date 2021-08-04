@@ -1,12 +1,17 @@
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  CommonHTML: {
-    mtextFontInherit: true
-  }
-});
-</script>
-<script type="text/javascript" async src="https://dsbihjlymzdyy.cloudfront.net/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+<% unless params[:disable_config].present? and params[:disable_config] == "1" %> 
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    CommonHTML: {
+      mtextFontInherit: true
+    }
+  });
+  </script>
+<% end %>
+<% unless params[:use_cdn].present? and params[:use_cdn] == "1" %>
+  <script type="text/javascript" async src="https://dsbihjlymzdyy.cloudfront.net/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<% else %>
+  <script async src='https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<% end %>
 <script>
   window.onload = function() {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
