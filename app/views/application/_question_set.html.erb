@@ -1,0 +1,7 @@
+<%= semantic_form_for [:admin, question], :remote => true do |f| %>
+  <input type="hidden" name="authenticity_token" value="#{form_authenticity_token.to_s}">
+  <%= f.inputs 'Question Set' do %>
+    <%= f.input :questionSet_ids, as: :tags, collection: Test.where(id: [419, 15263]), display_name: :name, input_html: {id: "question_set" + question.id.to_s} %>
+  <% end %>
+  <%= f.actions %>
+<% end %>

@@ -300,6 +300,7 @@ class Question < ApplicationRecord
   has_many :tests, through: :questionTests, dependent: :destroy
 
   has_many :systemTests, -> {where userId: nil}, through: :questionTests, dependent: :destroy, source: "test"
+  has_many :questionSets, -> {where id: [1020201, 1061903, 1061910, 1061913, 1061915, 1061925, 1061938, 1061940, 1061963, 1061965, 1061969, 1061976, 1061982, 1061988]}, through: :questionTests, dependent: :destroy, source: "test"
 
   has_many :answers, class_name: "Answer", foreign_key: :questionId
 

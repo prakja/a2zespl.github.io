@@ -1,5 +1,7 @@
-ActiveAdmin.register Question do
+ActiveAdmin.register Question, as: "Q" do
   duplicatable
+  menu false
+  config.batch_actions = false
   # config.sort_order = 'sequenceId_asc_and_id_asc'
   # See permitted parameters documentation: # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -58,26 +60,26 @@ ActiveAdmin.register Question do
   scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
   scope :not_in_qb, if: -> {current_admin_user.admin?}, show_count: false
 
-  batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
-    batch_action_collection.find(ids).each do |question|
-      question.set_image_link!
-    end
-    redirect_back fallback_location: collection_path, notice: "The question images have been updated."
-  end
+  #batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
+  #  batch_action_collection.find(ids).each do |question|
+  #    question.set_image_link!
+  #  end
+  #  redirect_back fallback_location: collection_path, notice: "The question images have been updated."
+  #end
 
-  batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
-    batch_action_collection.find(ids).each do |question|
-      question.change_option_index!
-    end
-    redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
-  end
+  #batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
+  #  batch_action_collection.find(ids).each do |question|
+  #    question.change_option_index!
+  #  end
+  #  redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
+  #end
 
-  batch_action :add_to_qb, if: proc{ current_admin_user.admin? } do |ids|
-    batch_action_collection.find(ids).each do |question|
-      question.insert_chapter_question
-    end
-    redirect_back fallback_location: collection_path, notice: "Questions added in the main question bank."
-  end
+  #batch_action :add_to_qb, if: proc{ current_admin_user.admin? } do |ids|
+  #  batch_action_collection.find(ids).each do |question|
+  #    question.insert_chapter_question
+  #  end
+  #  redirect_back fallback_location: collection_path, notice: "Questions added in the main question bank."
+  #end
 
   member_action :update_chapter_questions, method: :post do
     resource.update_chapter_questions!
@@ -152,6 +154,9 @@ ActiveAdmin.register Question do
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
     column ("Question Chapter") {|question| question&.topic&.name}
+    if params[:showQuestionSet].present? and params[:showQuestionSet] == 'yes'
+      column ("Question Set") {|question| render partial: 'question_set', :locals => {:question => question}}
+    end
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
 
@@ -479,7 +484,7 @@ ActiveAdmin.register Question do
   end
 
   action_item :see_ncert_marking, only: :index do
-    link_to 'Question Set Marking', request.params.merge(showQuestionSet: 'yes', controller: 'admin/qs')
+    link_to 'Question Set Marking', request.params.merge(showQuestionSet: 'yes')
   end
 
   action_item :delete_from_question_banks, only: :show, if: proc{ current_admin_user.question_bank_owner? } do
