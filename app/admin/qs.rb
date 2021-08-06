@@ -128,6 +128,14 @@ ActiveAdmin.register Question, as: "Q" do
         language: 'hindi'
       })
     end
+
+    def update(options={}, &block)
+      super do |success, failure|
+        block.call(success, failure) if block
+        failure.html { render :edit }
+        success.js {render :js => "alert('updated the question')"}
+      end
+    end
   end
 
   member_action :history do
