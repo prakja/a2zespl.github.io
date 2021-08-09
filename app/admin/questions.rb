@@ -490,8 +490,7 @@ ActiveAdmin.register Question do
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
       render partial: 'tinymce'
-      text_node javascript_include_tag Ckeditor.cdn_url
-      f.input :question, as: :ckeditor
+      f.input :question
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
       f.input :explanation
       # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits

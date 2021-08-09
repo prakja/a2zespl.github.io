@@ -1,0 +1,30 @@
+<script>
+  function add_ncert_sentence_link() {
+    var selected_items = $('#question_ncert_sentence_ids_selected_values .selected-item');    
+    var selected_item_inputs = selected_items.find('input');    
+    selected_items.each(function(index){
+      if ($(this).children().last().is("a") == false) {
+        var link = ' <a href="/admin/ncert_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
+        $(this).append(link);
+      }
+    });
+  }
+
+  function add_video_sentence_link() {
+    var selected_items = $('#question_video_sentence_ids_selected_values .selected-item');    
+    var selected_item_inputs = selected_items.find('input');    
+    selected_items.each(function(index){
+      if ($(this).children().last().is("a") == false) {
+        var link = ' <a href="/admin/video_sentences/' + selected_item_inputs[index].value + '" target="_blank">View Sentence</a>';
+        $(this).append(link);
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    $('#question_ncert_sentences_select2').on('select2:select', add_ncert_sentence_link);
+    $('#question_video_sentences_select2').on('select2:select', add_video_sentence_link);
+    add_video_sentence_link();
+    add_ncert_sentence_link();
+  });
+</script>
