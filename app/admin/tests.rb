@@ -156,6 +156,22 @@ ActiveAdmin.register Test do
     link_to 'Question Selection', resource.id.to_s + "/question_selection_test"
   end
 
+  action_item :botany_customer_issues, only: :show do
+    link_to 'Botany Customer Issues', '/admin/customer_issues?order=id_asc&scope=botany_test_issues&q[testId_eq]=' + resource.id.to_s, target: :_blank
+  end
+
+  action_item :zoology_customer_issues, only: :show do
+    link_to 'Zoology Customer Issues', '/admin/customer_issues?order=id_asc&scope=zoology_test_issues&q[testId_eq]=' + resource.id.to_s, target: :_blank
+  end
+
+  action_item :chemistry_customer_issues, only: :show do
+    link_to 'Chemistry Customer Issues', '/admin/customer_issues?order=id_asc&scope=chemistry_test_issues&q[testId_eq]=' + resource.id.to_s, target: :_blank
+  end
+
+  action_item :physics_customer_issues, only: :show do
+    link_to 'Physics Customer Issues', '/admin/customer_issues?order=id_asc&scope=physics_test_issues&q[testId_eq]=' + resource.id.to_s, target: :_blank
+  end
+
   member_action :duplicate_questions do
     @test = Test.find(resource.id)
     @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "TestQuestion" AS "TestQuestion1" ON "TestQuestion1"."testId" = "TestQuestion"."testId" and "TestQuestion"."questionId" < "TestQuestion1"."questionId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "TestQuestion1"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "TestQuestion1"."testId" = ' + resource.id.to_s + " limit 5");
