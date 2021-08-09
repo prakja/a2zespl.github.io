@@ -352,6 +352,77 @@ class Question < ApplicationRecord
     keywords.uniq
   end
 
+  def self.get_chapterwise_question_csv(topicId)
+    # 1. ID
+    # 2. Chapter
+    # 3. First SubTopic
+    # 4. Video Explanation Exists? (Yes / No)
+    # 5. No. of Doubts	
+    # 6. No. of Customer Issues	
+    # 7. Correct Percentage	
+    # 8. Question Type: (We would need to configure it as Selected Tests that can be shown in which the question might belong: I have created a similar thing QuestionSet. But, let's create this another list) 
+    # 8.1) PYQ - Tests in course Id 980
+    # 8.2) NCERT Back - test ID 1020201
+    # 8.3) Test Series - Course 8 Tests (without past year tests)
+    # 9. NCERT Tagging (Yes / No) - NCERT Sentences count > 0 or not
+
+    select_query = <<-SQL
+      SELECT DISTINCT ON (question_id) question_id,
+        correct_percentage,
+        have_video_explanation,
+        is_ncert,
+        first_subtopic,
+        SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
+        SUM(customer_issue_seq) OVER (PARTITION BY question_id) AS issue_count,
+        CASE
+          WHEN question_id IN (SELECT  "TestQuestion"."questionId" FROM "CourseTest" INNER JOIN "Test" ON "Test"."id" = "CourseTest"."testId" INNER JOIN "TestQuestion" ON "TestQuestion"."testId" = "Test"."id" WHERE "CourseTest"."courseId" = 8)
+          THEN 'PYQ'
+          
+          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" where "testId" = 1020201)
+          THEN 'NCERT Back'
+
+          WHEN question_id IN (SELECT "TestQuestion"."questionId" FROM "CourseTest" INNER JOIN "Test" ON "Test"."id" = "CourseTest"."testId" INNER JOIN "TestQuestion" ON "TestQuestion"."testId" = "Test"."id" WHERE "CourseTest"."courseId" = 8 AND (date_part('year', "Test"."createdAt") = date_part('year', CURRENT_DATE)))
+          THEN 'Test Series'
+
+          ELSE null
+        END AS question_type
+      FROM (
+        SELECT
+          "Doubt"."id" AS doubt_id,
+          "Doubt"."questionId" AS question_id,
+          "QuestionAnalytics"."correctPercentage" AS correct_percentage,
+          "Question"."explanation" LIKE '%youtu%' OR "Question"."explanation" LIKE '<%video%' AS have_video_explanation,
+          FIRST_VALUE("SubTopic"."name") OVER (PARTITION BY "Question"."id" ORDER BY "QuestionSubTopic"."createdAt" DESC) AS first_subtopic,
+          COALESCE (MAX("QuestionNcertSentence"."id") OVER (PARTITION BY "QuestionNcertSentence"."id", "QuestionNcertSentence"."questionId"), 0) > 0 as is_ncert,
+          CASE 
+            WHEN ROW_NUMBER() OVER (PARTITION BY "Doubt"."id", "Doubt"."questionId") = 1 
+            THEN 1 
+            ELSE 0 
+          END AS doubt_count_seq,
+
+          CASE 
+            WHEN ROW_NUMBER() OVER (PARTITION BY "CustomerIssue"."id", "CustomerIssue"."questionId") = 1 
+            THEN 1 ELSE 0 
+          END AS customer_issue_seq
+
+        FROM "ChapterQuestion"
+
+        LEFT OUTER JOIN "Question" ON "Question"."id" = "ChapterQuestion"."questionId" AND "Question"."deleted" = false
+        LEFT OUTER JOIN "QuestionAnalytics" ON "QuestionAnalytics"."id" = "Question"."id" 
+        LEFT OUTER JOIN "Doubt" ON "Doubt"."questionId" = "Question"."id"
+        LEFT OUTER JOIN "CustomerIssue" ON "CustomerIssue"."questionId" = "Question"."id"
+        LEFT OUTER JOIN "QuestionNcertSentence" on "Question"."id" = "QuestionNcertSentence"."questionId"
+        LEFT OUTER JOIN "QuestionSubTopic" ON "QuestionSubTopic"."questionId" = "Question"."id" 
+        LEFT OUTER JOIN "SubTopic" ON "SubTopic"."id" = "QuestionSubTopic"."subTopicId" AND "SubTopic"."deleted" = false 
+        WHERE 
+          "ChapterQuestion"."chapterId" = #{topicId}
+      ) AS U WHERE question_id IS NOT NULL
+    SQL
+
+    ActiveRecord::Base.connection.execute(select_query)
+      .to_a.map{ |r| r.transform_keys(&:to_sym)}
+  end
+
   amoeba do
     enable
     include_association :ncert_sentences
