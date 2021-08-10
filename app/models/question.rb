@@ -382,18 +382,23 @@ class Question < ApplicationRecord
         correct_percentage,
         SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
         SUM(customer_issue_seq) OVER (PARTITION BY question_id) AS customer_issue_count,
-        CASE
-          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "TestQuestion"."testId" IN (#{QUESTION_TYPE_TEST_IDS[:pyq].join ',' }))
-          THEN 'PYQ'
-
-          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:ncert_back].join ','}))
-          THEN 'NCERT Back'
-
-          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:test_series].join(',')}))
-          THEN 'Test Series'
-
-          ELSE NULL
-        END AS question_type
+        CONCAT(
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "TestQuestion"."testId" IN (#{QUESTION_TYPE_TEST_IDS[:pyq].join ',' }))
+            THEN 'PYQ '
+            ELSE ''
+          END,
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:ncert_back].join ','}))
+            THEN 'NCERT_Back '
+            ELSE ''
+          END,
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:test_series].join(',')}))
+            THEN 'Test_Series'
+            ELSE ''
+          END
+        ) AS question_type
       FROM (
         SELECT
           "Question"."id" AS question_id,
