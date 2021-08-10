@@ -5,6 +5,13 @@ class Question < ApplicationRecord
   extend QuestionKeyword
 
   QUESTION_SET_TEST_IDS = [1020201, 1061903, 1061910, 1061913, 1061915, 1061925, 1061938, 1061940, 1061963, 1061965, 1061969, 1061976, 1061982, 1061988]
+
+  QUESTION_TYPE_TEST_IDS = {
+    :pyq => [384, 367, 383, 350, 359, 372, 366, 377, 370, 388, 398, 387, 396, 30571, 364364, 348, 45168, 347, 419],
+    :ncert_back => [1020201],
+    :test_series => [45310, 45311, 45312, 132501, 132507, 15256, 15257, 15258, 15259, 15260, 15261, 15262, 15263, 15264, 15265, 15266, 15267, 15268, 15269, 15270, 15271, 56253, 56255, 944151],
+  }
+
   before_save :default_values
   after_save :update_question_bank_chapters
 
@@ -38,7 +45,7 @@ class Question < ApplicationRecord
   end
 
   def has_video_solution
-    self.explanation.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
+    self.explanation&.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
   end
 
   def update_question_bank_chapters
@@ -376,13 +383,13 @@ class Question < ApplicationRecord
         SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
         SUM(customer_issue_seq) OVER (PARTITION BY question_id) AS customer_issue_count,
         CASE
-          WHEN question_id IN (SELECT  "TestQuestion"."questionId" FROM "CourseTest" INNER JOIN "Test" ON "Test"."id" = "CourseTest"."testId" INNER JOIN "TestQuestion" ON "TestQuestion"."testId" = "Test"."id" WHERE "CourseTest"."courseId" = 8)
+          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "TestQuestion"."testId" IN (#{QUESTION_TYPE_TEST_IDS[:pyq].join ',' }))
           THEN 'PYQ'
-          
-          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" where "testId" = 1020201)
+
+          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:ncert_back].join ','}))
           THEN 'NCERT Back'
 
-          WHEN question_id IN (SELECT "TestQuestion"."questionId" FROM "CourseTest" INNER JOIN "Test" ON "Test"."id" = "CourseTest"."testId" INNER JOIN "TestQuestion" ON "TestQuestion"."testId" = "Test"."id" WHERE "CourseTest"."courseId" = 8 AND (date_part('year', "Test"."createdAt") = date_part('year', CURRENT_DATE)))
+          WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:test_series].join(',')}))
           THEN 'Test Series'
 
           ELSE NULL
