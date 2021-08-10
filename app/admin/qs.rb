@@ -500,13 +500,14 @@ ActiveAdmin.register Question, as: "Q" do
   end
 
   form do |f|
+    # requires firefox and extensions TexZilla, MathML Fonts & MathML Copy
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
-      render partial: 'tinymce'
+      render partial: 'ckeditor'
       text_node javascript_include_tag Ckeditor.cdn_url
       f.input :question, as: :ckeditor
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
-      f.input :explanation
+      f.input :explanation, as: :ckeditor
       # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits
       # If we want to add this back then may be thinking of a way to change version id along with test question edition should be evaluated
       # On second thought, we can let this be on for new questions for now
@@ -580,7 +581,7 @@ ActiveAdmin.register Question, as: "Q" do
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
 
       f.input :subTopics, input_html: { class: "select1" }, as: :select,
-        :collection => SubTopic.topic_sub_topics(q.topicId != nil ? q.topicId : (q.topics.length > 0 ? q.topics.map(&:id) : [])),
+        :collection => SubTopic.topic_sub_topics(f.object.topicId != nil ? f.object.topicId : (f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])),
         hint: "Hold Ctrl to select" if current_admin_user.question_bank_owner?
 
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]

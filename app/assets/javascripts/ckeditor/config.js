@@ -4,12 +4,16 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
 CKEDITOR.plugins.addExternal( 'texzilla', '/assets/ckeditor/plugins/texzilla/', 'plugin.js' );
+CKEDITOR.plugins.addExternal( 'autogrow', '/assets/ckeditor/plugins/autogrow/', 'plugin.js' );
 //CKEDITOR.plugins.addExternal( 'katex', '/assets/ckeditor/plugins/katex/', 'plugin.js' );
 
 CKEDITOR.editorConfig = function( config )
 {
-  config.extraPlugins = 'texzilla,';
+  config.extraPlugins = 'texzilla,autogrow';
 
+  config.autoGrow_minHeight = 200;
+  config.autoGrow_maxHeight = 600;
+  config.autoGrow_bottomSpace = 50;
   // Define changes to default configuration here. For example:
   // config.language = 'fr';
   // config.uiColor = '#AADC6E';
