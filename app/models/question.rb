@@ -5,6 +5,13 @@ class Question < ApplicationRecord
   extend QuestionKeyword
 
   QUESTION_SET_TEST_IDS = [1020201, 1061903, 1061910, 1061913, 1061915, 1061925, 1061938, 1061940, 1061963, 1061965, 1061969, 1061976, 1061982, 1061988]
+
+  QUESTION_TYPE_TEST_IDS = {
+    :pyq => [384, 367, 383, 350, 359, 372, 366, 377, 370, 388, 398, 387, 396, 30571, 364364, 348, 45168, 347, 419],
+    :ncert_back => [1020201],
+    :test_series => [45310, 45311, 45312, 132501, 132507, 15256, 15257, 15258, 15259, 15260, 15261, 15262, 15263, 15264, 15265, 15266, 15267, 15268, 15269, 15270, 15271, 56253, 56255, 944151],
+  }
+
   before_save :default_values
   after_save :update_question_bank_chapters
 
@@ -38,7 +45,7 @@ class Question < ApplicationRecord
   end
 
   def has_video_solution
-    self.explanation.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
+    self.explanation&.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
   end
 
   def update_question_bank_chapters
@@ -350,6 +357,83 @@ class Question < ApplicationRecord
 
     keywords = ncert_sentences_keywords + question_keywords
     keywords.uniq
+  end
+
+  def self.get_chapterwise_question_csv(topicId)
+    # 1. ID
+    # 2. Chapter
+    # 3. First SubTopic
+    # 4. Video Explanation Exists? (Yes / No)
+    # 5. No. of Doubts	
+    # 6. No. of Customer Issues	
+    # 7. Correct Percentage	
+    # 8. Question Type: (We would need to configure it as Selected Tests that can be shown in which the question might belong: I have created a similar thing QuestionSet. But, let's create this another list) 
+    # 8.1) PYQ - Tests in course Id 980
+    # 8.2) NCERT Back - test ID 1020201
+    # 8.3) Test Series - Course 8 Tests (without past year tests)
+    # 9. NCERT Tagging (Yes / No) - NCERT Sentences count > 0 or not
+
+    select_query = <<-SQL
+      SELECT DISTINCT ON (question_id) question_id,
+        topic_name,
+        first_subtopic,
+        is_ncert,
+        have_video_explanation,
+        correct_percentage,
+        SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
+        SUM(customer_issue_seq) OVER (PARTITION BY question_id) AS customer_issue_count,
+        CONCAT(
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "TestQuestion"."testId" IN (#{QUESTION_TYPE_TEST_IDS[:pyq].join ',' }))
+            THEN 'PYQ '
+            ELSE ''
+          END,
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:ncert_back].join ','}))
+            THEN 'NCERT_Back '
+            ELSE ''
+          END,
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:test_series].join(',')}))
+            THEN 'Test_Series'
+            ELSE ''
+          END
+        ) AS question_type
+      FROM (
+        SELECT
+          "Question"."id" AS question_id,
+          "Topic"."name" as topic_name,
+          "QuestionAnalytics"."correctPercentage" AS correct_percentage,
+          "Question"."explanation" LIKE '%youtu%' OR "Question"."explanation" LIKE '<%video%' AS have_video_explanation,
+          FIRST_VALUE("SubTopic"."name") OVER (PARTITION BY "Question"."id" ORDER BY "QuestionSubTopic"."createdAt" DESC) AS first_subtopic,
+          COALESCE (MAX("QuestionNcertSentence"."id") OVER (PARTITION BY "QuestionNcertSentence"."id", "QuestionNcertSentence"."questionId"), 0) > 0 AS is_ncert,
+
+          CASE 
+            WHEN ROW_NUMBER() OVER (PARTITION BY "Doubt"."id", "Doubt"."questionId") = 1 AND "Doubt"."id" IS NOT NULL
+            THEN 1 
+            ELSE 0 
+          END AS doubt_count_seq,
+
+          CASE 
+            WHEN ROW_NUMBER() OVER (PARTITION BY "CustomerIssue"."id", "CustomerIssue"."questionId") = 1 AND "CustomerIssue"."id" IS NOT NULL
+            THEN 1 ELSE 0 
+          END AS customer_issue_seq
+
+        FROM "Question"
+        LEFT OUTER JOIN "QuestionAnalytics" ON "QuestionAnalytics"."id" = "Question"."id" 
+        LEFT OUTER JOIN "Topic" ON "Topic"."id" = "Question"."topicId"
+        LEFT OUTER JOIN "Doubt" ON "Doubt"."questionId" = "Question"."id"
+        LEFT OUTER JOIN "CustomerIssue" ON "CustomerIssue"."questionId" = "Question"."id"
+        LEFT OUTER JOIN "QuestionNcertSentence" on "Question"."id" = "QuestionNcertSentence"."questionId"
+        LEFT OUTER JOIN "QuestionSubTopic" ON "QuestionSubTopic"."questionId" = "Question"."id" 
+        LEFT OUTER JOIN "SubTopic" ON "SubTopic"."id" = "QuestionSubTopic"."subTopicId" AND "SubTopic"."deleted" = false 
+
+        WHERE 
+          "Question"."topicId" = #{ActiveRecord::Base.sanitize_sql(topicId)} AND "Question"."deleted" = false
+      ) AS U WHERE question_id IS NOT NULL
+    SQL
+
+    ActiveRecord::Base.connection.execute(select_query).to_a
   end
 
   amoeba do

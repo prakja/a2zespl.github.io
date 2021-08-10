@@ -65,6 +65,38 @@ ActiveAdmin.register Question do
     redirect_back fallback_location: collection_path, notice: "The question images have been updated."
   end
 
+  collection_action :download_chapterwise_question_csv, :method => :get do
+    question_topicId = params[:q]["topicId"]
+
+    questions = Question.get_chapterwise_question_csv(question_topicId)
+
+    csv = CSV.generate do |csv|
+      csv << questions.first.keys
+
+      # add data
+      questions.each do |question|
+        csv << question.values
+      end
+    end
+
+    send_data csv.encode, type: 'text/csv; header=present', disposition: "attachment; filename=#{question_topicId}_chapter_wise_question.csv"
+  end
+
+  action_item only: :index do
+    q = params[:q]
+
+    unless q.nil?
+      selected_topic_id = q["topic_id_in"] || []
+      selected_topic_id = selected_topic_id.first
+
+      unless selected_topic_id.nil?
+        topic_name = Topic.find(selected_topic_id).name
+        link_to "#{topic_name} - Question CSV Download",
+          download_chapterwise_question_csv_admin_questions_path(q: {:topicId => selected_topic_id})
+      end
+    end
+  end 
+
   batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
     batch_action_collection.find(ids).each do |question|
       question.change_option_index!
