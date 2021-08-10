@@ -7,22 +7,22 @@ task :extraction, [:chapterId] => :environment do |task,args|
     sol = false
     htmlContent = Nokogiri::HTML(chapterNote.content)
     p chapterNote.sid
-    test = Test.find_or_create_by(name: "#{args[:chapterId] - NCERT Solved Examples}")
+    test = Test.find_or_create_by(name: "#{args[:chapterId]} - NCERT Solved Examples")
     question = nil
     htmlContent.xpath("//div[@class='box']").each do |box|
-      boxContent =  box.content 
+      boxContent =  box.to_s 
       example = boxContent.scan(/Example.+?Solution/m)
       if example.length != 0
         solution = boxContent.split(/Example.+?Solution/m)
-        #p example
-        #p solution[1..-1]
-
-
         #solution array has extra element so we have done this to remove the extra element
         solution = solution[1..-1]
         for i in 0..example.length - 1
-          #here we taken [0..-9] range because regex was capturing an extra word i.e "solution"
-          question = Question.create(question: example[i][0..-9], explanation: solution[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          e = '<p class="Normal ParaOverride-13" lang="en-US" xml:lang="en-US"><span class="CharOverride-12" lang="en-GB" style="font-weight: bold;" xml:lang="en-GB">' + example[i]
+          s = '<p class="Normal ParaOverride-55" lang="en-US" xml:lang="en-US"><span class="CharOverride-12" lang="en-GB" xml:lang="en-GB">Solution' + solution[i]
+          p e
+          p s 
+        #here we taken [0..-9] range because regex was capturing an extra word i.e "solution"
+          question = Question.create(question: e[0..-9], explanation: s ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
           TestQuestion.create(testId: test.id, questionId: question.id)
         end
         sol = true
@@ -30,16 +30,17 @@ task :extraction, [:chapterId] => :environment do |task,args|
     end
     # this section of code is for that notes where only example in box div and answer is out of box div
     if sol == false
-      answer = htmlContent.content.split(/Example.+?Answer/m)
-      example =  htmlContent.xpath("//div[@class='box']").map{ |a| a.content }
+      answer = htmlContent.to_s.split(/Example.+?Answer/m)
+      example =  htmlContent.xpath("//div[@class='box']").map{ |a| a.to_s }
 
       #answer array has extra element so we have done this to remove the extra element
       answer = answer[1..-1]
       if answer.length != 0 and answer.length == example.length
-        #p example
-        #p answer
         for i in 0..example.length - 1
-          question = Question.create(question: example[i], explanation: answer[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          p example[i]  
+          a = '<p class="Body-Text-Indent-2 ParaOverride-43"><span class="CharOverride-7">Answer' + answer[i]
+          p a
+          question = Question.create(question: example[i], explanation: a ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
           TestQuestion.create(testId: test.id, questionId: question.id)
         end
       end
