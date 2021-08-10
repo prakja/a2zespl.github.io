@@ -7,6 +7,8 @@ task :extraction, [:chapterId] => :environment do |task,args|
     sol = false
     htmlContent = Nokogiri::HTML(chapterNote.content)
     p chapterNote.sid
+    test = Test.find_or_create_by(name: "#{args[:chapterId] - NCERT Solved Examples}")
+    question = nil
     htmlContent.xpath("//div[@class='box']").each do |box|
       boxContent =  box.content 
       example = boxContent.scan(/Example.+?Solution/m)
@@ -20,7 +22,8 @@ task :extraction, [:chapterId] => :environment do |task,args|
         solution = solution[1..-1]
         for i in 0..example.length - 1
           #here we taken [0..-9] range because regex was capturing an extra word i.e "solution"
-          Question.create(question: example[i][0..-9], explanation: solution[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          question = Question.create(question: example[i][0..-9], explanation: solution[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          TestQuestion.create(testId: test.id, questionId: question.id)
         end
         sol = true
       end
@@ -36,7 +39,8 @@ task :extraction, [:chapterId] => :environment do |task,args|
         #p example
         #p answer
         for i in 0..example.length - 1
-          Question.create(question: example[i], explanation: answer[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          question = Question.create(question: example[i], explanation: answer[i] ,type:"SUBJECTIVE",ncert:true,topicId: args[:chapterId])
+          TestQuestion.create(testId: test.id, questionId: question.id)
         end
       end
     end  
