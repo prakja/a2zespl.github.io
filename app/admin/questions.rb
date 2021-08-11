@@ -180,7 +180,11 @@ ActiveAdmin.register Question do
       selectable_column
     end
     id_column
-    column (:question) { |question| raw(question.question)  }
+    if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
+      column (:question) { |question| raw(question.question.to_s + (question.level.to_s == 'MASTER-NCERT' ? '<br><br><b>Level: </b> Mastering NCERT' : ''))}
+    else
+      column (:question) { |question| raw(question.question) }
+    end
     column (:correctOption) { |question| question.options[question.correctOptionIndex] if not question.correctOptionIndex.blank? and not question.options.blank?}
     column (:explanation) { |question| raw(question.explanation)  }
     column ("Question Chapter") {|question| question&.topic&.name}
@@ -342,7 +346,11 @@ ActiveAdmin.register Question do
   end
 
   action_item :similar_question, only: :show do
-    link_to 'Find Similar Questions', '/admin/questions?q[similar_questions]=' + resource.id.to_s
+    if resource.topicId.present?
+      link_to 'Find Similar Questions', '/admin/questions?q[similar_questions]=' + resource.id.to_s
+    else
+      link_to 'Update Topic for Similar Quesitons', '/admin/questions/' + resource.id.to_s + '/edit'
+    end
   end
 
   action_item :question_issues, only: :show do
