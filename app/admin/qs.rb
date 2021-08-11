@@ -236,13 +236,13 @@ ActiveAdmin.register Question, as: "Q" do
       row :explanation do |question|
         raw(question.explanation)
       end
-      if question.explanations and question.explanations.length > 0
-        row :explanations do |question|
+      row :explanations do |question|
+        if question.explanations and question.explanations.length > 0
           raw(question.explanations.pluck(:explanation).join(""))
         end
       end
-      if question.translations and question.translations.length > 0
-        row :translations do |question|
+      row :translations do |question|
+        if question.translations and question.translations.length > 0
           raw('<a href="/admin/question_translations?q[questionId_eq]=' + question.id.to_s + '">View in Hindi</a>')
         end
       end
@@ -270,13 +270,13 @@ ActiveAdmin.register Question, as: "Q" do
       row :orignalQuestionId do |question|
         question.orignalQuestionId.nil? ? nil : raw('<a target="_blank" href="/admin/questions/' + question.orignalQuestionId.to_s + '">' + "Original Question" + '</a>')
       end
-      if question.ncert_sentences.length > 0
-        row "NCERT Sentences" do |question|
+      row "NCERT Sentences" do |question|
+        if question.ncert_sentences.length > 0
           raw question.ncert_sentences.collect{|sentence| "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
-      if question.video_sentences.length > 0
-        row "Video Sentences" do |question|
+      row "Video Sentences" do |question|
+        if question.video_sentences.length > 0
           raw question.video_sentences.collect{|sentence| "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
         end
       end
@@ -500,12 +500,14 @@ ActiveAdmin.register Question, as: "Q" do
   end
 
   form do |f|
+    # requires firefox and extensions TexZilla, MathML Fonts & MathML Copy
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
-      render partial: 'tinymce'
-      f.input :question
+      render partial: 'ckeditor'
+      text_node javascript_include_tag Ckeditor.cdn_url
+      f.input :question, as: :ckeditor
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
-      f.input :explanation
+      f.input :explanation, as: :ckeditor
       # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits
       # If we want to add this back then may be thinking of a way to change version id along with test question edition should be evaluated
       # On second thought, we can let this be on for new questions for now
@@ -579,7 +581,7 @@ ActiveAdmin.register Question, as: "Q" do
       render partial: 'hidden_topic_ids', locals: {topics: f.object.topics} if current_admin_user.role != 'support'
 
       f.input :subTopics, input_html: { class: "select1" }, as: :select,
-        :collection => SubTopic.topic_sub_topics(question.topicId != nil ? question.topicId : (question.topics.length > 0 ? question.topics.map(&:id) : [])),
+        :collection => SubTopic.topic_sub_topics(f.object.topicId != nil ? f.object.topicId : (f.object.topics.length > 0 ? f.object.topics.map(&:id) : [])),
         hint: "Hold Ctrl to select" if current_admin_user.question_bank_owner?
 
       f.input :type, as: :select, :collection => ["MCQ-SO", "MCQ-AR", "MCQ-MO", "SUBJECTIVE"]
