@@ -1,0 +1,11 @@
+<% added_hidden_topic_field = false %>
+<% displayed_topic_ids = Topic.name_with_subject.collect{|a,b| b}%>
+<% topics.each do |topic| %>
+  <% if not displayed_topic_ids.include?(topic.id) %>
+    <input type="hidden" name="question[topic_ids][]" value="<%=topic.id%>"/>
+    <% added_hidden_topic_field = true %>
+  <% end %>
+<% end %>
+<% if added_hidden_topic_field == false %>
+  <input type="hidden" name="question[topic_ids][]" value=""/>
+<% end %>
