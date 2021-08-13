@@ -378,6 +378,7 @@ class Question < ApplicationRecord
         topic_name,
         first_subtopic,
         is_ncert,
+        has_ncert_sentences,
         have_video_explanation,
         correct_percentage,
         SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
@@ -406,7 +407,8 @@ class Question < ApplicationRecord
           "QuestionAnalytics"."correctPercentage" AS correct_percentage,
           "Question"."explanation" LIKE '%youtu%' OR "Question"."explanation" LIKE '<%video%' AS have_video_explanation,
           FIRST_VALUE("SubTopic"."name") OVER (PARTITION BY "Question"."id" ORDER BY "QuestionSubTopic"."createdAt" DESC) AS first_subtopic,
-          COALESCE (MAX("QuestionNcertSentence"."id") OVER (PARTITION BY "QuestionNcertSentence"."id", "QuestionNcertSentence"."questionId"), 0) > 0 AS is_ncert,
+          "Question"."ncert" as "is_ncert",
+          COALESCE (MAX("QuestionNcertSentence"."id") OVER (PARTITION BY "QuestionNcertSentence"."id", "QuestionNcertSentence"."questionId"), 0) > 0 AS has_ncert_sentences,
 
           CASE 
             WHEN ROW_NUMBER() OVER (PARTITION BY "Doubt"."id", "Doubt"."questionId") = 1 AND "Doubt"."id" IS NOT NULL
