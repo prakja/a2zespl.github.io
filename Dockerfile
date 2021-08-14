@@ -20,6 +20,6 @@ ENV RAILS_SERVE_STATIC_FILES true
 RUN bundle config --global frozen 1
 RUN bundle install -j "$(getconf _NPROCESSORS_ONLN)" --retry 5 --without development test 
 EXPOSE 3000
-# CMD ["rails", "server", "-p", "3004"]
+CMD ["rails", "server", "-p", "3004"]
 # ENTRYPOINT ["./entrypoints/./docker-entrypoint.sh"]
-CMD bundle exec puma -C config/puma.rb
+# CMD bundle exec puma -C config/puma.rb
