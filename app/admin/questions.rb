@@ -203,8 +203,7 @@ ActiveAdmin.register Question do
       column ('NCERT Sentence') {|question| raw(question.ncert_sentences.collect(&:fullSentenceUrl).join("<br />"))}
     end
 
-    if current_admin_user.question_bank_owner? and params[:showNCERT] != 'yes'
-      # p params["q"]["questionTopics_chapterId_in"]
+    if current_admin_user.question_bank_owner?
       if params["q"] && (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         column :doubts_count, sortable: true do |question|
           link_to question.doubts_count, admin_doubts_path(q: {questionId_eq: question.id}, scope: 'all')
@@ -214,6 +213,10 @@ ActiveAdmin.register Question do
           link_to question.issues_count, admin_customer_issues_path(q: {questionId_eq: question.id})
         end
       end
+    end
+
+    if current_admin_user.question_bank_owner? and params[:showNCERT] != 'yes'
+      
       column ("Add explanation") { |question|
         raw('<a target="_blank" href="/questions/add_explanation/' + question.id.to_s + '">' + "Add Explanation" + '</a>')
       }

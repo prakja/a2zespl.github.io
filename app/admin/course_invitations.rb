@@ -122,7 +122,7 @@ ActiveAdmin.register CourseInvitation do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "CourseInvitation" do
-      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses, hint: "Search course by name or select from list"  if f.object.new_record?
+      f.input :course, include_hidden: false, input_html: { class: "select2" }, :collection => Course.public_courses_with_doubt_info, hint: "Search course by name or select from list"  if f.object.new_record?
       f.input :course, include_hidden: false, input_html: { class: "select2", readonly: true, disabled: true }, :collection => Course.public_courses, hint: "Can not change Course from here, set *Expire Course At* to a *past date* from below to expire course invitation and create a new invitation to give course access on different course" unless f.object.new_record?
       f.input :displayName, label: "Name"
       f.input :email, label: "Email"

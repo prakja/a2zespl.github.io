@@ -35,6 +35,10 @@ class Course < ApplicationRecord
     end
   end
 
+  def self.public_courses_with_doubt_info
+    Course.public_courses.pluck(:id, :name, :hasDoubt).map{|id, name, hasDoubt| [name + (hasDoubt == true ? '' : ' (NO DOUBT SUPPORT)') , id]}
+  end
+
   scope :public_courses, -> {where(package: 'neet').order('"id" ASC')}
   has_many :payments, class_name: "Payment", foreign_key: "paymentForId"
   has_many :courseInvitations, class_name: "CourseInvitation", foreign_key: "courseId"
