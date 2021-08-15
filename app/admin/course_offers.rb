@@ -17,6 +17,9 @@ ActiveAdmin.register CourseOffer do
 
   remove_filter :admin_user, :course
   permit_params :title, :text, :courseId, :fee, :discountedFee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :expiryAt, :description, :actualCourseId
+  scope :current_default, default: true, show_count: false
+  scope :hidden, show_count: false
+  scope :visible, show_count: false 
 
   index do
     id_column
@@ -31,6 +34,8 @@ ActiveAdmin.register CourseOffer do
     column :offerStartedAt
     column :offerExpiryAt
     column :admin_user
+    column :actualCourseId
+    toggle_bool_column :hidden 
     actions
   end
 

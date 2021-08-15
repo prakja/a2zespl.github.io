@@ -13,6 +13,10 @@ class CourseOffer < ApplicationRecord
     joins(:user).where('"User"."email" = "email"')
   }
 
+  scope :visible, -> {where(hidden: false)}
+  scope :hidden, -> {where(hidden: true)}
+  scope :current_default, -> {where(hidden: false, email: nil)}
+
   scope :user_via_phone, -> {
     joins(:user).where('"User"."phone" = "phone"')
   }
