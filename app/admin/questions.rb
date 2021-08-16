@@ -325,6 +325,7 @@ ActiveAdmin.register Question do
     column (:question) {|question| question.question && question.question.squish}
     column (:explanation) {|question| question.explanation && question.explanation.squish}
     column :options
+    column :ncert
     column :correctOptionIndex
   end
 
