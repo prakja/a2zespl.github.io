@@ -32,7 +32,7 @@
 
     function addChapterQuestions() {
       let questionIds = $("#selectedIds").val();
-      var questionIdsArray = questionIds.split(",");
+      var questionIdsArray = questionIds..split(/[\n,]+/);
       let chapterId = '<%= @chapter.id %>';
       if (questionIds == ""){
         alert('Questions not added');

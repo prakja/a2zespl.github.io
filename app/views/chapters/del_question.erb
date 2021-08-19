@@ -32,7 +32,7 @@
 
     function delChapterQuestions() {
       let questionIds = $("#selectedIds").val();
-      var questionIdsArray = questionIds.split(",");
+      var questionIdsArray = questionIds.split(/[\n,]+/);
       let chapterId = '<%= @chapter.id %>';
       if (questionIds == ""){
         alert('QuestionIds not given');

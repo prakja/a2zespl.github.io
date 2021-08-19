@@ -96,7 +96,7 @@
     });
     function addTestQuestions() {
       let questionIds = $("#addIds").val();
-      var questionIdsArray = questionIds.split(",");
+      var questionIdsArray = questionIds.split(/[\n,]+/);
       let testId = '<%= @test.id %>';
       let selectedSequenceId = 0;
 

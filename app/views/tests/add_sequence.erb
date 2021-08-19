@@ -38,7 +38,7 @@
         return
       } else {
         let questionIds = $("#selectedQuestionIds").val();
-        let questionIdsArray = questionIds.split(",");
+        let questionIdsArray = questionIds.split(/[\n,]+/);
 
         let sequenceIdsSeriesWise = '';
 
@@ -54,7 +54,7 @@
 
     function useSequenceSeries() {
       let questionIds = $("#selectedQuestionIds").val();
-      let questionIdsArray = questionIds.split(",");
+      let questionIdsArray = questionIds.split(/[\n,]+/);
 
       let sequenceIdsSeriesWise = '';
 
@@ -71,7 +71,7 @@
     function addTestQuestionSequence() {
       let questionIds = $("#selectedQuestionIds").val();
       let sequenceIds = $("#selectedSequenceIds").val();
-      var questionIdsArray = questionIds.split(",");
+      var questionIdsArray = questionIds.split(/[\n,]+/);
       var sequenceIdsArray = sequenceIds.split(",");
       let testId = '<%= @test.id %>';
       if (questionIds == ""){
