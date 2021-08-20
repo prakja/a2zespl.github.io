@@ -6,16 +6,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 CKEDITOR.plugins.addExternal( 'texzilla', '/assets/ckeditor/plugins/texzilla/', 'plugin.js' );
 CKEDITOR.plugins.addExternal( 'autogrow', '/assets/ckeditor/plugins/autogrow/', 'plugin.js' );
 CKEDITOR.plugins.addExternal( 'mathjax', '/assets/ckeditor/plugins/mathjax/', 'plugin.js' );
-CKEDITOR.plugins.addExternal( 'dialog', '/assets/ckeditor/plugins/dialog/', 'plugin.js' );
-CKEDITOR.plugins.addExternal( 'widget', '/assets/ckeditor/plugins/widget/', 'plugin.js' );
-CKEDITOR.plugins.addExternal( 'clipboard', '/assets/ckeditor/plugins/clipboard/', 'plugin.js' );
-CKEDITOR.plugins.addExternal( 'lineutils', '/assets/ckeditor/plugins/lineutils/', 'plugin.js' );
-CKEDITOR.plugins.addExternal( 'notification', '/assets/ckeditor/plugins/notification/', 'plugin.js' );
 //CKEDITOR.plugins.addExternal( 'katex', '/assets/ckeditor/plugins/katex/', 'plugin.js' );
 
 CKEDITOR.editorConfig = function( config )
 {
-  config.extraPlugins = 'texzilla,autogrow,mathjax,dialog,widget,clipboard,lineutils,notification';
+  config.extraPlugins = 'texzilla,autogrow,mathjax';
   config.mathJaxLib = '//cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML';
 
   config.autoGrow_minHeight = 200;
