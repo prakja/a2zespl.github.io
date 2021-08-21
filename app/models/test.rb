@@ -13,7 +13,7 @@ class Test < ApplicationRecord
   before_update :setSections, :setNumQuestions
 
   def setNumQuestions
-    self.numQuestions = self.questions.count
+    self.numQuestions = self.questions.count if self.numQuestions.blank?
   end
 
   def check_test_validity
