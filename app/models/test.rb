@@ -9,8 +9,12 @@ class Test < ApplicationRecord
   after_validation :check_test_validity
 
   after_commit :after_update_test, if: Proc.new { |model| model.previous_changes[:sections]}, on: [:update]
-  before_create :setSections
-  before_update :setSections
+  before_create :setSections, :setNumQuestions
+  before_update :setSections, :setNumQuestions
+
+  def setNumQuestions
+    self.numQuestions = self.questions.count
+  end
 
   def check_test_validity
     errors.add(:reviewAt, 'is less than started At') if reviewAt.present? and startedAt.present? and reviewAt < startedAt
