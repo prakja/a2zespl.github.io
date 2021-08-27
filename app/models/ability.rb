@@ -10,19 +10,24 @@ class Ability
     elsif user.role == 'hindi_editor'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read, :update], [QuestionTranslation]
-    elsif user.role == 'faculty'
+    elsif user.role == 'faculty' or user.role == 'facultyWithoutDoubt'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, QuestionHint, ChapterFlashCard, FlashCard]
       can :read, [UserProfile, Notification, SubjectLeaderBoard, TopicLeaderBoard, CommonLeaderBoard, TestLeaderBoard, Answer, CourseTest, Topic, CustomerIssueType, UniqueDoubtAnswer, ChapterQuestion, TestAttempt, UserDoubtStat]
-      can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence, VideoSentence, DuplicateQuestion, NotDuplicateQuestion]
-      can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note, WorkLog]
+      if user.role == 'faculty'
+        can [:read, :update], [Doubt, User, CustomerIssue, QuestionTranslation, NcertSentence, VideoSentence, DuplicateQuestion, NotDuplicateQuestion]
+        can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note, WorkLog]
+      else
+        can [:read, :update], [User, CustomerIssue, QuestionTranslation, NcertSentence, VideoSentence, DuplicateQuestion, NotDuplicateQuestion]
+        can [:read, :create, :update], [VideoAnnotation, VideoLink, Question, Video, Test, Note, WorkLog]
+      end
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
       can [:duplicate_questions, :remove_duplicate], [Test]
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup, :update_chapter_questions], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'superfaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
@@ -36,7 +41,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup, :update_chapter_questions], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'supportAndFaculty'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
@@ -55,7 +60,7 @@ class Ability
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
-      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
+      can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup, :update_chapter_questions], [Question]
       can [:destroy], [DuplicateQuestion, NotDuplicateQuestion]
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
