@@ -13,6 +13,7 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require ckeditor/config
 //= require_tree .
 //= require tinymce
 //= require chartkick
