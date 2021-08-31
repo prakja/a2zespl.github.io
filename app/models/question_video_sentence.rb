@@ -4,6 +4,11 @@ class QuestionVideoSentence < ApplicationRecord
 
   belongs_to :question, foreign_key: 'questionId', class_name: 'Question', touch: true
   belongs_to :videoSentence, foreign_key: 'videoSentenceId', class_name: 'VideoSentence'
+
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
+
+  def active_admin_comment
+    self.comment || "- Type comment here"
+  end
 end

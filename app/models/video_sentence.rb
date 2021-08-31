@@ -60,10 +60,6 @@ class VideoSentence < ApplicationRecord
     [:similar_to_question]
   end
 
-  def active_admin_comment
-    self.comment || "- No comment"
-  end
-
   def sentenceHtml
     self[:sentenceHtml].blank? ? self.transcribed_sentence : self[:sentenceHtml]
   end
