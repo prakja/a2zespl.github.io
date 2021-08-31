@@ -84,7 +84,7 @@ ActiveAdmin.register NcertSentence do
 
 
   member_action :add_comment, method: [:put] do
-    sentenceId, comment = params[:id].to_i, params[:question_ncert_sentence][:active_admin_comment]
+    sentenceId, comment = params[:id].to_i, params[:question_ncert_sentence][:comment_without_null]
     QuestionNcertSentence.where(:id => sentenceId).update(:comment => comment)
     head :ok
   end

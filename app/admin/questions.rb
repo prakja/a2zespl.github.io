@@ -302,7 +302,7 @@ ActiveAdmin.register Question do
             ncert_sentence = QuestionNcertSentence.find(sentence.sentence_id)
             raw(
               "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
-              (<i><b>#{best_in_place(ncert_sentence, :active_admin_comment, as: :input, url: add_comment_admin_ncert_sentence_path(ncert_sentence))}</b></i>)
+              (<i><b>#{best_in_place(ncert_sentence, :comment_without_null, as: :input, url: add_comment_admin_ncert_sentence_path(ncert_sentence))}</b></i>)
               <br>
               ".strip
             )
@@ -315,7 +315,7 @@ ActiveAdmin.register Question do
             video_sentence = QuestionVideoSentence.find(sentence.sentence_id)
             raw(
               "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
-              (<i><b>#{best_in_place(video_sentence, :active_admin_comment, as: :input, url: add_comment_admin_video_sentence_path(video_sentence))}</b></i>)
+              (<i><b>#{best_in_place(video_sentence, :comment_without_null, as: :input, url: add_comment_admin_video_sentence_path(video_sentence))}</b></i>)
               <br>
               ".strip
             )

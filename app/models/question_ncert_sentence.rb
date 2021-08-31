@@ -6,7 +6,7 @@ class QuestionNcertSentence < ApplicationRecord
   attribute :createdAt, :datetime, default: Time.now
   attribute :updatedAt, :datetime, default: Time.now
 
-  def active_admin_comment
+  def comment_without_null
     self.comment || "- Type comment here"
   end
 end
