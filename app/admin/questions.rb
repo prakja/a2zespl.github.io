@@ -301,7 +301,7 @@ ActiveAdmin.register Question do
           question.ncert_sentences.collect do |sentence|
             raw(
               "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
-              (<i><b>#{best_in_place(sentence, :active_admin_comment_with_style, as: :input, url: add_comment_admin_ncert_sentence_path(sentence.sentence_id))}</b></i>)
+              (<i><b>#{best_in_place(sentence, :active_admin_comment, as: :input, url: add_comment_admin_ncert_sentence_path(sentence.sentence_id))}</b></i>)
               <br>
               ".strip
             )
@@ -310,7 +310,14 @@ ActiveAdmin.register Question do
       end
       if question.video_sentences.length > 0
         row "Video Sentences" do |question|
-          raw question.video_sentences.collect{|sentence| "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
+          question.video_sentences.collect do |sentence|
+            raw(
+              "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
+              (<i><b>#{best_in_place(sentence, :active_admin_comment, as: :input, url: add_comment_admin_video_sentence_path(sentence.sentence_id))}</b></i>)
+              <br>
+              ".strip
+            )
+          end
         end
       end
     end

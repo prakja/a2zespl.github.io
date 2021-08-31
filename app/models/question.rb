@@ -318,7 +318,7 @@ class Question < ApplicationRecord
   has_many :question_ncert_sentences, class_name: 'QuestionNcertSentence', foreign_key: :questionId, dependent: :destroy
   has_many :question_video_sentences, class_name: 'QuestionVideoSentence', foreign_key: :questionId, dependent: :destroy
 
-  has_and_belongs_to_many :video_sentences, -> { select ['"VideoSentence".*', '"QuestionVideoSentence".comment as comment'] }, class_name: :VideoSentence, join_table: :QuestionVideoSentence, foreign_key: :questionId, association_foreign_key: :videoSentenceId
+  has_and_belongs_to_many :video_sentences, -> { select ['"VideoSentence".*', '"QuestionVideoSentence".id as sentence_id', '"QuestionVideoSentence".comment as comment'] }, class_name: :VideoSentence, join_table: :QuestionVideoSentence, foreign_key: :questionId, association_foreign_key: :videoSentenceId
   has_and_belongs_to_many :ncert_sentences, -> { select ['"NcertSentence".*', '"QuestionNcertSentence".id as sentence_id', '"QuestionNcertSentence".comment as comment'] }, class_name: :NcertSentence, join_table: :QuestionNcertSentence, foreign_key: :questionId, association_foreign_key: :ncertSentenceId
 
   def self.distinct_type

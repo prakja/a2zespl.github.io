@@ -21,8 +21,8 @@ class NcertSentence < ApplicationRecord
     self[:sentenceHtml].blank? ? self.sentence : self[:sentenceHtml]
   end
 
-  def active_admin_comment_with_style
-    self.comment || "Add Comment"
+  def active_admin_comment
+    self.comment || "- No comment"
   end
 
   def fullSentenceUrl
