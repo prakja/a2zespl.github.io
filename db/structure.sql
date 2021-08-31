@@ -92,7 +92,6 @@ CREATE TYPE public."enum_Doubt_doubtType" AS ENUM (
     'Spelling_Mistakes',
     'Academic_Doubt',
     'Website_Not_Working_Properly',
-    'new_value',
     'Wrong_Ncert_Sentence_Marking',
     'Wrong_Video_Sentence_Marking'
 );
@@ -652,11 +651,86 @@ CREATE FUNCTION public.get_chapter_wise_stopwords_from_question(topic_id integer
                   )
                   question_stat 
                 WHERE
-                  repr > 8
+                  repr >= 7
               )
               u);
         END;
         $$;
+
+
+--
+-- Name: get_g_test_matrix(integer, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_g_test_matrix(question_a_id integer, question_b_id integer) RETURNS json
+    LANGUAGE plpgsql
+    AS $$ 
+      DECLARE g_matrix JSON;
+      BEGIN
+        WITH all_question_attempts AS (select "Answer"."id" as id,
+          "Question"."id" as question_id,
+            "Answer"."userId" as user_id,
+            "Answer"."userAnswer" = "Question"."correctOptionIndex"  as is_correct
+        from "Answer" 
+        inner join "Question" on 
+            "Question"."id" = "Answer"."questionId" 
+          where 
+            "Question"."id" IN (question_a_id, question_b_id)
+      ), both_attempt_records AS (
+      select 
+          distinct on (a.user_id, a.question_id, b.question_id)
+          a.question_id as first_question_id,
+          a.is_correct as is_first_question_correct,
+          b.is_correct as is_second_question_correct
+      from 
+        all_question_attempts a 
+      cross join all_question_attempts b 
+      where
+        (a.question_id = question_a_id AND b.question_id = question_b_id) and (a.user_id = b.user_id)
+    )
+
+	select row_to_json(u) into g_matrix from (select 
+		coalesce(
+      sum(
+        case 
+          when is_first_question_correct = true 
+          then 1 
+          else 0 
+        end), 0) as a_correct,
+    coalesce(
+      sum(
+          case 
+            when is_first_question_correct = true and is_second_question_correct = true then 1
+            else 0
+          end
+        ), 0) as both_correct,
+    coalesce(sum(
+        case
+          when is_first_question_correct = true and is_second_question_correct = false then 1
+          else 0
+        end
+    ), 0) as only_a_correct_b_incorrect,
+    coalesce(sum(
+        case
+          when is_second_question_correct = true then 1
+          else 0
+        end
+    ), 0) as b_correct,
+    coalesce(
+      sum(
+        case when is_first_question_correct = false and is_second_question_correct = true then 1 
+        else 0 
+        end
+      ), 0) as only_b_correct_a_incorrect,
+    coalesce(sum(case when is_first_question_correct = false then 1 else 0 end), 0) as a_incorrect,
+    coalesce(sum(case when is_second_question_correct = false then 1 else 0 end), 0) as b_incorrect,
+    coalesce(sum(case when is_first_question_correct = false and is_second_question_correct = false then 1 else 0 end), 0) as both_incorrect
+    
+	from 
+		both_attempt_records) u;
+    return g_matrix;
+  END;
+  $$;
 
 
 --
@@ -1791,6 +1865,39 @@ CREATE TABLE public."ChapterQuestion26052021" (
 
 
 --
+-- Name: ChapterQuestionSet; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestionSet" (
+    id integer NOT NULL,
+    "testId" integer NOT NULL,
+    "chapterId" integer NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: ChapterQuestionSet_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."ChapterQuestionSet_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ChapterQuestionSet_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."ChapterQuestionSet_id_seq" OWNED BY public."ChapterQuestionSet".id;
+
+
+--
 -- Name: ChapterSubTopicWeightage; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -1936,6 +2043,19 @@ CREATE TABLE public."ChapterVideo" (
 --
 
 CREATE TABLE public."ChapterVideo10012021" (
+    id integer,
+    "chapterId" integer,
+    "videoId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
+-- Name: ChapterVideo20210704; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterVideo20210704" (
     id integer,
     "chapterId" integer,
     "videoId" integer,
@@ -2798,7 +2918,8 @@ CREATE TABLE public."CourseInvitation" (
     "displayName" character varying(100),
     "creatorId" integer,
     "paymentId" integer,
-    admin_user_id integer
+    admin_user_id integer,
+    CONSTRAINT expiratcheck CHECK (("expiryAt" <= (CURRENT_TIMESTAMP + '6 years'::interval)))
 );
 
 
@@ -3631,6 +3752,17 @@ CREATE SEQUENCE public."Group_id_seq"
 --
 
 ALTER SEQUENCE public."Group_id_seq" OWNED BY public."Group".id;
+
+
+--
+-- Name: HindiDuplicateChapter; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."HindiDuplicateChapter" (
+    id integer,
+    "origId" integer,
+    "dupId" integer
+);
 
 
 --
@@ -4523,6 +4655,37 @@ CREATE TABLE public."Question20210607" (
 
 
 --
+-- Name: Question20210811; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Question20210811" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
 -- Name: QuestionCopy; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -4673,7 +4836,8 @@ CREATE TABLE public."QuestionNcertSentence" (
     "questionId" integer NOT NULL,
     "ncertSentenceId" integer NOT NULL,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    comment character varying
 );
 
 
@@ -4793,7 +4957,8 @@ CREATE TABLE public."QuestionVideoSentence" (
     "questionId" integer,
     "videoSentenceId" integer,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    comment character varying
 );
 
 
@@ -4817,6 +4982,38 @@ ALTER SEQUENCE public."QuestionVideoSentence_id_seq" OWNED BY public."QuestionVi
 
 
 --
+-- Name: QuestionVimeo; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."QuestionVimeo" (
+    id integer NOT NULL,
+    "questionId" integer,
+    "youtubIframe" text NOT NULL,
+    "vimeoIframe" text NOT NULL
+);
+
+
+--
+-- Name: QuestionVimeo_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."QuestionVimeo_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: QuestionVimeo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."QuestionVimeo_id_seq" OWNED BY public."QuestionVimeo".id;
+
+
+--
 -- Name: Question_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -4833,6 +5030,68 @@ CREATE SEQUENCE public."Question_id_seq"
 --
 
 ALTER SEQUENCE public."Question_id_seq" OWNED BY public."Question".id;
+
+
+--
+-- Name: QuetionMasterClassYoutubeVideo; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."QuetionMasterClassYoutubeVideo" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
+-- Name: QuetionMasterClassYoutubeVideo1; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."QuetionMasterClassYoutubeVideo1" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
 
 
 --
@@ -4867,6 +5126,38 @@ CREATE SEQUENCE public."Quiz_id_seq"
 --
 
 ALTER SEQUENCE public."Quiz_id_seq" OWNED BY public."Quiz".id;
+
+
+--
+-- Name: RemovedSyllabusSubTopic; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."RemovedSyllabusSubTopic" (
+    id integer NOT NULL,
+    "chapterId" integer NOT NULL,
+    "subTopicId" integer NOT NULL,
+    year integer NOT NULL
+);
+
+
+--
+-- Name: RemovedSyllabusSubTopic_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."RemovedSyllabusSubTopic_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: RemovedSyllabusSubTopic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."RemovedSyllabusSubTopic_id_seq" OWNED BY public."RemovedSyllabusSubTopic".id;
 
 
 --
@@ -5582,7 +5873,8 @@ CREATE TABLE public."Test" (
     "userId" integer,
     scholarship boolean DEFAULT false NOT NULL,
     "reviewAt" timestamp with time zone,
-    "discussionEnd" timestamp with time zone
+    "discussionEnd" timestamp with time zone,
+    "seqId" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6070,7 +6362,8 @@ CREATE TABLE public."UserCourse" (
     "couponId" integer,
     trial boolean DEFAULT false,
     "invitationId" integer,
-    "courseOfferId" integer
+    "courseOfferId" integer,
+    CONSTRAINT expiratcheck CHECK (("expiryAt" <= (CURRENT_TIMESTAMP + '6 years'::interval)))
 );
 
 
@@ -7036,6 +7329,24 @@ CREATE SEQUENCE public."VideoQuestion_id_seq"
 --
 
 ALTER SEQUENCE public."VideoQuestion_id_seq" OWNED BY public."VideoQuestion".id;
+
+
+--
+-- Name: VideoSentence20210704; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."VideoSentence20210704" (
+    id bigint,
+    "videoId" integer,
+    "chapterId" integer,
+    "sectionId" integer,
+    sentence character varying,
+    "timestampStart" double precision,
+    "timestampEnd" double precision,
+    "createdAt" timestamp without time zone,
+    "updatedAt" timestamp without time zone,
+    sentence1 text
+);
 
 
 --
@@ -13686,6 +13997,13 @@ ALTER TABLE ONLY public."ChapterQuestionCopy" ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: ChapterQuestionSet id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterQuestionSet" ALTER COLUMN id SET DEFAULT nextval('public."ChapterQuestionSet_id_seq"'::regclass);
+
+
+--
 -- Name: ChapterTask id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14064,10 +14382,24 @@ ALTER TABLE ONLY public."QuestionVideoSentence" ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: QuestionVimeo id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVimeo" ALTER COLUMN id SET DEFAULT nextval('public."QuestionVimeo_id_seq"'::regclass);
+
+
+--
 -- Name: Quiz id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Quiz" ALTER COLUMN id SET DEFAULT nextval('public."Quiz_id_seq"'::regclass);
+
+
+--
+-- Name: RemovedSyllabusSubTopic id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."RemovedSyllabusSubTopic" ALTER COLUMN id SET DEFAULT nextval('public."RemovedSyllabusSubTopic_id_seq"'::regclass);
 
 
 --
@@ -15156,6 +15488,22 @@ ALTER TABLE ONLY public."ChapterNote"
 
 
 --
+-- Name: ChapterQuestionSet ChapterQuestionSet_chapterId_testId_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterQuestionSet"
+    ADD CONSTRAINT "ChapterQuestionSet_chapterId_testId_key" UNIQUE ("chapterId", "testId");
+
+
+--
+-- Name: ChapterQuestionSet ChapterQuestionSet_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterQuestionSet"
+    ADD CONSTRAINT "ChapterQuestionSet_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: ChapterQuestion ChapterQuestion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15692,11 +16040,35 @@ ALTER TABLE ONLY public."QuestionVideoSentence"
 
 
 --
+-- Name: QuestionVimeo QuestionVimeo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVimeo"
+    ADD CONSTRAINT "QuestionVimeo_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: Quiz Quiz_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."Quiz"
     ADD CONSTRAINT "Quiz_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: RemovedSyllabusSubTopic RemovedSyllabusSubTopic_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."RemovedSyllabusSubTopic"
+    ADD CONSTRAINT "RemovedSyllabusSubTopic_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: RemovedSyllabusSubTopic RemovedSyllabusSubTopic_subTopicId_year_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."RemovedSyllabusSubTopic"
+    ADD CONSTRAINT "RemovedSyllabusSubTopic_subTopicId_year_key" UNIQUE ("subTopicId", year);
 
 
 --
@@ -16073,6 +16445,14 @@ ALTER TABLE ONLY public."VideoSentence"
 
 ALTER TABLE ONLY public."VideoSentence"
     ADD CONSTRAINT "VideoSentence_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: VideoSentence VideoSentence_videoId_timestampStart_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."VideoSentence"
+    ADD CONSTRAINT "VideoSentence_videoId_timestampStart_unique" UNIQUE ("videoId", "timestampStart");
 
 
 --
@@ -17247,6 +17627,13 @@ CREATE INDEX "ChapterFlashCard_flashCardId_idx" ON public."ChapterFlashCard" USI
 
 
 --
+-- Name: ChapterQuestionSet_chapterId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "ChapterQuestionSet_chapterId_idx" ON public."ChapterQuestionSet" USING btree ("chapterId");
+
+
+--
 -- Name: CourseOffer_email_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18147,6 +18534,13 @@ CREATE INDEX announcement_user_id ON public."Announcement" USING btree ("userId"
 --
 
 CREATE INDEX answer_incorrect_answer_reason ON public."Answer" USING btree ("incorrectAnswerReason");
+
+
+--
+-- Name: answer_question_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX answer_question_idx ON public."Answer" USING btree ("questionId");
 
 
 --
@@ -20131,6 +20525,13 @@ CREATE INDEX user_course_invitation_id ON public."UserCourse" USING btree ("invi
 
 
 --
+-- Name: user_course_user_id_course_id_expiryAt; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "user_course_user_id_course_id_expiryAt" ON public."UserCourse" USING btree ("userId", "courseId", "expiryAt");
+
+
+--
 -- Name: user_doubt_stat_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20426,6 +20827,22 @@ ALTER TABLE ONLY public."ChapterMindmap"
 
 
 --
+-- Name: ChapterQuestionSet ChapterQuestionSet_chapterId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterQuestionSet"
+    ADD CONSTRAINT "ChapterQuestionSet_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
+-- Name: ChapterQuestionSet ChapterQuestionSet_testId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."ChapterQuestionSet"
+    ADD CONSTRAINT "ChapterQuestionSet_testId_fkey" FOREIGN KEY ("testId") REFERENCES public."Test"(id);
+
+
+--
 -- Name: Comment Comment_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20634,6 +21051,14 @@ ALTER TABLE ONLY public."QuestionTranslation"
 
 
 --
+-- Name: QuestionVimeo QuestionVimeo_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."QuestionVimeo"
+    ADD CONSTRAINT "QuestionVimeo_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
 -- Name: Question Question_creatorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20655,6 +21080,22 @@ ALTER TABLE ONLY public."Question"
 
 ALTER TABLE ONLY public."Question"
     ADD CONSTRAINT "Question_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES public."Subject"(id);
+
+
+--
+-- Name: RemovedSyllabusSubTopic RemovedSyllabusSubTopic_chapterId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."RemovedSyllabusSubTopic"
+    ADD CONSTRAINT "RemovedSyllabusSubTopic_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES public."Topic"(id);
+
+
+--
+-- Name: RemovedSyllabusSubTopic RemovedSyllabusSubTopic_subTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."RemovedSyllabusSubTopic"
+    ADD CONSTRAINT "RemovedSyllabusSubTopic_subTopicId_fkey" FOREIGN KEY ("subTopicId") REFERENCES public."SubTopic"(id);
 
 
 --
@@ -21495,6 +21936,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210706105329'),
 ('20210706140821'),
 ('20210709103127'),
-('20210709104030');
+('20210709104030'),
+('20210811061300'),
+('20210830111613');
 
 

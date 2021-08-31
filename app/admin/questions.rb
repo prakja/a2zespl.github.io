@@ -298,7 +298,14 @@ ActiveAdmin.register Question do
       end
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
-          raw question.ncert_sentences.collect{|sentence| "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
+          question.ncert_sentences.collect do |sentence|
+            raw(
+              "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
+              (<i><b>#{best_in_place(sentence, :active_admin_comment_with_style, as: :input, url: add_comment_admin_ncert_sentence_path(sentence.sentence_id))}</b></i>)
+              <br>
+              ".strip
+            )
+          end 
         end
       end
       if question.video_sentences.length > 0

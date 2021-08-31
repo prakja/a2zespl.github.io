@@ -21,6 +21,10 @@ class NcertSentence < ApplicationRecord
     self[:sentenceHtml].blank? ? self.sentence : self[:sentenceHtml]
   end
 
+  def active_admin_comment_with_style
+    self.comment || "Add Comment"
+  end
+
   def fullSentenceUrl
     return '<a href="https://www.neetprep.com/notes/' + self.noteId.to_s + '#:~:text=' + self.sentenceUrl + '" target="_blank"><span>' + (self.sentenceHtml) + '</span></a>'
   end
