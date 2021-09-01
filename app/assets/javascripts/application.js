@@ -13,6 +13,8 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require ckeditor/plugins/mathjax/plugin
+//= require ckeditor/plugins/mathjax/lang/en
 //= require ckeditor/config
 //= require_tree .
 //= require tinymce
