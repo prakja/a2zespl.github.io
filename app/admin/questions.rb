@@ -298,12 +298,28 @@ ActiveAdmin.register Question do
       end
       if question.ncert_sentences.length > 0
         row "NCERT Sentences" do |question|
-          raw question.ncert_sentences.collect{|sentence| "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
+          question.ncert_sentences.collect do |sentence|
+            ncert_sentence = QuestionNcertSentence.find(sentence.sentence_id)
+            raw(
+              "<a href='#{admin_ncert_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
+              (<i><b>#{best_in_place(ncert_sentence, :comment_without_null, as: :input, url: add_comment_admin_ncert_sentence_path(ncert_sentence))}</b></i>)
+              <br>
+              ".strip
+            )
+          end 
         end
       end
       if question.video_sentences.length > 0
         row "Video Sentences" do |question|
-          raw question.video_sentences.collect{|sentence| "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>"}.join("<br>")
+          question.video_sentences.collect do |sentence|
+            video_sentence = QuestionVideoSentence.find(sentence.sentence_id)
+            raw(
+              "<a href='#{admin_video_sentence_path(sentence)}' target='_blank'>#{sentence.sentence}</a>
+              (<i><b>#{best_in_place(video_sentence, :comment_without_null, as: :input, url: add_comment_admin_video_sentence_path(video_sentence))}</b></i>)
+              <br>
+              ".strip
+            )
+          end
         end
       end
     end

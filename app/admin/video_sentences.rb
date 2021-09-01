@@ -29,6 +29,13 @@ ActiveAdmin.register VideoSentence do
     render 'import_transcribe'
   end
 
+
+  member_action :add_comment, method: [:put] do
+    sentenceId, comment = params[:id].to_i, params[:question_video_sentence][:comment_without_null]
+    QuestionVideoSentence.where(:id => sentenceId).update(:comment => comment)
+    head :ok
+  end
+
   collection_action :import_transcribe, method: :post do
     json, videoId =  params[:outputJson] || false, params[:videoId] || false
 
