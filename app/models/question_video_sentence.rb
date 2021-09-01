@@ -1,5 +1,8 @@
 class QuestionVideoSentence < ApplicationRecord
   self.table_name = "QuestionVideoSentence"
+
+  nilify_blanks only: [:comment]
+
   has_paper_trail
 
   belongs_to :question, foreign_key: 'questionId', class_name: 'Question', touch: true
@@ -9,6 +12,10 @@ class QuestionVideoSentence < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   def comment_without_null
-    self.comment || "- Type comment here"
+    if self.comment.nil? or self.comment.length == 0
+      "- Type comment here"
+    else
+      self.comment
+    end
   end
 end
