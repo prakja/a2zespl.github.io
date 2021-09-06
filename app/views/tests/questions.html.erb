@@ -135,7 +135,7 @@
             <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b><%= test_sections[index + 1][0]%></b></div>
           <% end %>
           <% if params[:show_qlink].present? and params[:show_qlink] == "1"%>
-            <a target="_blank" href="https://www.neetprep.com/questions/<%= question.id %>"><span>Question </span>
+            <a target="_blank" href="https://www.neetprep.com/question/<%= question.id %>"><span>Question </span>
           <% end %>
           <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span>
           <% if params[:show_qlink].present? and params[:show_qlink] == "1"%>
