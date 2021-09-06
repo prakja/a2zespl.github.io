@@ -13,16 +13,25 @@ namespace :chapterwise_test do
 
     ActiveRecord::Base.transaction do
       topics.each do |topic|
-        sections, have_questions = [], false
+        sections, test_questions = [], []
+
+        test_title = "#{topic.name} NCERT Example & Excercise Based MCQs"
+
+        topic_test = Test.create!(
+          :name => test_title, :description => test_title,
+          :free => true, :showAnswer => true,
+          :positiveMarks => 4, :negativeMarks => 1
+        )
 
         ncert_solved_question_ids = Question
           .joins(:tests)
           .where(Question: {:topicId => topic.id}, TestQuestion: {:testId => ncert_solved_test_id})
           .pluck(:id)
 
-        if ncert_backed_question_ids.length > 0
+        if ncert_solved_question_ids.length > 0
           sections << ["Solved Examples", 1]
-          have_questions = true
+          test_questions << ncert_solved_question_ids
+            .map { |qId| TestQuestion.new(:testId => topic_test.id, :questionId => qId, :seqNum => 0)}
         end
 
         ncert_backed_question_ids = Question
@@ -32,23 +41,12 @@ namespace :chapterwise_test do
 
         if ncert_backed_question_ids.length > 0
           sections << ["Back Exercises", ncert_solved_question_ids.length + 1]
-          have_questions = true
+          test_questions << ncert_backed_question_ids
+            .map { |qId| TestQuestion.new(:testId => topic_test.id, :questionId => qId, :seqNum => 1)}
         end
 
-        if have_questions
-          topic_test = Test.create!(
-            :name => "#{topic.name} Test",
-            :description => "#{topic.name} Test",
-            :sections => sections,
-            :free => true, :showAnswer => true,
-            :positiveMarks => 4, :negativeMarks => 1
-          )
-
-          test_questions = (ncert_solved_question_ids + ncert_backed_question_ids)
-            .map { |qId| TestQuestion.new(:testId => topic_test.id, :questionId => qId)}
-
-          TestQuestion.import! test_questions  
-        end
+        topic_test.update(:sections => sections)
+        TestQuestion.import! test_questions.flatten
       end
     end    
   end
