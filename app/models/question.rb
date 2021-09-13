@@ -365,14 +365,15 @@ class Question < ApplicationRecord
     # 2. Chapter
     # 3. First SubTopic
     # 4. Video Explanation Exists? (Yes / No)
-    # 5. No. of Doubts	
-    # 6. No. of Customer Issues	
-    # 7. Correct Percentage	
-    # 8. Question Type: (We would need to configure it as Selected Tests that can be shown in which the question might belong: I have created a similar thing QuestionSet. But, let's create this another list) 
-    # 8.1) PYQ - Tests in course Id 980
-    # 8.2) NCERT Back - test ID 1020201
-    # 8.3) Test Series - Course 8 Tests (without past year tests)
-    # 9. NCERT Tagging (Yes / No) - NCERT Sentences count > 0 or not
+    # 5. Audio Explanation Exists? (Yes / No)
+    # 6. No. of Doubts
+    # 7. No. of Customer Issues
+    # 8. Correct Percentage
+    # 9. Question Type: (We would need to configure it as Selected Tests that can be shown in which the question might belong: I have created a similar thing QuestionSet. But, let's create this another list)
+    # 9.1) PYQ - Tests in course Id 980
+    # 9.2) NCERT Back - test ID 1020201
+    # 9.3) Test Series - Course 8 Tests (without past year tests)
+    # 10. NCERT Tagging (Yes / No) - NCERT Sentences count > 0 or not
 
     select_query = <<-SQL
       SELECT DISTINCT ON (question_id) question_id,
@@ -381,6 +382,7 @@ class Question < ApplicationRecord
         is_ncert,
         has_ncert_sentences,
         have_video_explanation,
+        have_audio_explanation,
         correct_percentage,
         SUM(doubt_count_seq) OVER (PARTITION BY question_id) AS doubt_count,
         SUM(customer_issue_seq) OVER (PARTITION BY question_id) AS customer_issue_count,
@@ -406,7 +408,8 @@ class Question < ApplicationRecord
           "Question"."id" AS question_id,
           "Topic"."name" as topic_name,
           "QuestionAnalytics"."correctPercentage" AS correct_percentage,
-          "Question"."explanation" LIKE '%youtu%' OR "Question"."explanation" LIKE '<%video%' AS have_video_explanation,
+          "Question"."explanation" LIKE '%youtu%' OR "Question"."explanation" LIKE '%<video%' AS have_video_explanation,
+          "Question"."explanation" LIKE '%<audio%' AS have_audio_explanation,
           FIRST_VALUE("SubTopic"."name") OVER (PARTITION BY "Question"."id" ORDER BY "QuestionSubTopic"."createdAt" DESC) AS first_subtopic,
           "Question"."ncert" as "is_ncert",
           COALESCE (MAX("QuestionNcertSentence"."id") OVER (PARTITION BY "QuestionNcertSentence"."id", "QuestionNcertSentence"."questionId"), 0) > 0 AS has_ncert_sentences,
