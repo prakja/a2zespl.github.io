@@ -50,12 +50,22 @@ ActiveAdmin.register Test do
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
-    DuplicateQuestion.create!(
-      questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
-      questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
-    );
+    begin
+      DuplicateQuestion.create!(
+        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+      );
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
-    redirect_to duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"}
+      format.js
+    end
   end
 
   member_action :history do
@@ -192,10 +202,17 @@ ActiveAdmin.register Test do
   end
 
   member_action :mark_duplicate_practice_question, method: :post do
-    DuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id1].to_i : params[:question_id2].to_i,
-      questionId2: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id2].to_i : params[:question_id1].to_i
-    )
+    begin
+      DuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id1].to_i : params[:question_id2].to_i,
+        questionId2: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id2].to_i : params[:question_id1].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_practice_questions_admin_test_path(resource), notice: "marked as duplicate question so that we get only missing questions from this test"}
       format.js
