@@ -50,12 +50,22 @@ ActiveAdmin.register Test do
 
   # remove one of the duplicate question
   member_action :remove_duplicate, method: :post do
-    DuplicateQuestion.create!(
-      questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
-      questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
-    );
+    begin
+      DuplicateQuestion.create!(
+        questionId1: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:delete_question_id] : params[:retain_question_id],
+        questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
+      );
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     ActiveRecord::Base.connection.query('delete from "TestQuestion" where "questionId" = ' + params[:delete_question_id] + ' and "testId" in (select "testId" from "TestQuestion" where "questionId" in  (' + params[:delete_question_id] + ', ' + params[:retain_question_id] + ') group by "testId" having count(*) > 1);')
-    redirect_to duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"
+    respond_to do |format|
+      format.html {redirect_back fallback_location: duplicate_questions_admin_test_path(resource), notice: "Duplicate question removed from test questions!"}
+      format.js
+    end
   end
 
   member_action :history do
@@ -148,6 +158,10 @@ ActiveAdmin.register Test do
     link_to 'Duplicate Practice Questions', duplicate_practice_questions_admin_test_path(resource), target: :_blank
   end
 
+  action_item :duplicate_all_questions, only: :show do
+    link_to 'Duplicate Questions (All)', duplicate_all_questions_admin_test_path(resource), target: :_blank
+  end
+
   action_item :show_leaderboard, only: :show do
     link_to 'Scholarship LeaderBoard', resource.id.to_s + "/leader_board"
   end
@@ -182,11 +196,23 @@ ActiveAdmin.register Test do
     @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' and not exists (select * from "ChapterQuestion" where "ChapterQuestion"."questionId" = "Question"."id" and "ChapterQuestion"."chapterId" = "Question"."topicId") and not exists (select * from "ChapterQuestion", "DuplicateQuestion" where "ChapterQuestion"."questionId" = "DuplicateQuestion"."questionId1" and "ChapterQuestion"."chapterId" = "Question"."topicId" and "DuplicateQuestion"."questionId2" = "Question"."id") and not exists (select * from "ChapterQuestion", "DuplicateQuestion" where "ChapterQuestion"."questionId" = "DuplicateQuestion"."questionId2" and "ChapterQuestion"."chapterId" = "Question"."topicId" and "DuplicateQuestion"."questionId1" = "Question"."id") INNER JOIN "ChapterQuestion" on "TestQuestion"."questionId" != "ChapterQuestion"."questionId" and "ChapterQuestion"."chapterId" = "Question"."topicId" INNER JOIN "Question" AS "Question1" ON "Question1"."id" = "ChapterQuestion"."questionId" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 where not exists (select * from "NotDuplicateQuestion" where "NotDuplicateQuestion"."questionId1" = "Question"."id" and "NotDuplicateQuestion"."questionId2" = "Question1"."id") and not exists (select * from "NotDuplicateQuestion" where "NotDuplicateQuestion"."questionId2" = "Question"."id" and "NotDuplicateQuestion"."questionId1" = "Question1"."id")');
   end
 
+  member_action :duplicate_all_questions do
+    @test = Test.find(resource.id)
+    @question_pairs = ActiveRecord::Base.connection.query('Select "Question"."id", "Question"."question", "Question1"."id", "Question1"."question", "Question"."correctOptionIndex", "Question1"."correctOptionIndex", "Question"."options", "Question1".options, "Question"."explanation", "Question1"."explanation" from "TestQuestion" INNER JOIN "Question" ON "Question"."id" = "TestQuestion"."questionId" and "Question"."deleted" = false and "TestQuestion"."testId" = ' + resource.id.to_s + ' INNER JOIN "Question" AS "Question1" ON "Question1"."id" != "Question"."id" and "Question1"."deleted" = false and similarity("Question1"."question", "Question"."question") > 0.7 and "Question1"."topicId" = "Question"."topicId"');
+  end
+
   member_action :mark_duplicate_practice_question, method: :post do
-    DuplicateQuestion.create!(
-      questionId1: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id1].to_i : params[:question_id2].to_i,
-      questionId2: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id2].to_i : params[:question_id1].to_i
-    )
+    begin
+      DuplicateQuestion.create!(
+        questionId1: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id1].to_i : params[:question_id2].to_i,
+        questionId2: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id2].to_i : params[:question_id1].to_i
+      )
+    rescue ActiveRecord::RecordNotUnique => e
+      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      else
+        raise e.message
+      end
+    end
     respond_to do |format|
       format.html {redirect_back fallback_location: duplicate_practice_questions_admin_test_path(resource), notice: "marked as duplicate question so that we get only missing questions from this test"}
       format.js
