@@ -435,7 +435,7 @@ class Question < ApplicationRecord
         LEFT OUTER JOIN "SubTopic" ON "SubTopic"."id" = "QuestionSubTopic"."subTopicId" AND "SubTopic"."deleted" = false 
 
         WHERE 
-          "Question"."topicId" = #{ActiveRecord::Base.sanitize_sql(topicId)} AND "Question"."deleted" = false
+          "Question"."topicId" = #{ActiveRecord::Base.sanitize_sql(topicId)} AND "Question"."type" = 'MCQ-SO' AND "Question"."deleted" = false
       ) AS U WHERE question_id IS NOT NULL
     SQL
 
