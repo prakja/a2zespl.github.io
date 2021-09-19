@@ -89,6 +89,9 @@ ActiveAdmin.register Test do
       row :positiveMarks
       row ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
       row :exam
+      row :pdfURL do |test|
+        test.pdfURL.present? ? raw('<a href="' + test.pdfURL + '" target="_blank">PDF Link</a>') : 'No PDF Uploaded'
+      end
       row :startedAt
       row :expiryAt
       row :topics
