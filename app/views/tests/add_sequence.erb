@@ -72,7 +72,7 @@
       let questionIds = $("#selectedQuestionIds").val();
       let sequenceIds = $("#selectedSequenceIds").val();
       var questionIdsArray = questionIds.split(/[\n,]+/);
-      var sequenceIdsArray = sequenceIds.split(",");
+      var sequenceIdsArray = sequenceIds.split(/[\n,]+/);
       let testId = '<%= @test.id %>';
       if (questionIds == ""){
         alert('Questions Ids Empty');
