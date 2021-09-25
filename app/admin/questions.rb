@@ -36,8 +36,9 @@ ActiveAdmin.register Question do
   filter :similar_questions, as: :number, label: "Similar to ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
-  filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
-  filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
+  filter :explanation_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
+  filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
+  filter :tests_id_eq, as: :number, label: "Test ID"
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course, show_count: false
