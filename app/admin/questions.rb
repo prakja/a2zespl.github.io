@@ -39,6 +39,7 @@ ActiveAdmin.register Question do
   filter :explanation_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   filter :tests_id_eq, as: :number, label: "Test ID"
+  filter :questionTopics_chapterId_eq, as: :number, label: "Question Bank Chapter ID"
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course, show_count: false
