@@ -38,13 +38,13 @@
       Selected Question Ids:
       <span id="selectedIdsCount"></span>
       <button id="deletedSeletedTestQuestions">Delete Selected Questions</button>
-      <textarea placeholder="selected question ids" id="selectedIds" disabled></textarea>
+      <textarea placeholder="selected question ids" id="selectedIds"></textarea>
     </div>
     <div>
       Unselected Question Ids:
       <span id="unselectedIdsCount"></span>
       <button id="deletedUnSeletedTestQuestions">Delete Unselected Questions</button>
-      <textarea placeholder="unselected question ids" id="unselectedIds" disabled></textarea>
+      <textarea placeholder="unselected question ids" id="unselectedIds"></textarea>
     </div>
     <div>
       <input type="checkbox" id="selectAllQuestions"></input>
@@ -120,7 +120,7 @@
     }
 
     $('#deletedSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(',') : null;
+      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
@@ -140,7 +140,7 @@
     });
 
     $('#deletedUnSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(',') : null;
+      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
