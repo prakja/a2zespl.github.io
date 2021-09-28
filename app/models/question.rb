@@ -10,6 +10,7 @@ class Question < ApplicationRecord
     :pyq => [384, 367, 383, 350, 359, 372, 366, 377, 370, 388, 398, 387, 396, 30571, 364364, 348, 45168, 347, 419],
     :ncert_back => [1020201],
     :test_series => [45310, 45311, 45312, 132501, 132507, 15256, 15257, 15258, 15259, 15260, 15261, 15262, 15263, 15264, 15265, 15266, 15267, 15268, 15269, 15270, 15271, 56253, 56255, 944151],
+    :already_selected => [1158021, 1155398, 1158181, 1158211, 1159044, 1159079, 1159266, 1159299, 1159390, 1159528, 1156678, 1156728, 1156846],
   }
 
   before_save :default_values
@@ -399,7 +400,12 @@ class Question < ApplicationRecord
           END,
           CASE
             WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:test_series].join(',')}))
-            THEN 'Test_Series'
+            THEN 'Test_Series '
+            ELSE ''
+          END,
+          CASE
+            WHEN question_id IN (SELECT "questionId" FROM "TestQuestion" WHERE "testId" IN (#{QUESTION_TYPE_TEST_IDS[:already_selected].join(',')}))
+            THEN 'Already_Selected'
             ELSE ''
           END
         ) AS question_type
