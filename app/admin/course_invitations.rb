@@ -84,7 +84,7 @@ ActiveAdmin.register CourseInvitation do
     courseInvitation.invitations_without_payment
   end
 
-  scope "my accepted course invitations", show_count: false, if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation| 
+  scope "my accepted course invitations", show_count: false do |courseInvitation| 
     courseInvitation.my_accepted_course_invitations(current_admin_user)
   end
 
