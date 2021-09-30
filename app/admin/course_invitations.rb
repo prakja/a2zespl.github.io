@@ -37,6 +37,28 @@ ActiveAdmin.register CourseInvitation do
         csv_headers: ['name',	'courseId',	'email',	'phone',  'expiryAt', 'createdAt', 'updatedAt']
     )
 
+  member_action :create_course_offer, :method=>:get do
+    begin
+      course = Course.find(resource.courseId)
+
+      # 10% off on discounted fee
+      course_offer_fee = course.discountedFee - (course.discountedFee * 0.10)
+
+      course_offer = CourseOffer.create(
+        :title => 'On Call Discount', :description => 'On Call Discount',
+        :email => resource.email, :phone => nil, :courseId => resource.courseId,
+        :expiryAt => course.expiryAt || Date.new(2022, 5, 31),
+        :offerStartedAt => Time.now, :fee => course_offer_fee, 
+        :admin_user_id =>  current_admin_user.id
+      )
+      redirect_to "/admin/course_offers/#{course_offer.id}", 
+        notice: "Course Offer for user #{resource.displayName} created !"
+    rescue => exception
+      flash[:danger] = exception.to_s
+      redirect_to "/admin/course_invitations/#{resource.id}"
+    end
+  end
+
   member_action :resendinvite, :method=>:get do
     p resource
     redirect_to resource_path
@@ -60,6 +82,10 @@ ActiveAdmin.register CourseInvitation do
 
   scope "invitations without payments", show_count: false, if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
     courseInvitation.invitations_without_payment
+  end
+
+  scope "my accepted course invitations", show_count: false, if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation| 
+    courseInvitation.my_accepted_course_invitations(current_admin_user)
   end
 
   #scope "invitations expiring tomorrow", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|

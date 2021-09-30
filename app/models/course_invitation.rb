@@ -86,6 +86,11 @@ class CourseInvitation < ApplicationRecord
    scope :my_invitations_expiring_by_tomorrow, ->(admin_user) {
      where.not(PaymentCourseInvitation.where('"PaymentCourseInvitation"."courseInvitationId" = "CourseInvitation"."id"').exists).where(PaperTrail::Version.where('"item_id" = "CourseInvitation"."id" and "whodunnit" = ? and "item_type" = ? and "event" = ?', admin_user, 'CourseInvitation', 'create').exists).where(:createdAt => (Time.now - 2.day)..Time.now);
    }
+
+   scope :my_accepted_course_invitations, -> (admin_user) {
+     where(:admin_user_id => admin_user.id, :accepted => true)
+   }
+
    has_many :courseInvitationPayments, foreign_key: :courseInvitationId, class_name: 'PaymentCourseInvitation'
    has_many :payments, through: :courseInvitationPayments
    belongs_to :course, foreign_key: "courseId", class_name: "Course", optional: true
