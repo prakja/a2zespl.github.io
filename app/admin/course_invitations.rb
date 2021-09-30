@@ -37,9 +37,23 @@ ActiveAdmin.register CourseInvitation do
         csv_headers: ['name',	'courseId',	'email',	'phone',  'expiryAt', 'createdAt', 'updatedAt']
     )
 
-  member_action :create_course_offer, :method=>:get do
+  member_action :create_course_offer, :method=>:post do
     begin
+      unless resource.accepted
+        raise "Course Invitation has not been accepted"
+      end
+
       course = Course.find(resource.courseId)
+
+      course_offer_exists = CourseOffer.where(
+        :email => resource.email, :phone => nil, :courseId => resource.courseId, 
+        :admin_user_id =>  current_admin_user.id, 
+        :expiryAt => course.expiryAt || Date.new(2022, 5, 31)
+      ).where('"expiryAt" > "offerStartedAt"').exists?
+
+      if course_offer_exists
+        raise "Discounted Course Offer already created"
+      end
 
       # 10% off on discounted fee
       course_offer_fee = course.discountedFee - (course.discountedFee * 0.10)
@@ -48,13 +62,13 @@ ActiveAdmin.register CourseInvitation do
         :title => 'On Call Discount', :description => 'On Call Discount',
         :email => resource.email, :phone => nil, :courseId => resource.courseId,
         :expiryAt => course.expiryAt || Date.new(2022, 5, 31),
-        :offerStartedAt => Time.now, :fee => course_offer_fee, 
+        :offerStartedAt => Time.now, :fee => course_offer_fee,
         :admin_user_id =>  current_admin_user.id
       )
       redirect_to "/admin/course_offers/#{course_offer.id}", 
         notice: "Course Offer for user #{resource.displayName} created !"
     rescue => exception
-      flash[:danger] = exception.to_s
+      flash[:warning] = exception.to_s
       redirect_to "/admin/course_invitations/#{resource.id}"
     end
   end
@@ -74,6 +88,10 @@ ActiveAdmin.register CourseInvitation do
 
   action_item :send_multiple_course_invitations, only: :index do
     link_to 'Send Multiple Course Invitations', '../../course_invitations/multiple_courses'
+  end
+
+  action_item :create_course_offer, only: :show do
+    link_to 'Create Course Offer', "#{resource.id}/create_course_offer", method: :post
   end
 
   action_item :resend_course_invitation, only: :show do
