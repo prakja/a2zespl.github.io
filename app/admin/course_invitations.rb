@@ -62,7 +62,9 @@ ActiveAdmin.register CourseInvitation do
         :title => 'On Call Discount', :description => 'On Call Discount',
         :email => resource.email, :phone => nil, :courseId => resource.courseId,
         :expiryAt => course.expiryAt || Date.new(2022, 5, 31),
-        :offerStartedAt => Time.now, :fee => course_offer_fee,
+        :offerStartedAt => Time.now, :fee => course.fee,
+        :discountedFee => course_offer_fee,
+        :offerExpiryAt => resource.expiryAt,
         :admin_user_id =>  current_admin_user.id
       )
       redirect_to "/admin/course_offers/#{course_offer.id}", 
@@ -91,7 +93,11 @@ ActiveAdmin.register CourseInvitation do
   end
 
   action_item :create_course_offer, only: :show do
-    link_to 'Create Course Offer', "#{resource.id}/create_course_offer", method: :post
+    if resource.expiryAt > Time.now and resource.expiryAt - resource.createdAt < 10.days
+      link_to_if resource.accepted, 'Create Course Offer', "#{resource.id}/create_course_offer", method: :post do |name|
+        link_to name, "#", {disabled: true, class: "disabled"}
+      end
+    end
   end
 
   action_item :resend_course_invitation, only: :show do
