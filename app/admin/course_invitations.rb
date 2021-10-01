@@ -37,6 +37,44 @@ ActiveAdmin.register CourseInvitation do
         csv_headers: ['name',	'courseId',	'email',	'phone',  'expiryAt', 'createdAt', 'updatedAt']
     )
 
+  member_action :create_course_offer, :method=>:post do
+    begin
+      unless resource.accepted
+        raise "Course Invitation has not been accepted"
+      end
+
+      course = Course.find(resource.courseId)
+
+      course_offer_exists = CourseOffer.where(
+        :email => resource.email, :phone => nil, :courseId => resource.courseId, 
+        :admin_user_id =>  current_admin_user.id, 
+        :expiryAt => course.expiryAt || Date.new(2022, 5, 31)
+      ).where('"expiryAt" > "offerStartedAt"').exists?
+
+      if course_offer_exists
+        raise "Discounted Course Offer already created"
+      end
+
+      # 10% off on discounted fee
+      course_offer_fee = course.discountedFee - ((course.discountedFee * 0.10).floor)
+
+      course_offer = CourseOffer.create(
+        :title => 'On Call Discount', :description => 'On Call Discount',
+        :email => resource.email, :phone => nil, :courseId => resource.courseId,
+        :expiryAt => course.expiryAt || Date.new(2022, 5, 31),
+        :offerStartedAt => Time.now, :fee => course.fee,
+        :discountedFee => course_offer_fee,
+        :offerExpiryAt => resource.expiryAt,
+        :admin_user_id =>  current_admin_user.id
+      )
+      redirect_to "/admin/course_offers/#{course_offer.id}", 
+        notice: "Course Offer for user #{resource.displayName} created !"
+    rescue => exception
+      flash[:warning] = exception.to_s
+      redirect_to "/admin/course_invitations/#{resource.id}"
+    end
+  end
+
   member_action :resendinvite, :method=>:get do
     p resource
     redirect_to resource_path
@@ -54,12 +92,24 @@ ActiveAdmin.register CourseInvitation do
     link_to 'Send Multiple Course Invitations', '../../course_invitations/multiple_courses'
   end
 
+  action_item :create_course_offer, only: :show do
+    if resource.expiryAt > Time.now and resource.expiryAt - resource.createdAt < 10.days
+      link_to_if resource.accepted, 'Create Course Offer', "#{resource.id}/create_course_offer", method: :post do |name|
+        link_to name, "#", {disabled: true, class: "disabled"}
+      end
+    end
+  end
+
   action_item :resend_course_invitation, only: :show do
     link_to 'Resend Course Invite', resource.id.to_s + '/resendinvite'
   end
 
   scope "invitations without payments", show_count: false, if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
     courseInvitation.invitations_without_payment
+  end
+
+  scope "my accepted course invitations", show_count: false do |courseInvitation| 
+    courseInvitation.my_accepted_course_invitations(current_admin_user)
   end
 
   #scope "invitations expiring tomorrow", if: -> { current_admin_user.role == 'admin' or current_admin_user.role == 'accounts' } do |courseInvitation|
