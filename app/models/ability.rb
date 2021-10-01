@@ -75,6 +75,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]
       can [:create, :read, :update], [CourseInvitation, Delivery, CourseOffer, WorkLog]
+      can [:create_course_offer], [CourseInvitation]
     elsif user.role == 'accounts'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :read, [UserCourse, User, UserProfile]
