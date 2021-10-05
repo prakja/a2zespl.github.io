@@ -12,7 +12,7 @@ ActiveAdmin.register SubTopic do
 #   permitted
 # end
   remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos, :versions
-  permit_params :name, :topicId
+  permit_params :name, :topicId, :position, :deleted, :videoOnly
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.main_course_topic_name_with_subject}, label: "Chapter"
   preserve_default_filters!
