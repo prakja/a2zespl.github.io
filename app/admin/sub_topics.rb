@@ -78,7 +78,11 @@ ActiveAdmin.register SubTopic do
   index do
     id_column
     column :topic
-    columns_to_exclude = ["id", "createdAt", "updatedAt", "deleted", "position", "topicId"]
+    if params[:scope].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?))
+      columns_to_exclude = ["id", "createdAt", "updatedAt", "deleted", "topicId"]
+    else
+      columns_to_exclude = ["id", "createdAt", "updatedAt", "position", "deleted", "topicId"]
+    end
     (SubTopic.column_names - columns_to_exclude).each do |c|
       column c.to_sym
     end
@@ -116,6 +120,7 @@ ActiveAdmin.register SubTopic do
   controller do
     def scoped_collection
       if params[:scope].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?))
+        params[:order] = 'position_asc_and_id_asc'
         super.left_outer_joins(:questions).select('"SubTopic".*, count(distinct("Question"."id")) as questions_count').group('"SubTopic"."id"')
       else
         super
