@@ -105,6 +105,9 @@ ActiveAdmin.register SubTopic do
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name
+      f.input :position
+      f.input :deleted
+      f.input :videoOnly
       f.input :topic, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
     end
     f.actions
