@@ -5,14 +5,12 @@
     }
     #questionsList{
       width: 50%;
-      overflow: auto;
       height: 700px;
     }
     .questionData {
       border: 1px solid;
       padding: 5px;
       width: 85%;
-      height: 100px;
       overflow: auto;
     }
     .questionBox {
@@ -20,6 +18,10 @@
     }
     .border-maroon{
       border: 1px solid #85144b;
+    }
+    .flex{
+      display: flex;
+      flex-direction: row;
     }
   </style>
 </head>
@@ -50,14 +52,23 @@
       <input type="checkbox" id="selectAllQuestions"></input>
       <label for="selectAllQuestions">Select All Questions</label>
     </div>
+    <div class="flex">
     <ul id="questionsList" class="js-grid sortable grid" data-url = '/tests/update_and_sort'>
       <% @questions_data.each do |key, value| %>
         <%= raw("<li class='questionData' data-id='" + key.to_s + "'>") %>
           <%= raw("<input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id='" + key.to_s + "'></input>") %>
-          <%= raw("<a href='/admin/questions/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
+          <%= raw("<a href='/admin/questions/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a>") %>
         </li>
       <% end %>
     </ul>
+    <ul id="questionsList" class="js-grid grid">
+      <% @questions_data.each do |key, value| %>
+        <li class='questionData'>
+          <%= raw("<b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
+        </li>
+      <% end %>
+    </ul>
+    </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
   <script>
