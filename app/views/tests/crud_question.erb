@@ -101,7 +101,7 @@
     }
     function addTestQuestions() {
       let questionIds = $("#addIds").val();
-      var questionIdsArray = questionIds.split(",");
+      var questionIdsArray = questionIds.split(/[\n,]+/);
       let testId = '<%= @test.id %>';
       let selectedSequenceId = 0;
 
@@ -125,7 +125,7 @@
     }
 
     $('#deletedSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(',') : null;
+      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
@@ -145,7 +145,7 @@
     });
 
     $('#deletedUnSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(',') : null;
+      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
