@@ -1,27 +1,27 @@
 <head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <style>
     .bg-maroon {
         background-color: #85144b;
     }
     #questionsList{
       width: 50%;
+      overflow: auto;
       height: 700px;
     }
     .questionData {
       border: 1px solid;
       padding: 5px;
       width: 85%;
-      overflow: auto;
     }
     .questionBox {
       cursor: pointer;
     }
     .border-maroon{
       border: 1px solid #85144b;
-    }
-    .flex{
-      display: flex;
-      flex-direction: row;
     }
   </style>
 </head>
@@ -52,23 +52,14 @@
       <input type="checkbox" id="selectAllQuestions"></input>
       <label for="selectAllQuestions">Select All Questions</label>
     </div>
-    <div class="flex">
     <ul id="questionsList" class="js-grid sortable grid" data-url = '/tests/update_and_sort'>
       <% @questions_data.each do |key, value| %>
         <%= raw("<li class='questionData' data-id='" + key.to_s + "'>") %>
           <%= raw("<input onchange='pushSelectedIds()' class='questionCheckbox' type='checkbox' id='" + key.to_s + "'></input>") %>
-          <%= raw("<a href='/admin/questions/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a>") %>
+          <%= raw("<a href='/admin/questions/" + key.to_s + "/edit' target='_blank'><span><b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span></a><button class='btn btn-sm btn-light mx-5' onClick=" + '"showQuestionBody(' + "'#collapseQuestion" + key.to_s + "')" + '" data-toggle="collapse">Show/Hide</button>' + "<div id='collapseQuestion" + key.to_s +  "' class='collapse'>" + value[0].to_s + "</div>") %>
         </li>
       <% end %>
     </ul>
-    <ul id="questionsList" class="js-grid grid">
-      <% @questions_data.each do |key, value| %>
-        <li class='questionData'>
-          <%= raw("<b>" + value[1].to_s  + ": </b> (" + key.to_s + ")" + "</span><label class='questionBox' for=" + key.to_s + ">" + value[0].to_s + "</label>") %>
-        </li>
-      <% end %>
-    </ul>
-    </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></script>
   <script>
@@ -105,6 +96,9 @@
       }
 
     });
+    function showQuestionBody(id){
+      $(id).collapse('toggle');
+    }
     function addTestQuestions() {
       let questionIds = $("#addIds").val();
       var questionIdsArray = questionIds.split(/[\n,]+/);
@@ -131,7 +125,7 @@
     }
 
     $('#deletedSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(',') : null;
+      let questionIds = $("#selectedIds").val() != "" ? $("#selectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
@@ -151,7 +145,7 @@
     });
 
     $('#deletedUnSeletedTestQuestions').on('click', function(e){
-      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(',') : null;
+      let questionIds = $("#unselectedIds").val() != "" ? $("#unselectedIds").val().split(/[\n,]+/) : null;
       let testId = '<%= @test.id %>';
       if (questionIds == null){
         alert('questionIds not selected');
@@ -203,3 +197,4 @@
     }
   </script>
 </body>
+
