@@ -23,7 +23,7 @@ class Ability
       end
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
-      can [:duplicate_questions, :remove_duplicate], [Test]
+      can [:duplicate_questions, :remove_duplicate, :duplicate_all_questions], [Test]
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
@@ -37,7 +37,7 @@ class Ability
       can [:read, :create, :update], [VideoAnnotation, VideoLink, DoubtAnswer, Question, Video, Test, Note, WorkLog]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
-      can [:duplicate_questions, :remove_duplicate], [Test]
+      can [:duplicate_questions, :remove_duplicate, :duplicate_all_questions], [Test]
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
@@ -56,7 +56,7 @@ class Ability
       can [:read, :create, :update], [VideoAnnotation, VideoLink]
       can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
       can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
-      can [:duplicate_questions, :remove_duplicate], [Test]
+      can [:duplicate_questions, :remove_duplicate, :duplicate_all_questions], [Test]
       can [:batch_action], [CustomerIssue, DuplicateQuestion, NotDuplicateQuestion]
       can [:create, :read], [ActiveAdmin::Comment]
       can [:play], [Video]
@@ -75,6 +75,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]
       can [:create, :read, :update], [CourseInvitation, Delivery, CourseOffer, WorkLog]
+      can [:create_course_offer], [CourseInvitation]
     elsif user.role == 'accounts'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :read, [UserCourse, User, UserProfile]

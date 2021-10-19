@@ -33,6 +33,11 @@ class TestsController < ApplicationController
     end
   end
 
+  # TODO: copied from neetpreprails and need to similar to that except security checks. so better way to do this?
+  def questions_copy
+    questions
+  end
+
   def live_session_questions
     id = params.require(:id)
     begin

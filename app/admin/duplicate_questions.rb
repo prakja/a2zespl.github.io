@@ -50,10 +50,10 @@ ActiveAdmin.register DuplicateQuestion do
     end
     id_column
     column "Question1" do |dq|
-      raw('<a href=' + edit_admin_question_path(dq.question1) + " target='_blank'>#{dq.question1.id}</a><br />" + dq.question1.question)
+      raw('<a href=' + edit_admin_question_path(dq.questionId1) + " target='_blank'>#{dq.questionId1}</a><br />" + dq&.question1&.question.to_s)
     end
     column "Question2" do |dq|
-      raw('<a href=' + edit_admin_question_path(dq.question2) + " target='_blank'>#{dq.question2.id}</a><br />" + dq.question2.question)
+      raw('<a href=' + edit_admin_question_path(dq.questionId2) + " target='_blank'>#{dq.questionId2}</a><br />" + dq&.question2&.question.to_s)
     end
     column :similarity
     actions defaults: true do |dq|

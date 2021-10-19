@@ -56,7 +56,7 @@ ActiveAdmin.register Test do
         questionId2: params[:delete_question_id].to_i < params[:retain_question_id].to_i ? params[:retain_question_id] : params[:delete_question_id]
       );
     rescue ActiveRecord::RecordNotUnique => e
-      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
       else
         raise e.message
       end
@@ -89,6 +89,9 @@ ActiveAdmin.register Test do
       row :positiveMarks
       row ("Current Question Count") {|test| raw("<b>" + test.questions.count.to_s + "</b>") + "/" + raw(test.numQuestions)}
       row :exam
+      row :pdfURL do |test|
+        test.pdfURL.present? ? raw('<a href="' + test.pdfURL + '" target="_blank">PDF Link</a>') : 'No PDF Uploaded'
+      end
       row :startedAt
       row :expiryAt
       row :topics
@@ -208,7 +211,7 @@ ActiveAdmin.register Test do
         questionId2: params[:question_id1].to_i < params[:question_id2].to_i ? params[:question_id2].to_i : params[:question_id1].to_i
       )
     rescue ActiveRecord::RecordNotUnique => e
-      if(e.message =~ /unique.*constraint.*NotDuplicateQuestion_questionId1_questionId2_key/)
+      if(e.message =~ /unique.*constraint.*DuplicateQuestion_questionId1_questionId2_key/)
       else
         raise e.message
       end

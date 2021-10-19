@@ -121,7 +121,7 @@
   </head>
   <body class="A4">
     <div class="page_template">
-      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><a href="https://www.neetprep.com/neet-test/<%=@test.id%>"><%=@test.name%></a><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
+      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><a target="_blank" href="<%=params[:base_url]%>?testId=<%=@test.id%>"><%=@test.description%></a><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
       <div class='content'></div>
       <div class='footer'><span>Page: </span></div>
     </div>
@@ -135,7 +135,7 @@
             <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b><%= test_sections[index + 1][0]%></b></div>
           <% end %>
           <% if params[:show_qlink].present? and params[:show_qlink] == "1"%>
-            <a target="_blank" href="https://www.neetprep.com/question/<%= question.id.to_s + (params[:test_id].present? ? "?testId=" + params[:test_id].to_s : "") %>"><span>Question </span>
+            <a target="_blank" href="<%=params[:base_url]%>?questionId=<%= question.id.to_s + "&testId=" + @test.id.to_s %>"><span>Question </span>
           <% end %>
           <span class="questionId" style="vertical-align: top;"><%=index + 1%>.</span>
           <% if params[:show_qlink].present? and params[:show_qlink] == "1"%>
@@ -145,14 +145,6 @@
         </div>
         <% if index + 1 == @test_questions.length %>
           <div class="dontsplit">
-            <div>
-              <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/<%=@test.id%>"><h2 style="text-align: center;">Fill OMR Sheet*</h2></a>
-            </div>
-            <div>
-              *If above link doesn't work, please go to test link from where you got the pdf and fill OMR from there
-            </div>
-            <br>
-            <br>
             <% unless params[:hide_trial].present? and params[:hide_trial] == "1" %> 
               <br>
               <div class="free-trial">

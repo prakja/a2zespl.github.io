@@ -45,14 +45,16 @@ ActiveAdmin.register CourseInvitation do
 
       course = Course.find(resource.courseId)
 
-      course_offer_exists = CourseOffer.where(
+      existing_course_offer = CourseOffer.where(
         :email => resource.email, :phone => nil, :courseId => resource.courseId, 
         :admin_user_id =>  current_admin_user.id, 
         :expiryAt => course.expiryAt || Date.new(2022, 5, 31)
-      ).where('"expiryAt" > "offerStartedAt"').exists?
+      ).where('"expiryAt" > "offerStartedAt"').first
 
-      if course_offer_exists
-        raise "Discounted Course Offer already created"
+      if existing_course_offer
+        flash[:warning] = "Discounted Course Offer already created. Please edit the course offer to either change discounted fee or offer expiry at. No other field should be changed"
+        redirect_to "/admin/course_offers/" + existing_course_offer.id.to_s + "/edit"
+        return
       end
 
       # 10% off on discounted fee

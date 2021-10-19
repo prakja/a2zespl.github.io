@@ -12,7 +12,7 @@ ActiveAdmin.register SubTopic do
 #   permitted
 # end
   remove_filter :questions, :subTopicQuestions, :topic, :subTopicVideos, :videos, :versions
-  permit_params :name, :topicId
+  permit_params :name, :topicId, :position, :deleted, :videoOnly
 
   filter :topic_id_eq, as: :select, collection: -> { Topic.main_course_topic_name_with_subject}, label: "Chapter"
   preserve_default_filters!
@@ -78,7 +78,11 @@ ActiveAdmin.register SubTopic do
   index do
     id_column
     column :topic
-    columns_to_exclude = ["id", "createdAt", "updatedAt", "deleted", "position", "topicId"]
+    if params[:scope].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?))
+      columns_to_exclude = ["id", "createdAt", "updatedAt", "deleted", "topicId"]
+    else
+      columns_to_exclude = ["id", "createdAt", "updatedAt", "position", "deleted", "topicId"]
+    end
     (SubTopic.column_names - columns_to_exclude).each do |c|
       column c.to_sym
     end
@@ -105,6 +109,9 @@ ActiveAdmin.register SubTopic do
   form do |f|
     f.inputs "Sub Topic" do
       f.input :name
+      f.input :position
+      f.input :deleted
+      f.input :videoOnly
       f.input :topic, input_html: { class: "select2" }, :collection => Topic.neetprep_course.pluck(:name, :'Subject.name', :id).map{|topic_name, subject_name, topic_id| [topic_name + " - " + subject_name, topic_id]}
     end
     f.actions
@@ -113,6 +120,7 @@ ActiveAdmin.register SubTopic do
   controller do
     def scoped_collection
       if params[:scope].present? or (params[:q].present? and (params[:q][:topic_id_eq].present? or params[:q][:topic_id_in].present?))
+        params[:order] = 'position_asc_and_id_asc'
         super.left_outer_joins(:questions).select('"SubTopic".*, count(distinct("Question"."id")) as questions_count').group('"SubTopic"."id"')
       else
         super
