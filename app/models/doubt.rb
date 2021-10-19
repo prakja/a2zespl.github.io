@@ -30,6 +30,10 @@ class Doubt < ApplicationRecord
     solved("yes").where('"content" like \'%img%amazonaws%\' and length(regexp_replace("content", \'<img.*?/>\', \'\')) <= 100').or(where('"imgUrl" is not null')).order('"id" DESC');
   }
 
+  scope :all_with_no_answers, -> {
+    where('"((NOT EXISTS (SELECT "id" from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id")) OR ((SELECT MAX("id") from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id") = (SELECT COALESCE(MAX("id"), 0) from "DoubtAnswer" where "DoubtAnswer"."doubtId" = "Doubt"."id" and "Doubt"."userId" = "DoubtAnswer"."userId" and "createdAt" > current_date - interval \'3 day\')))')
+  }
+
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
   }

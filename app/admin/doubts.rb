@@ -23,6 +23,7 @@ ActiveAdmin.register Doubt do
   scope :zoology_paid_student_doubts, show_count: false
   # scope :masterclass_paid_student_doubts, show_count: false
   scope :all, show_count: false
+  scope :all_with_no_answers, show_count: false
   scope :image_doubts, show_count: false, if: -> { current_admin_user.image_doubts_access? }
   #scope :concept_building_student_doubts, show_count: false
   scope :unpaid_student_solved_doubts, show_count: false
