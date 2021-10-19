@@ -3,13 +3,13 @@
 <script>
 tinymce.init({
   selector: '#question_question',
-  plugins: "link image code paste media table",
+  plugins: "link image code paste media table charmap",
   // TODO: to be added only if secure loading of plugin.js below is not working
   // content_security_policy: "default-src 'self' *.wiris.net *.amazonaws.com *.cloudflare.com; style-src 'self' 'unsafe-inline' *.cloudflare.com; img-src * data:;",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   // TODO: not sure why was this required but language going undefined in wiris editor somehow and gets fixed now
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,subscript,superscript,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,table,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media',
+  toolbar: 'code,|,bold,italic,underline,subscript,superscript,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,table,|,charmap,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media',
   menubar: 'file edit insert view format table tools help',
   paste_data_images: true,
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
@@ -34,13 +34,13 @@ tinymce.init({
 });
 tinymce.init({
   selector: '#question_explanation',
-  plugins: "link image code paste media youtubeIframe table",
+  plugins: "link image code paste media youtubeIframe table charmap",
   // TODO: to be added only if secure loading of plugin.js below is not working
   // content_security_policy: "default-src 'self' *.wiris.net *.amazonaws.com *.cloudflare.com; style-src 'self' 'unsafe-inline' *.cloudflare.com; img-src * data:;",
   external_plugins: { tiny_mce_wiris: 'https://www.neetprep.com/@wiris/mathtype-tinymce4/plugin.min.js' },
   // TODO: not sure why was this required but language going undefined in wiris editor somehow and gets fixed now
   language: 'en',
-  toolbar: 'code,|,bold,italic,underline,subscript,superscript,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,table,|,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,youtubeIframe',
+  toolbar: 'code,|,bold,italic,underline,subscript,superscript,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,table,|,charmap,tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry,|,fullscreen,media,|,youtubeIframe',
   menubar: 'file edit insert view format table tools help',
   paste_data_images: true,
   invalid_styles: {
