@@ -45,13 +45,20 @@ class CourseInvitation < ApplicationRecord
    end
 
    def before_update_course_invitation
-     HTTParty.post(
+     response = HTTParty.post(
        Rails.configuration.node_site_url + "api/v1/webhook/beforeUpdateCourseInvitation",
         body: {
           id: self.id,
           phone: self.phone,
           email: self.email
      })
+     case response.code
+     when 200
+     when 404
+       puts "O noes not found!"
+     when 500...600
+       raise "ERROR #{response.to_s}. Please update the course invitation once more to see if the error goes away otherwise contact tech team"
+     end
    end
 
    def after_create_update_course_invitation
@@ -59,11 +66,18 @@ class CourseInvitation < ApplicationRecord
        return
      end
 
-     HTTParty.post(
+     response = HTTParty.post(
        Rails.configuration.node_site_url + "api/v1/webhook/afterCreateUpdateCourseInvitation",
         body: {
           id: self.id,
      })
+     case response.code
+     when 200
+     when 404
+       puts "O noes not found!"
+     when 500...600
+       raise raw "ERROR #{response.to_s}. The course invitation was created but user access couldn't be created. Please <a target='_blank' href='/admin/course_invitations/#{self.id}/edit'>update the course invitation once</a> to see if the error goes away otherwise contact tech team"
+     end
    end
 
    scope :invitation_created_more_than_7days_by_sales, -> {
