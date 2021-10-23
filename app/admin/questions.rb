@@ -55,8 +55,8 @@ ActiveAdmin.register Question do
   scope :difficultLevel, show_count: false
   scope :has_ncert_sentences, show_count: false
   scope :no_ncert_sentences, show_count: false
-  scope :has_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
-  scope :no_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :has_video_sentences, show_count: false
+  scope :no_video_sentences, show_count: false
   scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
   scope :not_in_qb, if: -> {current_admin_user.admin?}, show_count: false
 
