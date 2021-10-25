@@ -69,10 +69,7 @@ class QuestionsController < ApplicationController
   end
 
   def translation_pdf
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @subject = params[:subject]
     @topicId = params[:topic]
@@ -101,10 +98,7 @@ class QuestionsController < ApplicationController
   end
 
   def test_translation
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @testId = params[:test]
     raise "Test ID error" if @testId.nil?
@@ -119,10 +113,7 @@ class QuestionsController < ApplicationController
   end
 
   def pdf_questions
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     default_order = 'asc'
     default_limit = 50
@@ -233,10 +224,7 @@ class QuestionsController < ApplicationController
   end
 
   def remove_video_link_hint
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       @hintId = params.require(:hintId)
       QuestionHint.where(id: @hintId).update(videoLinkId: nil)
@@ -246,10 +234,7 @@ class QuestionsController < ApplicationController
   end
 
   def video_link_hint
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       @videoHintId = params.require(:videoId)
       @hintId = params.require(:hintId)
@@ -261,10 +246,7 @@ class QuestionsController < ApplicationController
   end
 
   def add_hint 
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       @question_hints_data = {}
       @videoList_data = {}
@@ -296,10 +278,7 @@ class QuestionsController < ApplicationController
   end
 
   def add_explanation
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       @questionId = params.require(:id)
       @question = Question.find(@questionId)

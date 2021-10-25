@@ -1,9 +1,6 @@
 class CustomerIssuesController < ApplicationController
   def pending_stats
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @botany_question_two_days = CustomerIssue.two_days_pending('botany_question')
     @botany_question_five_days = CustomerIssue.five_days_pending('botany_question')

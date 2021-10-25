@@ -46,10 +46,7 @@ class TestsController < ApplicationController
   end
 
   def add_question
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @testId = params[:testId]
     @test = Test.where(id: @testId).first
@@ -74,10 +71,7 @@ class TestsController < ApplicationController
   end
 
   def crud_question
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @questions_data = {}
     @testId = params.require(:testId)
@@ -107,10 +101,7 @@ class TestsController < ApplicationController
   end
 
   def add_sequence
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @testId = params[:testId]
     @test = Test.where(id: @testId).first
@@ -197,10 +188,7 @@ class TestsController < ApplicationController
   end
 
   def add_chapter_test
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @testId = params[:testId]
     @test = Test.where(id: @testId).first

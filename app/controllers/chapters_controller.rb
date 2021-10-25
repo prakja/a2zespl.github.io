@@ -34,10 +34,7 @@ class ChaptersController < ApplicationController
   end
 
   def crud_video
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @videos_data = {}
     @chapterId = params.require(:chapterId)
@@ -50,37 +47,25 @@ class ChaptersController < ApplicationController
   end
 
   def add_question
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     @chapterId = params[:chapterId]
     @chapter = Topic.where(id: @chapterId).first
   end
 
   def del_question
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     @chapterId = params[:chapterId]
     @chapter = Topic.where(id: @chapterId).first
   end
 
   def add_note
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     @chapterId = params[:chapterId]
     @chapter = Topic.where(id: @chapterId).first
   end
 
   def del_note
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     @chapterId = params[:chapterId]
     @chapter = Topic.where(id: @chapterId).first
   end
@@ -275,10 +260,7 @@ class ChaptersController < ApplicationController
   end
 
   def crud_question
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @questions_data = {}
     @testId = params.require(:testId)
@@ -329,10 +311,7 @@ class ChaptersController < ApplicationController
   end
 
   def section_content
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @current_admin_user = current_admin_user
     if current_admin_user.role == 'admin' or current_admin_user.role == 'faculty' or current_admin_user.role == 'support' or current_admin_user.role == "supportAndFaculty" or current_admin_user.role == "superfaculty"

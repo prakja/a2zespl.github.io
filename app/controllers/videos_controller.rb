@@ -22,10 +22,7 @@ class VideosController < ApplicationController
   end
 
   def add_chapter_video
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @videoId = params[:videoId]
     @video = Video.where(id: @videoId).first
