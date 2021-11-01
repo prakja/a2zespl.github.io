@@ -55,8 +55,8 @@ ActiveAdmin.register Question do
   scope :difficultLevel, show_count: false
   scope :has_ncert_sentences, show_count: false
   scope :no_ncert_sentences, show_count: false
-  scope :has_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
-  scope :no_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :has_video_sentences, show_count: false
+  scope :no_video_sentences, show_count: false
   scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
   scope :not_in_qb, if: -> {current_admin_user.admin?}, show_count: false
 
@@ -124,6 +124,8 @@ ActiveAdmin.register Question do
         super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count, (select count(*) from "CustomerIssue" where "CustomerIssue"."questionId" = "Question"."id" and "resolved" = false) as issues_count').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
+      elsif request.format == :csv
+        super.preload(:systemTests, :subTopics, :topics)
       else
         super.left_outer_joins(:topic)
       end
@@ -345,6 +347,7 @@ ActiveAdmin.register Question do
     column :options
     column :ncert
     column :correctOptionIndex
+    column (:tests) {|question| question.systemTests && question.systemTests.pluck(:name).join(", ")}
   end
 
   # Label works with filters but not with scope xD
