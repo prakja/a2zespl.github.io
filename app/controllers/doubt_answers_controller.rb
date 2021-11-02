@@ -69,10 +69,7 @@ class DoubtAnswersController < ApplicationController
   end
 
   def answer
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @userId = current_admin_user.userId
     @doubt_id = params[:doubt_id]

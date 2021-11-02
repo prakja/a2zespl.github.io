@@ -2,10 +2,7 @@ class UserAnalyticsController < ApplicationController
   protect_from_forgery with: :null_session
 
   def userData
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     if request.post?
       emails = params[:emails].split(/\r?\n/)
@@ -27,10 +24,7 @@ class UserAnalyticsController < ApplicationController
   end
 
   def show
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @userId = params.require(:userId)
     startDate = [params[:startDate]][0]
@@ -54,10 +48,7 @@ class UserAnalyticsController < ApplicationController
   end
 
   def accuracy
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @userId = params[:userId]
     @user = User.where(id: @userId).first

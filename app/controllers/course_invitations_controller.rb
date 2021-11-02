@@ -3,10 +3,7 @@ class CourseInvitationsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def multiple_courses
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @courses_data = {}
     @current_admin_role = current_admin_user.role

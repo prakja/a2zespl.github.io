@@ -1,6 +1,6 @@
 ActiveAdmin.register Test do
   duplicatable
-  permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :discussionEnd, :ownerType, :seqId, :ownerId, :scholarship, course_ids: [], topic_ids: []
+  permit_params :name, :sections, :description, :pdfURL, :resultMsgHtml, :instructions, :syllabus, :durationInMin, :free, :showAnswer, :negativeMarks, :positiveMarks, :numQuestions, :exam, :startedAt, :expiryAt, :reviewAt, :discussionEnd, :ownerType, :seqId, :ownerId, :scholarship, :allowPracticeMode, course_ids: [], topic_ids: []
   remove_filter :questions, :test_leader_boards, :versions, :testQuestions, :testCourseTests, :testChapterTests, :test_attempts, :target, :question_ids
 
   filter :id_eq, as: :number, label: "Test ID"
@@ -84,6 +84,7 @@ ActiveAdmin.register Test do
       end
       row :durationInMin
       row :free
+      row :allowPracticeMode
       row :showAnswer
       row :negativeMarks
       row :positiveMarks
@@ -244,6 +245,7 @@ ActiveAdmin.register Test do
       f.input :syllabus
       f.input :durationInMin, label: "Duration in Minutes"
       f.input :free, hint: "Mark checked for Live session test and Scholarship tests"
+      f.input :allowPracticeMode, label: "Allow Test For Practice", as: :boolean
       f.input :scholarship, hint: "Mark checked only for Scholarship tests"
       f.input :showAnswer, hint: "Uncheck if you don't want student to see test solution after exam"
       f.input :resultMsgHtml, hint: "result message on test result page"
