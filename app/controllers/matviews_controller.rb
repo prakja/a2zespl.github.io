@@ -4,10 +4,7 @@ class MatviewsController < ApplicationController
 
 
   def forced_update
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     begin
 

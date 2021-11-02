@@ -2,10 +2,7 @@ class CoachesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     # render html: helpers.tag.strong('You are not a coach') if current_admin_user.role != 'coach'
     if current_admin_user.students.count == 0
       render html: helpers.tag.strong('You are not coaching any student currently')
@@ -45,10 +42,7 @@ class CoachesController < ApplicationController
   end
 
   def summary
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     if current_admin_user.students.count == 0
       render html: helpers.tag.strong('You are not coaching any student currently')

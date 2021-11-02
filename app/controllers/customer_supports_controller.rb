@@ -1,9 +1,6 @@
 class CustomerSupportsController < ApplicationController
   def pending_stats
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @pendrive_two_days = CustomerSupport.two_days_pending('Pendrive_Not_Working')
     @pendrive_five_days = CustomerSupport.five_days_pending('Pendrive_Not_Working')

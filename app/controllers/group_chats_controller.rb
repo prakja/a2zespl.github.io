@@ -4,10 +4,7 @@ class GroupChatsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def group
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @group_id = params.require(:id)
     @group = Group.find(@group_id)
@@ -18,10 +15,7 @@ class GroupChatsController < ApplicationController
   end
 
   def teacher_view
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @group_id = params.require(:id)
     @group = Group.find(@group_id)

@@ -22,10 +22,7 @@ class GenericsController < ApplicationController
   end
 
   def create_user_token
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     if current_admin_user.role == 'admin'
       userId = params[:id].to_i
@@ -159,10 +156,7 @@ class GenericsController < ApplicationController
   end
 
   def user_activity
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     file = params[:file]
 
     @course_id = params[:course_id].to_i

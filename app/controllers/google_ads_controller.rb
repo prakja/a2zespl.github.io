@@ -4,10 +4,7 @@ class GoogleAdsController < ApplicationController
 
 
   def report
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @campaign_reports = {}
     @campaign_reports = CampaignPerformanceReport.where(['day > ? and _sdc_report_datetime > ?', 30.days.ago, Time.now.midnight]).group('day').order('day desc').pluck("day, sum(cost) as total_cost")

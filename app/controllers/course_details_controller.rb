@@ -3,10 +3,7 @@ class CourseDetailsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     @course_id = params.require(:courseId)
     @course = Course.includes(subjects: :topics).find(@course_id)
 
@@ -56,10 +53,7 @@ class CourseDetailsController < ApplicationController
   end
 
   def booster
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @paidUser = params[:paidUser] && params[:paidUser] === "false" ? false : true
     begin

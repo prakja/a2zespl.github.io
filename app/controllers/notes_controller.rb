@@ -3,10 +3,7 @@ class NotesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def update_content
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       noteId = params[:noteId]
       content = params[:content]
@@ -29,10 +26,7 @@ class NotesController < ApplicationController
   end
 
   def duplicate_content
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       noteId = params[:noteId]
 
@@ -58,10 +52,7 @@ class NotesController < ApplicationController
   end
 
   def edit_content
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
     begin
       @noteId = params.require(:id)
       @note = Note.find(@noteId)

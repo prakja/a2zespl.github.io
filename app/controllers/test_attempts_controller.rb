@@ -4,10 +4,7 @@ class TestAttemptsController < ApplicationController
 
 
   def aryan_raj_toppers
-    if not current_admin_user
-      redirect_to "/admin/login"
-      return
-    end
+    authenticate_admin_user!
 
     @test_attempts = {}
     @tests = TestAttempt.aryan_raj_test_series.order('"Test"."id" ASC').pluck('distinct "Test"."id", "Test"."name"');
