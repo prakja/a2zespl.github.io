@@ -328,23 +328,191 @@ CREATE FUNCTION public."MissingNEETExamQuestion"(yr integer) RETURNS TABLE("qId"
 
 
 --
+-- Name: PopulateDailyUserAllEvent(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserAllEvent"() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+ PERFORM "PopulateDailyUserEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserTestQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserNcertQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserCorrectQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserPhysicsQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserChemistryQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserPhysicsCorrectQEvent"(1, date(current_timestamp));
+ PERFORM "PopulateDailyUserChemistryCorrectQEvent"(1, date(current_timestamp));
+END
+$$;
+
+
+--
+-- Name: PopulateDailyUserAllEvent(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserAllEvent"(days integer DEFAULT 1) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+ PERFORM "PopulateDailyUserEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserTestQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserNcertQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserCorrectQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserPhysicsQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserChemistryQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserPhysicsCorrectQEvent"(days, date(current_timestamp));
+ PERFORM "PopulateDailyUserChemistryCorrectQEvent"(days, date(current_timestamp));
+END
+$$;
+
+
+--
+-- Name: PopulateDailyUserChemistryCoQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserChemistryCoQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'ChemistryCorrectQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (54, 1214))) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserChemistryCorrectQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserChemistryCorrectQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'ChemistryCorrectQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (54, 1214) and "correctOptionIndex" = "userAnswer")) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserChemistryQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserChemistryQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'ChemistryQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (54, 1214))) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserCorrectQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserCorrectQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'CorrectQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "correctOptionIndex" = "userAnswer")) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
 -- Name: PopulateDailyUserCourseEvent(integer, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public."PopulateDailyUserCourseEvent"(days integer DEFAULT 1, courseid integer DEFAULT 255) RETURNS void
     LANGUAGE plpgsql
     AS $$
-DECLARE
-    maxDate DATE;
-BEGIN
-  select max("eventDate") from "DailyUserEvent" where "courseId" = courseId into maxDate;
-  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount", "courseId") select "userId", 'Question', date("createdAt"), count(*), courseId from "Answer", "QuestionCourse"
-    where "createdAt" >= maxDate + 1 and "createdAt" < maxDate + 1 + days
-    and "QuestionCourse"."courseId" = courseId
-    and "QuestionCourse"."questionId" = "Answer"."questionId"
-    group by "userId", date("createdAt");
-END
-$$;
+      DECLARE
+          maxDate DATE;
+          startDate DATE;
+      BEGIN
+        select max("eventDate") from "DailyUserEvent" where "courseId" = courseId into maxDate;
+         if maxDate is not null then
+          startDate := maxDate + 1;
+        else
+          startDate := '2020-01-01';
+        end if;
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount", "courseId") select "userId", 'Question', startDate, count(distinct("questionId")), courseId from "Answer", "QuestionCourse"
+          where "createdAt" at time zone 'utc' at time zone 'Asia/Kolkata' >= startDate and "createdAt" at time zone 'utc' at time zone 'Asia/Kolkata' < startDate + days
+          and "QuestionCourse"."courseId" = courseId
+          and "QuestionCourse"."questionId" = "Answer"."questionId"
+          group by "userId";
+      END
+      $$;
+
+
+--
+-- Name: PopulateDailyUserCourseEvent(integer, integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserCourseEvent"(days integer DEFAULT 1, courseid integer DEFAULT 255, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+      DECLARE
+          maxDate DATE;
+      BEGIN
+        select max("eventDate") from "DailyUserEvent" where "courseId" = courseId into maxDate;
+         if maxDate is not null and startDate = '2020-01-01' then
+          startDate := maxDate + 1;
+        end if;
+        if now() at time zone 'Asia/Kolkata' < startDate then
+          startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+        end if;
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount", "courseId") select "userId", 'Question', startDate, count(distinct("questionId")), courseId from "Answer", "QuestionCourse"
+          where "createdAt" >= startDate - interval '5.5 hours' and "createdAt" < startDate + days - interval '5.5 hours'
+          and "QuestionCourse"."courseId" = courseId
+          and "QuestionCourse"."questionId" = "Answer"."questionId"
+          group by "userId" on conflict ("userId", "event", "eventDate", "courseId") do update set "eventCount" = EXCLUDED."eventCount";
+      END
+      $$;
 
 
 --
@@ -354,18 +522,235 @@ $$;
 CREATE FUNCTION public."PopulateDailyUserEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
     LANGUAGE plpgsql
     AS $$
-DECLARE
-    maxDate DATE;
-BEGIN
-  SELECT max("eventDate") from "DailyUserEvent" into maxDate;
-  if maxDate is not null then
-    startDate := maxDate + 1;
-  end if;
-  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'Question', date("createdAt"), count(*) from "Answer" 
-    where "createdAt" >= startDate and "createdAt" < startDate + days
-    group by "userId", date("createdAt");
+      DECLARE
+          maxDate DATE;
+      BEGIN
+        SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+        if maxDate is not null and startDate = '2020-01-01' then
+          startDate := maxDate + 1;
+        end if;
+        if now() at time zone 'Asia/Kolkata' < startDate then
+          startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+        end if;
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'Question', startDate, count(distinct("questionId")) from "Answer" 
+          where "createdAt" >= startDate - interval '5.5 hours' and "createdAt" < startDate + days - interval '5.5 hours'
+          group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+      END
+      $$;
+
+
+--
+-- Name: PopulateDailyUserEventMeta(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserEventMeta"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+        maxDate DATE;
+    BEGIN
+    SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+
+    if maxDate is not null and startDate = '2020-01-01' then
+        startDate := maxDate + 1;
+    end if;
+
+    if now() at time zone 'Asia/Kolkata' < startDate then
+        startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+    end if;
+
+    insert into 
+        "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+    select user_id, column1, start_date,
+        case column1 
+            when 'NcertQuestion' then ncert_questions
+            when 'TestQuestion' then test_questions
+            when 'PhysicsQuestion' then physics_questions
+            when 'ChemistryQuestion' then chemistry_questions
+            when 'PhysicsCorrectQuestion' then physics_correct_questions
+            when 'ChemistryCorrectQuestion' then chemistry_correct_questions
+            when 'CorrectQuestion' then correct_questions
+            else null end as event_count
+     from (
+                select 
+                    t."userId" as user_id,
+                    startDate as start_date,
+                    count(distinct(t."questionId")) FILTER (where t."ncert" = true) AS ncert_questions,
+                    count(distinct(t."questionId")) FILTER (where t."testAttemptId" is not null) AS test_questions,
+                    count(distinct(t."questionId")) FILTER (where t.subject_name = 'Physics') AS physics_questions,
+                    count(distinct(t."questionId")) FILTER (where t.subject_name = 'Chemistry') AS chemistry_questions,
+                    count(distinct(t."questionId")) FILTER (where t.isCorrect = true) AS correct_questions,
+                    count(distinct(t."questionId")) FILTER (where t.subject_name = 'Physics' and t.isCorrect = true) AS physics_correct_questions,
+                    count(distinct(t."questionId")) FILTER (where t.subject_name = 'Chemistry' and t.isCorrect = true) AS chemistry_correct_questions
+                from 
+                    (select 
+                            *,
+                            case
+                                when "Question"."subjectId" = 54 or "Question"."subjectId" = 1214 then 'Chemistry'
+                                when "Question"."subjectId" = 55 or "Question"."subjectId" = 1215 then 'Physics'
+                            else
+                                null
+                            end as subject_name,
+                            case 
+                                when "correctOptionIndex" = "userAnswer" then true
+                            else 
+                                false 
+                            end as isCorrect
+                        from "Answer" 
+                        inner join "Question" on 
+                            "Question"."id" = "Answer"."questionId" and "Question"."deleted" = false
+                        where 
+                            "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+                    ) t
+                    group by t."userId"
+                ) t1, (values ('NcertQuestion'), ('TestQuestion'), ('PhysicsQuestion'), ('ChemistryQuestion'), ('PhysicsCorrectQuestion'), ('ChemistryCorrectQuestion'), ('CorrectQuestion')) t2
+     on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
 END
 $$;
+
+
+--
+-- Name: PopulateDailyUserNcertEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserNcertEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'NcertQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "ncert" = true)) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserNcertQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserNcertQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'NcertQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "ncert" = true)) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserPhysicsCorrectQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserPhysicsCorrectQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'PhysicsCorrectQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (55, 1215) and "correctOptionIndex" = "userAnswer")) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserPhysicsQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserPhysicsQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+       DECLARE
+    maxDate DATE;
+       BEGIN
+  SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+  if maxDate is not null and startDate = '2020-01-01' then
+    startDate := maxDate + 1;
+  end if;
+  if now() at time zone 'Asia/Kolkata' < startDate then
+    startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+  end if;
+  insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'PhysicsQuestion', startDate, count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (55, 1215))) from "Answer"
+    where "Answer"."createdAt" >= startDate - interval '5.5 hours' and "Answer"."createdAt" < startDate + days - interval '5.5 hours'
+    group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+       END
+       $$;
+
+
+--
+-- Name: PopulateDailyUserTestEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserTestEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+      DECLARE
+          maxDate DATE;
+      BEGIN
+        SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+        if maxDate is not null and startDate = '2020-01-01' then
+          startDate := maxDate + 1;
+        end if;
+        if now() at time zone 'Asia/Kolkata' < startDate then
+          startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+        end if;
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'TestQuestion', startDate, count(distinct("questionId")) from "Answer" 
+          where "createdAt" >= startDate - interval '5.5 hours' and "createdAt" < startDate + days - interval '5.5 hours' and "testAttemptId" is not null
+          group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+      END
+      $$;
+
+
+--
+-- Name: PopulateDailyUserTestQEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserTestQEvent"(days integer DEFAULT 1, startdate date DEFAULT '2020-01-01'::date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+      DECLARE
+          maxDate DATE;
+      BEGIN
+        SELECT max("eventDate") from "DailyUserEvent" where "courseId" is null into maxDate;
+        if maxDate is not null and startDate = '2020-01-01' then
+          startDate := maxDate + 1;
+        end if;
+        if now() at time zone 'Asia/Kolkata' < startDate then
+          startDate := (now() at time zone 'Asia/Kolkata')::DATE;
+        end if;
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'TestQuestion', startDate, count(distinct("questionId")) from "Answer" 
+          where "createdAt" >= startDate - interval '5.5 hours' and "createdAt" < startDate + days - interval '5.5 hours' and "testAttemptId" is not null
+          group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+      END
+      $$;
 
 
 --
@@ -656,81 +1041,6 @@ CREATE FUNCTION public.get_chapter_wise_stopwords_from_question(topic_id integer
               u);
         END;
         $$;
-
-
---
--- Name: get_g_test_matrix(integer, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.get_g_test_matrix(question_a_id integer, question_b_id integer) RETURNS json
-    LANGUAGE plpgsql
-    AS $$ 
-      DECLARE g_matrix JSON;
-      BEGIN
-        WITH all_question_attempts AS (select "Answer"."id" as id,
-          "Question"."id" as question_id,
-            "Answer"."userId" as user_id,
-            "Answer"."userAnswer" = "Question"."correctOptionIndex"  as is_correct
-        from "Answer" 
-        inner join "Question" on 
-            "Question"."id" = "Answer"."questionId" 
-          where 
-            "Question"."id" IN (question_a_id, question_b_id)
-      ), both_attempt_records AS (
-      select 
-          distinct on (a.user_id, a.question_id, b.question_id)
-          a.question_id as first_question_id,
-          a.is_correct as is_first_question_correct,
-          b.is_correct as is_second_question_correct
-      from 
-        all_question_attempts a 
-      cross join all_question_attempts b 
-      where
-        (a.question_id = question_a_id AND b.question_id = question_b_id) and (a.user_id = b.user_id)
-    )
-
-	select row_to_json(u) into g_matrix from (select 
-		coalesce(
-      sum(
-        case 
-          when is_first_question_correct = true 
-          then 1 
-          else 0 
-        end), 0) as a_correct,
-    coalesce(
-      sum(
-          case 
-            when is_first_question_correct = true and is_second_question_correct = true then 1
-            else 0
-          end
-        ), 0) as both_correct,
-    coalesce(sum(
-        case
-          when is_first_question_correct = true and is_second_question_correct = false then 1
-          else 0
-        end
-    ), 0) as only_a_correct_b_incorrect,
-    coalesce(sum(
-        case
-          when is_second_question_correct = true then 1
-          else 0
-        end
-    ), 0) as b_correct,
-    coalesce(
-      sum(
-        case when is_first_question_correct = false and is_second_question_correct = true then 1 
-        else 0 
-        end
-      ), 0) as only_b_correct_a_incorrect,
-    coalesce(sum(case when is_first_question_correct = false then 1 else 0 end), 0) as a_incorrect,
-    coalesce(sum(case when is_second_question_correct = false then 1 else 0 end), 0) as b_incorrect,
-    coalesce(sum(case when is_first_question_correct = false and is_second_question_correct = false then 1 else 0 end), 0) as both_incorrect
-    
-	from 
-		both_attempt_records) u;
-    return g_matrix;
-  END;
-  $$;
 
 
 --
@@ -1178,7 +1488,8 @@ CREATE TABLE public."Advertisement" (
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
     "backgroundColor" character varying(255),
-    context jsonb
+    context jsonb,
+    show_paid_user boolean DEFAULT false
 );
 
 
@@ -1813,6 +2124,19 @@ CREATE TABLE public."ChapterQuestion20210220" (
 
 
 --
+-- Name: ChapterQuestion20210818; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion20210818" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
 -- Name: ChapterQuestion20211801; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2140,8 +2464,8 @@ CREATE TABLE public."VideoSentence" (
     sentence character varying,
     "timestampStart" double precision,
     "timestampEnd" double precision,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL,
+    "updatedAt" timestamp without time zone DEFAULT now() NOT NULL,
     sentence1 text
 );
 
@@ -2918,9 +3242,76 @@ CREATE TABLE public."CourseInvitation" (
     "displayName" character varying(100),
     "creatorId" integer,
     "paymentId" integer,
-    admin_user_id integer,
-    CONSTRAINT expiratcheck CHECK (("expiryAt" <= (CURRENT_TIMESTAMP + '6 years'::interval)))
+    admin_user_id integer
 );
+
+
+--
+-- Name: CourseInvitation20210821; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."CourseInvitation20210821" (
+    id integer,
+    "courseId" integer,
+    email character varying(255),
+    phone character varying(255),
+    "expiryAt" timestamp with time zone,
+    role public."enum_CourseInvitation_role",
+    accepted boolean,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "displayName" character varying(100),
+    "creatorId" integer,
+    "paymentId" integer,
+    admin_user_id integer
+);
+
+
+--
+-- Name: CourseInvitationConversion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."CourseInvitationConversion" (
+    id integer NOT NULL,
+    "courseInvitationId" integer,
+    "utmCampaign" character varying,
+    "utmSource" character varying,
+    "utmMedium" character varying,
+    "campaignId" character varying,
+    "adgroupId" character varying,
+    keyword character varying,
+    matchtype character varying,
+    creative character varying,
+    placement character varying,
+    target character varying,
+    gclid character varying,
+    "createdAt" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    phone character varying(255),
+    email character varying(255),
+    "displayName" character varying(255),
+    "courseId" integer
+);
+
+
+--
+-- Name: CourseInvitationConversion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."CourseInvitationConversion_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: CourseInvitationConversion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."CourseInvitationConversion_id_seq" OWNED BY public."CourseInvitationConversion".id;
 
 
 --
@@ -4436,6 +4827,37 @@ ALTER SEQUENCE public."Payment_id_seq" OWNED BY public."Payment".id;
 
 
 --
+-- Name: PhysicsMasterClassFreeQuestion; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."PhysicsMasterClassFreeQuestion" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
 -- Name: Post; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4450,7 +4872,8 @@ CREATE TABLE public."Post" (
     section_4 text,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    "highIntent" boolean DEFAULT false
+    "highIntent" boolean DEFAULT false,
+    "useLatestLayout" boolean DEFAULT false NOT NULL
 );
 
 
@@ -4659,6 +5082,68 @@ CREATE TABLE public."Question20210607" (
 --
 
 CREATE TABLE public."Question20210811" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
+-- Name: Question20210825; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Question20210825" (
+    id integer,
+    question text,
+    options json,
+    "correctOptionIndex" integer,
+    explanation text,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "creatorId" integer,
+    "canvasQuestionId" integer,
+    "canvasQuizId" integer,
+    deleted boolean,
+    type public."enum_Question_type",
+    "paidAccess" boolean,
+    "explanationMp4" text,
+    level public."enum_Question_level",
+    jee boolean,
+    "sequenceId" integer,
+    "proofRead" boolean,
+    "orignalQuestionId" integer,
+    "topicId" integer,
+    "subjectId" integer,
+    lock_version integer,
+    ncert boolean
+);
+
+
+--
+-- Name: Question20211012; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."Question20211012" (
     id integer,
     question text,
     options json,
@@ -4982,38 +5467,6 @@ ALTER SEQUENCE public."QuestionVideoSentence_id_seq" OWNED BY public."QuestionVi
 
 
 --
--- Name: QuestionVimeo; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public."QuestionVimeo" (
-    id integer NOT NULL,
-    "questionId" integer,
-    "youtubIframe" text NOT NULL,
-    "vimeoIframe" text NOT NULL
-);
-
-
---
--- Name: QuestionVimeo_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."QuestionVimeo_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: QuestionVimeo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public."QuestionVimeo_id_seq" OWNED BY public."QuestionVimeo".id;
-
-
---
 -- Name: Question_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5255,6 +5708,20 @@ CREATE TABLE public."ScheduleItemAsset" (
 
 
 --
+-- Name: ScheduleItemAsset20210929; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ScheduleItemAsset20210929" (
+    id bigint,
+    "ScheduleItem_id" bigint,
+    "createdAt" timestamp without time zone,
+    "updatedAt" timestamp without time zone,
+    "assetLink" text,
+    "assetName" character varying
+);
+
+
+--
 -- Name: ScheduleItemAssetBak; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5292,6 +5759,24 @@ ALTER SEQUENCE public."ScheduleItemAsset_id_seq" OWNED BY public."ScheduleItemAs
 --
 
 CREATE TABLE public."ScheduleItemBak" (
+    id integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    name text,
+    description text,
+    "scheduleId" integer,
+    "topicId" integer,
+    hours integer,
+    link text,
+    "scheduledAt" timestamp with time zone
+);
+
+
+--
+-- Name: ScheduleItemLiveSessionOld; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ScheduleItemLiveSessionOld" (
     id integer,
     "createdAt" timestamp with time zone,
     "updatedAt" timestamp with time zone,
@@ -5874,7 +6359,8 @@ CREATE TABLE public."Test" (
     scholarship boolean DEFAULT false NOT NULL,
     "reviewAt" timestamp with time zone,
     "discussionEnd" timestamp with time zone,
-    "seqId" integer DEFAULT 0 NOT NULL
+    "seqId" integer DEFAULT 0 NOT NULL,
+    "allowPracticeMode" boolean DEFAULT true
 );
 
 
@@ -6362,8 +6848,7 @@ CREATE TABLE public."UserCourse" (
     "couponId" integer,
     trial boolean DEFAULT false,
     "invitationId" integer,
-    "courseOfferId" integer,
-    CONSTRAINT expiratcheck CHECK (("expiryAt" <= (CURRENT_TIMESTAMP + '6 years'::interval)))
+    "courseOfferId" integer
 );
 
 
@@ -6463,10 +6948,130 @@ ALTER SEQUENCE public."UserClaim_id_seq" OWNED BY public."UserClaim".id;
 
 
 --
+-- Name: UserCourse1; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse1" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
 -- Name: UserCourse177174; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public."UserCourse177174" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
+-- Name: UserCourse2; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse2" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
+-- Name: UserCourse3; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse3" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
+-- Name: UserCourse4; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse4" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
+-- Name: UserCourse5; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse5" (
+    id integer,
+    "startedAt" timestamp with time zone,
+    "expiryAt" timestamp with time zone,
+    role public."enum_UserCourse_role",
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    "courseId" integer,
+    "userId" integer,
+    "couponId" integer,
+    trial boolean,
+    "invitationId" integer,
+    "courseOfferId" integer
+);
+
+
+--
+-- Name: UserCourse7; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserCourse7" (
     id integer,
     "startedAt" timestamp with time zone,
     "expiryAt" timestamp with time zone,
@@ -14088,6 +14693,13 @@ ALTER TABLE ONLY public."CourseInvitation" ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: CourseInvitationConversion id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseInvitationConversion" ALTER COLUMN id SET DEFAULT nextval('public."CourseInvitationConversion_id_seq"'::regclass);
+
+
+--
 -- Name: CourseOffer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14379,13 +14991,6 @@ ALTER TABLE ONLY public."QuestionTranslation" ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public."QuestionVideoSentence" ALTER COLUMN id SET DEFAULT nextval('public."QuestionVideoSentence_id_seq"'::regclass);
-
-
---
--- Name: QuestionVimeo id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."QuestionVimeo" ALTER COLUMN id SET DEFAULT nextval('public."QuestionVimeo_id_seq"'::regclass);
 
 
 --
@@ -15592,6 +16197,14 @@ ALTER TABLE ONLY public."CourseDetail"
 
 
 --
+-- Name: CourseInvitationConversion CourseInvitationConversion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseInvitationConversion"
+    ADD CONSTRAINT "CourseInvitationConversion_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: CourseInvitation CourseInvitation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16037,14 +16650,6 @@ ALTER TABLE ONLY public."QuestionVideoSentence"
 
 ALTER TABLE ONLY public."QuestionVideoSentence"
     ADD CONSTRAINT "QuestionVideoSentence_questionId_videoSentenceId_key" UNIQUE ("videoSentenceId", "questionId");
-
-
---
--- Name: QuestionVimeo QuestionVimeo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."QuestionVimeo"
-    ADD CONSTRAINT "QuestionVimeo_pkey" PRIMARY KEY (id);
 
 
 --
@@ -17634,6 +18239,13 @@ CREATE INDEX "ChapterQuestionSet_chapterId_idx" ON public."ChapterQuestionSet" U
 
 
 --
+-- Name: CourseInvitationUniqueUserCourseWithExpiry; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "CourseInvitationUniqueUserCourseWithExpiry" ON public."CourseInvitation" USING btree (email, phone, "courseId", "expiryAt");
+
+
+--
 -- Name: CourseOffer_email_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17711,10 +18323,38 @@ CREATE INDEX "DailyUserEvent_courseId_idx" ON public."DailyUserEvent" USING btre
 
 
 --
+-- Name: DailyUserEvent_courseId_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DailyUserEvent_courseId_idx1" ON public."DailyUserEvent" USING btree ("courseId");
+
+
+--
 -- Name: DailyUserEvent_eventCount_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX "DailyUserEvent_eventCount_idx" ON public."DailyUserEvent" USING btree ("eventCount");
+
+
+--
+-- Name: DailyUserEvent_eventDate_userId_courseId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DailyUserEvent_eventDate_userId_courseId_idx" ON public."DailyUserEvent" USING btree ("eventDate", "userId", "courseId");
+
+
+--
+-- Name: DailyUserEvent_eventDate_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "DailyUserEvent_eventDate_userId_idx" ON public."DailyUserEvent" USING btree ("eventDate", "userId");
+
+
+--
+-- Name: DailyUserEvent_userId_eventDate_event_courseId_null_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX "DailyUserEvent_userId_eventDate_event_courseId_null_key" ON public."DailyUserEvent" USING btree ("userId", event, "eventDate") WHERE ("courseId" IS NULL);
 
 
 --
@@ -18534,13 +19174,6 @@ CREATE INDEX announcement_user_id ON public."Announcement" USING btree ("userId"
 --
 
 CREATE INDEX answer_incorrect_answer_reason ON public."Answer" USING btree ("incorrectAnswerReason");
-
-
---
--- Name: answer_question_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX answer_question_idx ON public."Answer" USING btree ("questionId");
 
 
 --
@@ -20851,6 +21484,14 @@ ALTER TABLE ONLY public."Comment"
 
 
 --
+-- Name: CourseInvitationConversion CourseInvitationConversion_courseInvitationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseInvitationConversion"
+    ADD CONSTRAINT "CourseInvitationConversion_courseInvitationId_fkey" FOREIGN KEY ("courseInvitationId") REFERENCES public."CourseInvitation"(id);
+
+
+--
 -- Name: CourseOffer CourseOffer_admin_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -21048,14 +21689,6 @@ ALTER TABLE ONLY public."QuestionTranslation"
 
 ALTER TABLE ONLY public."QuestionTranslation"
     ADD CONSTRAINT "QuestionTranslation_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
-
-
---
--- Name: QuestionVimeo QuestionVimeo_questionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."QuestionVimeo"
-    ADD CONSTRAINT "QuestionVimeo_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
 
 
 --
@@ -21937,7 +22570,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210706140821'),
 ('20210709103127'),
 ('20210709104030'),
-('20210811061300'),
-('20210830111613');
+('20210830111613'),
+('20210915115940'),
+('20211101113350'),
+('20211102104955');
 
 
