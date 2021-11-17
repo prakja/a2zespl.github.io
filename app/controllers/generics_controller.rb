@@ -32,6 +32,19 @@ class GenericsController < ApplicationController
 
   end
 
+  def ckeditor_file_upload
+    file = params[:upload]
+    original_filename = file.original_filename
+
+    res = HTTParty.post('https://www.neetprep.com/api/v1/fileUpload/fileUpload', body: {
+      file: File.open(file.path, 'rb'), filename: original_filename
+    })
+
+    url = JSON.parse(res.body)["location"]
+
+    render json: {:fileName => original_filename, :uploaded => 1, :url => url}
+  end
+
   def bulk_notify
   end
 

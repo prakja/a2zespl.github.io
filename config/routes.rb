@@ -83,6 +83,7 @@ Rails.application.routes.draw do
   get "generics/create_user_token/:id", to: "generics#create_user_token"
   get "generics/bookmark_during", to: "generics#bookmark_during"
 
+  post "generics/ckeditor/file-upload", to: "generics#ckeditor_file_upload"
   post "generics/move_flashcard_to_back", to: "generics#set_seq_id_back"
   get "generics/course_access_ar", to: "generics#give_course_access_aryan_raj_view"
   post "generics/course_access_ar", to: "generics#give_course_access_aryan_raj"
