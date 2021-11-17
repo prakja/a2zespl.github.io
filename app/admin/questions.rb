@@ -554,10 +554,11 @@ ActiveAdmin.register Question do
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs "Question" do
-      render partial: 'tinymce'
-      f.input :question
+      render partial: 'ckeditor'
+      text_node javascript_include_tag Ckeditor.cdn_url
+      f.input :question, as: :ckeditor
       f.input :correctOptionIndex, as: :select, :collection => [["(1)", 0], ["(2)", 1], ["(3)", 2], ["(4)", 3]], label: "Correct Option"
-      f.input :explanation
+      f.input :explanation, as: :ckeditor
       # Hiding system tests from question edit as we saw test questions getting deleted from tests before test goes live due to simulaneous edits
       # If we want to add this back then may be thinking of a way to change version id along with test question edition should be evaluated
       # On second thought, we can let this be on for new questions for now

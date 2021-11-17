@@ -38,8 +38,10 @@ ActiveAdmin.register Question, as: "Q" do
   filter :similar_questions, as: :number, label: "Similar to ID"
   filter :type, filters: ['eq'], as: :select, collection: -> { Question.distinct_type.map{|q_type| q_type["type"]} }, label: "Question Type"
   filter :level, filters: ['eq'], as: :select, collection: -> { Question.distinct_level.map{|q_type| q_type["level"]} }, label: "Question Level"
-  filter :explanation_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
-  filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "<video"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
+  filter :explanation_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
+  filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
+  filter :tests_id_eq, as: :number, label: "Test ID"
+  filter :questionTopics_chapterId_eq, as: :number, label: "Question Bank Chapter ID"
   # brings back the default filters
   preserve_default_filters!
   scope :neetprep_course, show_count: false
@@ -55,31 +57,63 @@ ActiveAdmin.register Question, as: "Q" do
   scope :difficultLevel, show_count: false
   scope :has_ncert_sentences, show_count: false
   scope :no_ncert_sentences, show_count: false
-  scope :has_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
-  scope :no_video_sentences, if: -> {current_admin_user.admin?}, show_count: false
+  scope :has_video_sentences, show_count: false
+  scope :no_video_sentences, show_count: false
   scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
   scope :not_in_qb, if: -> {current_admin_user.admin?}, show_count: false
 
-  #batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
-  #  batch_action_collection.find(ids).each do |question|
-  #    question.set_image_link!
-  #  end
-  #  redirect_back fallback_location: collection_path, notice: "The question images have been updated."
-  #end
+  batch_action :set_image_link, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.set_image_link!
+    end
+    redirect_back fallback_location: collection_path, notice: "The question images have been updated."
+  end
 
-  #batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
-  #  batch_action_collection.find(ids).each do |question|
-  #    question.change_option_index!
-  #  end
-  #  redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
-  #end
+  collection_action :download_chapterwise_question_csv, :method => :get do
+    question_topicId = params[:q]["topicId"]
 
-  #batch_action :add_to_qb, if: proc{ current_admin_user.admin? } do |ids|
-  #  batch_action_collection.find(ids).each do |question|
-  #    question.insert_chapter_question
-  #  end
-  #  redirect_back fallback_location: collection_path, notice: "Questions added in the main question bank."
-  #end
+    questions = Question.get_chapterwise_question_csv(question_topicId)
+
+    csv = CSV.generate do |csv|
+      csv << questions.first.keys
+
+      # add data
+      questions.each do |question|
+        csv << question.values
+      end
+    end
+
+    send_data csv.encode, type: 'text/csv; header=present', disposition: "attachment; filename=#{question_topicId}_chapter_wise_question.csv"
+  end
+
+  action_item only: :index do
+    q = params[:q]
+
+    unless q.nil?
+      selected_topic_id = q["topic_id_in"] || []
+      selected_topic_id = selected_topic_id.first
+
+      unless selected_topic_id.nil?
+        topic_name = Topic.find(selected_topic_id).name
+        link_to "#{topic_name} - Question CSV Download",
+          download_chapterwise_question_csv_admin_questions_path(q: {:topicId => selected_topic_id})
+      end
+    end
+  end
+
+  batch_action :change_option_index, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.change_option_index!
+    end
+    redirect_back fallback_location: collection_path, notice: "The option index has been changed from abcd to 1234 ."
+  end
+
+  batch_action :add_to_qb, if: proc{ current_admin_user.admin? } do |ids|
+    batch_action_collection.find(ids).each do |question|
+      question.insert_chapter_question
+    end
+    redirect_back fallback_location: collection_path, notice: "Questions added in the main question bank."
+  end
 
   member_action :update_chapter_questions, method: :post do
     resource.update_chapter_questions!
@@ -92,6 +126,8 @@ ActiveAdmin.register Question, as: "Q" do
         super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count, (select count(*) from "CustomerIssue" where "CustomerIssue"."questionId" = "Question"."id" and "resolved" = false) as issues_count').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
+      elsif request.format == :csv
+        super.preload(:systemTests, :subTopics, :topics)
       else
         super.left_outer_joins(:topic)
       end

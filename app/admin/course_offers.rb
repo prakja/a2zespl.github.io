@@ -16,7 +16,7 @@ ActiveAdmin.register CourseOffer do
   # end
 
   remove_filter :admin_user, :course
-  permit_params :title, :text, :courseId, :fee, :discountedFee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :expiryAt, :description, :actualCourseId
+  permit_params :title, :text, :courseId, :fee, :discountedFee, :email, :phone, :durationInDays, :offerExpiryAt, :offerStartedAt, :position, :hidden, :admin_user_id, :course, :expiryAt, :description, :actualCourseId, :accepted
   scope :current_default, default: true, show_count: false
   scope :hidden, show_count: false
   scope :visible, show_count: false 
@@ -58,6 +58,7 @@ ActiveAdmin.register CourseOffer do
       f.input :offerExpiryAt, as: :date_picker, label: "Offer Expiry At", hint: "Date until which the user can avail this offer"
       f.input :actualCourseId
       f.input :hidden
+      f.input :accepted
       f.input :admin_user_id, as: :hidden, :input_html => { :value => current_admin_user.id } if f.object.admin_user_id.blank?
       f.input :admin_user_id, as: :hidden if not f.object.admin_user_id.blank?
     end
