@@ -39,6 +39,7 @@ ActiveAdmin.register Question do
   filter :explanation_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Has", multiple: true
   filter :explanation_not_cont_all, as: :select, collection: -> {[["Video", "youtu"], ["Audio", "<audio"], ["Image", "<img"], ["Text", "<p>"]]}, label: "Explanation Does Not Have", multiple: true
   filter :tests_id_eq, as: :number, label: "Test ID"
+  filter :tests_id_not_in_all, as: :select, multiple: true, label: "Not in Test IDs"
   filter :questionTopics_chapterId_eq, as: :number, label: "Question Bank Chapter ID"
   # brings back the default filters
   preserve_default_filters!
@@ -173,6 +174,7 @@ ActiveAdmin.register Question do
   # https://www.neetprep.com/api/v1/questions/id/edit
   index do
     render partial: 'mathjax'
+    render partial: 'select2_testIds'
     # if current_admin_user.role == 'admin' or current_admin_user.role == 'support'
     #   @index = 15 * (((params[:page] || 1).to_i) - 1)
     #       column :number do

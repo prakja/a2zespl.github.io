@@ -1,0 +1,16 @@
+<script>
+  window.addEventListener('load', (event) => {
+    $('#q_tests_id_not_in_all').select2({
+      tags: true,
+      multiple: true,
+      tokenSeparators: [',', ' '],
+      data: <% if params[:q].present? and params[:q][:tests_id_not_in_all].present? %><%=raw params[:q][:tests_id_not_in_all].map{|id| {id: id, text: id}}.to_json%><% else %>null<% end %>
+    });
+  });
+  <% if params[:q].present? and params[:q][:tests_id_not_in_all].present? %>
+    setTimeout(function (){
+      $('#q_tests_id_not_in_all').val(<%=raw params[:q][:tests_id_not_in_all].to_json%>);
+      $('#q_tests_id_not_in_all').trigger('change');
+    }, 7000);
+  <% end %>
+</script>
