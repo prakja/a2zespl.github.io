@@ -179,6 +179,7 @@ class DoubtAnswersController < ApplicationController
       @doubt_answer_user = User.find(doubt_answer.userId)
       @doubt_answers_data[doubt_answer.id] = [@doubt_answer_user.name, doubt_answer.content, Time.parse(doubt_answer.createdAt.to_s), doubt_answer.imgUrl]
     end
+    render layout: false
   end
 
   def connect_user
