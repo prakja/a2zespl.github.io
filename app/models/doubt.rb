@@ -37,6 +37,11 @@ class Doubt < ApplicationRecord
   scope :subject_name, ->(subject_id) {
     joins(:topic => :subjects).where(topic: {Subject: {id: subject_id}})
   }
+
+  scope :test_id, -> (test_id) {
+    joins(:question => :tests).where(question: {Test: {id: test_id}})
+  }
+
   scope :student_name, ->(name) {
     joins(:user => :user_profile).where('"UserProfile"."displayName" ILIKE ?', "%#{name}%")
   }
@@ -140,7 +145,7 @@ class Doubt < ApplicationRecord
   scope :zoology_paid_student_doubts_seven_days, -> {zoology_paid_student_doubts().seven_days_pending('yes')}
 
   def self.ransackable_scopes(_auth_object = nil)
-    [:subject_name, :solved, :paid, :student_name, :student_email, :student_phone, :course_name]
+    [:subject_name, :solved, :paid, :student_name, :student_email, :student_phone, :course_name, :test_id]
   end
 
   def imgUrl

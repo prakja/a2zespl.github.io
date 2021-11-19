@@ -122,9 +122,9 @@ class DoubtAnswersController < ApplicationController
       @question = Question.find(@doubt.questionId)
       @doubt_data += @question.question
       @doubt_data += '<div style="margin: 16px; padding: 8px; border: 1px solid #828282">' + "Explanation: </br>" + @question.explanation.to_s + '</div>'
-      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">View Question on NEETPrep</a>'
-      @doubt_data += '<a target="_blank" href="/admin/questions/' + @question.id.to_s + '/edit">Edit Question</a>'
-      @doubt_data += '<a target="_blank" href="/questions/add_explanation/' + @question.id.to_s + '">Add Audio Explanation in Question</a>'
+      @doubt_data += '<a target="_blank" href="/admin/questions/' + @question.id.to_s + '/edit">Edit Question</a><br>'
+      @doubt_data += '<a target="_blank" href="/questions/add_explanation/' + @question.id.to_s + '">Add Audio Explanation in Question</a><br>'
+      @doubt_data += '<a target="_blank" href="https://www.neetprep.com/question/' + @question.id.to_s + '-abc">View Question on NEETPrep</a><br>'
     end
 
     @ism3u8 = "no"

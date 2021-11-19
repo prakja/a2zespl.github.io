@@ -122,7 +122,12 @@ ActiveAdmin.register Doubt do
     end
     column :createdAt
     column :topic
-    column :tagType
+    if params[:q].present? and params[:q][:test_id].present?
+      column ("Question") {|doubt| raw('<a target="_blank" href="https://www.neetprep.com/questions?testId=' + params[:q][:test_id].to_s + '&questionId='+ doubt.questionId.to_s + '">View on NEETprep</a>')}
+      column :questionId
+    else
+      column :tagType
+    end
     column :doubtType
     column :user
     column :week_doubt_count, :sortable => true
