@@ -166,7 +166,12 @@ ActiveAdmin.register Doubt do
         params[:order] = 'week_doubt_count_asc_and_createdAt_asc' if params[:order].blank?
         super.left_outer_joins(:user_doubt_stat).select('"Doubt".*, sum("UserDoubtStat"."doubt7DaysCount") as "week_doubt_count"').group('"Doubt"."id"').preload(:admin_user, :topic, user: [:common_rank, :user_profile, subject_rank: :subject])
       else
-        super.preload(:topic, :admin_user, user: [:common_rank, :user_profile, subject_rank: :subject])
+        if params[:q].present? and params[:q][:test_id].present?
+          params[:order] = 'doubt_question_count_desc_and_createdAt_desc'
+          super.select('"Doubt".*, count("Doubt"."id") over (partition by "Doubt"."questionId") as "doubt_question_count"').group('"Doubt"."id"').preload(:topic, :admin_user, user: [:common_rank, :user_profile, subject_rank: :subject])
+        else
+          super.preload(:topic, :admin_user, user: [:common_rank, :user_profile, subject_rank: :subject])
+        end
       end
     end
   end
