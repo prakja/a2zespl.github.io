@@ -278,7 +278,6 @@ GEM
     polyamorous (2.3.0)
       activerecord (>= 5.0)
     public_suffix (4.0.1)
-    puma (3.12.1)
     pundit (2.1.0)
       activesupport (>= 3.0.0)
     rack (2.0.7)
@@ -435,7 +434,6 @@ DEPENDENCIES
   paper_trail
   paper_trail-association_tracking
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
   pundit
   rails (~> 5.2.3)
   sass-rails (~> 5.0)
@@ -451,7 +449,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 RUBY VERSION
-   ruby 2.6.5p114
+   ruby 2.6.8p205
 
 BUNDLED WITH
    2.2.16
