@@ -58,7 +58,7 @@ ActiveAdmin.register CourseInvitation do
       end
 
       # 10% off on discounted fee
-      course_offer_fee = course.discountedFee - ((course.discountedFee * 0.10).floor)
+      course_offer_fee = course.discountedFee - ((course.discountedFee * 0.15).floor)
 
       course_offer = CourseOffer.create(
         :title => 'On Call Discount', :description => 'On Call Discount',
