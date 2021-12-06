@@ -285,7 +285,7 @@ ActiveAdmin.register Test do
       end
       @paid_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId"').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(100)
       @inspire_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (' + Rails.configuration.aryan_raj_test_series_2_yr.to_s + ')').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
-      @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (287)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
+      @achiever_attempts = TestAttempt.where(testId: @test_id, completed: true).where('"finishedAt" < ?', @date_time).where(UserCourse.where('"UserCourse"."userId" = "TestAttempt"."userId" and "UserCourse"."courseId" in (1376, 1508, 386)').limit(1).arel.exists).order("(\"result\"->>'totalMarks')::INTEGER DESC").limit(50)
     end
 
     def get_subtopics_with_detail
