@@ -15,8 +15,8 @@ module RubyActiveAdmin
     config.english_full_course_id = 141
     config.boostup_course_id = 149
     config.bio_masterclass_course_id = 255
-    config.aryan_raj_test_series_1_yr = 287
-    config.aryan_raj_test_series_2_yr = 386
+    config.aryan_raj_test_series_1_yr = 1376
+    config.aryan_raj_test_series_2_yr = 881
     config.active_record.schema_format = :sql
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

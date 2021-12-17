@@ -80,6 +80,7 @@
           // hardcoding width check as A4 page width is fixed at 210mm and leaving out padding then 50% width should be close to 359px
           if (that.width() >= 359) {
             that.width('100%');
+            that.height('100%');
           }
         });
         if($('#newsletterContent').contents().length > 0){
