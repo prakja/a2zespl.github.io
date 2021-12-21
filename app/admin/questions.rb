@@ -695,4 +695,13 @@ ActiveAdmin.register Question do
     end
     f.actions
   end
+
+  active_admin_import validate: false,
+    timestamps: false,
+    batch_size: 100,
+    on_duplicate_key_update: [:topicId, :ncert, :correctOptionIndex, :subjectId, :deleted, :paidAccess],
+    headers_rewrites: {'id': :id, 'topicId': :topicId, 'subjectId': :subjectId, 'deleted': :deleted, 'paidAccess': :paidAccess, 'ncert': :ncert},
+    template_object: ActiveAdminImport::Model.new(
+        hint: "File will be imported with such header format: 'topicId', 'ncert', 'id' (optional) in any order."
+    )
 end
