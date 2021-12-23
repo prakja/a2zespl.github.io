@@ -127,6 +127,7 @@ ActiveAdmin.register Question do
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count, (select count(*) from "CustomerIssue" where "CustomerIssue"."questionId" = "Question"."id" and "resolved" = false) as issues_count').group('"Question"."id"')
       elsif params["order"].present? and params["order"].include?('correct_percentage')
+        super.preload(:question_analytic)
         super.select('"Question".*, (select min("correctPercentage") from "QuestionAnalytics" where "QuestionAnalytics"."id" = "Question"."id") as correct_percentage').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
@@ -203,6 +204,9 @@ ActiveAdmin.register Question do
     column ("Question Chapter") {|question| question&.topic&.name}
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
+    if params[:order] && params[:order].include?('correct_percentage')
+      column "Correct Percentage", :question_analytic, sortable: 'correct_percentage'
+    end
 
     if current_admin_user.question_bank_owner?  and params[:showProofRead] == 'yes'
       toggle_bool_column :proofRead
@@ -558,6 +562,10 @@ ActiveAdmin.register Question do
 
   action_item :delete_from_question_banks, only: :show, if: proc{ current_admin_user.question_bank_owner? } do
     link_to 'Delete From Question Banks', '/questions/delete_from_question_banks/' + resource.id.to_s, method: :post, data: {confirm: 'Are you sure? This Question will be deleted from all question banks. It will still be available in tests though.'}
+  end
+
+  action_item :question_analytics, only: :show do
+    link_to 'Question Analytics', '/admin/question_analytics/' + resource.id.to_s
   end
 
   form do |f|
