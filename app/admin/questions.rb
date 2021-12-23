@@ -126,6 +126,8 @@ ActiveAdmin.register Question do
     def scoped_collection
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super.select('"Question".*, (select count(*) from "Doubt" where "Doubt"."questionId" = "Question"."id") as doubts_count, (select count(*) from "BookmarkQuestion" where "BookmarkQuestion"."questionId" = "Question"."id") as bookmarks_count, (select count(*) from "CustomerIssue" where "CustomerIssue"."questionId" = "Question"."id" and "resolved" = false) as issues_count').group('"Question"."id"')
+      elsif params["order"].present? and params["order"].include?('correct_percentage')
+        super.select('"Question".*, (select min("correctPercentage") from "QuestionAnalytics" where "QuestionAnalytics"."id" = "Question"."id") as correct_percentage').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super
       elsif request.format == :csv
@@ -137,6 +139,8 @@ ActiveAdmin.register Question do
 
     def apply_filtering(chain)
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
+        super(chain)
+      elsif params["order"].present? and params["order"].include?('correct_percentage')
         super(chain)
       else
         super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
