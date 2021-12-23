@@ -205,6 +205,7 @@ ActiveAdmin.register Question do
     # column ("Link") {|question| raw('<a target="_blank" href="https://www.neetprep.com/api/v1/questions/' + (question.id).to_s + '/edit">Edit on NEETprep</a>')}
     # column "Difficulty Level", :question_analytic, sortable: 'question_analytic.difficultyLevel'
     if params[:order] && params[:order].include?('correct_percentage')
+      column ("Correct Percentage") {|question| question&.question_analytic&.correctPercentage}
       column "Correct Percentage", :question_analytic, sortable: 'correct_percentage'
     end
 
