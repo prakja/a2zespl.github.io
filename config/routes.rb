@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get "generics/flashcardstats", to: "generics#get_flashcard_stats"
   get "generics/create_user_token/:id", to: "generics#create_user_token"
+  get "generics/create_chat_auth_token/:userId", to: "generics#create_chat_auth_token"
   get "generics/bookmark_during", to: "generics#bookmark_during"
 
   post "generics/ckeditor/file-upload", to: "generics#ckeditor_file_upload"

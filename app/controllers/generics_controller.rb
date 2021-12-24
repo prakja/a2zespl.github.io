@@ -1,5 +1,6 @@
 class GenericsController < ApplicationController
   skip_before_action :verify_authenticity_token
+
   def get_flashcard_stats
     @total_count = UserFlashCard.all.count
     @tatal_users = UserFlashCard.all.distinct.pluck(:userId).count
@@ -19,6 +20,38 @@ class GenericsController < ApplicationController
   end
 
   def give_course_access_aryan_raj_view
+  end
+
+  def create_chat_auth_token
+    user = User.find params[:userId].to_i
+    chat_auth_token = user.chat_auth_token
+
+    if chat_auth_token&.authToken.present?
+      redirect_to admin_user_chat_auth_token_path(chat_auth_token.id)
+      return
+    end
+
+    # create a new chat auth token
+    chat_token_instance = UserChatAuthToken.new(userId: user.id, authToken: '')
+    chat_token_instance.save!(validate: false)
+
+    begin
+      domain = (Rails.env === "development") ? 'http://local.neetprep.com' : 'https://www.neetprep.com'
+      res = HTTParty.post("#{domain}/register-cometchat", body: {
+        user_chat_auth_token_id: chat_token_instance.id
+      })
+
+      p res.code
+      if res.code.to_i != 200
+        raise "Cannot create auth token for UserId #{user.id}"
+      end
+
+      redirect_to admin_user_chat_auth_token_path(chat_token_instance.id)
+    rescue => exception
+      p res, exception.to_s
+      chat_token_instance.delete
+      redirect_to admin_user_path(user.id)
+    end
   end
 
   def create_user_token

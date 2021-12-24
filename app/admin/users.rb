@@ -140,6 +140,10 @@ sidebar :user_activity, only: :show do
     li link_to "Bookmarked Questions", admin_bookmark_questions_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Targets", admin_targets_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Create Login Token", "/generics/create_user_token/" + user.id.to_s
+
+    unless user.chat_auth_token.present?
+      li link_to "Create Chat AuthToken", "/generics/create_chat_auth_token/#{user.id.to_s}"
+    end
   end
 end
 
