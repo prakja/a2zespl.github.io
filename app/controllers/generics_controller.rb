@@ -36,7 +36,7 @@ class GenericsController < ApplicationController
     chat_token_instance.save!(validate: false)
 
     begin
-      domain = (Rails.env === "development") ? 'http://local.neetprep.com' : 'https://www.neetprep.com'
+      domain = (Rails.env === "production") ? 'https://www.neetprep.com' : 'http://local.neetprep.com'
       res = HTTParty.post("#{domain}/register-cometchat", body: {
         user_chat_auth_token_id: chat_token_instance.id
       })
