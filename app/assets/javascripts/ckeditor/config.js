@@ -18,8 +18,7 @@ CKEDITOR.editorConfig = function( config )
   config.autoGrow_maxHeight = 600;
   config.autoGrow_bottomSpace = 50;
   config.allowedContent = true;
-  // TODO: is this adding extra p elements? 
-  // config.contentsCss = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+  config.contentsCss = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
 
   // Define changes to default configuration here. For example:
   // config.language = 'fr';
