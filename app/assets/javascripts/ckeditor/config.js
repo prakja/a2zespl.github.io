@@ -19,6 +19,9 @@ CKEDITOR.editorConfig = function( config )
   config.autoGrow_bottomSpace = 50;
   config.allowedContent = true;
   config.contentsCss = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+  config.enterMode = CKEDITOR.ENTER_BR;
+  config.autoParagraph = false;
+  config.fillEmptyBlocks = false;
 
   // Define changes to default configuration here. For example:
   // config.language = 'fr';
