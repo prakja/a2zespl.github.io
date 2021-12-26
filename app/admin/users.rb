@@ -13,7 +13,7 @@ permit_params :blockedUser, :password_text, :email, :phone
 #   permitted
 # end
 
-remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone, :payments, :userFlashCards, :flash_cards, :results, :versions, :coaches, :answers
+remove_filter :user_todos, :studentCoches, :schedule_item_users, :user_profile, :customer_supports, :doubts, :test_attempts, :user_profile_analytics, :user_action, :user_video_stats, :user_courses, :common_rank, :subject_rank, :email, :phone, :payments, :userFlashCards, :flash_cards, :results, :versions, :coaches, :answers, :chat_auth_token
 filter :student_name, as: :string
 filter :student_email, as: :string
 filter :student_phone, as: :string
@@ -140,6 +140,10 @@ sidebar :user_activity, only: :show do
     li link_to "Bookmarked Questions", admin_bookmark_questions_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Targets", admin_targets_path(q: {userId_eq: user.id}, order: 'createdAt_desc')
     li link_to "Create Login Token", "/generics/create_user_token/" + user.id.to_s
+
+    unless user.chat_auth_token.present?
+      li link_to "Create Chat AuthToken", "/generics/create_chat_auth_token/#{user.id.to_s}"
+    end
   end
 end
 
