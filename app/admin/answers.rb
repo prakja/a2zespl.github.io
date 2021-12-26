@@ -29,6 +29,24 @@ ActiveAdmin.register Answer do
     end
   end
 
+  show do
+    attributes_table do
+      columns_to_exclude = ["questionId", "userId"]
+      (Answer.column_names - columns_to_exclude).each do |c|
+        row c.to_sym
+      end
+      row :question_analytics do |answer|
+        link_to answer.questionId, admin_question_analytic_path(answer.questionId)
+      end
+      row :question do |answer|
+        link_to answer.questionId, admin_question_path(answer.questionId)
+      end
+      row :user do |answer|
+        link_to answer.userId, admin_user_path(answer.userId)
+      end
+    end
+  end
+
   index do
     id_column
     column (:question) {|answer| raw(answer.question&.question)}
