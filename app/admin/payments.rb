@@ -65,7 +65,7 @@ ActiveAdmin.register Payment do
 
   controller do
     def scoped_collection
-      super.includes :course, :installment
+      super.includes :course, :installment, :user
     end
   end
 
@@ -75,9 +75,9 @@ ActiveAdmin.register Payment do
     column :course
     column (:amount) { |payment| raw(payment.amount)  }
     column (:status) { |payment| raw(payment.status)  }
-    column (:userName) { |payment| raw(payment.userName)  }
-    column (:userEmail) { |payment| raw(payment.userEmail)  }
-    column (:userPhone) { |payment| raw(payment.userPhone)  }
+    column (:userName) { |payment| raw(payment.userName)}
+    column (:userEmail) { |payment| raw(payment.userEmail || payment.user.email)  }
+    column (:userPhone) { |payment| raw(payment.userPhone || payment.user.phone)  }
     column (:paymentMode) { |payment| raw(payment.paymentMode)  }
     column (:paymentDesc) { |payment| raw(payment.paymentDesc)  }
     column :courseExpiryAt
