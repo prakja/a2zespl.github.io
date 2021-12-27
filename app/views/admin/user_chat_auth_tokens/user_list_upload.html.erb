@@ -1,0 +1,4 @@
+<%= form_with url: "/admin/user_chat_auth_tokens/create_auth_tokens", method: :post do |form| %>
+  <%= form.file_field :user_list %>
+  <%= form.submit "Upload" %>
+<% end %>
