@@ -19,10 +19,12 @@ ActiveAdmin.register UserChatAuthToken do
     file_path = params[:user_list].tempfile.path
     csv_file_data = CSV.read(file_path)
 
-    user_id_arr = csv_file_data
+    user_email_arr = csv_file_data
       .reduce([]) { |acc, rec| acc << rec.first}
       .filter { |rec| not rec.nil?}
-      .map(&:to_i)
+      .map(&:to_s)
+
+    user_id_arr = User.where(email: user_email_arr).pluck(:id).uniq
 
     # filter out user id that do not already exists
     existing_user_id = UserChatAuthToken.where(userId: user_id_arr).pluck(:userId)
