@@ -1,3 +1,5 @@
+require 'csv'
+
 class UserChatAuthToken < ApplicationRecord
   self.table_name = "UserChatAuthToken"
 
