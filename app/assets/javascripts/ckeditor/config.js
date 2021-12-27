@@ -22,6 +22,11 @@ CKEDITOR.editorConfig = function( config )
   config.enterMode = CKEDITOR.ENTER_BR;
   config.autoParagraph = false;
   config.fillEmptyBlocks = false;
+  config.youtube_responsive = true;
+  config.youtube_related = false;
+  config.youtube_privacy = true;
+
+  config.youtube_disabled_fields = ['chkAutoplay', 'chkResponsive', 'chkRelated', 'chkOlderCode', 'chkPrivacy', 'chkNoEmbed', 'chkControls'];
 
   // Define changes to default configuration here. For example:
   // config.language = 'fr';
