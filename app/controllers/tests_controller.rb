@@ -26,7 +26,12 @@ class TestsController < ApplicationController
     begin
       @test = Test.find(id)
       questions_count = @test.question_ids.count
-      @test_questions = @test.questions.first(questions_count)
+      if params[:chapterId].present?
+        @test_questions = @test.questions.where(topicId: params[:chapterId].to_i).first(questions_count)
+        @chapter = Topic.where(id: params[:chapterId].to_i).first
+      else
+        @test_questions = @test.questions.first(questions_count)
+      end
       render layout: false
     rescue => exception
       p exception

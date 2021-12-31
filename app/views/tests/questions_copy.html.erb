@@ -121,7 +121,7 @@
   </head>
   <body class="A4">
     <div class="page_template">
-      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><a target="_blank" href="<%=params[:base_url]%>?testId=<%=@test.id%>"><%=@test.description%></a><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
+      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png"><a target="_blank" href="<%=params[:base_url]%>?testId=<%=@test.id%>"><%=@test.description + (params[:chapterId].present? ? "- #{@chapter.name}" : "")%></a><span class="contact">Contact Number: 9667591930 / 8527521718</span><hr></div>
       <div class='content'></div>
       <div class='footer'><span>Page: </span></div>
     </div>
