@@ -159,7 +159,7 @@ class QuestionsController < ApplicationController
     # end
 
     @questions.each do |question|
-      @questions_data[question.id] = [question.question, question.explanation, question.question_analytic.correctPercentage, question.correctOptionIndex]
+      @questions_data[question.id] = [question.question, question.explanation.to_s.gsub('<iframe', '<iframe loading="lazy"'), question.question_analytic.correctPercentage, question.correctOptionIndex]
     end
 
   end
