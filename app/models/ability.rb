@@ -65,12 +65,14 @@ class Ability
     elsif user.role == 'support'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, [SubTopic, Post, ScheduleItem, Delivery, CustomerSupport, Group, Message, FlashCard, ChapterFlashCard]
-      can :read, [UserCourse, UserProfile, CustomerIssueType, TestAttempt, UserDoubtStat]
+      can :read, [UserCourse, UserProfile, CustomerIssueType, TestAttempt, UserDoubtStat, Topic, SubTopic]
       can [:read, :update], [CustomerIssue, QuestionTranslation, User, VideoSentence]
       can [:create, :read, :update], [Question, Test, Video, CourseInvitation, Payment, TestLeaderBoard, SubjectChapter, FlashCard, Note, WorkLog]
       can :import, [Video, FlashCard]
       can [:play], [Video]
       can [:copy_explanation, :merge_explanation, :copy_video_solution, :copy_ncert, :add_dup, :add_not_dup, :del_dup], [Question]
+      can [:mark_not_duplicate, :duplicate_questions, :remove_duplicate, :question_issues], [Topic]
+      can [:mark_not_duplicate, :duplicate_questions, :mark_duplicate], [SubTopic]
     elsif user.role == 'sales' or user.role == 'sales2'
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can [:read], [Payment, UserCourse, UserAction, User, UserVideoStat, TestAttempt, Test]
