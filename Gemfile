@@ -73,7 +73,7 @@ gem 'draper'
 gem 'pundit'
 gem 'activeadmin_quill_editor', :git => 'https://github.com/jayprakash1/activeadmin_quill_editor', :ref => 'e880d55f564cf068487b3355fef8399d1c104a9c'
 gem 'activeadmin_addons'
-gem 'tinymce-rails', :git => "git://github.com/spohlenz/tinymce-rails.git", :branch => 'tinymce-4'
+gem 'tinymce-rails', git: "https://github.com/spohlenz/tinymce-rails.git", :branch => 'tinymce-4'
 
 gem 'paper_trail'
 

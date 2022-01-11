@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/spohlenz/tinymce-rails.git
-  revision: 213db17d672b3f0da46d4aaa0982045129f29705
-  branch: tinymce-4
-  specs:
-    tinymce-rails (4.9.11)
-      railties (>= 3.1.1)
-
-GIT
   remote: https://github.com/galetahub/ckeditor.git
   revision: c6e4acc154c2cbbee5a6153b015451c7c4c5b595
   specs:
@@ -27,6 +19,14 @@ GIT
   ref: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
   specs:
     mimemagic (0.3.5)
+
+GIT
+  remote: https://github.com/spohlenz/tinymce-rails.git
+  revision: 213db17d672b3f0da46d4aaa0982045129f29705
+  branch: tinymce-4
+  specs:
+    tinymce-rails (4.9.11)
+      railties (>= 3.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -452,4 +452,4 @@ RUBY VERSION
    ruby 2.6.8p205
 
 BUNDLED WITH
-   2.2.16
+   2.3.4
