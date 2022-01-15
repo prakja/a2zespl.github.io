@@ -81,7 +81,7 @@ ActiveAdmin.register Payment do
     column (:paymentMode) { |payment| raw(payment.paymentMode)  }
     column (:paymentDesc) { |payment| raw(payment.paymentDesc)  }
     column :courseExpiryAt
-    if current_admin_user.role == 'admin' or current_admin_user.role == 'accounts'
+    if current_admin_user.role == 'admin' or current_admin_user.role == 'accounts'  or current_admin_user.role == 'sales' or current_admin_user.role == 'sales2' 
       column :userState
       column :userCity
       column :salesPerson
