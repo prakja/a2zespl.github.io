@@ -42,8 +42,8 @@ class DoubtAnswersController < ApplicationController
 
     doubt_id = params[:doubtId]
     doubt = Doubt.find(doubt_id)
-    doubt_admin = DoubtAdmin.where(admin_user_id: current_admin_user.id, doubtId: doubt.id)
-    if current_admin_user.role != 'admin'
+    doubt_admin = DoubtAdmin.where(admin_user_id: current_admin_user.id, doubtId: doubt.id).first
+    if current_admin_user.role != 'admin' and current_admin_user.role  != 'superfaculty' and doubt_admin.empty? 
       raise "Not your doubt" if doubt_admin.empty?
     else
       p "Admin user, bypass assign check"
