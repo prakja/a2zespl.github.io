@@ -2,7 +2,8 @@ ActiveAdmin.register QuestionTranslation do
   remove_filter :ques, :questionTopics, :versions
 
   permit_params :question, :explanation, :completed, :reviewed
-  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :ques_topicId_in, as: :searchable_select, multiple: true, label: "Question Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :topics, as: :searchable_select, multiple: true, label: "Question Bank Chapter", :collection => Topic.name_with_subject_hinglish
   filter :id_eq, as: :number, label: "Translation Id"
   filter :questionId_eq, as: :number, label: "Question Id"
   filter :test_questions, as: :number, label: "Test Id"

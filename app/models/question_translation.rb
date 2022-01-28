@@ -11,7 +11,7 @@ class QuestionTranslation < ApplicationRecord
   has_many :topics, through: :questionTopics
 
   scope :test_questions, ->(test_id) {
-    where('"questionId" in (select "questionId" from "TestQuestion" where "testId" = ' +  test_id.to_s + ')')
+    where('"QuestionTranslation"."questionId" in (select "TestQuestion"."questionId" from "TestQuestion" where "testId" = ' +  test_id.to_s + ')')
   }
 
   def setCreatedTime
