@@ -46,7 +46,7 @@ class Question < ApplicationRecord
   end
 
   def has_video_solution
-    self.explanation&.match(/<iframe .*youtube\.com\/embed.*<\/iframe>/)
+    self.explanation&.match(/<iframe .*(youtube|youtube-nocookie)\.com\/embed.*<\/iframe>/)
   end
 
   def update_question_bank_chapters
