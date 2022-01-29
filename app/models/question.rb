@@ -182,6 +182,10 @@ class Question < ApplicationRecord
     Question.ransack({videoSentences_count_eq: 0}).result
   }
 
+  scope :has_video_explanation, ->() {
+    Question.ransack({explanation_contains: 'youtu'}).result
+  }
+
   scope :subject_ids, ->(*subject_ids) {
     flatten_subject_ids = subject_ids.flatten
     joins(:topics => :subjects).where(topics: {Subject: {id: flatten_subject_ids}})

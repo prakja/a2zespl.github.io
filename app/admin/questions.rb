@@ -61,6 +61,7 @@ ActiveAdmin.register Question do
   scope :no_ncert_sentences, show_count: false
   scope :has_video_sentences, show_count: false
   scope :no_video_sentences, show_count: false
+  scope :has_video_explanation, show_count: false
   scope :abcd_options, if: -> {current_admin_user.admin?}, show_count: false
   scope :not_in_qb, if: -> {current_admin_user.admin?}, show_count: false
 
@@ -130,7 +131,7 @@ ActiveAdmin.register Question do
         super.preload(:question_analytic)
         super.select('"Question".*, (select min("correctPercentage") from "QuestionAnalytics" where "QuestionAnalytics"."id" = "Question"."id") as correct_percentage').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
-        super
+        super.select('"Question".*, (select similarity("Question"."question", (select t."question" from "Question" t where t."id" = ' + params["q"]["similar_questions"] + '))) as similarity_score').group('"Question"."id"')
       elsif request.format == :csv
         super.preload(:systemTests, :subTopics, :topics)
       else
@@ -142,6 +143,8 @@ ActiveAdmin.register Question do
       if params["q"] and (params["q"]["questionTopics_chapterId_in"].present? or params["q"]["questionTopics_chapterId_eq"].present?)
         super(chain)
       elsif params["order"].present? and params["order"].include?('correct_percentage')
+        super(chain)
+      elsif params["q"] and params["q"]["similar_questions"].present?
         super(chain)
       else
         super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
@@ -260,7 +263,7 @@ ActiveAdmin.register Question do
           else
             item 'Remove Duplicate marking', del_dup_admin_question_path(question, origId: main_question_id), class: 'member_link', method: :post, data: {confirm: "Please remove duplicate marking of: #{main_question_id} and #{question.id}"}
           end
-          item 'Set Main Question', admin_questions_path(q: {similar_questions: question.id}) 
+          item 'Set Main Question', admin_questions_path(q: {similar_questions: question.id}, order: 'similarity_score_desc')
         else
           "This is the main Question"
         end
@@ -386,7 +389,7 @@ ActiveAdmin.register Question do
 
   action_item :similar_question, only: :show do
     if resource.topicId.present?
-      link_to 'Find Similar Questions', '/admin/questions?q[similar_questions]=' + resource.id.to_s
+      link_to 'Find Similar Questions', '/admin/questions?q[similar_questions]=' + resource.id.to_s + '&order=similarity_score_desc'
     else
       link_to 'Update Topic for Similar Quesitons', '/admin/questions/' + resource.id.to_s + '/edit'
     end
