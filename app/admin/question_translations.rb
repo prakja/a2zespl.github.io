@@ -21,6 +21,9 @@ ActiveAdmin.register QuestionTranslation do
     column ("Explanation") {|qe|
       raw(qe.explanation)
     }
+    column ("Chapter") {|qe|
+      raw (qe.ques.topic.name)
+    }
     actions
   end
 
@@ -42,6 +45,9 @@ ActiveAdmin.register QuestionTranslation do
       end
       row :questionId do |object|
         raw('<a target="_blank" href="/admin/questions/' + object.questionId.to_s + '">' + "Question Link" + '</a>')
+      end
+      row :chapter do |object|
+        raw(object.ques.topic.name)
       end
     end
   end
@@ -65,7 +71,7 @@ ActiveAdmin.register QuestionTranslation do
 
   controller do
     def scoped_collection
-      super.includes(:ques)
+      super.includes(ques: :topic)
     end
   end
 
