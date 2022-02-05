@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.533.0.min.js"></script>
 <script>
@@ -144,7 +145,7 @@
       accessKeyId: 'AKIAYEPQTPG6DDTMY3UR', secretAccessKey: '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', region: 'us-west-2'
     });
 
-    var credentials = new AWS.Credentials(''AKIAYEPQTPG6DDTMY3UR, 'pw3jq2uGsA0lLjc8S+lNVo8UAUGZDNif7+2whPcD');
+    var credentials = new AWS.Credentials('AKIAYEPQTPG6DDTMY3UR', 'pw3jq2uGsA0lLjc8S+lNVo8UAUGZDNif7+2whPcD');
     AWS.config.region = bucketRegion;
     AWS.config.credentials = credentials;
     // console.log(AWS.config.credentials);

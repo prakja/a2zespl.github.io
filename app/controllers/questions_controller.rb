@@ -288,6 +288,7 @@ class QuestionsController < ApplicationController
     rescue => exception
 
     end
+    render layout: false
   end
 
 
