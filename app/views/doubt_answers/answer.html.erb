@@ -191,6 +191,12 @@ tinymce.init({
   toolbar: 'code,|,bold,italic,underline,subscript,superscript,|,cut,copy,paste,|,search,|,undo,redo,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,fontselect,fontsizeselect,|,fullscreen,media',
   paste_data_images: true,
   images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
+  mobile: {
+    theme: 'mobile',
+    plugins: [ 'autosave', 'lists', 'autolink' ],
+    toolbar: [ 'undo', 'bold', 'italic', 'styleselect', 'image'],
+    images_upload_url: 'https://www.neetprep.com/api/v1/fileUpload/fileUpload',
+  },
   // TODO: seems wiris plugin is changing this to not have its images affected but ends up causing issue to our image upload..so adding this..anything better? this is especially added for data image which exist and images_dataimg_filter was anyway getting called for that
   editorObject: {'id': 'doubtAnswer_content'},
   setup: function (editor) {
@@ -342,7 +348,7 @@ function startRecording () {
   inputStopDiv.style.display = 'block';
   navigator.mediaDevices.getUserMedia({ audio: true })
   .then(stream => {
-    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
     mediaRecorder.start();
 
     mediaRecorder.addEventListener("dataavailable", event => {
