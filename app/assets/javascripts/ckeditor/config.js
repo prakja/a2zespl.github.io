@@ -8,6 +8,18 @@ CKEDITOR.plugins.addExternal( 'autogrow', '/assets/ckeditor/plugins/autogrow/', 
 CKEDITOR.plugins.addExternal( 'mathjax', '/assets/ckeditor/plugins/mathjax/', 'plugin.js' );
 CKEDITOR.plugins.addExternal( 'youtube', '/assets/ckeditor/plugins/youtube/', 'plugin.js' );
 //CKEDITOR.plugins.addExternal( 'katex', '/assets/ckeditor/plugins/katex/', 'plugin.js' );
+//
+
+CKEDITOR.stylesSet.add( 'my_styles', [
+  // Block-level styles.
+  { name: 'Blue Title', element: 'h2', styles: { color: 'Blue' } },
+  { name: 'Red Title',  element: 'h3', styles: { color: 'Red' } },
+
+  // Inline styles.
+  { name: 'CSS Style', element: 'span', attributes: { 'class': 'my_style' } },
+  { name: 'Marker: Yellow', element: 'span', styles: { 'background-color': 'Yellow' } },
+  { name: 'Math: No Break', element: 'span', styles: { 'white-space': 'nowrap' } }
+]);
 
 CKEDITOR.editorConfig = function( config )
 {
@@ -56,6 +68,9 @@ CKEDITOR.editorConfig = function( config )
 
   config.allowedContent = true;
   config.filebrowserUploadMethod = 'form';
+
+  // For inline style definition.
+  config.stylesSet = 'my_styles';
 
   // Toolbar groups configuration.
   config.toolbar = [
