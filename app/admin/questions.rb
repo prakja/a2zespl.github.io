@@ -132,6 +132,9 @@ ActiveAdmin.register Question do
         super.select('"Question".*, (select min("correctPercentage") from "QuestionAnalytics" where "QuestionAnalytics"."id" = "Question"."id") as correct_percentage').group('"Question"."id"')
       elsif params["q"] and params["q"]["similar_questions"].present?
         super.select('"Question".*, (select similarity("Question"."question", (select t."question" from "Question" t where t."id" = ' + params["q"]["similar_questions"] + '))) as similarity_score').group('"Question"."id"')
+      elsif params["q"] and params["q"]["tests_id_eq"].present?
+        params[:order] = 'test_question_seqNum_asc_and_id_asc'
+        super.select('"Question".*, (select "seqNum" from "TestQuestion" where "questionId" = "Question"."id" and "testId" = ' + params["q"]["tests_id_eq"] + ') as "test_question_seqNum"').group('"Question"."id"')
       elsif request.format == :csv
         super.preload(:systemTests, :subTopics, :topics)
       else
@@ -145,6 +148,8 @@ ActiveAdmin.register Question do
       elsif params["order"].present? and params["order"].include?('correct_percentage')
         super(chain)
       elsif params["q"] and params["q"]["similar_questions"].present?
+        super(chain)
+      elsif params["q"] and params["q"]["tests_id_eq"].present?
         super(chain)
       else
         super(chain).select('DISTINCT ON ("Question"."id") "Question".*')
