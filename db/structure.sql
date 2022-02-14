@@ -212,6 +212,56 @@ CREATE TYPE public.jwt_token AS (
 
 
 --
+-- Name: AddCourseOfferForMeritReward(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."AddCourseOfferForMeritReward"() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+   t_row RECORD;
+BEGIN
+for t_row in
+   select 
+     "User"."email", "User"."phone"
+   from 
+    "UserCourse"
+   join "User" on "User"."id" = "UserCourse"."userId"
+ join "Course" on "Course"."id" = "UserCourse"."courseId"
+    and "Course"."fee" > 0
+    and "UserCourse"."expiryAt"::date > '2022-05-01' 
+    and "UserCourse"."expiryAt"::date < '2022-11-30' 
+  loop
+    insert into 
+    "CourseOffer"(
+      "email", 
+      "phone", 
+      "title", 
+      "description", 
+      "courseId", 
+      "fee", 
+      "discountedFee", 
+      "expiryAt", 
+      "offerStartedAt", 
+      "offerExpiryAt"
+    ) values(
+      coalesce("t_row"."email", ''), 
+      coalesce("t_row"."phone", ''), 
+      'Merit Reward Offer',
+      '<p class="course-offer-discount">You have been given access to <a target="_blank" href="/neet-course/1541">AIIMS Level Test Series</a>. So, you should not pay if you do not want to be considered for <a target="_blank" href="/exam-info/merit-reward">MERIT Reward.</a></p>', 
+      1508,
+      1499, 
+      899, 
+      '2022-05-31',
+      current_timestamp, 
+      '2022-05-31'
+    ) ON CONFLICT ON CONSTRAINT single_applicable_course_offer do update set "discountedFee" = 899;
+ end loop;
+END
+$$;
+
+
+--
 -- Name: AddCourseOfferForShortDurationCourse(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -351,7 +401,7 @@ $$;
 -- Name: PopulateDailyUserAllEvent(integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public."PopulateDailyUserAllEvent"(days integer DEFAULT 1) RETURNS void
+CREATE FUNCTION public."PopulateDailyUserAllEvent"(days integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -363,6 +413,26 @@ BEGIN
  PERFORM "PopulateDailyUserChemistryQEvent"(days, date(current_timestamp));
  PERFORM "PopulateDailyUserPhysicsCorrectQEvent"(days, date(current_timestamp));
  PERFORM "PopulateDailyUserChemistryCorrectQEvent"(days, date(current_timestamp));
+END
+$$;
+
+
+--
+-- Name: PopulateDailyUserAllEvent(integer, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."PopulateDailyUserAllEvent"(days integer, eventdate date) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+ PERFORM "PopulateDailyUserEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserTestQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserNcertQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserCorrectQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserPhysicsQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserChemistryQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserPhysicsCorrectQEvent"(days, date(eventDate));
+ PERFORM "PopulateDailyUserChemistryCorrectQEvent"(days, date(eventDate));
 END
 $$;
 
@@ -749,6 +819,142 @@ CREATE FUNCTION public."PopulateDailyUserTestQEvent"(days integer DEFAULT 1, sta
         insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") select "userId", 'TestQuestion', startDate, count(distinct("questionId")) from "Answer" 
           where "createdAt" >= startDate - interval '5.5 hours' and "createdAt" < startDate + days - interval '5.5 hours' and "testAttemptId" is not null
           group by "userId" on conflict ("userId", "event", "eventDate") where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+      END
+      $$;
+
+
+--
+-- Name: RefreshUserStreak(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public."RefreshUserStreak"(user_id integer) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+      DECLARE
+        dateLower TIMESTAMP;
+        dateUpper TIMESTAMP;
+      BEGIN
+
+        SELECT CURRENT_DATE::TIMESTAMP AT TIME ZONE 'Asia/Kolkata' - interval '2 day' into dateLower;
+        SELECT CURRENT_DATE::TIMESTAMP AT TIME ZONE 'Asia/Kolkata' + interval '1 day' into dateUpper;
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'Question', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct("questionId")) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+            where 
+              "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'TestQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(case when "testAttemptId" is not null then "questionId" else null end)) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper  and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where 
+            "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'NcertQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "ncert" = true)) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper  and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where 
+            "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'CorrectQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "correctOptionIndex" = "userAnswer")) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and
+            "createdAt" < dateUpper  and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where 
+            "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'PhysicsQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (55, 1215))) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper and 
+            "userId" = user_id 
+            group by 
+              "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+            where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'ChemistryQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (54, 1214))) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'PhysicsCorrectQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (55, 1215) and "correctOptionIndex" = "userAnswer")) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper  and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where 
+            "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
+
+        insert into "DailyUserEvent" ("userId", "event", "eventDate", "eventCount") 
+          select 
+            "userId", 'ChemistryCorrectQuestion', ("createdAt" at time zone 'Asia/Kolkata')::DATE as "eventDate", 
+            count(distinct(select "id" from "Question" where "id" = "questionId" and "subjectId" in (54, 1214) and "correctOptionIndex" = "userAnswer")) 
+          from 
+            "Answer" 
+          where 
+            "createdAt" >= dateLower and 
+            "createdAt" < dateUpper  and 
+            "userId" = user_id 
+          group by 
+            "userId", "eventDate" on conflict ("userId", "event", "eventDate") 
+          where 
+            "courseId" is null do update set "eventCount" = EXCLUDED."eventCount";
       END
       $$;
 
@@ -2137,6 +2343,19 @@ CREATE TABLE public."ChapterQuestion20210818" (
 
 
 --
+-- Name: ChapterQuestion20211111; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ChapterQuestion20211111" (
+    id integer,
+    "chapterId" integer,
+    "questionId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
+);
+
+
+--
 -- Name: ChapterQuestion20211801; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2405,7 +2624,8 @@ CREATE TABLE public."Video" (
     "seqId" integer DEFAULT 0 NOT NULL,
     "youtubeUrl" character varying(255) DEFAULT NULL::character varying,
     language character varying(255),
-    url2 text
+    url2 text,
+    "allowChat" boolean DEFAULT false
 );
 
 
@@ -2571,48 +2791,35 @@ CREATE TABLE public."Constant" (
 CREATE MATERIALIZED VIEW public."CommonLeaderBoard" AS
  SELECT "CommonLeaderBoardDatarank".id,
     "CommonLeaderBoardDatarank"."userId",
-    "CommonLeaderBoardDatarank".score,
     "CommonLeaderBoardDatarank"."correctAnswerCount",
     "CommonLeaderBoardDatarank"."incorrectAnswerCount",
-    rank() OVER (ORDER BY "CommonLeaderBoardDatarank".score DESC) AS rank
+    ((("CommonLeaderBoardDatarank"."correctAnswerCount" * 4) - "CommonLeaderBoardDatarank"."incorrectAnswerCount") * ("CommonLeaderBoardDatarank"."correctAnswerCount" / ("CommonLeaderBoardDatarank"."correctAnswerCount" + "CommonLeaderBoardDatarank"."incorrectAnswerCount"))) AS score,
+    rank() OVER (ORDER BY ((("CommonLeaderBoardDatarank"."correctAnswerCount" * 4) - "CommonLeaderBoardDatarank"."incorrectAnswerCount") * ("CommonLeaderBoardDatarank"."correctAnswerCount" / ("CommonLeaderBoardDatarank"."correctAnswerCount" + "CommonLeaderBoardDatarank"."incorrectAnswerCount"))) DESC) AS rank
    FROM ( SELECT "CommonLeaderBoardData"."userId" AS id,
             "CommonLeaderBoardData"."userId",
-            (("CommonLeaderBoardData".score * "CommonLeaderBoardData"."correctAnswerCount") / ("CommonLeaderBoardData"."correctAnswerCount" + "CommonLeaderBoardData"."incorrectAnswerCount")) AS score,
             "CommonLeaderBoardData"."correctAnswerCount",
             "CommonLeaderBoardData"."incorrectAnswerCount"
            FROM ( SELECT "User".id AS "userId",
-                    count(
+                    count(DISTINCT
                         CASE
-                            WHEN ("Question"."correctOptionIndex" = "Answer"."userAnswer") THEN 1
+                            WHEN ("Question"."correctOptionIndex" = "Answer"."userAnswer") THEN "Answer"."questionId"
                             ELSE NULL::integer
                         END) AS "correctAnswerCount",
-                    count(
+                    count(DISTINCT
                         CASE
-                            WHEN ("Question"."correctOptionIndex" <> "Answer"."userAnswer") THEN 1
+                            WHEN ("Question"."correctOptionIndex" <> "Answer"."userAnswer") THEN "Answer"."questionId"
                             ELSE NULL::integer
-                        END) AS "incorrectAnswerCount",
-                    count(
-                        CASE
-                            WHEN ("Answer"."createdAt" > (CURRENT_DATE - ((( SELECT ("Constant".value)::text AS value
-                               FROM public."Constant"
-                              WHERE ("Constant".key = 'LEADERBOARD_CUTOFF_DAYS'::text)) || ' days'::text))::interval)) THEN 1
-                            ELSE NULL::integer
-                        END) AS "recentAnswerCount",
-                    ((count(
-                        CASE
-                            WHEN ("Question"."correctOptionIndex" = "Answer"."userAnswer") THEN 1
-                            ELSE NULL::integer
-                        END) * 4) + (count(
-                        CASE
-                            WHEN ("Question"."correctOptionIndex" <> "Answer"."userAnswer") THEN 1
-                            ELSE NULL::integer
-                        END) * '-1'::integer)) AS score
+                        END) AS "incorrectAnswerCount"
                    FROM public."Question",
                     public."Answer",
                     public."User"
-                  WHERE (("User".id = "Answer"."userId") AND ("Question".id = "Answer"."questionId"))
+                  WHERE (("User".id = "Answer"."userId") AND ("User".id IN ( SELECT DISTINCT "Answer_1"."userId"
+                           FROM public."Answer" "Answer_1"
+                          WHERE ("Answer_1"."createdAt" > (CURRENT_DATE - ((( SELECT ("Constant".value)::text AS value
+                                   FROM public."Constant"
+                                  WHERE ("Constant".key = 'LEADERBOARD_CUTOFF_DAYS'::text)) || ' days'::text))::interval)))) AND ("Question".id = "Answer"."questionId"))
                   GROUP BY "User".id) "CommonLeaderBoardData"
-          WHERE (("CommonLeaderBoardData"."correctAnswerCount" <> 0) AND ("CommonLeaderBoardData"."incorrectAnswerCount" <> 0) AND ("CommonLeaderBoardData"."recentAnswerCount" > 0))) "CommonLeaderBoardDatarank"
+          WHERE (("CommonLeaderBoardData"."correctAnswerCount" <> 0) AND ("CommonLeaderBoardData"."incorrectAnswerCount" <> 0))) "CommonLeaderBoardDatarank"
   WITH NO DATA;
 
 
@@ -3406,6 +3613,19 @@ CREATE TABLE public."CourseTest" (
     "testId" integer NOT NULL,
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: CourseTest20211023; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."CourseTest20211023" (
+    id integer,
+    "courseId" integer,
+    "testId" integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone
 );
 
 
@@ -4210,6 +4430,74 @@ ALTER SEQUENCE public."Installment_id_seq" OWNED BY public."Installment".id;
 
 
 --
+-- Name: LiveClassUser; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."LiveClassUser" (
+    id bigint NOT NULL,
+    "liveClassId" integer NOT NULL,
+    "userId" integer NOT NULL,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: LiveClassUser_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."LiveClassUser_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: LiveClassUser_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."LiveClassUser_id_seq" OWNED BY public."LiveClassUser".id;
+
+
+--
+-- Name: LiveClasses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."LiveClasses" (
+    id bigint NOT NULL,
+    "roomId" character varying,
+    description text,
+    "courseId" integer,
+    "startTime" timestamp without time zone,
+    "endTime" timestamp without time zone,
+    paid boolean DEFAULT true,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: LiveClasses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."LiveClasses_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: LiveClasses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."LiveClasses_id_seq" OWNED BY public."LiveClasses".id;
+
+
+--
 -- Name: MasterClassFreeUser; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4317,6 +4605,44 @@ CREATE SEQUENCE public."NCERTQuestion_id_seq"
 --
 
 ALTER SEQUENCE public."NCERTQuestion_id_seq" OWNED BY public."NCERTQuestion".id;
+
+
+--
+-- Name: NEET2020Counselling; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."NEET2020Counselling" (
+    id integer NOT NULL,
+    quota character varying NOT NULL,
+    rank integer NOT NULL,
+    category character varying NOT NULL,
+    "subCategory" character varying NOT NULL,
+    institute character varying NOT NULL,
+    course character varying NOT NULL,
+    "allottedCategory" character varying NOT NULL,
+    "allotedPH" character varying NOT NULL,
+    "admittedRound" integer NOT NULL
+);
+
+
+--
+-- Name: NEET2020Counselling_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."NEET2020Counselling_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: NEET2020Counselling_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."NEET2020Counselling_id_seq" OWNED BY public."NEET2020Counselling".id;
 
 
 --
@@ -4873,7 +5199,7 @@ CREATE TABLE public."Post" (
     "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     "highIntent" boolean DEFAULT false,
-    "useLatestLayout" boolean DEFAULT false NOT NULL
+    "useLatestLayout" boolean DEFAULT false
 );
 
 
@@ -5686,6 +6012,24 @@ CREATE TABLE public."ScheduleItem" (
     name text,
     description text,
     "scheduleId" integer NOT NULL,
+    "topicId" integer,
+    hours integer,
+    link text,
+    "scheduledAt" timestamp with time zone
+);
+
+
+--
+-- Name: ScheduleItem20211114; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."ScheduleItem20211114" (
+    id integer,
+    "createdAt" timestamp with time zone,
+    "updatedAt" timestamp with time zone,
+    name text,
+    description text,
+    "scheduleId" integer,
     "topicId" integer,
     hours integer,
     link text,
@@ -6912,6 +7256,40 @@ CREATE SEQUENCE public."UserChapterStat_id_seq"
 --
 
 ALTER SEQUENCE public."UserChapterStat_id_seq" OWNED BY public."UserChapterStat".id;
+
+
+--
+-- Name: UserChatAuthToken; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."UserChatAuthToken" (
+    id integer NOT NULL,
+    "userId" integer NOT NULL,
+    "authToken" character varying(255) NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "defaultGroupId" character varying(255) DEFAULT '2022batcha1'::character varying
+);
+
+
+--
+-- Name: UserChatAuthToken_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."UserChatAuthToken_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: UserChatAuthToken_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."UserChatAuthToken_id_seq" OWNED BY public."UserChatAuthToken".id;
 
 
 --
@@ -8336,6 +8714,47 @@ CREATE TABLE public.copyvideo (
     "seqId" integer,
     "youtubeUrl" character varying(255),
     language character varying(255)
+);
+
+
+--
+-- Name: courses_live_class_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.courses_live_class_sessions (
+    id bigint NOT NULL,
+    course_id integer,
+    live_class_sessions_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: courses_live_class_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.courses_live_class_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: courses_live_class_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.courses_live_class_sessions_id_seq OWNED BY public.courses_live_class_sessions.id;
+
+
+--
+-- Name: datelower; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.datelower (
+    "?column?" timestamp with time zone
 );
 
 
@@ -14235,6 +14654,39 @@ CREATE TABLE public.history (
 
 
 --
+-- Name: live_class_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_class_sessions (
+    id bigint NOT NULL,
+    admin_user_id integer NOT NULL,
+    free boolean DEFAULT false,
+    room_id character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: live_class_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_class_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_class_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_class_sessions_id_seq OWNED BY public.live_class_sessions.id;
+
+
+--
 -- Name: note_details; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -14833,6 +15285,20 @@ ALTER TABLE ONLY public."Installment" ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: LiveClassUser id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClassUser" ALTER COLUMN id SET DEFAULT nextval('public."LiveClassUser_id_seq"'::regclass);
+
+
+--
+-- Name: LiveClasses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClasses" ALTER COLUMN id SET DEFAULT nextval('public."LiveClasses_id_seq"'::regclass);
+
+
+--
 -- Name: Message id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14851,6 +15317,13 @@ ALTER TABLE ONLY public."Motivation" ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public."NCERTQuestion" ALTER COLUMN id SET DEFAULT nextval('public."NCERTQuestion_id_seq"'::regclass);
+
+
+--
+-- Name: NEET2020Counselling id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NEET2020Counselling" ALTER COLUMN id SET DEFAULT nextval('public."NEET2020Counselling_id_seq"'::regclass);
 
 
 --
@@ -15176,6 +15649,13 @@ ALTER TABLE ONLY public."UserChapterStat" ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: UserChatAuthToken id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserChatAuthToken" ALTER COLUMN id SET DEFAULT nextval('public."UserChatAuthToken_id_seq"'::regclass);
+
+
+--
 -- Name: UserClaim id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15358,6 +15838,13 @@ ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: courses_live_class_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses_live_class_sessions ALTER COLUMN id SET DEFAULT nextval('public.courses_live_class_sessions_id_seq'::regclass);
+
+
+--
 -- Name: doubt_admins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15530,6 +16017,13 @@ ALTER TABLE ONLY public.drupal_taxonomy_term_revision ALTER COLUMN revision_id S
 --
 
 ALTER TABLE ONLY public.drupal_watchdog ALTER COLUMN wid SET DEFAULT nextval('public.drupal_watchdog_wid_seq'::regclass);
+
+
+--
+-- Name: live_class_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_class_sessions ALTER COLUMN id SET DEFAULT nextval('public.live_class_sessions_id_seq'::regclass);
 
 
 --
@@ -16397,6 +16891,22 @@ ALTER TABLE ONLY public."Installment"
 
 
 --
+-- Name: LiveClassUser LiveClassUser_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClassUser"
+    ADD CONSTRAINT "LiveClassUser_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: LiveClasses LiveClasses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClasses"
+    ADD CONSTRAINT "LiveClasses_pkey" PRIMARY KEY (id);
+
+
+--
 -- Name: Message Message_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16418,6 +16928,14 @@ ALTER TABLE ONLY public."Motivation"
 
 ALTER TABLE ONLY public."NCERTQuestion"
     ADD CONSTRAINT "NCERTQuestion_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: NEET2020Counselling NEET2020Counselling_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."NEET2020Counselling"
+    ADD CONSTRAINT "NEET2020Counselling_pkey" PRIMARY KEY (id);
 
 
 --
@@ -16877,6 +17395,22 @@ ALTER TABLE ONLY public."UserChapterStat"
 
 
 --
+-- Name: UserChatAuthToken UserChatAuthToken_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserChatAuthToken"
+    ADD CONSTRAINT "UserChatAuthToken_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: UserChatAuthToken UserChatAuthToken_userId_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserChatAuthToken"
+    ADD CONSTRAINT "UserChatAuthToken_userId_key" UNIQUE ("userId");
+
+
+--
 -- Name: UserClaim UserClaim_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17178,6 +17712,14 @@ ALTER TABLE ONLY public."ChapterTest"
 
 ALTER TABLE ONLY public."ChapterVideo"
     ADD CONSTRAINT chaptervideo_chapter_id_video_id UNIQUE ("chapterId", "videoId");
+
+
+--
+-- Name: courses_live_class_sessions courses_live_class_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses_live_class_sessions
+    ADD CONSTRAINT courses_live_class_sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -18037,6 +18579,14 @@ ALTER TABLE ONLY public.drupal_watchdog
 
 
 --
+-- Name: live_class_sessions live_class_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_class_sessions
+    ADD CONSTRAINT live_class_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: NcertChapterQuestion ncert_chapterquestion_chapter_id_question_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18208,6 +18758,20 @@ CREATE INDEX "Advertisement_expiryAt_idx" ON public."Advertisement" USING btree 
 --
 
 CREATE INDEX "Advertisement_platform_idx" ON public."Advertisement" USING btree (platform);
+
+
+--
+-- Name: Answer_questionId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Answer_questionId_idx" ON public."Answer" USING btree ("questionId");
+
+
+--
+-- Name: Answer_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "Answer_userId_idx" ON public."Answer" USING btree ("userId");
 
 
 --
@@ -21772,6 +22336,14 @@ ALTER TABLE ONLY public."Topic"
 
 
 --
+-- Name: UserChatAuthToken UserChatAuthToken_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."UserChatAuthToken"
+    ADD CONSTRAINT "UserChatAuthToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."User"(id);
+
+
+--
 -- Name: UserClaim UserClaim_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -22172,11 +22744,27 @@ ALTER TABLE ONLY public."Section"
 
 
 --
+-- Name: LiveClassUser fk_rails_8551511039; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClassUser"
+    ADD CONSTRAINT fk_rails_8551511039 FOREIGN KEY ("userId") REFERENCES public."User"(id);
+
+
+--
 -- Name: QuestionVideoSentence fk_rails_8593383ffd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."QuestionVideoSentence"
     ADD CONSTRAINT fk_rails_8593383ffd FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
+
+
+--
+-- Name: LiveClasses fk_rails_85b30079a9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClasses"
+    ADD CONSTRAINT fk_rails_85b30079a9 FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --
@@ -22316,11 +22904,27 @@ ALTER TABLE ONLY public."TargetChapter"
 
 
 --
+-- Name: live_class_sessions fk_rails_bab58b39cf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_class_sessions
+    ADD CONSTRAINT fk_rails_bab58b39cf FOREIGN KEY (admin_user_id) REFERENCES public.admin_users(id);
+
+
+--
 -- Name: VideoSentence fk_rails_bfb381278a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."VideoSentence"
     ADD CONSTRAINT fk_rails_bfb381278a FOREIGN KEY ("videoId") REFERENCES public."Video"(id);
+
+
+--
+-- Name: courses_live_class_sessions fk_rails_c2ddfc8639; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses_live_class_sessions
+    ADD CONSTRAINT fk_rails_c2ddfc8639 FOREIGN KEY (course_id) REFERENCES public."Course"(id);
 
 
 --
@@ -22340,6 +22944,14 @@ ALTER TABLE ONLY public."VideoSentence"
 
 
 --
+-- Name: courses_live_class_sessions fk_rails_cc4f488ae7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses_live_class_sessions
+    ADD CONSTRAINT fk_rails_cc4f488ae7 FOREIGN KEY (live_class_sessions_id) REFERENCES public.live_class_sessions(id);
+
+
+--
 -- Name: SectionContent fk_rails_ccea17349b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -22353,6 +22965,14 @@ ALTER TABLE ONLY public."SectionContent"
 
 ALTER TABLE ONLY public."QuestionVideoSentence"
     ADD CONSTRAINT fk_rails_ced843e9fe FOREIGN KEY ("videoSentenceId") REFERENCES public."VideoSentence"(id);
+
+
+--
+-- Name: LiveClassUser fk_rails_d4f1cb7a72; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClassUser"
+    ADD CONSTRAINT fk_rails_d4f1cb7a72 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClasses"(id);
 
 
 --
@@ -22573,6 +23193,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210830111613'),
 ('20210915115940'),
 ('20211101113350'),
-('20211102104955');
+('20211102104955'),
+('20211108145647'),
+('20220214062357'),
+('20220214100418');
 
 

@@ -22,6 +22,12 @@ module TechMintHelper
     AUTH_KEY  = '3wK_gtTAgr2DHkrSwHcWu3G2vsNvXi6aPfLtJmkIaT81sliN6eSnWQ'
   
     class << self
+      def s
+        puts "\n\n"
+        p "Henlo"
+        puts "\n\n"
+      end
+
       def create_room(name, room_id)
         body = with_credentials({'room_id':  room_id.to_s, 'name': name})
         HTTParty.post(BASE_URL + "/add/room", body: body.to_json, headers: headers)
