@@ -110,21 +110,21 @@ class Doubt < ApplicationRecord
     where.not(userId: [982730, 97])
   }
 
-  scope :botany_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 20, 100, 51, 120, 518], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447, 983, 990, 1152, 647]).distinct}
-  scope :chemistry_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 19, 100, 51, 518], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169, 984, 987, 991, 1153, 646]).distinct}
-  scope :physics_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 18, 100, 51, 518], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170, 985, 988, 992, 1154, 645]).distinct}
-  scope :zoology_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 20, 100, 51, 120, 518], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448, 986, 989, 1155, 648]).distinct}
+  scope :botany_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 20, 100, 51, 120, 518, 273], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447, 983, 990, 1152, 647]).distinct}
+  scope :chemistry_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 19, 100, 51, 518, 272], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169, 984, 987, 991, 1153, 646]).distinct}
+  scope :physics_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 18, 100, 51, 518, 271], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170, 985, 988, 992, 1154, 645]).distinct}
+  scope :zoology_paid_student_doubts, -> {ignore_old_doubt("yes").ignored_user_ids.solved('no').paid([8, 141, 20, 100, 51, 120, 518, 273], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448, 986, 989, 1155, 648]).distinct}
   scope :masterclass_paid_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([253, 254, 255], 'yes').deleted('no').subject_name([627, 628, 629, 630]).distinct}
   scope :all_masterclass_paid_student_doubts, -> {paid([253, 254, 255], 'yes').deleted('no').subject_name([627, 628, 629, 630]).distinct}
   scope :concept_building_student_doubts, -> {ignore_old_doubt("yes").solved('no').paid([617], 'yes').deleted('no').subject_name([1049]).distinct}
 
-  scope :botany_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 20, 100, 51, 120, 518], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447, 983, 990, 1152]).distinct}
-  scope :chemistry_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 19, 100, 51, 518], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169, 984, 987, 991, 1153]).distinct}
-  scope :physics_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 18, 100, 51, 518], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170, 985, 988, 992, 1154]).distinct}
-  scope :zoology_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 20, 100, 51, 120, 518], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448, 986, 989, 1155]).distinct}
-  scope :unpaid_student_solved_doubts, -> {solved("yes").paid([8, 141, 20, 100, 51, 120, 518], 'no').deleted('no').distinct}
+  scope :botany_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 20, 100, 51, 120, 518, 273], 'yes').deleted('no').subject_name([53, 478, 132, 495, 390, 222, 447, 983, 990, 1152, 647]).distinct}
+  scope :chemistry_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 19, 100, 51, 518, 272], 'yes').deleted('no').subject_name([54, 477, 129, 494, 391, 229, 169, 984, 987, 991, 1153, 646]).distinct}
+  scope :physics_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 18, 100, 51, 518i, 271], 'yes').deleted('no').subject_name([55, 476, 126, 493, 392, 232, 170, 985, 988, 992, 1154, 645]).distinct}
+  scope :zoology_paid_student_solved_doubts, -> {solved('yes').paid([8, 141, 20, 100, 51, 120, 518, 273], 'yes').deleted('no').subject_name([56, 479, 135, 496, 393, 234, 448, 986, 989, 1155, 648]).distinct}
+  scope :unpaid_student_solved_doubts, -> {solved("yes").paid([8, 141, 20, 100, 51, 120, 518, 272, 273, 271], 'no').deleted('no').distinct}
 
-  scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135]).distinct}
+  scope :paid_student_doubts, -> {paid([8, 141, 20, 19, 18, 20, 518, 271, 272, 273], 'yes').deleted('no').subject_name([53, 54, 55, 56, 476, 477, 478, 479, 126, 129, 132, 135, 647, 648, 645, 646]).distinct}
 
   # scope :assigined_to_me, -> {my_doubts(current_admin_user.id)}
 
