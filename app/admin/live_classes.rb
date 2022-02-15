@@ -72,6 +72,7 @@ ActiveAdmin.register LiveClass do
       end
       row :startTime
       row :endTime
+      row :recordingUrl
       row :paid
     end
   end
@@ -102,12 +103,13 @@ ActiveAdmin.register LiveClass do
       render partial: 'ckeditor'
       text_node javascript_include_tag Ckeditor.cdn_url
 
-      f.input :roomName,    label: "Room Name",     as: :string,          required: true
-      f.input :description, label: "Description",   as: :ckeditor,        required: true
-      f.input :courses,    label: "Select Course", as: :select,           required: true, input_html: { class: "select2" }, collection: Course.all, hint: "Hold Ctrl to select" 
-      f.input :startTime,   label: "Start Time",    as: :datetime_picker, required: true
-      f.input :endTime,     label: "End Time",      as: :datetime_picker, required: true
-      f.input :paid,        label: "Paid Class",    as: :boolean,         required: true
+      f.input :roomName,      label: "Room Name",     as: :string,          required: true
+      f.input :recordingUrl,  label: "Recording Url", as: :string,          required: false
+      f.input :description,   label: "Description",   as: :ckeditor,        required: true
+      f.input :courses,       label: "Select Course", as: :select,          required: true, input_html: { class: "select2" }, collection: Course.all, hint: "Hold Ctrl to select" 
+      f.input :startTime,     label: "Start Time",    as: :datetime_picker, required: true
+      f.input :endTime,       label: "End Time",      as: :datetime_picker, required: true
+      f.input :paid,          label: "Paid Class",    as: :boolean,         required: true
     end
     f.actions
   end

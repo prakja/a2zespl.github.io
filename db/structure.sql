@@ -4501,6 +4501,7 @@ ALTER SEQUENCE public."LiveClassUser_id_seq" OWNED BY public."LiveClassUser".id;
 CREATE TABLE public."LiveClasses" (
     id bigint NOT NULL,
     "roomName" character varying,
+    "recordingUrl" character varying,
     description text,
     "startTime" timestamp without time zone,
     "endTime" timestamp without time zone,

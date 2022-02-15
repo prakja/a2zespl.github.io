@@ -2,6 +2,7 @@ class CreateLiveClasses < ActiveRecord::Migration[5.2]
   def change
     create_table :LiveClasses do |t|
       t.string   :roomName
+      t.string   :recordingUrl, null: true
       t.text     :description
       t.datetime :startTime
       t.datetime :endTime
