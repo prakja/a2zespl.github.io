@@ -1,4 +1,4 @@
-include TechMintHelper
+include TeachMintHelper
 
 ActiveAdmin.register LiveClass do
   # remove delete actions from show page by default and add it manually for live classes which haven't ended yet
@@ -10,7 +10,7 @@ ActiveAdmin.register LiveClass do
   before_destroy do |resource|
     # ensure room is deleted from the techmint services
     room_id = Base64.encode64(resource.roomName).gsub(/[^0-9A-Za-z]/, '')
-    response = TechMintService.remove_room(room_id)
+    response = TeachMintService.remove_room(room_id)
 
     flash[:info] = response["msg"]
   end
@@ -23,11 +23,11 @@ ActiveAdmin.register LiveClass do
 
       # get room_id from base64 of room name and remove all special characters
       room_id = Base64.encode64(resource.roomName).gsub(/[^0-9A-Za-z]/, '')
-      response = TechMintService.create_room(resource.roomName, room_id)
+      response = TeachMintService.create_room(resource.roomName, room_id)
 
       if response['status'] == true
         # add current user to the room
-        inst = TechMintService.new(room_id: room_id, user: User.find(current_admin_user.userId))
+        inst = TeachMintService.new(room_id: room_id, user: User.find(current_admin_user.userId))
         room_url = inst.host_join
 
         redirect_to room_url
@@ -40,7 +40,7 @@ ActiveAdmin.register LiveClass do
 
   member_action :delete_room, method: :delete do
     room_id = Base64.encode64(resource.roomName).gsub(/[^0-9A-Za-z]/, '')
-    response = TechMintService.remove_room(room_id)
+    response = TeachMintService.remove_room(room_id)
 
     flash[:notice] = response["msg"]
 
