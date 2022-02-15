@@ -1,15 +1,20 @@
 include TechMintHelper
 
 ActiveAdmin.register LiveClass do
+  # remove delete actions from show page by default and add it manually for live classes which haven't ended yet
+  config.action_items.delete_if {|item| item.name == :destroy && item.display_on?(:show) }
+
   permit_params :roomName, :description, :startTime, :endTime, :paid, course_ids: []
+  remove_filter :users, :courses
 
   before_destroy do |resource|
     # ensure room is deleted from the techmint services
     room_id = Base64.encode64(resource.roomName).gsub(/[^0-9A-Za-z]/, '')
-    response = TechMintService.create_room(resource.roomName, room_id)
+    response = TechMintService.remove_room(room_id)
 
-    flash[:notice] = response["msg"]
+    flash[:info] = response["msg"]
   end
+
 
   member_action :go_live, method: :post do
     begin
@@ -42,10 +47,14 @@ ActiveAdmin.register LiveClass do
     redirect_to action: :show
   end
 
-  action_item :go_live, only: :show do
-    link_to "Go live", go_live_admin_live_class_path(resource), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
+
+  action_item :delete, only: :show, if: proc { resource.endTime > Time.now.utc } do 
+    link_to "Delete", admin_live_class_path(resource), class: 'member_link', method: :delete
   end
 
+  action_item :go_live, only: :show, if: proc { resource.endTime > Time.now.utc } do 
+    link_to "Go live", go_live_admin_live_class_path(resource), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
+  end
 
   action_item :delete_room, only: :show do
     link_to "Remove Room", delete_room_admin_live_class_path(resource), class: 'member_link', method: :delete, data: {confirm: "Are You sure ?"}, style: "background-color: red;"
@@ -77,9 +86,13 @@ ActiveAdmin.register LiveClass do
 
     toggle_bool_column :paid
 
-    actions defaults: true do |lc|
-      item "Go live", go_live_admin_live_class_path(lc), class: 'member_link', method: :post, 
-        data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
+    actions defaults: false do |lc|
+      item "View", admin_live_class_path(lc), class: 'member_link', method: :get
+      item "Edit", edit_admin_live_class_path(lc), class: 'member_link', method: :get
+      if lc.endTime > Time.now.utc
+        item "Delete", admin_live_class_path(lc), class: 'member_link', method: :delete
+        item "Go live", go_live_admin_live_class_path(lc), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
+      end
     end
   end
 
@@ -91,9 +104,7 @@ ActiveAdmin.register LiveClass do
 
       f.input :roomName,    label: "Room Name",     as: :string,          required: true
       f.input :description, label: "Description",   as: :ckeditor,        required: true
-      f.input :courses,    label: "Select Course", as: :select,          required: true, input_html: { class: "select2" },
-        collection: Course.all,
-        hint: "Hold Ctrl to select" 
+      f.input :courses,    label: "Select Course", as: :select,           required: true, input_html: { class: "select2" }, collection: Course.all, hint: "Hold Ctrl to select" 
       f.input :startTime,   label: "Start Time",    as: :datetime_picker, required: true
       f.input :endTime,     label: "End Time",      as: :datetime_picker, required: true
       f.input :paid,        label: "Paid Class",    as: :boolean,         required: true
