@@ -79,6 +79,7 @@ ActiveAdmin.register QuestionTranslation do
     column :id
     column :question
     column :explanation
+    column :questionId
   end
 
 end
