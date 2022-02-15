@@ -3541,6 +3541,38 @@ ALTER SEQUENCE public."CourseInvitation_id_seq" OWNED BY public."CourseInvitatio
 
 
 --
+-- Name: CourseLiveClass; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."CourseLiveClass" (
+    id bigint NOT NULL,
+    "courseId" integer,
+    "liveClassId" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: CourseLiveClass_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."CourseLiveClass_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: CourseLiveClass_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public."CourseLiveClass_id_seq" OWNED BY public."CourseLiveClass".id;
+
+
+--
 -- Name: CourseOffer; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4437,6 +4469,7 @@ CREATE TABLE public."LiveClassUser" (
     id bigint NOT NULL,
     "liveClassId" integer NOT NULL,
     "userId" integer NOT NULL,
+    "userType" character varying NOT NULL,
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL
 );
@@ -4467,9 +4500,8 @@ ALTER SEQUENCE public."LiveClassUser_id_seq" OWNED BY public."LiveClassUser".id;
 
 CREATE TABLE public."LiveClasses" (
     id bigint NOT NULL,
-    "roomId" character varying,
+    "roomName" character varying,
     description text,
-    "courseId" integer,
     "startTime" timestamp without time zone,
     "endTime" timestamp without time zone,
     paid boolean DEFAULT true,
@@ -15152,6 +15184,13 @@ ALTER TABLE ONLY public."CourseInvitationConversion" ALTER COLUMN id SET DEFAULT
 
 
 --
+-- Name: CourseLiveClass id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseLiveClass" ALTER COLUMN id SET DEFAULT nextval('public."CourseLiveClass_id_seq"'::regclass);
+
+
+--
 -- Name: CourseOffer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16704,6 +16743,14 @@ ALTER TABLE ONLY public."CourseInvitationConversion"
 
 ALTER TABLE ONLY public."CourseInvitation"
     ADD CONSTRAINT "CourseInvitation_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: CourseLiveClass CourseLiveClass_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseLiveClass"
+    ADD CONSTRAINT "CourseLiveClass_pkey" PRIMARY KEY (id);
 
 
 --
@@ -22744,6 +22791,22 @@ ALTER TABLE ONLY public."Section"
 
 
 --
+-- Name: CourseLiveClass fk_rails_6fd060d630; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseLiveClass"
+    ADD CONSTRAINT fk_rails_6fd060d630 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClasses"(id);
+
+
+--
+-- Name: CourseLiveClass fk_rails_7cfa34e6fb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."CourseLiveClass"
+    ADD CONSTRAINT fk_rails_7cfa34e6fb FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
+
+
+--
 -- Name: LiveClassUser fk_rails_8551511039; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -22757,14 +22820,6 @@ ALTER TABLE ONLY public."LiveClassUser"
 
 ALTER TABLE ONLY public."QuestionVideoSentence"
     ADD CONSTRAINT fk_rails_8593383ffd FOREIGN KEY ("questionId") REFERENCES public."Question"(id);
-
-
---
--- Name: LiveClasses fk_rails_85b30079a9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."LiveClasses"
-    ADD CONSTRAINT fk_rails_85b30079a9 FOREIGN KEY ("courseId") REFERENCES public."Course"(id);
 
 
 --

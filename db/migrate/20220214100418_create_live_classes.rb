@@ -1,9 +1,8 @@
 class CreateLiveClasses < ActiveRecord::Migration[5.2]
   def change
     create_table :LiveClasses do |t|
-      t.string   :roomId
+      t.string   :roomName
       t.text     :description
-      t.integer  :courseId
       t.datetime :startTime
       t.datetime :endTime
       t.boolean  :paid, default: true
@@ -12,11 +11,20 @@ class CreateLiveClasses < ActiveRecord::Migration[5.2]
       t.datetime :updatedAt, null: false
     end
 
-    add_foreign_key :LiveClasses, :Course, column: :courseId, primary_key: :id
+    # through table
+    create_table :CourseLiveClass do |t|
+      t.integer :courseId
+      t.integer :liveClassId
+      t.timestamps
+    end
+
+    add_foreign_key :CourseLiveClass, :Course,      column: :courseId,    primary_key: :id
+    add_foreign_key :CourseLiveClass, :LiveClasses, column: :liveClassId, primary_key: :id
 
     create_table :LiveClassUser do |t|
       t.integer  :liveClassId, null: false
       t.integer  :userId,      null: false
+      t.string   :userType,        null: false
       t.datetime :createdAt,   null: false
       t.datetime :updatedAt,   null: false
     end
