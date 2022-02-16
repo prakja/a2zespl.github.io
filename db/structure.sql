@@ -3355,7 +3355,8 @@ CREATE TABLE public."Course" (
     "showPayment" boolean DEFAULT false NOT NULL,
     "feeDesc" text,
     "hideCourseFee" boolean DEFAULT false,
-    "feeTitle" text
+    "feeTitle" text,
+    "hasLiveClass" boolean DEFAULT false
 );
 
 
@@ -23267,6 +23268,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211108145647'),
 ('20220214062357'),
 ('20220214100418'),
-('20220216060654');
+('20220216060654'),
+('20220216092305');
 
 

@@ -1,6 +1,6 @@
 ActiveAdmin.register Course do
   duplicatable
-  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest, :shortDescription, :seqId, :feeDesc
+  permit_params :name, :year, :image, :description, :package, :fee, :public, :hasVideo, :hasQuestionBank, :hasNCERT, :hasDoubt, :hasLeaderBoard, :allowCallback, :origFee, :discount, :type, :bestSeller, :recommended, :discountedFee, :expiryAt, :hasPartTest, :shortDescription, :seqId, :feeDesc, :hasLiveClass
   remove_filter :payments, :subjects, :versions, :courseInvitations, :courseCourseTests, :tests, :public_courses, :course_offers
 
   sidebar :related_data, only: :show do
@@ -36,6 +36,7 @@ ActiveAdmin.register Course do
     column :expiryAt
     column ("Course Details") {|course| raw('<a target="_blank" href=/course_details/show?courseId=' + course.id.to_s + '>Course Details</a>')}
     column :seqId
+    column :hasLiveClass
     actions
   end
 
@@ -67,6 +68,7 @@ ActiveAdmin.register Course do
       f.input :allowCallback
       f.input :feeDesc
       f.input :seqId
+      f.input :hasLiveClass, label: "Has Live Class"
     end
     f.actions
   end

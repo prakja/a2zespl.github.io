@@ -106,7 +106,7 @@ ActiveAdmin.register LiveClass do
       f.input :roomName,      label: "Room Name",     as: :string,          required: true
       f.input :recordingUrl,  label: "Recording Url", as: :string,          required: false
       f.input :description,   label: "Description",   as: :ckeditor,        required: true
-      f.input :courses,       label: "Select Course", as: :select,          required: true, input_html: { class: "select2" }, collection: Course.all, hint: "Hold Ctrl to select" 
+      f.input :courses,       label: "Select Course", as: :select,          required: true, input_html: { class: "select2" }, collection: Course.live_classes, hint: "Hold Ctrl to select courses" 
       f.input :startTime,     label: "Start Time",    as: :datetime_picker, required: true
       f.input :endTime,       label: "End Time",      as: :datetime_picker, required: true
       f.input :paid,          label: "Paid Class",    as: :boolean,         required: true
