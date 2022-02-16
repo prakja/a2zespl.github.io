@@ -1,4 +1,4 @@
-module TechMintHelper
+module TeachMintHelper
   module ServiceHelper
     BASE_URL  = 'https://api.teachmint.com'
     CLIENT_ID = 'goodedtech'
@@ -17,7 +17,7 @@ module TechMintHelper
     end
   end
   
-  class TechMintService
+  class TeachMintService
     include HTTParty
     include ServiceHelper
 
