@@ -1,5 +1,5 @@
 class LiveClass < ApplicationRecord
-  self.table_name = :LiveClasses
+  self.table_name = :LiveClass
 
   has_many :couse_live_classes, foreign_key: :liveClassId, dependent: :destroy, class_name: :CourseLiveClass
   has_many :courses, through: :couse_live_classes,         dependent: :destroy 
