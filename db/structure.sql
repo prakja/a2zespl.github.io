@@ -4462,6 +4462,23 @@ ALTER SEQUENCE public."Installment_id_seq" OWNED BY public."Installment".id;
 
 
 --
+-- Name: LiveClass; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."LiveClass" (
+    id bigint NOT NULL,
+    "roomName" character varying,
+    "recordingUrl" character varying,
+    description text,
+    "startTime" timestamp without time zone,
+    "endTime" timestamp without time zone,
+    paid boolean DEFAULT true,
+    "createdAt" timestamp without time zone NOT NULL,
+    "updatedAt" timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: LiveClassUser; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4495,27 +4512,10 @@ ALTER SEQUENCE public."LiveClassUser_id_seq" OWNED BY public."LiveClassUser".id;
 
 
 --
--- Name: LiveClasses; Type: TABLE; Schema: public; Owner: -
+-- Name: LiveClass_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE public."LiveClasses" (
-    id bigint NOT NULL,
-    "roomName" character varying,
-    "recordingUrl" character varying,
-    description text,
-    "startTime" timestamp without time zone,
-    "endTime" timestamp without time zone,
-    paid boolean DEFAULT true,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
-);
-
-
---
--- Name: LiveClasses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public."LiveClasses_id_seq"
+CREATE SEQUENCE public."LiveClass_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4524,10 +4524,10 @@ CREATE SEQUENCE public."LiveClasses_id_seq"
 
 
 --
--- Name: LiveClasses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: LiveClass_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public."LiveClasses_id_seq" OWNED BY public."LiveClasses".id;
+ALTER SEQUENCE public."LiveClass_id_seq" OWNED BY public."LiveClass".id;
 
 
 --
@@ -15325,17 +15325,17 @@ ALTER TABLE ONLY public."Installment" ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: LiveClass id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."LiveClass" ALTER COLUMN id SET DEFAULT nextval('public."LiveClass_id_seq"'::regclass);
+
+
+--
 -- Name: LiveClassUser id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."LiveClassUser" ALTER COLUMN id SET DEFAULT nextval('public."LiveClassUser_id_seq"'::regclass);
-
-
---
--- Name: LiveClasses id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public."LiveClasses" ALTER COLUMN id SET DEFAULT nextval('public."LiveClasses_id_seq"'::regclass);
 
 
 --
@@ -16947,11 +16947,11 @@ ALTER TABLE ONLY public."LiveClassUser"
 
 
 --
--- Name: LiveClasses LiveClasses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: LiveClass LiveClass_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public."LiveClasses"
-    ADD CONSTRAINT "LiveClasses_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."LiveClass"
+    ADD CONSTRAINT "LiveClass_pkey" PRIMARY KEY (id);
 
 
 --
@@ -21224,10 +21224,24 @@ CREATE INDEX "incorrectReason3Count10" ON public."QuestionAnalytics25" USING btr
 
 
 --
+-- Name: index_CourseLiveClass_on_liveClassId_and_courseId; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "index_CourseLiveClass_on_liveClassId_and_courseId" ON public."CourseLiveClass" USING btree ("liveClassId", "courseId");
+
+
+--
 -- Name: index_Glossary_on_word; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX "index_Glossary_on_word" ON public."Glossary" USING btree (word);
+
+
+--
+-- Name: index_LiveClassUser_on_liveClassId_and_userId; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "index_LiveClassUser_on_liveClassId_and_userId" ON public."LiveClassUser" USING btree ("liveClassId", "userId");
 
 
 --
@@ -22796,7 +22810,7 @@ ALTER TABLE ONLY public."Section"
 --
 
 ALTER TABLE ONLY public."CourseLiveClass"
-    ADD CONSTRAINT fk_rails_6fd060d630 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClasses"(id);
+    ADD CONSTRAINT fk_rails_6fd060d630 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClass"(id);
 
 
 --
@@ -23028,7 +23042,7 @@ ALTER TABLE ONLY public."QuestionVideoSentence"
 --
 
 ALTER TABLE ONLY public."LiveClassUser"
-    ADD CONSTRAINT fk_rails_d4f1cb7a72 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClasses"(id);
+    ADD CONSTRAINT fk_rails_d4f1cb7a72 FOREIGN KEY ("liveClassId") REFERENCES public."LiveClass"(id);
 
 
 --
@@ -23252,6 +23266,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211102104955'),
 ('20211108145647'),
 ('20220214062357'),
-('20220214100418');
+('20220214100418'),
+('20220216060654');
 
 
