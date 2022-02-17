@@ -4475,7 +4475,9 @@ CREATE TABLE public."LiveClass" (
     "endTime" timestamp without time zone,
     paid boolean DEFAULT true,
     "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
+    "updatedAt" timestamp without time zone NOT NULL,
+    "zoomMeetingId" character varying,
+    "zoomEmail" character varying
 );
 
 
@@ -23269,6 +23271,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220214062357'),
 ('20220214100418'),
 ('20220216060654'),
-('20220216092305');
+('20220216092305'),
+('20220217114647');
 
 
