@@ -42,19 +42,5 @@ module ZoomHelper
       
       json_response["join_url"]
     end
-
-    class << self
-      def create_meeting(email:, topic:)
-        body = {
-          'topic': topic,
-          'type': 2,
-          'start_time': '2022-02-18T12:02:00Z',
-          'duration': 10
-        }
-
-        HTTParty.post(BASE_URL + "/users/#{email}/meetings", body: body.to_json, headers: headers)
-      end
-    end
-
   end
 end
