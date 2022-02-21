@@ -1,10 +1,10 @@
 module ZoomHelper
   class ZoomService
+    HOST_EMAIL = "jprakash@goodeducator.com"
 
     Zoom.configure do |c|
-      c.api_key     = "mtm4O-Z3T-S1xT1eJx3uBg"
-      c.api_secret  = "qWxIb5qHYQ9G2zZvdvxPISsyQv90f0ihHTi3"
-      c.access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Im10bTRPLVozVC1TMXhUMWVKeDN1QmciLCJleHAiOjE2NDU3MDAxNjYsImlhdCI6MTY0NTA5NTM2Nn0.c1-lNcXuTGdsDJuZP5VNq9JpyJvLFN7RJ1H_15WalCo" 
+      c.api_key     = "s8F8xZYVR9G9x5gYQ6Ze-g"
+      c.api_secret  = "U2MALqmnH8Pq3S4UEFUp3QNlpwuVatN53ZLu"
     end
 
     @@zoom_client = Zoom.new
@@ -15,9 +15,10 @@ module ZoomHelper
 
     def create_meeting!
       response = @@zoom_client.meeting_create(
-        user_id: @live_class.zoomEmail,
+        user_id: HOST_EMAIL,
         type: 2, duration: @live_class.duration, 
-        topic: @live_class.roomName, start_time: @live_class.startTime
+        topic: @live_class.roomName, start_time: @live_class.startTime,
+        settings: {approval_type: 0},
       )
 
       @live_class.update(zoomMeetingId: response["id"])
