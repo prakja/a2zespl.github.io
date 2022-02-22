@@ -5,7 +5,7 @@ ActiveAdmin.register LiveClass do
   # remove delete actions from show page by default and add it manually for live classes which haven't ended yet
   config.action_items.delete_if {|item| item.name == :destroy && item.display_on?(:show) }
 
-  permit_params :roomName, :description, :startTime, :endTime, :paid, :zoomEmail, course_ids: []
+  permit_params :roomName, :description, :startTime, :endTime, :paid, course_ids: []
   remove_filter :users, :courses
 
   before_destroy do |resource|
@@ -52,7 +52,7 @@ ActiveAdmin.register LiveClass do
     zoom_service = ZoomService.new(resource)
     begin
       # if already have meeting id then only get join url
-      start_url = (resource.zoomMeetingId.present?) ? zoom_service.get_join_url : zoom_service.create_meeting!
+      start_url = (resource.zoomMeetingId.present?) ? zoom_service.get_start_url : zoom_service.create_meeting!
       redirect_to start_url
     rescue => exception
       flash[:danger] = exception.to_s
@@ -68,7 +68,7 @@ ActiveAdmin.register LiveClass do
     link_to "Go live", go_live_admin_live_class_path(resource), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #db8121;"
   end
 
-  action_item :zoom_meeting, only: :show , if: proc { resource.endTime > Time.now.utc and not resource.zoomEmail.nil? } do
+  action_item :zoom_meeting, only: :show , if: proc { resource.endTime > Time.now.utc } do
     link_to "Launch Zoom", zoom_meeting_admin_live_class_path(resource), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
   end
 
@@ -89,13 +89,7 @@ ActiveAdmin.register LiveClass do
       row :startTime
       row :endTime
       row :recordingUrl
-      row ("Zoom Details") do
-        unless f.zoomEmail.nil?
-          raw("#{f.zoomEmail} (Meeting ID: <strong> #{f.zoomMeetingId || '-'} </strong>)")
-        else
-          "Empty"
-        end
-      end
+      row :zoomMeetingId
       row :paid
     end
   end
@@ -117,7 +111,7 @@ ActiveAdmin.register LiveClass do
       if lc.endTime > Time.now.utc
         item "Delete", admin_live_class_path(lc), class: 'member_link', method: :delete
         item "Go live", go_live_admin_live_class_path(lc), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #db8121;"
-        item "Launch Zoom", zoom_meeting_admin_live_class_path(lc), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;" unless lc.zoomEmail.nil?
+        item "Launch Zoom", zoom_meeting_admin_live_class_path(lc), class: 'member_link', method: :post, data: {confirm: "Are You sure ?"}, style: "background-color: #2181db;"
       end
     end
   end
@@ -130,7 +124,6 @@ ActiveAdmin.register LiveClass do
 
       f.input :roomName,      label: "Room Name",       as: :string,          required: true
       f.input :recordingUrl,  label: "Recording Url",   as: :string,          required: false
-      f.input :zoomEmail,     label: "Zoom Email",      as: :email,           required: false
       f.input :description,   label: "Description",     as: :ckeditor,        required: true
       f.input :courses,       label: "Select Course",   as: :select,          required: true, input_html: { class: "select2" }, collection: Course.live_classes, hint: "Hold Ctrl to select courses" 
       f.input :startTime,     label: "Start Time",      as: :datetime_picker, required: true

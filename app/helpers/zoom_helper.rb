@@ -13,22 +13,43 @@ module ZoomHelper
       @live_class = live_class
     end
 
-    def get_join_url
+    def get_start_url
       response = @@zoom_client.meeting_get meeting_id: @live_class.zoomMeetingId
       response["start_url"]
     end
 
-    def create_meeting!
-      response = @@zoom_client.meeting_create(
-        user_id: HOST_EMAIL,
-        type: 2, duration: @live_class.duration, 
-        topic: @live_class.roomName, start_time: @live_class.startTime,
-        settings: {approval_type: 0, allow_multiple_devices: false},
-      )
+    def create_meeting!(with_registration=false)
+      response = with_registration ? meeting_with_registration : meeting_with_password_no_registration
 
-      @live_class.update(zoomMeetingId: response["id"])
+      # if with_registration is true we will also store password containing join_url
+      update_data = {
+        zoomMeetingId: response["id"], 
+        joinUrlWithPassword: (response["join_url"] unless with_registration)
+      }.compact
+
+      @live_class.update(**update_data)
 
       response["start_url"]
     end
+
+    private
+      def get_meeting_config
+        {
+          type: 2,
+          topic: @live_class.roomName.capitalize,
+          user_id: HOST_EMAIL, 
+          duration: @live_class.duration, 
+          start_time: @live_class.startTime,
+        }
+      end
+
+      def meeting_with_registration
+        @@zoom_client.meeting_create settings: {approval_type: 0, allow_multiple_devices: false}, **get_meeting_config
+      end
+
+      def meeting_with_password_no_registration
+        password = Digest::SHA2.hexdigest(@live_class.id.to_s).first 10
+        @@zoom_client.meeting_create password: password, settings: {approval_type: 2, allow_multiple_devices: false}, **get_meeting_config
+      end
   end
 end
