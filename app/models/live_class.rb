@@ -11,4 +11,24 @@ class LiveClass < ApplicationRecord
   attribute :updatedAt, :datetime, default: Time.now
 
   accepts_nested_attributes_for :couse_live_classes, allow_destroy: true
+
+  validates :startTime, presence: true
+  validates :endTime,   presence: true
+
+  validate :duration_cannot_be_negative
+
+  def duration_cannot_be_negative
+    if self.duration < 0
+      errors.add(:endTime, "can't be in the past")
+    end
+  end
+
+  def room_id
+    # get room_id from base64 of room name and remove all special characters
+    Base64.encode64(self.roomName).gsub(/[^0-9A-Za-z]/, '')
+  end
+
+  def duration
+    ((self.endTime - self.startTime) / 1.minutes).to_i
+  end
 end

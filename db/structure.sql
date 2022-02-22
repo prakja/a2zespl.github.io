@@ -3549,8 +3549,8 @@ CREATE TABLE public."CourseLiveClass" (
     id bigint NOT NULL,
     "courseId" integer,
     "liveClassId" integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -4471,11 +4471,16 @@ CREATE TABLE public."LiveClass" (
     "roomName" character varying,
     "recordingUrl" character varying,
     description text,
-    "startTime" timestamp without time zone,
-    "endTime" timestamp without time zone,
+    "startTime" timestamp with time zone,
+    "endTime" timestamp with time zone,
     paid boolean DEFAULT true,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "zoomMeetingId" character varying,
+    "zoomEmail" character varying,
+    live boolean DEFAULT false,
+    "joinUrlWithPassword" character varying,
+    "withRegistration" boolean DEFAULT false NOT NULL
 );
 
 
@@ -4488,8 +4493,9 @@ CREATE TABLE public."LiveClassUser" (
     "liveClassId" integer NOT NULL,
     "userId" integer NOT NULL,
     "userType" character varying NOT NULL,
-    "createdAt" timestamp without time zone NOT NULL,
-    "updatedAt" timestamp without time zone NOT NULL
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "joinUrl" character varying
 );
 
 
@@ -23269,6 +23275,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220214062357'),
 ('20220214100418'),
 ('20220216060654'),
-('20220216092305');
+('20220216092305'),
+('20220217114647'),
+('20220220163233'),
+('20220222132029');
 
 
