@@ -4479,7 +4479,8 @@ CREATE TABLE public."LiveClass" (
     "zoomMeetingId" character varying,
     "zoomEmail" character varying,
     live boolean DEFAULT false,
-    "joinUrlWithPassword" character varying
+    "joinUrlWithPassword" character varying,
+    "withRegistration" boolean DEFAULT false NOT NULL
 );
 
 

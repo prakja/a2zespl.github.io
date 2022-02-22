@@ -18,13 +18,13 @@ module ZoomHelper
       response["start_url"]
     end
 
-    def create_meeting!(with_registration=false)
-      response = with_registration ? meeting_with_registration : meeting_with_password_no_registration
+    def create_meeting!
+      response = @live_class.withRegistration ? meeting_with_registration : meeting_with_password_no_registration
 
       # if with_registration is true we will also store password containing join_url
       update_data = {
         zoomMeetingId: response["id"], 
-        joinUrlWithPassword: (response["join_url"] unless with_registration)
+        joinUrlWithPassword: (response["join_url"] unless @live_class.withRegistration)
       }.compact
 
       @live_class.update(**update_data)

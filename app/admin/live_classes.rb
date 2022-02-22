@@ -5,7 +5,7 @@ ActiveAdmin.register LiveClass do
   # remove delete actions from show page by default and add it manually for live classes which haven't ended yet
   config.action_items.delete_if {|item| item.name == :destroy && item.display_on?(:show) }
 
-  permit_params :roomName, :description, :startTime, :endTime, :paid, course_ids: []
+  permit_params :roomName, :description, :startTime, :endTime, :paid, :withRegistration, course_ids: []
   remove_filter :users, :courses
 
   before_destroy do |resource|
@@ -122,13 +122,14 @@ ActiveAdmin.register LiveClass do
       render partial: 'ckeditor'
       text_node javascript_include_tag Ckeditor.cdn_url
 
-      f.input :roomName,      label: "Room Name",       as: :string,          required: true
-      f.input :recordingUrl,  label: "Recording Url",   as: :string,          required: false
-      f.input :description,   label: "Description",     as: :ckeditor,        required: true
-      f.input :courses,       label: "Select Course",   as: :select,          required: true, input_html: { class: "select2" }, collection: Course.live_classes, hint: "Hold Ctrl to select courses" 
-      f.input :startTime,     label: "Start Time",      as: :datetime_picker, required: true
-      f.input :endTime,       label: "End Time",        as: :datetime_picker, required: true
-      f.input :paid,          label: "Paid Class",      as: :boolean,         required: true
+      f.input :roomName,          label: "Room Name",         as: :string,          required: true
+      f.input :recordingUrl,      label: "Recording Url",     as: :string,          required: false
+      f.input :description,       label: "Description",       as: :ckeditor,        required: true
+      f.input :courses,           label: "Select Course",     as: :select,          required: true, input_html: { class: "select2" }, collection: Course.live_classes, hint: "Hold Ctrl to select courses" 
+      f.input :startTime,         label: "Start Time",        as: :datetime_picker, required: true
+      f.input :endTime,           label: "End Time",          as: :datetime_picker, required: true
+      f.input :paid,              label: "Paid Class",        as: :boolean,         required: true
+      f.input :withRegistration,  label: "Require Resgistration for Meeting", as: :boolean
     end
     f.actions
   end
