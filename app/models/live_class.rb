@@ -31,4 +31,8 @@ class LiveClass < ApplicationRecord
   def duration
     ((self.endTime - self.startTime) / 1.minutes).to_i
   end
+
+  def zoomMeetingId?
+    not (self.zoomMeetingId.nil? or self.zoomMeetingId.empty?)
+  end
 end
