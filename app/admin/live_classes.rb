@@ -8,6 +8,15 @@ ActiveAdmin.register LiveClass do
   permit_params :roomName, :description, :startTime, :endTime, :paid, :withRegistration, course_ids: []
   remove_filter :users, :courses
 
+  after_create do |resource|
+    begin
+      zoom_service = ZoomService.new(resource)
+      zoom_service.create_meeting!
+    rescue => exception
+      flash[:info] = exception.to_s
+    end
+  end
+
   before_destroy do |resource|
     # ensure room is deleted from the techmint services
     room_id = Base64.encode64(resource.roomName).gsub(/[^0-9A-Za-z]/, '')
