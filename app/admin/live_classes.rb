@@ -52,7 +52,7 @@ ActiveAdmin.register LiveClass do
     zoom_service = ZoomService.new(resource)
     begin
       # if already have meeting id then only get join url
-      start_url = resource.zoomMeetingId? ? zoom_service.get_join_url : zoom_service.create_meeting!
+      start_url = (resource.zoomMeetingId.present?) ? zoom_service.get_join_url : zoom_service.create_meeting!
       redirect_to start_url
     rescue => exception
       flash[:danger] = exception.to_s
