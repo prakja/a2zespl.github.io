@@ -116,6 +116,7 @@ Rails.application.routes.draw do
   get "/ncert-question/:id", to: "admin/questions#show"
 
   post "/zoom_event/meeting_started", to: "zoom_event_subscription#meeting_started"
+  post "/zoom_event/meeting_ended", to: "zoom_event_subscription#meeting_ended"
 
   namespace :admin do
     get "/topics/:id/print_flashcards", to: "topics#print_flashcards"
