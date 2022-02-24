@@ -55,7 +55,7 @@ ActiveAdmin.register Advertisement do
     def save_to_s3(file)
       Aws.config.update({
         region: 'us-west-2',
-        credentials: Aws::Credentials.new('AKIAYEPQTPG6K7CEFU6D', 'XtUqnXWkwvPvlK+t8gwuShuESJA1fjnBV1q6AwTX')
+        credentials: Aws::Credentials.new('AKIAYEPQTPG6DDTMY3UR', 'pw3jq2uGsA0lLjc8S+lNVo8UAUGZDNif7+2whPcD')
       })
       s3 = Aws::S3::Resource.new
       bucket = s3.bucket('neetprep-from-ruby')

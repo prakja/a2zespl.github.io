@@ -2,7 +2,8 @@ ActiveAdmin.register QuestionTranslation do
   remove_filter :ques, :questionTopics, :versions
 
   permit_params :question, :explanation, :completed, :reviewed
-  filter :topics, as: :searchable_select, multiple: true, label: "Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :ques_topicId_in, as: :searchable_select, multiple: true, label: "Question Chapter", :collection => Topic.name_with_subject_hinglish
+  filter :topics, as: :searchable_select, multiple: true, label: "Question Bank Chapter", :collection => Topic.name_with_subject_hinglish
   filter :id_eq, as: :number, label: "Translation Id"
   filter :questionId_eq, as: :number, label: "Question Id"
   filter :test_questions, as: :number, label: "Test Id"
@@ -19,6 +20,9 @@ ActiveAdmin.register QuestionTranslation do
     }
     column ("Explanation") {|qe|
       raw(qe.explanation)
+    }
+    column ("Chapter") {|qe|
+      raw (qe.ques.topic.name)
     }
     actions
   end
@@ -42,6 +46,9 @@ ActiveAdmin.register QuestionTranslation do
       row :questionId do |object|
         raw('<a target="_blank" href="/admin/questions/' + object.questionId.to_s + '">' + "Question Link" + '</a>')
       end
+      row :chapter do |object|
+        raw(object.ques.topic.name)
+      end
     end
   end
 
@@ -64,7 +71,7 @@ ActiveAdmin.register QuestionTranslation do
 
   controller do
     def scoped_collection
-      super.includes(:ques)
+      super.includes(ques: :topic)
     end
   end
 
@@ -72,6 +79,7 @@ ActiveAdmin.register QuestionTranslation do
     column :id
     column :question
     column :explanation
+    column :questionId
   end
 
 end

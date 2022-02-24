@@ -9,8 +9,8 @@ local:
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
   service: S3
-  access_key_id: AKIAYEPQTPG6K7CEFU6D
-  secret_access_key: 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
+  access_key_id: AKIAYEPQTPG6DDTMY3UR
+  secret_access_key: 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
   region: us-west-2
   bucket: neetprep-from-ruby
 
