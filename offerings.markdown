@@ -23,7 +23,8 @@ permalink: /offerings/
 </div>
 
 <link rel="stylesheet" href="/styles/custom.css">
-<script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://checkout.razorpay.com/v1/razorpay.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simplecartjs/3.0.5/simplecart.min.js" integrity="sha512-EOuiE1YuBkhsjVlAEjRmjJbQa2phU+9s0akQHiXOp5Zs/ye429onMubcIKvSnLjeqt+ttFEkPwQFrMzJ6bg5rA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 <script>
@@ -48,9 +49,11 @@ var options = {
     "color": "#3399cc"
   }
 };
-var rzp1 = new Razorpay(options);
-$(".razorPaymentGateway").click = function(e){
-  rzp1.open();
-  e.preventDefault();
-}
+$(document).ready(function() {
+  $(".razorPaymentGateway").on("click", function(e){
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+    e.preventDefault();
+  });
+});
 </script>
