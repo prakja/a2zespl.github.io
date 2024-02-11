@@ -9,17 +9,17 @@ permalink: /offerings/
 <div class="simpleCart_shelfItem">
   <h2 class="item_name">Masterclass in Biology - 11<sup>th</sup> Class</h2>
   <span class="item_price">₹ 1499</span>
-  <a class="item_add razorPaymentGateway" href="javascript:;">Purchase</a>
+  <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_NZatmxhMEcQnoC" async> </script> </form>
 </div>
 <div class="simpleCart_shelfItem">
   <h2 class="item_name">Masterclass in Biology - 12<sup>th</sup> Class</h2>
   <span class="item_price">₹ 1499</span>
-  <a class="item_add razorPaymentGateway" href="javascript:;">Purchase</a>
+  <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_NZay8b5AXtROvl" async> </script> </form>
 </div>
 <div class="simpleCart_shelfItem">
-  <h2 class="item_name">Bio Prodigy Test Series</h2>
+  <h2 class="item_name">Biology Prodigy Test Series</h2>
   <span class="item_price">₹ 1999</span>
-  <a class="item_add razorPaymentGateway" href="javascript:;">Purchase</a>
+  <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_NZazXr192OYqkz" async> </script> </form>
 </div>
 
 <link rel="stylesheet" href="/styles/custom.css">
