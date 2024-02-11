@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Offerings
-permalink: /offerings/
+title: Books
+permalink: /books/
 ---
 
-## Current offerings
+#### The following are the available books authored by Dr. N.K. Sharma for purchase 
 
 <div class="simpleCart_shelfItem">
   <h2 class="item_name">Masterclass in Biology - 11<sup>th</sup> Class</h2>
